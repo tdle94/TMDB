@@ -9,7 +9,6 @@ end
 
 target 'TMDB' do
   use_frameworks!
-  pod 'PromisesSwift'
   pod 'RealmSwift'
   # Pods for TMDB
 

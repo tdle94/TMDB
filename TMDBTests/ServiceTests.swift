@@ -1,0 +1,128 @@
+//
+//  ServiceTests.swift
+//  TMDBTests
+//
+//  Created by Tuyen Le on 07.06.20.
+//  Copyright © 2020 Tuyen Le. All rights reserved.
+//
+
+
+@testable import TMDB
+import Quick
+import Nimble
+import Cuckoo
+
+class ServiceTests: XCTestCase {
+
+    let session = MockSessionProtocol()
+    let urlRequestBuilder = MockURLRequestBuilderProtocol()
+    var services: Services!
+
+    override func setUp() {
+        services = Services(session: session, urlRequestBuilder: urlRequestBuilder)
+    }
+
+    // MARK: - popular
+
+    func testGetPopularMovie() {
+        let expectation = self.expectation(description: "")
+        let matchRequest = URLRequestBuilder().getPopularMovieURLRequest(page: 1)
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: isNil()).thenReturn(matchRequest)
+        }
+
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(PopularMovieResult.Type.self), completion: anyClosure()).then { implementation in
+                let popularMovieResult = PopularMovieResult(page: 1, totalPage: 100, totalResult: 1000, movies: [])
+                implementation.2(.success(popularMovieResult))
+            }
+        }
+
+        services.getPopularMovie(page: 1) { result in
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: isNil())
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularMovieResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetPopularPeople() {
+        let expectation = self.expectation(description: "")
+        let matchRequest = URLRequestBuilder().getPopularPeopleURLRequest(page: 1)
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(matchRequest)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(PopularPeopleResult.Type.self), completion: anyClosure()).then { implementation in
+                let popularPeopleResult = PopularPeopleResult(page: 1, totalPage: 100, totalResult: 1000, peoples: [])
+                implementation.2(.success(popularPeopleResult))
+            }
+        }
+        
+        services.getPopularPeople(page: 1) { result in
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetPopularOnTV() {
+        let expectation = self.expectation(description: "")
+        let matchRequest = URLRequestBuilder().getPopularTVURLRequest(page: 1)
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(matchRequest)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(PopularOnTVResult.Type.self), completion: anyClosure()).then { implementation in
+                let popularPeopleResult = PopularOnTVResult(page: 1, totalPage: 100, totalResult: 1000, onTV: [])
+                implementation.2(.success(popularPeopleResult))
+            }
+        }
+        
+        services.getPopularOnTV(page: 1) { result in
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
+    }
+    
+    // MARK: - detail
+    func testGetMovieDetail() {
+        let expectation = self.expectation(description: "")
+        let matchRequest = URLRequestBuilder().getMovieDetailURLRequest(id: 3)
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getMovieDetailURLRequest(id: 3, language: "en-US").thenReturn(matchRequest)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(MovieDetail.Type.self), completion: anyClosure()).then { implementation in
+                let movieDetail = MovieDetail(id: 1, adult: true, backdropPath: "", budget: 0,
+                                              genres: [], homepage: "", imdbId: "", originalLanguage: "",
+                                              originalTitle: "", overview: "", popularity: 0, posterPath: "",
+                                              productionCompanies: [], productionCountries: [], releaseDate: "",
+                                              revenue: 0, runtime: 0, spokenLanguage: [], status: "", tagline: "",
+                                              title: "", video: false, voteAverage: 0, voteCount: 0)
+                implementation.2(.success(movieDetail))
+            }
+        }
+        
+        services.getMovieDetail(id: 3) { result in
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(MovieDetail.Type.self), completion: anyClosure())
+    }
+}

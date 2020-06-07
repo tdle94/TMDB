@@ -1,0 +1,50 @@
+//
+//  Session.swift
+//  TMDB
+//
+//  Created by Tuyen Le on 06.06.20.
+//  Copyright © 2020 Tuyen Le. All rights reserved.
+//
+
+import Foundation
+
+protocol SessionProtocol {
+    func send<T: Decodable>(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)
+}
+
+struct Session: SessionProtocol {
+
+    enum APIError: Error {
+        case noURLReponse
+        case noData
+        case cannotDecode
+    }
+
+    func send<T: Decodable>(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
+        URLSession.shared.dataTask(with: request) { data, urlResponse, error in
+
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let response = urlResponse as? HTTPURLResponse, response.statusCode == 200 else {
+                completion(.failure(APIError.noURLReponse))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(APIError.noData))
+                return
+            }
+
+            do {
+                let responseValueType = try JSONDecoder().decode(T.self, from: data)
+                completion(.success(responseValueType))
+            } catch let error {
+                debugPrint(error)
+                completion(.failure(APIError.cannotDecode))
+            }
+        }.resume()
+    }
+}

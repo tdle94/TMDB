@@ -20,6 +20,20 @@
                ReferencedContainer = "container:TMDB.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "342E66352489BB33003B5CB8"
+               BuildableName = "TMDBTests.xctest"
+               BlueprintName = "TMDBTests"
+               ReferencedContainer = "container:TMDB.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

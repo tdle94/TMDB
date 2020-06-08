@@ -76,7 +76,7 @@ class ServiceTests: XCTestCase {
         
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(PopularPeopleResult.Type.self), completion: anyClosure()).then { implementation in
-                let popularPeopleResult = PopularPeopleResult(page: 1, totalPages: 100, totalResults: 1000, peoples: [])
+                let popularPeopleResult = PopularPeopleResult()
                 implementation.2(.success(popularPeopleResult))
             }
         }

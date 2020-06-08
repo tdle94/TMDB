@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct PopularMovieResult: Decodable {
-    let page: Int
-    let totalPages: Int
-    let totalResults: Int
-    let movies: [PopularMovie]
+@objcMembers
+class PopularMovieResult: Object, Decodable {
+    dynamic var page: Int = 0
+    dynamic var totalPages: Int = 0
+    dynamic var totalResults: Int = 0
+    let movies: List<PopularMovie> = List<PopularMovie>()
     
     enum CodingKeys: String, CodingKey {
         case page
@@ -20,24 +22,40 @@ struct PopularMovieResult: Decodable {
         case totalResults = "total_results"
         case movies = "results"
     }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        page = try container.decode(Int.self, forKey: .page)
+        totalPages = try container.decode(Int.self, forKey: .totalPages)
+        totalResults = try container.decode(Int.self, forKey: .totalResults)
+        let movies = try container.decode(List<PopularMovie>.self, forKey: .movies)
+        self.movies.append(objectsIn: movies)
+        super.init()
+    }
+
+    required init() {
+        super.init()
+    }
 }
 
-class PopularMovie: Decodable {
-    let id: Int
-    let posterPath: String
-    let adult: Bool
-    let overview: String
-    let releaseDate: String
-    let genreIds: [Int]
-    let originalTitle: String
-    let originalLanguage: String
-    let title: String
-    let backdropPath: String
-    let popularity: Double
-    let voteCount: Int
-    let video: Bool
-    let voteAverage: Double
-    let mediaType: String?
+@objcMembers
+class PopularMovie: Object, Decodable {
+    dynamic var id: Int = 0
+    dynamic var posterPath: String = ""
+    dynamic var adult: Bool = false
+    dynamic var overview: String = ""
+    dynamic var releaseDate: String = ""
+    let genreIds: List<Int> = List<Int>()
+    dynamic var originalTitle: String = ""
+    dynamic var originalLanguage: String = ""
+    dynamic var title: String = ""
+    dynamic var backdropPath: String = ""
+    dynamic var popularity: Double = 0.0
+    dynamic var voteCount: Int = 0
+    dynamic var video: Bool = false
+    dynamic var voteAverage: Double = 0.0
+    dynamic var mediaType: String? = nil
     
     enum CodingKeys: String, CodingKey {
         case id, adult, overview, popularity, video, title
@@ -62,7 +80,8 @@ class PopularMovie: Decodable {
         video = try container.decode(Bool.self, forKey: .video)
         posterPath = try container.decode(String.self, forKey: .posterPath)
         releaseDate = try container.decode(String.self, forKey: .releaseDate)
-        genreIds = try container.decode([Int].self, forKey: .genreIds)
+        let genreIds = try container.decode([Int].self, forKey: .genreIds)
+        self.genreIds.append(objectsIn: genreIds)
         originalTitle = try container.decode(String.self, forKey: .originalTitle)
         originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
         title = try container.decode(String.self, forKey: .title)
@@ -70,6 +89,10 @@ class PopularMovie: Decodable {
         voteCount = try container.decode(Int.self, forKey: .voteCount)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         mediaType = try container.decodeIfPresent(String.self, forKey: .mediaType)
+    }
+    
+    required init() {
+        super.init()
     }
 }
 

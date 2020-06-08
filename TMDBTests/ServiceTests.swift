@@ -52,7 +52,7 @@ class ServiceTests: XCTestCase {
 
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(PopularMovieResult.Type.self), completion: anyClosure()).then { implementation in
-                let popularMovieResult = PopularMovieResult(page: 1, totalPages: 100, totalResults: 1000, movies: [])
+                let popularMovieResult = PopularMovieResult()
                 implementation.2(.success(popularMovieResult))
             }
         }

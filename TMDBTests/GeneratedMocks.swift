@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/Services/Session.swift at 2020-06-08 00:52:29 +0000
+// MARK: - Mocks generated from file: TMDB/Services/Session.swift at 2020-06-08 01:11:13 +0000
 
 //
 //  Session.swift
@@ -104,7 +104,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/Services/URLRequestBuilder.swift at 2020-06-08 00:52:29 +0000
+// MARK: - Mocks generated from file: TMDB/Services/URLRequestBuilder.swift at 2020-06-08 01:11:13 +0000
 
 //
 //  URLRequestBuilder.swift

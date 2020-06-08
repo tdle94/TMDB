@@ -125,12 +125,7 @@ class ServiceTests: XCTestCase {
         
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(MovieDetail.Type.self), completion: anyClosure()).then { implementation in
-                let movieDetail = MovieDetail(id: 1, adult: true, backdropPath: "", budget: 0,
-                                              genres: [], homepage: "", imdbId: "", originalLanguage: "",
-                                              originalTitle: "", overview: "", popularity: 0, posterPath: "",
-                                              productionCompanies: [], productionCountries: [], releaseDate: "",
-                                              revenue: 0, runtime: 0, spokenLanguage: [], status: "", tagline: "",
-                                              title: "", video: false, voteAverage: 0, voteCount: 0)
+                let movieDetail = MovieDetail()
                 implementation.2(.success(movieDetail))
             }
         }

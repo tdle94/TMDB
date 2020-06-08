@@ -200,7 +200,7 @@ class ServiceTests: XCTestCase {
 
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(TrendingResult.Type.self), completion: anyClosure()).then { implementation in
-                let trending = TrendingResult(page: 1, totalPages: 10, totalResult: 50, trending: [])
+                let trending = TrendingResult()
                 implementation.2(.success(trending))
             }
         }

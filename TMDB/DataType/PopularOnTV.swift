@@ -10,9 +10,16 @@ import Foundation
 
 struct PopularOnTVResult: Decodable {
     let page: Int
-    let totalPage: Int
-    let totalResult: Int
+    let totalPages: Int
+    let totalResults: Int
     let onTV: [PopularOnTV]
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+        case onTV = "results"
+    }
 }
 
 struct PopularOnTV: Decodable {
@@ -29,4 +36,17 @@ struct PopularOnTV: Decodable {
     let voteCount: Int
     let name: String
     let originalName: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id, popularity, overview, name
+        case posterPath = "poster_path"
+        case backdropPath = "backdrop_path"
+        case voteAverage = "vote_average"
+        case firstAirDate = "first_air_date"
+        case originCountry = "origin_country"
+        case genreIds = "genre_ids"
+        case originalLanguage = "original_language"
+        case voteCount = "vote_count"
+        case originalName = "original_name"
+    }
 }

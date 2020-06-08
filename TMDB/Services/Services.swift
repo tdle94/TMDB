@@ -33,4 +33,9 @@ struct Services {
         let request = urlRequestBuilder.getMovieDetailURLRequest(id: id)
         session.send(request: request, responseType: MovieDetail.self, completion: completion)
     }
+
+    func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getTrendingURLRequest(time: time, type: type)
+        session.send(request: request, responseType: TrendingResult.self, completion: completion)
+    }
 }

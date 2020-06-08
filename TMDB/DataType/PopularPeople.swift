@@ -10,14 +10,14 @@ import Foundation
 
 struct PopularPeopleResult: Decodable {
     let page: Int
-    let totalPage: Int
-    let totalResult: Int
+    let totalPages: Int
+    let totalResults: Int
     let peoples: [PopularPeople]
     
     enum CodingKeys: String, CodingKey {
         case page
-        case totalPage = "total_page"
-        case totalResult = "total_result"
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
         case peoples = "results"
     }
 }

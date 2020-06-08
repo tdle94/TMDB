@@ -17,6 +17,24 @@ class ServiceTests: XCTestCase {
     let session = MockSessionProtocol()
     let urlRequestBuilder = MockURLRequestBuilderProtocol()
     var services: Services!
+    
+    struct TrendingTimeMatchable: Matchable {
+        var matcher: ParameterMatcher<TrendingTime>
+        typealias MatchedType = TrendingTime
+    }
+    
+    struct TrendingMediaMatchable: Matchable {
+        var matcher: ParameterMatcher<TrendingMediaType>
+        typealias MatchedType = TrendingMediaType
+    }
+    
+    let todayTrending = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .today })
+    let weekTrending = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .week })
+
+    let allTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .all })
+    let movieTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .movie })
+    let tvTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .tv })
+    let personTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .person })
 
     override func setUp() {
         services = Services(session: session, urlRequestBuilder: urlRequestBuilder)
@@ -34,7 +52,7 @@ class ServiceTests: XCTestCase {
 
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(PopularMovieResult.Type.self), completion: anyClosure()).then { implementation in
-                let popularMovieResult = PopularMovieResult(page: 1, totalPage: 100, totalResult: 1000, movies: [])
+                let popularMovieResult = PopularMovieResult(page: 1, totalPages: 100, totalResults: 1000, movies: [])
                 implementation.2(.success(popularMovieResult))
             }
         }
@@ -58,7 +76,7 @@ class ServiceTests: XCTestCase {
         
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(PopularPeopleResult.Type.self), completion: anyClosure()).then { implementation in
-                let popularPeopleResult = PopularPeopleResult(page: 1, totalPage: 100, totalResult: 1000, peoples: [])
+                let popularPeopleResult = PopularPeopleResult(page: 1, totalPages: 100, totalResults: 1000, peoples: [])
                 implementation.2(.success(popularPeopleResult))
             }
         }
@@ -82,7 +100,7 @@ class ServiceTests: XCTestCase {
         
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(PopularOnTVResult.Type.self), completion: anyClosure()).then { implementation in
-                let popularPeopleResult = PopularOnTVResult(page: 1, totalPage: 100, totalResult: 1000, onTV: [])
+                let popularPeopleResult = PopularOnTVResult(page: 1, totalPages: 100, totalResults: 1000, onTV: [])
                 implementation.2(.success(popularPeopleResult))
             }
         }
@@ -124,5 +142,80 @@ class ServiceTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(MovieDetail.Type.self), completion: anyClosure())
+    }
+    
+    // MARK: - trending
+    
+    func testAllTrendingToday() {
+        self.trending(time: .today, type: .all)
+    }
+    
+    func testMovieTrendingToday() {
+        self.trending(time: .today, type: .movie)
+    }
+    
+    func testTVTrendingToday() {
+        self.trending(time: .today, type: .tv)
+    }
+    
+    func testPersonTrendingToday() {
+        self.trending(time: .today, type: .person)
+    }
+    
+    func testAllTrendingThisWeek() {
+        self.trending(time: .week, type: .all)
+    }
+    
+    func testMovieTrendingThisWeek() {
+        self.trending(time: .week, type: .movie)
+    }
+    
+    func testTVTrendingThisWeek() {
+        self.trending(time: .week, type: .tv)
+    }
+    
+    func testPersonTrendingThisWeek() {
+        self.trending(time: .week, type: .person)
+    }
+    
+    private func trending(time: TrendingTime, type: TrendingMediaType) {
+        let expectation = self.expectation(description: "")
+        let trendingTime = TrendingTimeMatchable(matcher: time == .today ? self.todayTrending : self.weekTrending )
+        let matchRequest: URLRequest
+        let trendingType: TrendingMediaMatchable
+        
+        switch type {
+        case .all:
+            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .all)
+            trendingType =  TrendingMediaMatchable(matcher: self.allTrending)
+        case .movie:
+            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .movie)
+            trendingType = TrendingMediaMatchable(matcher: self.movieTrending)
+        case .person:
+            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .person)
+            trendingType = TrendingMediaMatchable(matcher: self.personTrending)
+        case .tv:
+            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .tv)
+            trendingType = TrendingMediaMatchable(matcher: self.tvTrending)
+        }
+
+        stub(urlRequestBuilder) { stub in
+            when(stub).getTrendingURLRequest(time: trendingTime, type: trendingType).thenReturn(matchRequest)
+        }
+
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(TrendingResult.Type.self), completion: anyClosure()).then { implementation in
+                let trending = TrendingResult(page: 1, totalPages: 10, totalResult: 50, trending: [])
+                implementation.2(.success(trending))
+            }
+        }
+
+        services.getTrending(time: time, type: type) { result in
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getTrendingURLRequest(time: trendingTime, type: trendingType)
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(TrendingResult.Type.self), completion: anyClosure())
     }
 }

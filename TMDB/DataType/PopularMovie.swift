@@ -10,14 +10,14 @@ import Foundation
 
 struct PopularMovieResult: Decodable {
     let page: Int
-    let totalPage: Int
-    let totalResult: Int
+    let totalPages: Int
+    let totalResults: Int
     let movies: [PopularMovie]
     
     enum CodingKeys: String, CodingKey {
         case page
-        case totalPage = "total_page"
-        case totalResult = "total_result"
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
         case movies = "results"
     }
 }
@@ -31,6 +31,7 @@ class PopularMovie: Decodable {
     let genreIds: [Int]
     let originalTitle: String
     let originalLanguage: String
+    let title: String
     let backdropPath: String
     let popularity: Double
     let voteCount: Int
@@ -39,10 +40,10 @@ class PopularMovie: Decodable {
     let mediaType: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, adult, overview, popularity, video
+        case id, adult, overview, popularity, video, title
         case posterPath = "poster_path"
         case releaseDate = "release_date"
-        case genreIds = "genere_ids"
+        case genreIds = "genre_ids"
         case originalTitle = "original_title"
         case originalLanguage = "original_language"
         case backdropPath = "backdrop_path"
@@ -64,6 +65,7 @@ class PopularMovie: Decodable {
         genreIds = try container.decode([Int].self, forKey: .genreIds)
         originalTitle = try container.decode(String.self, forKey: .originalTitle)
         originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
+        title = try container.decode(String.self, forKey: .title)
         backdropPath = try container.decode(String.self, forKey: .backdropPath)
         voteCount = try container.decode(Int.self, forKey: .voteCount)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)

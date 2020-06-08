@@ -100,7 +100,7 @@ class ServiceTests: XCTestCase {
         
         stub(session) { stub in
             when(stub).send(request: any(), responseType: any(PopularOnTVResult.Type.self), completion: anyClosure()).then { implementation in
-                let popularPeopleResult = PopularOnTVResult(page: 1, totalPages: 100, totalResults: 1000, onTV: [])
+                let popularPeopleResult = PopularOnTVResult()
                 implementation.2(.success(popularPeopleResult))
             }
         }

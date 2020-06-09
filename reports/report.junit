@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name='TMDBTests.xctest' tests='24' failures='0'>
+  <testsuite name='TMDBTests.ServiceTests' tests='12' failures='0'>
+    <testcase classname='TMDBTests.ServiceTests' name='testAllTrendingThisWeek' time='0.066'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testAllTrendingToday' time='0.014'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testGetMovieDetail' time='0.025'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testGetPopularMovie' time='0.020'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testGetPopularOnTV' time='0.019'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testGetPopularPeople' time='0.007'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testMovieTrendingThisWeek' time='0.015'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testMovieTrendingToday' time='0.003'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testPersonTrendingThisWeek' time='0.014'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testPersonTrendingToday' time='0.003'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testTVTrendingThisWeek' time='0.003'/>
+    <testcase classname='TMDBTests.ServiceTests' name='testTVTrendingToday' time='0.003'/>
+  </testsuite>
+  <testsuite name='TMDBTests.TestURLRequestBuilder' tests='12' failures='0'>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testMovieDetailURL' time='0.019'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testPopularMovieURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testPopularOnTVURL' time='0.013'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testPopularPeopleURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekAllTrendingURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekMovieTrendingURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekPeopleTrendingURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekTVTrendingURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayAllTrendingURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayMovieTrendingURL' time='0.013'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayPeopleTrendingURL' time='0.002'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayTVTrendingURL' time='0.002'/>
+  </testsuite>
+</testsuites>

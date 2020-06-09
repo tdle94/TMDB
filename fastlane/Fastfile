@@ -1,0 +1,40 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+setup_travis
+
+default_platform(:ios)
+$xcode_version = "~> 11.0"
+$test_scheme = "TMDB"
+
+platform :ios do
+  desc "Description of what the lane does"
+  lane :custom_lane do
+    # add actions here: https://docs.fastlane.tools/actions
+  end
+
+  before_all do
+    xcversion(version: $xcode_version)
+  end
+end
+
+lane :tests do
+  scan(scheme: $test_scheme, 
+        output_types: "junit",
+        code_coverage: true,
+        fail_build: false, 
+        derived_data_path: $derived_data_path, 
+        output_directory: "./reports")
+end

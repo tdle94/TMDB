@@ -8,10 +8,14 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class TMDBHomeViewController: UIViewController {
+    
+    // MARK: - coordinator
+    var coordinator: MainCoordinator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         // Do any additional setup after loading the view.
     }
 

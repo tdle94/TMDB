@@ -35,19 +35,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // set navigation controller
         let homeNavController = UINavigationController(rootViewController: homeVC)
         homeNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        homeNavController.tabBarItem.title = "Home"
+        homeNavController.tabBarItem.title = NSLocalizedString("Home", comment: "")
         
         let movieNavController = UINavigationController(rootViewController: movieVC)
         movieNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        movieNavController.tabBarItem.title = "Movies"
+        movieNavController.tabBarItem.title = NSLocalizedString("Movies", comment: "")
 
         let tvNavController = UINavigationController(rootViewController: tvVC)
         tvNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        tvNavController.tabBarItem.title = "TV Shows"
+        tvNavController.tabBarItem.title = NSLocalizedString("TV Shows", comment: "")
         
         let peopleNavController = UINavigationController(rootViewController: peopleVC)
         peopleNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        peopleNavController.tabBarItem.title = "People"
+        peopleNavController.tabBarItem.title = NSLocalizedString("People", comment: "")
 
         // set coordinators
         homeCoordinator = MainCoordinator(navigationController: homeNavController)

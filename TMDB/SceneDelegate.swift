@@ -15,6 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var homeCoordinator: MainCoordinator?
     var movieCoordinator: MainCoordinator?
     var tvCoordinator: MainCoordinator?
+    var peopleCoordinator: MainCoordinator?
 
     let tabBarController = UITabBarController()
 
@@ -29,6 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let homeVC = TMDBHomeViewController()
         let movieVC = TMDBMovieViewController()
         let tvVC = TMDBTelevisionViewController()
+        let peopleVC = TMDBPeopleViewController()
 
         // set navigation controller
         let homeNavController = UINavigationController(rootViewController: homeVC)
@@ -42,17 +44,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tvNavController = UINavigationController(rootViewController: tvVC)
         tvNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         tvNavController.tabBarItem.title = "TV Shows"
+        
+        let peopleNavController = UINavigationController(rootViewController: peopleVC)
+        peopleNavController.navigationBar.barTintColor = Constant.Color.primaryColor
+        peopleNavController.tabBarItem.title = "People"
 
         // set coordinators
         homeCoordinator = MainCoordinator(navigationController: homeNavController)
         movieCoordinator = MainCoordinator(navigationController: movieNavController)
         tvCoordinator = MainCoordinator(navigationController: tvNavController)
+        peopleCoordinator = MainCoordinator(navigationController: peopleNavController)
         
         // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
         tabBarController.tabBar.unselectedItemTintColor = Constant.Color.secondaryColor
         tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
-        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController], animated: true)
+        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController, peopleNavController], animated: true)
 
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController

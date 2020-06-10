@@ -12,7 +12,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    var coordinator: MainCoordinator?
+    var homeCoordinator: MainCoordinator?
+    var movieCoordinator: MainCoordinator?
 
     let tabBarController = UITabBarController()
 
@@ -22,15 +23,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let win = UIWindow(windowScene: windowScene)
-        let homeVC = TMDBHomeViewController()
-        let navController = UINavigationController(rootViewController: homeVC)
-        navController.navigationBar.barTintColor = Constant.Color.primaryColor
-        navController.tabBarItem.title = "Home"
 
-        coordinator = MainCoordinator(navigationController: navController)
+        // set view controller
+        let homeVC = TMDBHomeViewController()
+        let movieVC = TMDBMovieViewController()
+
+        // set navigation controller
+        let homeNavController = UINavigationController(rootViewController: homeVC)
+        homeNavController.navigationBar.barTintColor = Constant.Color.primaryColor
+        homeNavController.tabBarItem.title = "Home"
+        
+        let movieNavController = UINavigationController(rootViewController: movieVC)
+        movieNavController.navigationBar.barTintColor = Constant.Color.primaryColor
+        movieNavController.tabBarItem.title = "Movie"
+
+        // set coordinators
+        homeCoordinator = MainCoordinator(navigationController: homeNavController)
+        movieCoordinator = MainCoordinator(navigationController: movieNavController)
+        
+        // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
-        tabBarController.tabBar.tintColor = Constant.Color.secondaryColor
-        tabBarController.setViewControllers([navController], animated: true)
+        tabBarController.tabBar.unselectedItemTintColor = Constant.Color.secondaryColor
+        tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
+        tabBarController.setViewControllers([homeNavController, movieNavController], animated: true)
+
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController
         window = win

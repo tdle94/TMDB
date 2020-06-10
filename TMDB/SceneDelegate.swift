@@ -14,6 +14,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var coordinator: MainCoordinator?
 
+    let tabBarController = UITabBarController()
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -22,11 +24,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let win = UIWindow(windowScene: windowScene)
         let homeVC = TMDBHomeViewController()
         let navController = UINavigationController(rootViewController: homeVC)
-        
+        navController.navigationBar.barTintColor = Constant.Color.primaryColor
+        navController.tabBarItem.title = "Home"
+
         coordinator = MainCoordinator(navigationController: navController)
-        
+        tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
+        tabBarController.tabBar.tintColor = Constant.Color.secondaryColor
+        tabBarController.setViewControllers([navController], animated: true)
         win.makeKeyAndVisible()
-        win.rootViewController = navController
+        win.rootViewController = tabBarController
         window = win
     }
 

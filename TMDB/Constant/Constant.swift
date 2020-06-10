@@ -11,9 +11,9 @@ import UIKit
 
 struct Constant {
     struct Color {
-        static let primaryColor = UIColor(displayP3Red: 13, green: 37, blue: 63, alpha: 1)
-        static let secondaryColor = UIColor(displayP3Red: 1, green: 180, blue: 228, alpha: 1)
-        static let tertiaryColor = UIColor(displayP3Red: 144, green: 206, blue:  161, alpha: 1)
-        static let backgroundColor = UIColor(displayP3Red: 235, green: 235, blue:  240, alpha: 1)
+        static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)
+        static let secondaryColor = UIColor(displayP3Red: 1/255, green: 180/255, blue: 228/255, alpha: 1)
+        static let tertiaryColor = UIColor(displayP3Red: 144/255, green: 206/255, blue:  161/255, alpha: 1)
+        static let backgroundColor = UIColor(displayP3Red: 235/255, green: 235/255, blue:  240/255, alpha: 1)
     }
 }

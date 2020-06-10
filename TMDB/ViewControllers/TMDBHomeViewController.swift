@@ -15,7 +15,7 @@ class TMDBHomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = Constant.Color.backgroundColor
         // Do any additional setup after loading the view.
     }
 

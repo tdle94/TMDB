@@ -14,6 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var homeCoordinator: MainCoordinator?
     var movieCoordinator: MainCoordinator?
+    var tvCoordinator: MainCoordinator?
 
     let tabBarController = UITabBarController()
 
@@ -27,6 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // set view controller
         let homeVC = TMDBHomeViewController()
         let movieVC = TMDBMovieViewController()
+        let tvVC = TMDBTelevisionViewController()
 
         // set navigation controller
         let homeNavController = UINavigationController(rootViewController: homeVC)
@@ -35,17 +37,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let movieNavController = UINavigationController(rootViewController: movieVC)
         movieNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        movieNavController.tabBarItem.title = "Movie"
+        movieNavController.tabBarItem.title = "Movies"
+
+        let tvNavController = UINavigationController(rootViewController: tvVC)
+        tvNavController.navigationBar.barTintColor = Constant.Color.primaryColor
+        tvNavController.tabBarItem.title = "TV Shows"
 
         // set coordinators
         homeCoordinator = MainCoordinator(navigationController: homeNavController)
         movieCoordinator = MainCoordinator(navigationController: movieNavController)
+        tvCoordinator = MainCoordinator(navigationController: tvNavController)
         
         // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
         tabBarController.tabBar.unselectedItemTintColor = Constant.Color.secondaryColor
         tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
-        tabBarController.setViewControllers([homeNavController, movieNavController], animated: true)
+        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController], animated: true)
 
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController

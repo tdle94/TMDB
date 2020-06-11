@@ -8,22 +8,31 @@
 
 import Foundation
 
-struct UserSetting: UserSettingProtocol {
+struct TMDBUserSetting: TMDBUserSettingProtocol {
     var language: String? {
         get {
-            UserDefaults.
+            return UserDefaults.standard.object(forKey: Constant.UserSetting.language) as? String
         }
         set {
-            
+            UserDefaults.standard.setValue(newValue, forKey: Constant.UserSetting.language)
+        }
+    }
+    
+    var country: String? {
+        get {
+            return UserDefaults.standard.object(forKey: Constant.UserSetting.country) as? String
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: Constant.UserSetting.country)
         }
     }
     
     var region: String? {
         get {
-            
+            return UserDefaults.standard.object(forKey: Constant.UserSetting.region) as? String
         }
         set {
-            
+            UserDefaults.standard.setValue(newValue, forKey: Constant.UserSetting.region)
         }
     }
 }

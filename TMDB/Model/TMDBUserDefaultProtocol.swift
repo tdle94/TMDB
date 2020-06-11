@@ -8,7 +8,8 @@
 
 import Foundation
 
-protocol UserSettingProtocol {
+protocol TMDBUserSettingProtocol {
     var language: String? { get set }
+    var country: String? { get set }
     var region: String? { get set }
 }

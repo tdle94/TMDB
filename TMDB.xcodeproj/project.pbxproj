@@ -198,13 +198,21 @@
 		342E66392489BB33003B5CB8 /* TMDBTests */ = {
 			isa = PBXGroup;
 			children = (
+				3477B3E72492E5BA0067BC7E /* TMDBServiceTests */,
+				348F63742491D7E000245BE6 /* TMDBRepositoryTests.swift */,
 				34D3E7EE248D55C4000F5D83 /* GeneratedMocks.swift */,
 				342E663C2489BB33003B5CB8 /* Info.plist */,
-				34D3E7EA248D4B9B000F5D83 /* TMDBServiceTests.swift */,
-				34D3E7F0248D6D68000F5D83 /* TestURLRequestBuilder.swift */,
-				348F63742491D7E000245BE6 /* TMDBRepositoryTests.swift */,
 			);
 			path = TMDBTests;
+			sourceTree = "<group>";
+		};
+		3477B3E72492E5BA0067BC7E /* TMDBServiceTests */ = {
+			isa = PBXGroup;
+			children = (
+				34D3E7EA248D4B9B000F5D83 /* TMDBServiceTests.swift */,
+				34D3E7F0248D6D68000F5D83 /* TestURLRequestBuilder.swift */,
+			);
+			path = TMDBServiceTests;
 			sourceTree = "<group>";
 		};
 		348F636E2491CD5E00245BE6 /* SubServices */ = {

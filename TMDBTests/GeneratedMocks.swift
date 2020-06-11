@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/Services/Session.swift at 2020-06-10 04:16:42 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-11 02:04:40 +0000
 
 //
 //  Session.swift
@@ -14,19 +14,19 @@ import Cuckoo
 import Foundation
 
 
- class MockSessionProtocol: SessionProtocol, Cuckoo.ProtocolMock {
+ class MockTMDBSessionProtocol: TMDBSessionProtocol, Cuckoo.ProtocolMock {
     
-     typealias MocksType = SessionProtocol
+     typealias MocksType = TMDBSessionProtocol
     
-     typealias Stubbing = __StubbingProxy_SessionProtocol
-     typealias Verification = __VerificationProxy_SessionProtocol
+     typealias Stubbing = __StubbingProxy_TMDBSessionProtocol
+     typealias Verification = __VerificationProxy_TMDBSessionProtocol
 
      let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: SessionProtocol?
+    private var __defaultImplStub: TMDBSessionProtocol?
 
-     func enableDefaultImplementation(_ stub: SessionProtocol) {
+     func enableDefaultImplementation(_ stub: TMDBSessionProtocol) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -53,7 +53,7 @@ import Foundation
     }
     
 
-	 struct __StubbingProxy_SessionProtocol: Cuckoo.StubbingProxy {
+	 struct __StubbingProxy_TMDBSessionProtocol: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
 	
 	     init(manager: Cuckoo.MockManager) {
@@ -63,12 +63,12 @@ import Foundation
 	    
 	    func send<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, T: Decodable>(request: M1, responseType: M2, completion: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(URLRequest, T.Type, (Result<T, Error>) -> Void)> where M1.MatchedType == URLRequest, M2.MatchedType == T.Type, M3.MatchedType == (Result<T, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(URLRequest, T.Type, (Result<T, Error>) -> Void)>] = [wrap(matchable: request) { $0.0 }, wrap(matchable: responseType) { $0.1 }, wrap(matchable: completion) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockSessionProtocol.self, method: "send(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBSessionProtocol.self, method: "send(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
 	}
 
-	 struct __VerificationProxy_SessionProtocol: Cuckoo.VerificationProxy {
+	 struct __VerificationProxy_TMDBSessionProtocol: Cuckoo.VerificationProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
 	    private let callMatcher: Cuckoo.CallMatcher
 	    private let sourceLocation: Cuckoo.SourceLocation
@@ -91,7 +91,7 @@ import Foundation
 	}
 }
 
- class SessionProtocolStub: SessionProtocol {
+ class TMDBSessionProtocolStub: TMDBSessionProtocol {
     
 
     
@@ -104,7 +104,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/Services/URLRequestBuilder.swift at 2020-06-10 04:16:42 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-11 02:04:40 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -120,19 +120,19 @@ import Cuckoo
 import Foundation
 
 
- class MockURLRequestBuilderProtocol: URLRequestBuilderProtocol, Cuckoo.ProtocolMock {
+ class MockTMDBURLRequestBuilderProtocol: TMDBURLRequestBuilderProtocol, Cuckoo.ProtocolMock {
     
-     typealias MocksType = URLRequestBuilderProtocol
+     typealias MocksType = TMDBURLRequestBuilderProtocol
     
-     typealias Stubbing = __StubbingProxy_URLRequestBuilderProtocol
-     typealias Verification = __VerificationProxy_URLRequestBuilderProtocol
+     typealias Stubbing = __StubbingProxy_TMDBURLRequestBuilderProtocol
+     typealias Verification = __VerificationProxy_TMDBURLRequestBuilderProtocol
 
      let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: URLRequestBuilderProtocol?
+    private var __defaultImplStub: TMDBURLRequestBuilderProtocol?
 
-     func enableDefaultImplementation(_ stub: URLRequestBuilderProtocol) {
+     func enableDefaultImplementation(_ stub: TMDBURLRequestBuilderProtocol) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -219,7 +219,7 @@ import Foundation
     }
     
 
-	 struct __StubbingProxy_URLRequestBuilderProtocol: Cuckoo.StubbingProxy {
+	 struct __StubbingProxy_TMDBURLRequestBuilderProtocol: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
 	
 	     init(manager: Cuckoo.MockManager) {
@@ -229,32 +229,32 @@ import Foundation
 	    
 	    func getPopularMovieURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(page: M1, language: M2, region: M3) -> Cuckoo.ProtocolStubFunction<(Int, String?, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String, M3.OptionalMatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }, wrap(matchable: region) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockURLRequestBuilderProtocol.self, method: "getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
 	    func getPopularTVURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(page: M1, language: M2) -> Cuckoo.ProtocolStubFunction<(Int, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockURLRequestBuilderProtocol.self, method: "getPopularTVURLRequest(page: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getPopularTVURLRequest(page: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
 	    func getPopularPeopleURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(page: M1, language: M2) -> Cuckoo.ProtocolStubFunction<(Int, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockURLRequestBuilderProtocol.self, method: "getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
 	    func getTrendingURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(time: M1, type: M2) -> Cuckoo.ProtocolStubFunction<(TrendingTime, TrendingMediaType), URLRequest> where M1.MatchedType == TrendingTime, M2.MatchedType == TrendingMediaType {
 	        let matchers: [Cuckoo.ParameterMatcher<(TrendingTime, TrendingMediaType)>] = [wrap(matchable: time) { $0.0 }, wrap(matchable: type) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockURLRequestBuilderProtocol.self, method: "getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
 	    func getMovieDetailURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(id: M1, language: M2) -> Cuckoo.ProtocolStubFunction<(Int, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?)>] = [wrap(matchable: id) { $0.0 }, wrap(matchable: language) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockURLRequestBuilderProtocol.self, method: "getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
 	}
 
-	 struct __VerificationProxy_URLRequestBuilderProtocol: Cuckoo.VerificationProxy {
+	 struct __VerificationProxy_TMDBURLRequestBuilderProtocol: Cuckoo.VerificationProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
 	    private let callMatcher: Cuckoo.CallMatcher
 	    private let sourceLocation: Cuckoo.SourceLocation
@@ -301,7 +301,7 @@ import Foundation
 	}
 }
 
- class URLRequestBuilderProtocolStub: URLRequestBuilderProtocol {
+ class TMDBURLRequestBuilderProtocolStub: TMDBURLRequestBuilderProtocol {
     
 
     

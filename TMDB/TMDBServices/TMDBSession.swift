@@ -8,11 +8,11 @@
 
 import Foundation
 
-protocol SessionProtocol {
+protocol TMDBSessionProtocol {
     func send<T: Decodable>(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)
 }
 
-struct Session: SessionProtocol {
+struct TMDBSession: TMDBSessionProtocol {
 
     enum APIError: Error {
         case noURLReponse

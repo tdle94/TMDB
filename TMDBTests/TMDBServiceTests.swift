@@ -12,11 +12,11 @@ import Quick
 import Nimble
 import Cuckoo
 
-class ServiceTests: XCTestCase {
+class TMDBServiceTests: XCTestCase {
 
-    let session = MockSessionProtocol()
-    let urlRequestBuilder = MockURLRequestBuilderProtocol()
-    var services: Services!
+    let session = MockTMDBSessionProtocol()
+    let urlRequestBuilder = MockTMDBURLRequestBuilderProtocol()
+    var services: TMDBServices!
     
     struct TrendingTimeMatchable: Matchable {
         var matcher: ParameterMatcher<TrendingTime>
@@ -37,7 +37,7 @@ class ServiceTests: XCTestCase {
     let personTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .person })
 
     override func setUp() {
-        services = Services(session: session, urlRequestBuilder: urlRequestBuilder)
+        services = TMDBServices(session: session, urlRequestBuilder: urlRequestBuilder)
     }
 
     // MARK: - popular

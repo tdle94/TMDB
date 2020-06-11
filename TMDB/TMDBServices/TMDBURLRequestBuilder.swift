@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol URLRequestBuilderProtocol {
+protocol TMDBURLRequestBuilderProtocol {
     // MARK: - popular
 
     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest
@@ -24,7 +24,7 @@ protocol URLRequestBuilderProtocol {
     func getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest
 }
 
-extension URLRequestBuilderProtocol {
+extension TMDBURLRequestBuilderProtocol {
     // MARK: - popular
 
     func getPopularMovieURLRequest(page: Int, language: String? = "en-US", region: String? = nil) -> URLRequest {
@@ -52,7 +52,7 @@ extension URLRequestBuilderProtocol {
     }
 }
 
-struct URLRequestBuilder: URLRequestBuilderProtocol {
+struct URLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     let apiKey = "6823a37cea296ab67c0a2a6ce3cb4ec5"
 

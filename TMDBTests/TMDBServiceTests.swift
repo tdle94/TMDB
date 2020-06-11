@@ -44,7 +44,7 @@ class TMDBServiceTests: XCTestCase {
 
     func testGetPopularMovie() {
         let expectation = self.expectation(description: "")
-        let matchRequest = URLRequestBuilder().getPopularMovieURLRequest(page: 1)
+        let matchRequest = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1)
         
         stub(urlRequestBuilder) { stub in
             when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: isNil()).thenReturn(matchRequest)
@@ -68,7 +68,7 @@ class TMDBServiceTests: XCTestCase {
     
     func testGetPopularPeople() {
         let expectation = self.expectation(description: "")
-        let matchRequest = URLRequestBuilder().getPopularPeopleURLRequest(page: 1)
+        let matchRequest = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1)
         
         stub(urlRequestBuilder) { stub in
             when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(matchRequest)
@@ -92,7 +92,7 @@ class TMDBServiceTests: XCTestCase {
     
     func testGetPopularOnTV() {
         let expectation = self.expectation(description: "")
-        let matchRequest = URLRequestBuilder().getPopularTVURLRequest(page: 1)
+        let matchRequest = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1)
         
         stub(urlRequestBuilder) { stub in
             when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(matchRequest)
@@ -117,7 +117,7 @@ class TMDBServiceTests: XCTestCase {
     // MARK: - detail
     func testGetMovieDetail() {
         let expectation = self.expectation(description: "")
-        let matchRequest = URLRequestBuilder().getMovieDetailURLRequest(id: 3)
+        let matchRequest = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3)
         
         stub(urlRequestBuilder) { stub in
             when(stub).getMovieDetailURLRequest(id: 3, language: "en-US").thenReturn(matchRequest)
@@ -181,16 +181,16 @@ class TMDBServiceTests: XCTestCase {
         
         switch type {
         case .all:
-            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .all)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .all)
             trendingType =  TrendingMediaMatchable(matcher: self.allTrending)
         case .movie:
-            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .movie)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .movie)
             trendingType = TrendingMediaMatchable(matcher: self.movieTrending)
         case .person:
-            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .person)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .person)
             trendingType = TrendingMediaMatchable(matcher: self.personTrending)
         case .tv:
-            matchRequest = URLRequestBuilder().getTrendingURLRequest(time: time, type: .tv)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .tv)
             trendingType = TrendingMediaMatchable(matcher: self.tvTrending)
         }
 

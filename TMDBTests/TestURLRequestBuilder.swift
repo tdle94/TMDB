@@ -12,7 +12,7 @@ import Nimble
 import Cuckoo
 
 class TestURLRequestBuilder: XCTestCase {
-    let urlRequestBuilder = URLRequestBuilder()
+    let urlRequestBuilder = TMDBURLRequestBuilder()
 
     // MARK: - popular
     func testPopularMovieURL() {

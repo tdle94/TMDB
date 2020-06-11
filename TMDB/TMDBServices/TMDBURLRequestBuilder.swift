@@ -52,7 +52,7 @@ extension TMDBURLRequestBuilderProtocol {
     }
 }
 
-struct URLRequestBuilder: TMDBURLRequestBuilderProtocol {
+struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     let apiKey = "6823a37cea296ab67c0a2a6ce3cb4ec5"
 

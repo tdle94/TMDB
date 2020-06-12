@@ -40,11 +40,11 @@ class PopularPeopleResult: Object, Decodable {
 @objcMembers
 class PopularPeople: Object, Decodable {
     dynamic var id: Int = 0
-    dynamic var profilePath: String = ""
+    dynamic var profilePath: String?
     dynamic var adult: Bool = false
     dynamic var name: String = ""
     dynamic var popularity: Double = 0.0
-    let knownFor: List< KnownFor> = List<KnownFor>()
+    let knownFor: List<KnownFor> = List<KnownFor>()
     
     enum CodingKeys: String, CodingKey {
         case id, adult, name, popularity
@@ -56,11 +56,13 @@ class PopularPeople: Object, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         adult = try container.decode(Bool.self, forKey: .adult)
-        profilePath = try container.decode(String.self, forKey: .profilePath)
+        profilePath = try container.decodeIfPresent(String.self, forKey: .profilePath)
         name = try container.decode(String.self, forKey: .name)
         popularity = try container.decode(Double.self, forKey: .popularity)
-        let knownFor = try container.decode(List<KnownFor>.self, forKey: .knownFor)
-        self.knownFor.append(objectsIn: knownFor)
+
+        if let knownFor = try? container.decode(List<KnownFor>.self, forKey: .knownFor) {
+            self.knownFor.append(objectsIn: knownFor)
+        }
     }
     
     override static func primaryKey() -> String? {

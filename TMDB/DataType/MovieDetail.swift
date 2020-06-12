@@ -126,18 +126,6 @@ class MovieDetail: Object, Decodable {
     override class func primaryKey() -> String? {
         return "id"
     }
-
-    func save() -> Error? {
-        let realm = try! Realm()
-        do {
-            try realm.write {
-                realm.add(self)
-            }
-        } catch let error {
-            return error
-        }
-        return nil
-    }
 }
 
 @objcMembers

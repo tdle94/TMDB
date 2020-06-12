@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import RealmSwift
 class TMDBHomeViewController: UIViewController {
     
     // MARK: - coordinator
@@ -17,7 +17,10 @@ class TMDBHomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constant.Color.backgroundColor
-
+        let realm = try! Realm()
+        try! realm.write {
+            realm.deleteAll()
+        }
     }
 }
 

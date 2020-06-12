@@ -75,11 +75,11 @@ class LocalDataSourceTests: QuickSpec {
             it("save and retrieve movie to realm correctly") {
                 let movieDetail = MovieDetail(id: id, adult: adult, budget: budget, homepage: homepage, overview: overview, popularity: popularity, revenue: revenue, runtime: runtime, status: status, tagline: tagline, title: title, video: video, backdropPath: backdropPath, imdbId: imdbId, originalLanguage: originalLanguage, originalTitle: originalTitle, releaseDate: releaseDate, voteAverage: voteAverage, voteCount: voteCount)
                 
-                let error = movieDetail.save()
-                expect(error).to(beNil())
-                
                 let realm = try! Realm()
-                let movieDetailFromRealm = realm.object(ofType: MovieDetail.self, forPrimaryKey: 1)
+                try! realm.write {
+                    realm.add(movieDetail)
+                }
+                let movieDetailFromRealm = realm.object(ofType: MovieDetail.self, forPrimaryKey: id)
 
                 expect(movieDetailFromRealm?.id) == id
                 expect(movieDetailFromRealm?.adult) == adult

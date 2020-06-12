@@ -11,6 +11,7 @@ import RealmSwift
 
 protocol TMDBLocalDataSourceProtocol {
     func getMovieDetail(id: Int) -> MovieDetail?
+    func save(movie: MovieDetail) -> Error?
 }
 
 struct TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
@@ -19,5 +20,16 @@ struct TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func getMovieDetail(id: Int) -> MovieDetail? {
         return realm.object(ofType: MovieDetail.self, forPrimaryKey: id)
+    }
+
+    func save(movie: MovieDetail) -> Error? {
+        do {
+            try realm.write {
+                realm.add(movie)
+            }
+        } catch let error {
+            return error
+        }
+        return nil
     }
 }

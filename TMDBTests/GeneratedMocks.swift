@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-12 18:00:34 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-12 22:49:04 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -53,6 +53,21 @@ import RealmSwift
         
     }
     
+    
+    
+     func save(movie: MovieDetail) -> Error? {
+        
+    return cuckoo_manager.call("save(movie: MovieDetail) -> Error?",
+            parameters: (movie),
+            escapingParameters: (movie),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.save(movie: movie))
+        
+    }
+    
 
 	 struct __StubbingProxy_TMDBLocalDataSourceProtocol: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -65,6 +80,11 @@ import RealmSwift
 	    func getMovieDetail<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.ProtocolStubFunction<(Int), MovieDetail?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getMovieDetail(id: Int) -> MovieDetail?", parameterMatchers: matchers))
+	    }
+	    
+	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.ProtocolStubFunction<(MovieDetail), Error?> where M1.MatchedType == MovieDetail {
+	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "save(movie: MovieDetail) -> Error?", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -89,6 +109,12 @@ import RealmSwift
 	        return cuckoo_manager.verify("getMovieDetail(id: Int) -> MovieDetail?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
+	    @discardableResult
+	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.__DoNotUse<(MovieDetail), Error?> where M1.MatchedType == MovieDetail {
+	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
+	        return cuckoo_manager.verify("save(movie: MovieDetail) -> Error?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
 	}
 }
 
@@ -102,10 +128,14 @@ import RealmSwift
         return DefaultValueRegistry.defaultValue(for: (MovieDetail?).self)
     }
     
+     func save(movie: MovieDetail) -> Error?  {
+        return DefaultValueRegistry.defaultValue(for: (Error?).self)
+    }
+    
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-12 18:00:34 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-12 22:49:04 +0000
 
 //
 //  Session.swift
@@ -211,7 +241,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-12 18:00:34 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-12 22:49:04 +0000
 
 //
 //  URLRequestBuilder.swift

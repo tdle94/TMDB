@@ -5,6 +5,7 @@
 //  Created by Tuyen Le on 10.06.20.
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
+import Foundation
 
 protocol TMDBRepositoryProtocol {
     func getMovieDetail(id: Int, completion: @escaping (Result<MovieDetail, Error>) -> Void)
@@ -15,8 +16,8 @@ protocol TMDBRepositoryProtocol {
 }
 
 struct TMDBRepository: TMDBRepositoryProtocol {
-    let services: TMDBServices  = TMDBServices(session: TMDBSession(), urlRequestBuilder: TMDBURLRequestBuilder())
-    let localDataSource: TMDBLocalDataSourceProtocol = TMDBLocalDataSource()
+    let services: TMDBServices
+    let localDataSource: TMDBLocalDataSourceProtocol
 
     func getMovieDetail(id: Int, completion: @escaping (Result<MovieDetail, Error>) -> Void) {
         if let movieDetail = localDataSource.getMovieDetail(id: id) {
@@ -25,15 +26,17 @@ struct TMDBRepository: TMDBRepositoryProtocol {
         }
 
         services.getMovieDetail(id: id) { result in
-            do {
-                let movie = try result.get()
-                if let error = movie.save() {
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movie):
+                    if let error = self.localDataSource.save(movie: movie) {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(movie))
+                    }
+                case .failure(let error):
                     completion(.failure(error))
-                } else {
-                    completion(.success(movie))
                 }
-            } catch let error {
-                completion(.failure(error))
             }
         }
     }

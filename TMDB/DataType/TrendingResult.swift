@@ -20,7 +20,7 @@ class TrendingResult: Object, Decodable {
         case page
         case totalPages = "total_pages"
         case totalResults = "total_results"
-        case trending = "result"
+        case trending = "results"
     }
     
     required init(from decoder: Decoder) throws {
@@ -28,7 +28,6 @@ class TrendingResult: Object, Decodable {
         page = try container.decode(Int.self, forKey: .page)
         totalPages = try container.decode(Int.self, forKey: .totalPages)
         totalResults = try container.decode(Int.self, forKey: .totalResults)
-
         let trending = try container.decode(List<Trending>.self, forKey: .trending)
         self.trending.append(objectsIn: trending)
     }
@@ -42,6 +41,9 @@ class TrendingResult: Object, Decodable {
 class Trending: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var mediaType: String = ""
+    dynamic var people: PopularPeople?
+    dynamic var tv: PopularOnTV?
+    dynamic var movie: PopularMovie?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -52,6 +54,14 @@ class Trending: Object, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         mediaType = try container.decode(String.self, forKey: .mediaType)
+        
+        if mediaType == "movie" {
+            movie = try PopularMovie(from: decoder)
+        } else if mediaType == "tv" {
+            tv = try PopularOnTV(from: decoder)
+        } else {
+            people = try PopularPeople(from: decoder)
+        }
     }
 
     required init() {

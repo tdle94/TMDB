@@ -101,7 +101,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         
         switch time {
         case .today:
-            path += "today"
+            path += "day"
         case .week:
             path += "week"
         }
@@ -113,7 +113,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         urlComponent.scheme = "https"
         urlComponent.host = "api.themoviedb.org"
         urlComponent.path = path
-        urlComponent.queryItems = queryItems
+        urlComponent.queryItems = queryItems ?? []
         urlComponent.queryItems?.append(URLQueryItem(name: "api_key", value: apiKey))
         return URLRequest(url: urlComponent.url!)
     }

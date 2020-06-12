@@ -170,4 +170,71 @@ class TMDBRepositoryTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
     }
+
+    // MARK: - trending
+    private func setUpTrendingTest(time: TrendingTime, type: TrendingMediaType) {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: type)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        let trendingTimeMatcher = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == time })
+        let trendingTypeMatcher = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == type })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure()).thenDoNothing()
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        repository.getTrending(time: time, type: type) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        session.send(request: request, responseType: TrendingResult.self) { result in
+            expectation.fulfill()
+        }
+        
+        let _ = requestBuilder.getTrendingURLRequest(time: time, type: type)
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher)
+    }
+
+    func testAllTrendingToday() {
+        self.setUpTrendingTest(time: .today, type: .all)
+    }
+    
+    func testMovieTrendingToday() {
+        self.setUpTrendingTest(time: .today, type: .movie)
+    }
+    
+    func testPersonTrendingToday() {
+        self.setUpTrendingTest(time: .today, type: .person)
+    }
+    
+    func testTVTrendingToday() {
+        self.setUpTrendingTest(time: .today, type: .tv)
+    }
+    
+    func testAllTrendingThisWeek() {
+        self.setUpTrendingTest(time: .week, type: .all)
+    }
+    
+    func testMovieTrendingThisWeek() {
+        self.setUpTrendingTest(time: .week, type: .movie)
+    }
+    
+    func testPersonTrendingThisWeek() {
+        self.setUpTrendingTest(time: .week, type: .person)
+    }
+    
+    func testTVTrendingThisWeek() {
+        self.setUpTrendingTest(time: .week, type: .tv)
+    }
 }

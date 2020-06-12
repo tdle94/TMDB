@@ -13,25 +13,26 @@ import RealmSwift
 class MovieDetail: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var adult: Bool = false
-    dynamic var backdropPath: String = ""
+    dynamic var backdropPath: String?
     dynamic var budget: Double = 0.0
-    dynamic var homepage: String = ""
-    dynamic var imdbId: String = ""
+    dynamic var homepage: String?
+    dynamic var imdbId: String?
     dynamic var originalLanguage: String = ""
     dynamic var originalTitle: String = ""
-    dynamic var overview: String = ""
+    dynamic var overview: String?
     dynamic var popularity: Double = 0.0
-    dynamic var posterPath: String = ""
+    dynamic var posterPath: String?
     dynamic var releaseDate: String = ""
     dynamic var revenue: Double = 0.0
     dynamic var runtime: Int = 0
     dynamic var status: String = ""
-    dynamic var tagline: String = ""
+    var tagline: String?
     dynamic var title: String = ""
     dynamic var video: Bool = false
     dynamic var voteAverage: Double = 0.0
     dynamic var voteCount: Int = 0
-    let genres: List<Int> = List<Int>()
+    dynamic var belongToCollection: Bool?
+    let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()
     let productionCountries: List<ProductionCountry> = List<ProductionCountry>()
@@ -49,6 +50,7 @@ class MovieDetail: Object, Decodable {
         case spokenLanguages = "spoken_languages"
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+        case belongToCollection = "belongs_to_collection"
     }
 
     required init(from decoder: Decoder) throws {
@@ -56,25 +58,26 @@ class MovieDetail: Object, Decodable {
         id = try container.decode(Int.self, forKey: .id)
         adult = try container.decode(Bool.self, forKey: .adult)
         budget = try container.decode(Double.self, forKey: .budget)
-        homepage = try container.decode(String.self, forKey: .homepage)
-        overview = try container.decode(String.self, forKey: .overview)
+        homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+        overview = try container.decodeIfPresent(String.self, forKey: .overview)
         popularity = try container.decode(Double.self, forKey: .popularity)
         revenue = try container.decode(Double.self, forKey: .revenue)
-        runtime = try container.decode(Int.self, forKey: .runtime)
+        runtime = try container.decodeIfPresent(Int.self, forKey: .runtime) ?? 0
         status = try container.decode(String.self, forKey: .status)
-        tagline = try container.decode(String.self, forKey: .tagline)
+        tagline = try container.decodeIfPresent(String.self, forKey: .tagline)
         title = try container.decode(String.self, forKey: .title)
         video = try container.decode(Bool.self, forKey: .video)
-        backdropPath = try container.decode(String.self, forKey: .backdropPath)
-        imdbId = try container.decode(String.self, forKey: .imdbId)
+        backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
+        imdbId = try container.decodeIfPresent(String.self, forKey: .imdbId)
         originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
         originalTitle = try container.decode(String.self, forKey: .originalTitle)
-        posterPath = try container.decode(String.self, forKey: .posterPath)
+        posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
         releaseDate = try container.decode(String.self, forKey: .releaseDate)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         voteCount = try container.decode(Int.self, forKey: .voteCount)
+        belongToCollection = try container.decodeIfPresent(Bool.self, forKey: .belongToCollection)
 
-        let genres = try container.decode(List<Int>.self, forKey: .genres)
+        let genres = try container.decode(List<Genre>.self, forKey: .genres)
         self.genres.append(objectsIn: genres)
 
         let spokenLanguages = try container.decode(List<SpokenLanguage>.self, forKey: .spokenLanguages)
@@ -138,6 +141,16 @@ class MovieDetail: Object, Decodable {
 }
 
 @objcMembers
+class Genre: Object, Decodable {
+    dynamic var id: Int = 0
+    dynamic var name: String = ""
+
+    override class func primaryKey() -> String? {
+        return "id"
+    }
+}
+
+@objcMembers
 class SpokenLanguage: Object, Decodable {
     dynamic var iso6391: String = ""
     dynamic var name: String = ""
@@ -182,7 +195,7 @@ class ProductionCountry: Object, Decodable {
 @objcMembers
 class ProductionCompany: Object, Decodable {
     dynamic var id: Int = 0
-    dynamic var logoPath: String = ""
+    dynamic var logoPath: String?
     dynamic var name: String = ""
     dynamic var originCountry: String = ""
 
@@ -196,7 +209,7 @@ class ProductionCompany: Object, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
-        logoPath = try container.decode(String.self, forKey: .logoPath)
+        logoPath = try container.decodeIfPresent(String.self, forKey: .logoPath)
         originCountry = try container.decode(String.self, forKey: .originCountry)
     }
 

@@ -42,9 +42,9 @@ class PopularPeople: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var profilePath: String = ""
     dynamic var adult: Bool = false
-    let knownFor: List<PopularMovie> = List<PopularMovie>()
     dynamic var name: String = ""
     dynamic var popularity: Double = 0.0
+    let knownFor: List< KnownFor> = List<KnownFor>()
     
     enum CodingKeys: String, CodingKey {
         case id, adult, name, popularity
@@ -55,11 +55,11 @@ class PopularPeople: Object, Decodable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
-        profilePath = try container.decode(String.self, forKey: .profilePath)
         adult = try container.decode(Bool.self, forKey: .adult)
+        profilePath = try container.decode(String.self, forKey: .profilePath)
         name = try container.decode(String.self, forKey: .name)
         popularity = try container.decode(Double.self, forKey: .popularity)
-        let knownFor = try container.decode(List<PopularMovie>.self, forKey: .knownFor)
+        let knownFor = try container.decode(List<KnownFor>.self, forKey: .knownFor)
         self.knownFor.append(objectsIn: knownFor)
     }
     
@@ -67,6 +67,32 @@ class PopularPeople: Object, Decodable {
         return "id"
     }
     
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
+class KnownFor: Object, Decodable {
+    dynamic var mediaType: String = ""
+    dynamic var popularMovie: PopularMovie?
+    dynamic var popularTV: PopularOnTV?
+    
+    enum CodingKeys: String, CodingKey {
+        case mediaType = "media_type"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        mediaType = try container.decode(String.self, forKey: .mediaType)
+
+        if mediaType == "movie" {
+            popularMovie = try PopularMovie(from: decoder)
+        } else {
+            popularTV = try PopularOnTV(from: decoder)
+        }
+    }
+
     required init() {
         super.init()
     }

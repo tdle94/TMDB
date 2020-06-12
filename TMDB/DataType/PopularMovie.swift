@@ -42,7 +42,7 @@ class PopularMovieResult: Object, Decodable {
 @objcMembers
 class PopularMovie: Object, Decodable {
     dynamic var id: Int = 0
-    dynamic var posterPath: String = ""
+    var posterPath: String?
     dynamic var adult: Bool = false
     dynamic var overview: String = ""
     dynamic var releaseDate: String = ""
@@ -50,12 +50,12 @@ class PopularMovie: Object, Decodable {
     dynamic var originalTitle: String = ""
     dynamic var originalLanguage: String = ""
     dynamic var title: String = ""
-    dynamic var backdropPath: String = ""
+    var backdropPath: String?
     dynamic var popularity: Double = 0.0
     dynamic var voteCount: Int = 0
     dynamic var video: Bool = false
     dynamic var voteAverage: Double = 0.0
-    dynamic var mediaType: String? = nil
+    dynamic var mediaType: String?
     
     enum CodingKeys: String, CodingKey {
         case id, adult, overview, popularity, video, title
@@ -73,22 +73,26 @@ class PopularMovie: Object, Decodable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
+        if container.contains(.popularity) {
+            popularity = try container.decode(Double.self, forKey: .popularity)
+        }
+        
         id = try container.decode(Int.self, forKey: .id)
         adult = try container.decode(Bool.self, forKey: .adult)
         overview = try container.decode(String.self, forKey: .overview)
-        popularity = try container.decode(Double.self, forKey: .popularity)
         video = try container.decode(Bool.self, forKey: .video)
-        posterPath = try container.decode(String.self, forKey: .posterPath)
+        posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
         releaseDate = try container.decode(String.self, forKey: .releaseDate)
-        let genreIds = try container.decode([Int].self, forKey: .genreIds)
-        self.genreIds.append(objectsIn: genreIds)
         originalTitle = try container.decode(String.self, forKey: .originalTitle)
         originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
         title = try container.decode(String.self, forKey: .title)
-        backdropPath = try container.decode(String.self, forKey: .backdropPath)
+        backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
         voteCount = try container.decode(Int.self, forKey: .voteCount)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         mediaType = try container.decodeIfPresent(String.self, forKey: .mediaType)
+        
+        let genreIds = try container.decode([Int].self, forKey: .genreIds)
+        self.genreIds.append(objectsIn: genreIds)
     }
     
     required init() {

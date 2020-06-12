@@ -40,9 +40,9 @@ class PopularOnTVResult: Object, Decodable {
 @objcMembers
 class PopularOnTV: Object, Decodable {
     dynamic var id: Int = 0
-    dynamic var posterPath: String = ""
+    dynamic var posterPath: String?
     dynamic var popularity: Double = 0.0
-    dynamic var backdropPath: String = ""
+    dynamic var backdropPath: String?
     dynamic var voteAverage: Double = 0.0
     dynamic var overview: String = ""
     dynamic var firstAirDate: String = ""
@@ -68,10 +68,13 @@ class PopularOnTV: Object, Decodable {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        if container.contains(.popularity) {
+            popularity = try container.decode(Double.self, forKey: .popularity)
+        }
+
         id = try container.decode(Int.self, forKey: .id)
-        posterPath = try container.decode(String.self, forKey: .posterPath)
-        popularity = try container.decode(Double.self, forKey: .popularity)
-        backdropPath = try container.decode(String.self, forKey: .backdropPath)
+        posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
+        backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         overview  = try container.decode(String.self, forKey: .overview)
         firstAirDate = try container.decode(String.self, forKey: .firstAirDate)

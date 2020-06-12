@@ -9,6 +9,10 @@
 import Foundation
 import RealmSwift
 
+protocol TMDBLocalDataSourceProtocol {
+    func getMovieDetail(id: Int) -> MovieDetail?
+}
+
 struct TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     let realm = try! Realm()

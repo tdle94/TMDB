@@ -26,7 +26,7 @@ class MovieDetail: Object, Decodable {
     dynamic var revenue: Double = 0.0
     dynamic var runtime: Int = 0
     dynamic var status: String = ""
-    var tagline: String?
+    dynamic var tagline: String?
     dynamic var title: String = ""
     dynamic var video: Bool = false
     dynamic var voteAverage: Double = 0.0

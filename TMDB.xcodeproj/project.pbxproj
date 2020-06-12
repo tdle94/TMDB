@@ -16,6 +16,7 @@
 		342E662D2489BB33003B5CB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 342E662C2489BB33003B5CB8 /* Assets.xcassets */; };
 		342E66302489BB33003B5CB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342E662E2489BB33003B5CB8 /* LaunchScreen.storyboard */; };
 		347520B82490932B000ABA00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347520BA2490932B000ABA00 /* Localizable.strings */; };
+		3477B3E92492ECB00067BC7E /* LocalDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477B3E82492ECB00067BC7E /* LocalDataSourceTests.swift */; };
 		3485FEB5249177230027DF41 /* TMDBUserSettingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB4249177230027DF41 /* TMDBUserSettingProtocol.swift */; };
 		3485FEB72491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB62491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift */; };
 		3485FEB924917C4C0027DF41 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB824917C4C0027DF41 /* LocationManager.swift */; };
@@ -77,6 +78,7 @@
 		342E663C2489BB33003B5CB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		347520B92490932B000ABA00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		347520BC24909347000ABA00 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3477B3E82492ECB00067BC7E /* LocalDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSourceTests.swift; sourceTree = "<group>"; };
 		3485FEB4249177230027DF41 /* TMDBUserSettingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBUserSettingProtocol.swift; sourceTree = "<group>"; };
 		3485FEB62491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBUserSetting+TMDBUserSettingProtocol.swift"; sourceTree = "<group>"; };
 		3485FEB824917C4C0027DF41 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 		342E66222489BB33003B5CB8 /* TMDB */ = {
 			isa = PBXGroup;
 			children = (
+				3477B3EA249308830067BC7E /* Extension */,
 				348F636F2491D0B900245BE6 /* TMDBLocalDataSource */,
 				34CB501124903EBD00E9B5CF /* Constant */,
 				34CB500E24903A1900E9B5CF /* TMDBRepository */,
@@ -200,6 +203,7 @@
 			children = (
 				3477B3E72492E5BA0067BC7E /* TMDBServiceTests */,
 				348F63742491D7E000245BE6 /* TMDBRepositoryTests.swift */,
+				3477B3E82492ECB00067BC7E /* LocalDataSourceTests.swift */,
 				34D3E7EE248D55C4000F5D83 /* GeneratedMocks.swift */,
 				342E663C2489BB33003B5CB8 /* Info.plist */,
 			);
@@ -213,6 +217,13 @@
 				34D3E7F0248D6D68000F5D83 /* TestURLRequestBuilder.swift */,
 			);
 			path = TMDBServiceTests;
+			sourceTree = "<group>";
+		};
+		3477B3EA249308830067BC7E /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		348F636E2491CD5E00245BE6 /* SubServices */ = {
@@ -579,6 +590,7 @@
 			files = (
 				34D3E7F1248D6D68000F5D83 /* TestURLRequestBuilder.swift in Sources */,
 				34D3E7EF248D55C4000F5D83 /* GeneratedMocks.swift in Sources */,
+				3477B3E92492ECB00067BC7E /* LocalDataSourceTests.swift in Sources */,
 				348F63752491D7E000245BE6 /* TMDBRepositoryTests.swift in Sources */,
 				34D3E7EB248D4B9B000F5D83 /* TMDBServiceTests.swift in Sources */,
 			);

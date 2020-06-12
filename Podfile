@@ -5,6 +5,7 @@ def testing_pods
   pod 'Quick'
   pod 'Nimble'
   pod "Cuckoo"
+  pod 'RealmSwift'
 end
 
 target 'TMDB' do

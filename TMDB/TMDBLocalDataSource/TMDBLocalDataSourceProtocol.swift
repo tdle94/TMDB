@@ -9,6 +9,5 @@
 import Foundation
 
 protocol TMDBLocalDataSourceProtocol {
-    func save(movie: MovieDetail) -> Error?
     func getMovieDetail(id: Int) -> MovieDetail?
 }

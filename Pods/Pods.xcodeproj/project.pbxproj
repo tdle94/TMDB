@@ -32,7 +32,6 @@
 		192A3F8BEC1A99FD8712D3E09724D72C /* FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5A2295D8E74DBEA75D11D3F1C260BC /* FailureMessage.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		193937B8765E069B6840E374D80EEF7E /* RLMSchema_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = AA5B290886EAB4B337479663306FF02A /* RLMSchema_Private.h */; };
 		1A63B63F36883B0C1CD7D6A08DF256A7 /* RLMAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1052E89B302E4567E8AE89DCDE851B /* RLMAccessor.h */; };
-		1B08548C62C1007847FA9FA155C25050 /* Pods-TMDBTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 503B8A3566C3ECA093AD71DDEB3CF926 /* Pods-TMDBTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BE75988F4A2AF509C218BD1A68A7254 /* RLMObject_Private.h in Copy . Private Headers */ = {isa = PBXBuildFile; fileRef = 445BA32221EAFA8FAA3F0B49C842A0DB /* RLMObject_Private.h */; };
 		1C0B434DD60DF6ADC5E9B8BE1B8522AE /* RLMObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 21CE00145B862F12596C8651057EB875 /* RLMObject.h */; };
 		1D93105DBE379AC7ED41F1C78DCD4507 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BB2F004E8A71FF786A3AA5FB737113 /* Optional.swift */; };
@@ -41,7 +40,6 @@
 		2222F144D4CF4425188A8D26B1176682 /* RLMRealm+Sync.h in Headers */ = {isa = PBXBuildFile; fileRef = 18DBC7334E5DF32164831AAFF549D702 /* RLMRealm+Sync.h */; };
 		22E1EDBF560583A04FC4C30267BD408A /* URL+FileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = D535BA949E2868C02E8554E757F2C505 /* URL+FileName.swift */; };
 		23114ABF472BD9668DA46A1E37C22531 /* RLMSwiftSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89188A98C5A04AC0BAB8C02BFAFD06 /* RLMSwiftSupport.m */; settings = {COMPILER_FLAGS = "-DREALM_HAVE_CONFIG -DREALM_COCOA_VERSION='@\"5.0.2\"' -D__ASSERTMACROS__ -DREALM_ENABLE_SYNC"; }; };
-		231B9F3AD23C08B0A3352D9AC798089D /* Pods-TMDBTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA21448DEA5BA72ADCCEEF6BBD05C7 /* Pods-TMDBTests-dummy.m */; };
 		234849AD309265FD107C74357FC8C0CF /* DSL+Wait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D127AB1AEE8745F1BE12F01B2200E81 /* DSL+Wait.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		2391FFD3230B40E2348B5257D6296BBB /* BeGreaterThanOrEqualTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22EF9B1D53D54DC45BED173345F12A0 /* BeGreaterThanOrEqualTo.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		24DF75A98D4D49C726B7D67E9827A55A /* RealmCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700D27C52821AD628755210A3D03F45F /* RealmCollection.swift */; };
@@ -195,6 +193,7 @@
 		8D6A5DBD59AC4895DC065298AE5CECD1 /* RLMObservation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 521A324E1C3F8AF1D5F39F63726A8680 /* RLMObservation.mm */; settings = {COMPILER_FLAGS = "-DREALM_HAVE_CONFIG -DREALM_COCOA_VERSION='@\"5.0.2\"' -D__ASSERTMACROS__ -DREALM_ENABLE_SYNC"; }; };
 		8D75EC8969EA46FBD6E1BED7791A3C37 /* BeLogical.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F315F386CE1E217B1085276E774A131 /* BeLogical.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		8E994A54E27B219A04778C1C7C61BEC6 /* ObjectiveCSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7A2DBA33BE56C8F5E6714ACD5D481D /* ObjectiveCSupport.swift */; };
+		8EB8E09718CDECC1B7614F41959A401A /* Pods-TMDBTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 503B8A3566C3ECA093AD71DDEB3CF926 /* Pods-TMDBTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8F8C24D0CFAD03A5DDD4DB6534FCF113 /* RLMSyncSubscription.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6A2DB371C9D5138337CAC2BF6FDB56 /* RLMSyncSubscription.h */; };
 		9070351B5959B6E5E94D7F9244790D6E /* RLMManagedArray.mm in Sources */ = {isa = PBXBuildFile; fileRef = 505D3AA8182099852CFC51574E8072D4 /* RLMManagedArray.mm */; settings = {COMPILER_FLAGS = "-DREALM_HAVE_CONFIG -DREALM_COCOA_VERSION='@\"5.0.2\"' -D__ASSERTMACROS__ -DREALM_ENABLE_SYNC"; }; };
 		92506A7A62E10713A921D19DD0107CCA /* SuiteHooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370F73DF7D540FC79F1DA57CE8E3A105 /* SuiteHooks.swift */; };
@@ -228,6 +227,7 @@
 		AB1BFC3B19F8BAB981AC200026D88452 /* __DoNotUse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37FF831198F049FABCDBD7192BD5D609 /* __DoNotUse.swift */; };
 		ABF2A2D63EA8FB743B63C6B1F2BB6E47 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFB959D03B19B38154BC444E6B9F7554 /* Foundation.framework */; };
 		AD148E9649E649860DD978E7387D5166 /* BaseStubFunctionTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB9E2B5894FFEC3DAA4CEF2CFF78A05 /* BaseStubFunctionTrait.swift */; };
+		AD1B911BBBC331039779BF858277815B /* Pods-TMDBTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA21448DEA5BA72ADCCEEF6BBD05C7 /* Pods-TMDBTests-dummy.m */; };
 		AD69407E2FA1D39A9E09248052F2D81B /* ExpectationMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820D7AAA00DAB9254DA4A1424ACF37FF /* ExpectationMessage.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		AF361AC355F51B8AFA4D0F4FC89DA346 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB90B841DDE18D06260D48419F92471 /* Property.swift */; };
 		AF7F468786F1C39BF5818929BE61385C /* RLMSyncConfiguration.h in Copy . Public Headers */ = {isa = PBXBuildFile; fileRef = 9E77B342F4FB2A369678CC374130A228 /* RLMSyncConfiguration.h */; };
@@ -297,7 +297,6 @@
 		D3248707F2E64484B63112751F8EAE4B /* RLMResults_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 621FFF321974C05928A03DACC88F5406 /* RLMResults_Private.h */; };
 		D34D0540ADCBF163575B6B5444B1AAF6 /* Contain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC0AEE7CA239B0C27D5FDC33D9BD72D /* Contain.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		D4D4466507E46650DAB4FD9719D7B8B2 /* RLMRealm_Dynamic.h in Headers */ = {isa = PBXBuildFile; fileRef = 194C30281D9E4BA277543933D5019850 /* RLMRealm_Dynamic.h */; };
-		D8796E6368CAD0D9638B54E16E3B0FCE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFB959D03B19B38154BC444E6B9F7554 /* Foundation.framework */; };
 		D9CFB8E5E354D7BE61D092259779F437 /* Equal.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA159261E1F18C7C3FCD6A0B36676BDE /* Equal.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		D9D6150D329A87CBB415FD349F0C50FD /* SourceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2521772254D7998AC91859284F52B6 /* SourceLocation.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		DB84342A0C0DEABBF7F729DE55225D82 /* XCTestObservationCenter+Register.m in Sources */ = {isa = PBXBuildFile; fileRef = C0BD793411C8389BAFF48BF93987F0E7 /* XCTestObservationCenter+Register.m */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
@@ -311,6 +310,7 @@
 		DFAAEF3440DDBCA8719DD048DAE27FDF /* QuickConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 6CE9366E1B68717931B6163C99B8CD4C /* QuickConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E0EAC85F7ACFAD998B14FCE66144000E /* NMBStringify.h in Headers */ = {isa = PBXBuildFile; fileRef = 82620122D73BA6216207FE825A5739C5 /* NMBStringify.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E13234F5078FCA22228D8BD7EA1C79C4 /* RLMProperty.mm in Sources */ = {isa = PBXBuildFile; fileRef = 70EA4FF463915A0606BC01DEA055227B /* RLMProperty.mm */; settings = {COMPILER_FLAGS = "-DREALM_HAVE_CONFIG -DREALM_COCOA_VERSION='@\"5.0.2\"' -D__ASSERTMACROS__ -DREALM_ENABLE_SYNC"; }; };
+		E1F9F93A0AB505C206544B2BD4AB35FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFB959D03B19B38154BC444E6B9F7554 /* Foundation.framework */; };
 		E458AAE1AE9E2250F29806E5633B1860 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4939567084DB6811123E8F0440FB367 /* Expression.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		E4D3413849CFA118036E980BB1EB85EF /* NSBundle+CurrentTestBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993B5E243C40D10B18B9FCD233313F9D /* NSBundle+CurrentTestBundle.swift */; };
 		E689EA2A876B6DC6B0C199167EB9E7A3 /* object_schema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A76F26E5D8249E25EBBE4E97FF390F2B /* object_schema.cpp */; settings = {COMPILER_FLAGS = "-DREALM_HAVE_CONFIG -DREALM_COCOA_VERSION='@\"5.0.2\"' -D__ASSERTMACROS__ -DREALM_ENABLE_SYNC"; }; };
@@ -364,7 +364,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		15524094F8055E4D218F7C886BD238CD /* PBXContainerItemProxy */ = {
+		062D91E4949D8B4A774C9BDA4646C429 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6F13695E06195A78EA8A95F8C7ED0D2F;
+			remoteInfo = Nimble;
+		};
+		1ABEA7D1CB6D22AEBE46A6E6CFCEC039 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -378,6 +385,13 @@
 			remoteGlobalIDString = 68494F30B4A13F8E5E88BCCAEC25B0A4;
 			remoteInfo = Realm;
 		};
+		3503369E58B59AB9654E17309CD8FEFC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 782725687624F8665247B84AB581BEB1;
+			remoteInfo = RealmSwift;
+		};
 		48A606C8669BF9106101E4D89C2ED3DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
@@ -385,19 +399,19 @@
 			remoteGlobalIDString = 68494F30B4A13F8E5E88BCCAEC25B0A4;
 			remoteInfo = Realm;
 		};
-		6460A2B590A306B206EB12D5C5432738 /* PBXContainerItemProxy */ = {
+		7206F97A09613E8EFD1A4E37122687E4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C82891EAB7293DBEE916B21F57E8474D;
-			remoteInfo = Quick;
+			remoteGlobalIDString = 16B6966462D162FC651D1F4E4B3711FE;
+			remoteInfo = "Pods-TMDB";
 		};
-		851D8954C19C38E88AFE063E3229DF70 /* PBXContainerItemProxy */ = {
+		A3F352A07FE455FBE743B11678324486 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6F13695E06195A78EA8A95F8C7ED0D2F;
-			remoteInfo = Nimble;
+			remoteGlobalIDString = 68494F30B4A13F8E5E88BCCAEC25B0A4;
+			remoteInfo = Realm;
 		};
 		AE80EA43BDB937AD785135EB1F63FE4F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -406,12 +420,12 @@
 			remoteGlobalIDString = 782725687624F8665247B84AB581BEB1;
 			remoteInfo = RealmSwift;
 		};
-		CAADC84085B5F83E1A8CD4D8930785C0 /* PBXContainerItemProxy */ = {
+		F42C27A98A08BE0FC9025BF4D8B2655C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 16B6966462D162FC651D1F4E4B3711FE;
-			remoteInfo = "Pods-TMDB";
+			remoteGlobalIDString = C82891EAB7293DBEE916B21F57E8474D;
+			remoteInfo = Quick;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -846,14 +860,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		30BEB36F60F539FDD28D39291814C85F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D8796E6368CAD0D9638B54E16E3B0FCE /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		521C1CF0D005DF29AB32E38926628382 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -876,6 +882,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABF2A2D63EA8FB743B63C6B1F2BB6E47 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83D2A6E3A9E4302E7F06BE0FF3E575B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1F9F93A0AB505C206544B2BD4AB35FA /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1467,6 +1481,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5BB5F5919CECD4A92EA5CBD6C3257DC3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8EB8E09718CDECC1B7614F41959A401A /* Pods-TMDBTests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7B53465677CC184EAC9F343861E02C49 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1526,14 +1548,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EC34E59E947196937626621A8980F76A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1B08548C62C1007847FA9FA155C25050 /* Pods-TMDBTests-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FAD94F9D8C8F6929527A06E53FBEC27D /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1567,20 +1581,22 @@
 		};
 		506E8FF7EB04EF3217B070F0349293CC /* Pods-TMDBTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27DB2DC923FE87D208A0B01F7B1EEC1A /* Build configuration list for PBXNativeTarget "Pods-TMDBTests" */;
+			buildConfigurationList = E1E93403EE9AB1E7C9C4D9A4B12DB5A1 /* Build configuration list for PBXNativeTarget "Pods-TMDBTests" */;
 			buildPhases = (
-				EC34E59E947196937626621A8980F76A /* Headers */,
-				1401B8BC42FA0E5D62F35A6D0AA6B0DD /* Sources */,
-				30BEB36F60F539FDD28D39291814C85F /* Frameworks */,
-				371353A09E94AD1464101F04A27FDAA7 /* Resources */,
+				5BB5F5919CECD4A92EA5CBD6C3257DC3 /* Headers */,
+				4D70BA9D79AE91FF2A413FB820205CEF /* Sources */,
+				83D2A6E3A9E4302E7F06BE0FF3E575B7 /* Frameworks */,
+				234F5075B272EF04370249D9AA8372B8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0774EA4591E87AA64120312BAA4EB2FB /* PBXTargetDependency */,
-				92B153B713BD07D025D2E701375D8146 /* PBXTargetDependency */,
-				8E338D94EDD0BBD6B3BE07D8D0861C48 /* PBXTargetDependency */,
-				19631ACD8000075C8CCDB134B4E82633 /* PBXTargetDependency */,
+				50768D8531E8D879B832D05B32633957 /* PBXTargetDependency */,
+				7CCDD2E9874155C986A3077DEBE1C6D4 /* PBXTargetDependency */,
+				D5DDDA77B4D3143901017B77CBD3983E /* PBXTargetDependency */,
+				A4278EE1DFFB33D39286891D807B2E4E /* PBXTargetDependency */,
+				99556B939622E84E3B7E419268B03463 /* PBXTargetDependency */,
+				13FCCE8177412F6D5CB579DEC53D2E10 /* PBXTargetDependency */,
 			);
 			name = "Pods-TMDBTests";
 			productName = "Pods-TMDBTests";
@@ -1728,7 +1744,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		371353A09E94AD1464101F04A27FDAA7 /* Resources */ = {
+		234F5075B272EF04370249D9AA8372B8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1766,14 +1782,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1401B8BC42FA0E5D62F35A6D0AA6B0DD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				231B9F3AD23C08B0A3352D9AC798089D /* Pods-TMDBTests-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		191278D49BB24167D4868187768DA448 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1864,6 +1872,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				6243C26A53420AFE83EFE5AE2B44E604 /* Pods-TMDB-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D70BA9D79AE91FF2A413FB820205CEF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD1B911BBBC331039779BF858277815B /* Pods-TMDBTests-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2058,17 +2074,17 @@
 			target = 782725687624F8665247B84AB581BEB1 /* RealmSwift */;
 			targetProxy = AE80EA43BDB937AD785135EB1F63FE4F /* PBXContainerItemProxy */;
 		};
-		0774EA4591E87AA64120312BAA4EB2FB /* PBXTargetDependency */ = {
+		13FCCE8177412F6D5CB579DEC53D2E10 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RealmSwift;
+			target = 782725687624F8665247B84AB581BEB1 /* RealmSwift */;
+			targetProxy = 3503369E58B59AB9654E17309CD8FEFC /* PBXContainerItemProxy */;
+		};
+		50768D8531E8D879B832D05B32633957 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Cuckoo;
 			target = CFCA8CA494372A14108299CE150648B8 /* Cuckoo */;
-			targetProxy = 15524094F8055E4D218F7C886BD238CD /* PBXContainerItemProxy */;
-		};
-		19631ACD8000075C8CCDB134B4E82633 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Quick;
-			target = C82891EAB7293DBEE916B21F57E8474D /* Quick */;
-			targetProxy = 6460A2B590A306B206EB12D5C5432738 /* PBXContainerItemProxy */;
+			targetProxy = 1ABEA7D1CB6D22AEBE46A6E6CFCEC039 /* PBXContainerItemProxy */;
 		};
 		77154C8D022053A3DBB9D79E69C0EA00 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2076,17 +2092,23 @@
 			target = 68494F30B4A13F8E5E88BCCAEC25B0A4 /* Realm */;
 			targetProxy = 48A606C8669BF9106101E4D89C2ED3DE /* PBXContainerItemProxy */;
 		};
-		8E338D94EDD0BBD6B3BE07D8D0861C48 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Pods-TMDB";
-			target = 16B6966462D162FC651D1F4E4B3711FE /* Pods-TMDB */;
-			targetProxy = CAADC84085B5F83E1A8CD4D8930785C0 /* PBXContainerItemProxy */;
-		};
-		92B153B713BD07D025D2E701375D8146 /* PBXTargetDependency */ = {
+		7CCDD2E9874155C986A3077DEBE1C6D4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Nimble;
 			target = 6F13695E06195A78EA8A95F8C7ED0D2F /* Nimble */;
-			targetProxy = 851D8954C19C38E88AFE063E3229DF70 /* PBXContainerItemProxy */;
+			targetProxy = 062D91E4949D8B4A774C9BDA4646C429 /* PBXContainerItemProxy */;
+		};
+		99556B939622E84E3B7E419268B03463 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Realm;
+			target = 68494F30B4A13F8E5E88BCCAEC25B0A4 /* Realm */;
+			targetProxy = A3F352A07FE455FBE743B11678324486 /* PBXContainerItemProxy */;
+		};
+		A4278EE1DFFB33D39286891D807B2E4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Quick;
+			target = C82891EAB7293DBEE916B21F57E8474D /* Quick */;
+			targetProxy = F42C27A98A08BE0FC9025BF4D8B2655C /* PBXContainerItemProxy */;
 		};
 		B3A321629DFF635EDF9046BD114D9694 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2094,9 +2116,54 @@
 			target = 68494F30B4A13F8E5E88BCCAEC25B0A4 /* Realm */;
 			targetProxy = 1FA96DD43889168752C3AC768708ED32 /* PBXContainerItemProxy */;
 		};
+		D5DDDA77B4D3143901017B77CBD3983E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-TMDB";
+			target = 16B6966462D162FC651D1F4E4B3711FE /* Pods-TMDB */;
+			targetProxy = 7206F97A09613E8EFD1A4E37122687E4 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0CB13958F80906C78DAB389B260689E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0087CD78DF69FA8B34D2ADFC198055D8 /* Pods-TMDBTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		157B8F4EBF6464E8E3EA3736F1B2DBB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 094F1055D6FBCA502A9E7C171F43D144 /* Cuckoo.release.xcconfig */;
@@ -2281,6 +2348,44 @@
 			};
 			name = Release;
 		};
+		6A7A3BE9EC021CAEEF6A80052DEC4CAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5EBEE8B73EA03733238E6F478E9FB523 /* Pods-TMDBTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		8FA4B326F0575E13BF04AA1868C8E7BF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D0F5B569F3F0D2E4EE1488F68ADD08B6 /* Quick.debug.xcconfig */;
@@ -2345,45 +2450,6 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		AB2A5C7FD68C19542A8DAD9230DFC281 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0087CD78DF69FA8B34D2ADFC198055D8 /* Pods-TMDBTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2594,44 +2660,6 @@
 			};
 			name = Debug;
 		};
-		E6A6D41BB7EE7D1D5352F2A0C970A7BF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5EBEE8B73EA03733238E6F478E9FB523 /* Pods-TMDBTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 		F5F04600F5626DC980F02790D1ED2C19 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2731,15 +2759,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		27DB2DC923FE87D208A0B01F7B1EEC1A /* Build configuration list for PBXNativeTarget "Pods-TMDBTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E6A6D41BB7EE7D1D5352F2A0C970A7BF /* Debug */,
-				AB2A5C7FD68C19542A8DAD9230DFC281 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		365CC5A17D0BC52F4129081E53D0A205 /* Build configuration list for PBXNativeTarget "Realm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2799,6 +2818,15 @@
 			buildConfigurations = (
 				BC2F9ACF6532E38BFD9609FF5AB4771F /* Debug */,
 				1D5151581A0B42C2AD05F43F8D22B6EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1E93403EE9AB1E7C9C4D9A4B12DB5A1 /* Build configuration list for PBXNativeTarget "Pods-TMDBTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A7A3BE9EC021CAEEF6A80052DEC4CAD /* Debug */,
+				0CB13958F80906C78DAB389B260689E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

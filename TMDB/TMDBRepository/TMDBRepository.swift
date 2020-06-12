@@ -21,7 +21,7 @@ struct TMDBRepository {
         services.getMovieDetail(id: id) { result in
             do {
                 let movie = try result.get()
-                if let error = self.localDataSource.save(movie: movie) {
+                if let error = movie.save() {
                     completion(.failure(error))
                 } else {
                     completion(.success(movie))

@@ -10,19 +10,8 @@ import Foundation
 import RealmSwift
 
 struct TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
-    
-    let realm = try! Realm()
 
-    func save(movie: MovieDetail) -> Error? {
-        do {
-            try realm.write {
-                realm.add(movie)
-            }
-        } catch let error {
-            return error
-        }
-        return nil
-    }
+    let realm = try! Realm()
 
     func getMovieDetail(id: Int) -> MovieDetail? {
         return realm.object(ofType: MovieDetail.self, forPrimaryKey: id)

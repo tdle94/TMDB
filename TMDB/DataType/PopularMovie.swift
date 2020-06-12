@@ -94,6 +94,8 @@ class PopularMovie: Object, Decodable {
     required init() {
         super.init()
     }
+
+    override class func primaryKey() -> String? {
+        return "id"
+    }
 }
-
-

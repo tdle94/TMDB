@@ -43,49 +43,49 @@ class TestURLRequestBuilder: XCTestCase {
     // MARK: - trending
     func testTodayAllTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .today, type: .all)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/all/today"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/all/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testTodayMovieTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .today, type: .movie)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/movie/today"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/movie/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testTodayPeopleTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .today, type: .person)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/person/today"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/person/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testTodayTVTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .today, type: .tv)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/tv/today"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/tv/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testThisWeekAllTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .week, type: .all)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/all/week"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/all/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testThisWeekMovieTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .week, type: .all)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/all/week"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/all/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testThisWeekPeopleTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .week, type: .person)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/person/week"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/person/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testThisWeekTVTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .week, type: .tv)
-        let urlMatcher = "https://api.themoviedb.org/3/trending/tv/week"
+        let urlMatcher = "https://api.themoviedb.org/3/trending/tv/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
 }

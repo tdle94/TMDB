@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name='TMDBTests.xctest' tests='39' failures='9'>
+  <testsuite name='TMDBTests.LocalDataSourceTests' tests='2' failures='1'>
+    <testcase classname='TMDBTests.LocalDataSourceTests' name='initialize_MovieDetail__initializes_and_assign_properties_correctly' time='0.016'/>
+    <testcase classname='TMDBTests.LocalDataSourceTests' name='movie_detail__save_and_retrieve_movie_to_realm_correctly'>
+      <failure message='expected to equal &lt;&gt;, got &lt;nil&gt; (use beNil() to match nils)'>TMDBTests/LocalDataSourceTests.swift:93</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name='TMDBTests.TMDBRepositoryTests' tests='13' failures='0'>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testAllTrendingThisWeek' time='0.242'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testAllTrendingToday' time='0.101'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testGetMovieDetailCase1' time='0.034'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testGetMovieDetailCase2' time='0.009'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testMovieTrendingThisWeek' time='0.080'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testMovieTrendingToday' time='0.085'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testPersonTrendingThisWeek' time='0.132'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testPersonTrendingToday' time='0.087'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testPopularMovie' time='0.023'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testPopularPeople' time='0.062'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testPopularTVShows' time='0.027'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testTVTrendingThisWeek' time='0.375'/>
+    <testcase classname='TMDBTests.TMDBRepositoryTests' name='testTVTrendingToday' time='0.103'/>
+  </testsuite>
+  <testsuite name='TMDBTests.TMDBServiceTests' tests='12' failures='0'>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testAllTrendingThisWeek' time='0.002'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testAllTrendingToday' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testGetMovieDetail' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testGetPopularMovie' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testGetPopularOnTV' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testGetPopularPeople' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testMovieTrendingThisWeek' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testMovieTrendingToday' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testPersonTrendingThisWeek' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testPersonTrendingToday' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testTVTrendingThisWeek' time='0.001'/>
+    <testcase classname='TMDBTests.TMDBServiceTests' name='testTVTrendingToday' time='0.001'/>
+  </testsuite>
+  <testsuite name='TMDBTests.TestURLRequestBuilder' tests='12' failures='8'>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testMovieDetailURL' time='0.001'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testPopularMovieURL' time='0.001'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testPopularOnTVURL' time='0.001'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testPopularPeopleURL' time='0.001'/>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekAllTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/all/week&gt;, got &lt;https://api.themoviedb.org/3/trending/all/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:71</failure>
+    </testcase>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekMovieTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/all/week&gt;, got &lt;https://api.themoviedb.org/3/trending/all/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:77</failure>
+    </testcase>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekPeopleTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/person/week&gt;, got &lt;https://api.themoviedb.org/3/trending/person/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:83</failure>
+    </testcase>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testThisWeekTVTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/tv/week&gt;, got &lt;https://api.themoviedb.org/3/trending/tv/week?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:89</failure>
+    </testcase>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayAllTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/all/today&gt;, got &lt;https://api.themoviedb.org/3/trending/all/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:47</failure>
+    </testcase>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayMovieTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/movie/today&gt;, got &lt;https://api.themoviedb.org/3/trending/movie/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:53</failure>
+    </testcase>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayPeopleTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/person/today&gt;, got &lt;https://api.themoviedb.org/3/trending/person/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:59</failure>
+    </testcase>
+    <testcase classname='TMDBTests.TestURLRequestBuilder' name='testTodayTVTrendingURL'>
+      <failure message='expected to equal &lt;https://api.themoviedb.org/3/trending/tv/today&gt;, got &lt;https://api.themoviedb.org/3/trending/tv/day?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5&gt;'>TMDBTests/TMDBServiceTests/TestURLRequestBuilder.swift:65</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

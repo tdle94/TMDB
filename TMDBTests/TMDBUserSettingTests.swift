@@ -89,10 +89,10 @@ class TMDBUserSettingTests: XCTestCase {
     
     // MARK: - test user location setting
     func testUserLocationSetting() {
-        var userSetting = TMDBUserSetting()
-        userSetting.country = "US"
-        userSetting.language = "en"
-        userSetting.region = "US"
+        var setting = TMDBUserSetting()
+        setting.country = "US"
+        setting.language = "en"
+        setting.region = "US"
         
         XCTAssertNotNil(userSetting.country)
         XCTAssertEqual(userSetting.country, "US")

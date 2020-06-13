@@ -89,35 +89,6 @@ class MovieDetail: Object, Decodable {
         let productionCountries = try container.decode(List<ProductionCountry>.self, forKey: .productionCountries)
         self.productionCountries.append(objectsIn: productionCountries)
     }
-    
-    convenience init(id: Int, adult: Bool, budget: Double,
-                     homepage: String, overview: String, popularity: Double,
-                     revenue: Double, runtime: Int, status: String,
-                     tagline: String, title: String, video: Bool,
-                     backdropPath: String, imdbId: String, originalLanguage: String,
-                     originalTitle: String, releaseDate: String, voteAverage: Double, voteCount: Int) {
-        self.init()
-        self.id = id
-        self.adult = adult
-        self.budget = budget
-        self.homepage = homepage
-        self.overview = overview
-        self.popularity = popularity
-        self.revenue = revenue
-        self.runtime = runtime
-        self.status = status
-        self.tagline = tagline
-        self.title = title
-        self.video = video
-        self.backdropPath = backdropPath
-        self.imdbId = imdbId
-        self.originalLanguage = originalLanguage
-        self.originalTitle = originalTitle
-        self.posterPath = posterPath
-        self.releaseDate = releaseDate
-        self.voteAverage = voteAverage
-        self.voteCount = voteCount
-    }
 
     required init() {
         super.init()

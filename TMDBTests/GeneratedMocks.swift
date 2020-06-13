@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-13 18:28:00 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-13 20:28:23 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -55,9 +55,9 @@ import RealmSwift
     
     
     
-     func save(movie: MovieDetail) -> Error? {
+     func save(movie: MovieDetail) -> Bool {
         
-    return cuckoo_manager.call("save(movie: MovieDetail) -> Error?",
+    return cuckoo_manager.call("save(movie: MovieDetail) -> Bool",
             parameters: (movie),
             escapingParameters: (movie),
             superclassCall:
@@ -82,9 +82,9 @@ import RealmSwift
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getMovieDetail(id: Int) -> MovieDetail?", parameterMatchers: matchers))
 	    }
 	    
-	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.ProtocolStubFunction<(MovieDetail), Error?> where M1.MatchedType == MovieDetail {
+	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.ProtocolStubFunction<(MovieDetail), Bool> where M1.MatchedType == MovieDetail {
 	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "save(movie: MovieDetail) -> Error?", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "save(movie: MovieDetail) -> Bool", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -110,9 +110,9 @@ import RealmSwift
 	    }
 	    
 	    @discardableResult
-	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.__DoNotUse<(MovieDetail), Error?> where M1.MatchedType == MovieDetail {
+	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.__DoNotUse<(MovieDetail), Bool> where M1.MatchedType == MovieDetail {
 	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
-	        return cuckoo_manager.verify("save(movie: MovieDetail) -> Error?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("save(movie: MovieDetail) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	}
@@ -128,14 +128,135 @@ import RealmSwift
         return DefaultValueRegistry.defaultValue(for: (MovieDetail?).self)
     }
     
-     func save(movie: MovieDetail) -> Error?  {
-        return DefaultValueRegistry.defaultValue(for: (Error?).self)
+     func save(movie: MovieDetail) -> Bool  {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-13 18:28:00 +0000
+
+ class MockTMDBLocalDataSource: TMDBLocalDataSource, Cuckoo.ClassMock {
+    
+     typealias MocksType = TMDBLocalDataSource
+    
+     typealias Stubbing = __StubbingProxy_TMDBLocalDataSource
+     typealias Verification = __VerificationProxy_TMDBLocalDataSource
+
+     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: true)
+
+    
+    private var __defaultImplStub: TMDBLocalDataSource?
+
+     func enableDefaultImplementation(_ stub: TMDBLocalDataSource) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+     override func getMovieDetail(id: Int) -> MovieDetail? {
+        
+    return cuckoo_manager.call("getMovieDetail(id: Int) -> MovieDetail?",
+            parameters: (id),
+            escapingParameters: (id),
+            superclassCall:
+                
+                super.getMovieDetail(id: id)
+                ,
+            defaultCall: __defaultImplStub!.getMovieDetail(id: id))
+        
+    }
+    
+    
+    
+     override func save(movie: MovieDetail) -> Bool {
+        
+    return cuckoo_manager.call("save(movie: MovieDetail) -> Bool",
+            parameters: (movie),
+            escapingParameters: (movie),
+            superclassCall:
+                
+                super.save(movie: movie)
+                ,
+            defaultCall: __defaultImplStub!.save(movie: movie))
+        
+    }
+    
+
+	 struct __StubbingProxy_TMDBLocalDataSource: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	     init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    
+	    func getMovieDetail<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.ClassStubFunction<(Int), MovieDetail?> where M1.MatchedType == Int {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "getMovieDetail(id: Int) -> MovieDetail?", parameterMatchers: matchers))
+	    }
+	    
+	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.ClassStubFunction<(MovieDetail), Bool> where M1.MatchedType == MovieDetail {
+	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "save(movie: MovieDetail) -> Bool", parameterMatchers: matchers))
+	    }
+	    
+	}
+
+	 struct __VerificationProxy_TMDBLocalDataSource: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	     init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	
+	    
+	    @discardableResult
+	    func getMovieDetail<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.__DoNotUse<(Int), MovieDetail?> where M1.MatchedType == Int {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
+	        return cuckoo_manager.verify("getMovieDetail(id: Int) -> MovieDetail?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func save<M1: Cuckoo.Matchable>(movie: M1) -> Cuckoo.__DoNotUse<(MovieDetail), Bool> where M1.MatchedType == MovieDetail {
+	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
+	        return cuckoo_manager.verify("save(movie: MovieDetail) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	}
+}
+
+ class TMDBLocalDataSourceStub: TMDBLocalDataSource {
+    
+
+    
+
+    
+     override func getMovieDetail(id: Int) -> MovieDetail?  {
+        return DefaultValueRegistry.defaultValue(for: (MovieDetail?).self)
+    }
+    
+     override func save(movie: MovieDetail) -> Bool  {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+}
+
+
+// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-13 20:28:23 +0000
 
 //
 //  LocationService.swift
@@ -242,7 +363,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-13 18:28:00 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-13 20:28:23 +0000
 
 //
 //  Session.swift
@@ -348,7 +469,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-13 18:28:00 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-13 20:28:23 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -574,7 +695,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-13 18:28:00 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-13 20:28:23 +0000
 
 //
 //  UserDefault.swift

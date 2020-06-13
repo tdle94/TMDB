@@ -47,7 +47,7 @@ class TMDBRepositoryTests: XCTestCase {
         
         stub(localDataSource) { stub in
             when(stub.getMovieDetail(id: 3)).thenReturn(nil)
-            when(stub.save(movie: any())).thenReturn(nil)
+            when(stub.save(movie: any())).thenReturn(true)
         }
 
         /*WHEN*/
@@ -82,7 +82,7 @@ class TMDBRepositoryTests: XCTestCase {
         
         stub(localDataSource) { stub in
             when(stub.getMovieDetail(id: 3)).thenReturn(nil)
-            when(stub.save(movie: any())).thenReturn(NSError())
+            when(stub.save(movie: any())).thenReturn(false)
         }
 
         /*WHEN*/

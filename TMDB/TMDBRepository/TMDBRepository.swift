@@ -29,8 +29,8 @@ struct TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movie):
-                    if let error = self.localDataSource.save(movie: movie) {
-                        completion(.failure(error))
+                    if !self.localDataSource.save(movie: movie) {
+                        completion(.failure(NSError()))
                     } else {
                         completion(.success(movie))
                     }

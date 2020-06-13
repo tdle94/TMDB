@@ -15,12 +15,13 @@
 		342E662B2489BB33003B5CB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342E66292489BB33003B5CB8 /* Main.storyboard */; };
 		342E662D2489BB33003B5CB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 342E662C2489BB33003B5CB8 /* Assets.xcassets */; };
 		342E66302489BB33003B5CB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342E662E2489BB33003B5CB8 /* LaunchScreen.storyboard */; };
+		345CC92E24951D8600991A8B /* TMDBUserSettingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */; };
+		345CC9312495376B00991A8B /* TMDBLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC9302495376B00991A8B /* TMDBLocationService.swift */; };
 		347520B82490932B000ABA00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347520BA2490932B000ABA00 /* Localizable.strings */; };
 		3477B3E92492ECB00067BC7E /* LocalDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477B3E82492ECB00067BC7E /* LocalDataSourceTests.swift */; };
 		3477B3EE24930EBA0067BC7E /* TMDBRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477B3ED24930EBA0067BC7E /* TMDBRepositoryTests.swift */; };
-		3485FEB5249177230027DF41 /* TMDBUserSettingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB4249177230027DF41 /* TMDBUserSettingProtocol.swift */; };
-		3485FEB72491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB62491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift */; };
-		3485FEB924917C4C0027DF41 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB824917C4C0027DF41 /* LocationManager.swift */; };
+		3485FEB72491784E0027DF41 /* TMDBUserSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB62491784E0027DF41 /* TMDBUserSetting.swift */; };
+		3485FEB924917C4C0027DF41 /* TMDBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485FEB824917C4C0027DF41 /* TMDBLocationManager.swift */; };
 		348BD9F2249442C200EA9236 /* TMDBDataTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348BD9F1249442C200EA9236 /* TMDBDataTypeTests.swift */; };
 		348BD9F62494477900EA9236 /* MovieDetailFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348BD9F52494477900EA9236 /* MovieDetailFixture.swift */; };
 		348BD9F82494620600EA9236 /* PopularMovieFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348BD9F72494620600EA9236 /* PopularMovieFixture.swift */; };
@@ -88,13 +89,14 @@
 		342E66312489BB33003B5CB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		342E66362489BB33003B5CB8 /* TMDBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TMDBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		342E663C2489BB33003B5CB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBUserSettingTests.swift; sourceTree = "<group>"; };
+		345CC9302495376B00991A8B /* TMDBLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBLocationService.swift; sourceTree = "<group>"; };
 		347520B92490932B000ABA00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		347520BC24909347000ABA00 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3477B3E82492ECB00067BC7E /* LocalDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSourceTests.swift; sourceTree = "<group>"; };
 		3477B3ED24930EBA0067BC7E /* TMDBRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBRepositoryTests.swift; sourceTree = "<group>"; };
-		3485FEB4249177230027DF41 /* TMDBUserSettingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBUserSettingProtocol.swift; sourceTree = "<group>"; };
-		3485FEB62491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBUserSetting+TMDBUserSettingProtocol.swift"; sourceTree = "<group>"; };
-		3485FEB824917C4C0027DF41 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		3485FEB62491784E0027DF41 /* TMDBUserSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBUserSetting.swift; sourceTree = "<group>"; };
+		3485FEB824917C4C0027DF41 /* TMDBLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBLocationManager.swift; sourceTree = "<group>"; };
 		348BD9F1249442C200EA9236 /* TMDBDataTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBDataTypeTests.swift; sourceTree = "<group>"; };
 		348BD9F52494477900EA9236 /* MovieDetailFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailFixture.swift; sourceTree = "<group>"; };
 		348BD9F72494620600EA9236 /* PopularMovieFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularMovieFixture.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 		342E66222489BB33003B5CB8 /* TMDB */ = {
 			isa = PBXGroup;
 			children = (
+				345CC92F2495375200991A8B /* TMDBLocationManager */,
 				3477B3EA249308830067BC7E /* Extension */,
 				348F636F2491D0B900245BE6 /* TMDBLocalDataSource */,
 				34CB501124903EBD00E9B5CF /* Constant */,
@@ -211,7 +214,6 @@
 				34A31D11248C75DE00D56C10 /* TMDBServices */,
 				342E66232489BB33003B5CB8 /* AppDelegate.swift */,
 				342E66252489BB33003B5CB8 /* SceneDelegate.swift */,
-				3485FEB824917C4C0027DF41 /* LocationManager.swift */,
 				342E66292489BB33003B5CB8 /* Main.storyboard */,
 				342E662C2489BB33003B5CB8 /* Assets.xcassets */,
 				342E662E2489BB33003B5CB8 /* LaunchScreen.storyboard */,
@@ -232,8 +234,18 @@
 				342E663C2489BB33003B5CB8 /* Info.plist */,
 				3477B3ED24930EBA0067BC7E /* TMDBRepositoryTests.swift */,
 				348BD9F1249442C200EA9236 /* TMDBDataTypeTests.swift */,
+				345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */,
 			);
 			path = TMDBTests;
+			sourceTree = "<group>";
+		};
+		345CC92F2495375200991A8B /* TMDBLocationManager */ = {
+			isa = PBXGroup;
+			children = (
+				3485FEB824917C4C0027DF41 /* TMDBLocationManager.swift */,
+				345CC9302495376B00991A8B /* TMDBLocationService.swift */,
+			);
+			path = TMDBLocationManager;
 			sourceTree = "<group>";
 		};
 		3477B3E72492E5BA0067BC7E /* TMDBServiceTests */ = {
@@ -355,8 +367,7 @@
 		34CB500B249039FA00E9B5CF /* TMDBUserSetting */ = {
 			isa = PBXGroup;
 			children = (
-				3485FEB4249177230027DF41 /* TMDBUserSettingProtocol.swift */,
-				3485FEB62491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift */,
+				3485FEB62491784E0027DF41 /* TMDBUserSetting.swift */,
 			);
 			path = TMDBUserSetting;
 			sourceTree = "<group>";
@@ -523,7 +534,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Define output file. If first run, after the file is created, add it to the xcodeproj manually\nOUTPUT_FILE=\"$PROJECT_DIR/TMDBTests/GeneratedMocks.swift\"\necho \"Generated Mocks File = $OUTPUT_FILE\"\n# Define input directory, aka the location of the files that will be mocked\nINPUT_DIR=\"${PROJECT_DIR}/TMDB\"\necho \"Mocks Input Directory = $INPUT_DIR\"\n# Generate mocked classes/structs for the files listed below\n# TODO: Consider writing a script that pulls in all .swift files instead of manual entry to this list\n\"${PODS_ROOT}/Cuckoo/run\" generate --testable \"TMDB\" \\\n--output \"${OUTPUT_FILE}\" \\\n\"$INPUT_DIR/TMDBServices/TMDBSession.swift\" \\\n\"$INPUT_DIR/TMDBServices/TMDBURLRequestBuilder.swift\" \\\n\"$INPUT_DIR/TMDBLocalDataSource/TMDBLocalDataSource.swift\"\n\necho \"Finished generating mocks\"\necho \"warning:test\"\n";
+			shellScript = "# Define output file. If first run, after the file is created, add it to the xcodeproj manually\nOUTPUT_FILE=\"$PROJECT_DIR/TMDBTests/GeneratedMocks.swift\"\necho \"Generated Mocks File = $OUTPUT_FILE\"\n# Define input directory, aka the location of the files that will be mocked\nINPUT_DIR=\"${PROJECT_DIR}/TMDB\"\necho \"Mocks Input Directory = $INPUT_DIR\"\n# Generate mocked classes/structs for the files listed below\n# TODO: Consider writing a script that pulls in all .swift files instead of manual entry to this list\n\"${PODS_ROOT}/Cuckoo/run\" generate --testable \"TMDB\" \\\n--output \"${OUTPUT_FILE}\" \\\n\"$INPUT_DIR/TMDBServices/TMDBSession.swift\" \\\n\"$INPUT_DIR/TMDBServices/TMDBURLRequestBuilder.swift\" \\\n\"$INPUT_DIR/TMDBLocalDataSource/TMDBLocalDataSource.swift\" \\\n\"$INPUT_DIR/TMDBUserSetting/TMDBUserSetting.swift\" \\\n\"$INPUT_DIR/TMDBLocationManager/TMDBLocationService.swift\"\n\necho \"Finished generating mocks\"\necho \"warning:test\"\n";
 		};
 		A24FCBC3E6926C8A7974D5F6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -614,16 +625,16 @@
 				348F636B2491C96600245BE6 /* TMDBRepository.swift in Sources */,
 				34CB501F249076EE00E9B5CF /* TMDBPeopleViewController.swift in Sources */,
 				34D3E7E7248D43EE000F5D83 /* PopularOnTV.swift in Sources */,
-				3485FEB72491784E0027DF41 /* TMDBUserSetting+TMDBUserSettingProtocol.swift in Sources */,
+				3485FEB72491784E0027DF41 /* TMDBUserSetting.swift in Sources */,
 				342E66242489BB33003B5CB8 /* AppDelegate.swift in Sources */,
 				34D3E7E5248D3B84000F5D83 /* PopularPeople.swift in Sources */,
 				340CA6DE248DAC4C00E5A72D /* TrendingResult.swift in Sources */,
 				342E66262489BB33003B5CB8 /* SceneDelegate.swift in Sources */,
-				3485FEB924917C4C0027DF41 /* LocationManager.swift in Sources */,
-				3485FEB5249177230027DF41 /* TMDBUserSettingProtocol.swift in Sources */,
+				3485FEB924917C4C0027DF41 /* TMDBLocationManager.swift in Sources */,
 				34CB501B249070B500E9B5CF /* TMDBMovieViewController.swift in Sources */,
 				348F63652491C85500245BE6 /* TMDBServices+TMDBTVService.swift in Sources */,
 				34D3E7E9248D44F5000F5D83 /* MovieDetail.swift in Sources */,
+				345CC9312495376B00991A8B /* TMDBLocationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,6 +642,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				345CC92E24951D8600991A8B /* TMDBUserSettingTests.swift in Sources */,
 				348BDA0A24946BF000EA9236 /* TrendingOnTVThisWeekFixture.swift in Sources */,
 				348BDA04249469E700EA9236 /* AllTodayTrending.swift in Sources */,
 				34D3E7F1248D6D68000F5D83 /* TestURLRequestBuilder.swift in Sources */,

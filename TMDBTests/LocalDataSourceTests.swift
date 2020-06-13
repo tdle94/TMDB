@@ -25,7 +25,7 @@ class LocalDataSourceTests: QuickSpec {
             }
             
             afterEach {
-                try! testRealm.write {
+                try? testRealm.write {
                     testRealm.deleteAll()
                 }
             }

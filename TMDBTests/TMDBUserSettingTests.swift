@@ -18,17 +18,10 @@ class TMDBUserSettingTests: XCTestCase {
     var locationManager: TMDBLocationManager!
     let userSetting: MockTMDBUserSettingProtocol = MockTMDBUserSettingProtocol()
     let locationService: MockTMDBLocationService = MockTMDBLocationService()
+    let optional = ParameterMatcher<String?>()
     
     override func setUp() {
         locationManager = TMDBLocationManager(setting: userSetting, locationService: locationService)
-    }
-
-    // MARK: - test updated location
-
-    // no error
-    func testUserSettingCase1() {
-        let locationMatcher = ParameterMatcher<CLLocation>()
-        let optional = ParameterMatcher<String?>()
 
         /*GIVEN*/
         stub(userSetting) { stub in
@@ -36,6 +29,13 @@ class TMDBUserSettingTests: XCTestCase {
             when(stub).language.set(optional).thenDoNothing()
             when(stub).region.set(optional).thenDoNothing()
         }
+    }
+
+    // MARK: - test updated location
+
+    // no error
+    func testUserSettingCase1() {
+        let locationMatcher = ParameterMatcher<CLLocation>()
         
         stub(locationService) { stub in
             when(stub).geocode(location: locationMatcher, completion: anyClosure()).then { implementation in
@@ -58,14 +58,6 @@ class TMDBUserSettingTests: XCTestCase {
     // with error
     func testUserSettingCase2() {
         let locationMatcher = ParameterMatcher<CLLocation>()
-        let optional = ParameterMatcher<String?>()
-
-        /*GIVEN*/
-        stub(userSetting) { stub in
-            when(stub).country.set(optional).thenDoNothing()
-            when(stub).language.set(optional).thenDoNothing()
-            when(stub).region.set(optional).thenDoNothing()
-        }
         
         stub(locationService) { stub in
             when(stub).geocode(location: locationMatcher, completion: anyClosure()).then { implementation in
@@ -84,15 +76,7 @@ class TMDBUserSettingTests: XCTestCase {
     // with no location
     func testUserSettingCase3() {
         let locationMatcher = ParameterMatcher<CLLocation>()
-        let optional = ParameterMatcher<String?>()
 
-        /*GIVEN*/
-        stub(userSetting) { stub in
-            when(stub).country.set(optional).thenDoNothing()
-            when(stub).language.set(optional).thenDoNothing()
-            when(stub).region.set(optional).thenDoNothing()
-        }
-        
         stub(locationService) { stub in
             when(stub).geocode(location: locationMatcher, completion: anyClosure()).then { implementation in
                 implementation.1(nil, NSError())

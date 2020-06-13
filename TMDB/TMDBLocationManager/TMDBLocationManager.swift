@@ -9,14 +9,16 @@
 import Foundation
 import CoreLocation
 
-class LocationManager: NSObject, CLLocationManagerDelegate {
+class TMDBLocationManager: NSObject, CLLocationManagerDelegate {
     var manager: CLLocationManager = CLLocationManager()
     
-    var geodecoder: CLGeocoder = CLGeocoder()
-    
-    var setting: TMDBUserSettingProtocol = TMDBUserSetting()
+    var locationService: TMDBLocationService
 
-    override init() {
+    var setting: TMDBUserSettingProtocol
+
+    init(setting: TMDBUserSettingProtocol, locationService: TMDBLocationService) {
+        self.setting = setting
+        self.locationService = locationService
         super.init()
         manager.delegate = self
     }
@@ -26,12 +28,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             return
         }
 
-        geodecoder.reverseGeocodeLocation(location) { placemarks, error in
-            guard
-                error == nil,
-                let countryCode = placemarks?.first?.isoCountryCode else { return }
+        locationService.geocode(location: location) { placemarks, error in
+            guard error == nil else { return }
 
-            self.setting.country = countryCode
+            self.setting.country = placemarks?.first?.isoCountryCode
             self.setting.language = Locale.current.languageCode
             self.setting.region = Locale.current.regionCode
         }

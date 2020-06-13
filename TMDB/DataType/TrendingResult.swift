@@ -58,7 +58,6 @@ class Trending: Object, Decodable {
         if mediaType == "movie" {
             movie = try PopularMovie(from: decoder)
         } else if mediaType == "tv" {
-            print("wtf")
             tv = try PopularOnTV(from: decoder)
         } else {
             people = try PopularPeople(from: decoder)

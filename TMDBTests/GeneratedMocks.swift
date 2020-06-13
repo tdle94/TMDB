@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-13 02:22:21 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-13 18:28:00 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -135,7 +135,114 @@ import RealmSwift
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-13 02:22:21 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-13 18:28:00 +0000
+
+//
+//  LocationService.swift
+//  TMDB
+//
+//  Created by Tuyen Le on 13.06.20.
+//  Copyright © 2020 Tuyen Le. All rights reserved.
+//
+
+import Cuckoo
+@testable import TMDB
+
+import CoreLocation
+import Foundation
+
+
+ class MockTMDBLocationService: TMDBLocationService, Cuckoo.ProtocolMock {
+    
+     typealias MocksType = TMDBLocationService
+    
+     typealias Stubbing = __StubbingProxy_TMDBLocationService
+     typealias Verification = __VerificationProxy_TMDBLocationService
+
+     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: TMDBLocationService?
+
+     func enableDefaultImplementation(_ stub: TMDBLocationService) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+     func geocode(location: CLLocation, completion: @escaping ([CLPlacemark]?, Error?) -> Void)  {
+        
+    return cuckoo_manager.call("geocode(location: CLLocation, completion: @escaping ([CLPlacemark]?, Error?) -> Void)",
+            parameters: (location, completion),
+            escapingParameters: (location, completion),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.geocode(location: location, completion: completion))
+        
+    }
+    
+
+	 struct __StubbingProxy_TMDBLocationService: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	     init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    
+	    func geocode<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(location: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(CLLocation, ([CLPlacemark]?, Error?) -> Void)> where M1.MatchedType == CLLocation, M2.MatchedType == ([CLPlacemark]?, Error?) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(CLLocation, ([CLPlacemark]?, Error?) -> Void)>] = [wrap(matchable: location) { $0.0 }, wrap(matchable: completion) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocationService.self, method: "geocode(location: CLLocation, completion: @escaping ([CLPlacemark]?, Error?) -> Void)", parameterMatchers: matchers))
+	    }
+	    
+	}
+
+	 struct __VerificationProxy_TMDBLocationService: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	     init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	
+	    
+	    @discardableResult
+	    func geocode<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(location: M1, completion: M2) -> Cuckoo.__DoNotUse<(CLLocation, ([CLPlacemark]?, Error?) -> Void), Void> where M1.MatchedType == CLLocation, M2.MatchedType == ([CLPlacemark]?, Error?) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(CLLocation, ([CLPlacemark]?, Error?) -> Void)>] = [wrap(matchable: location) { $0.0 }, wrap(matchable: completion) { $0.1 }]
+	        return cuckoo_manager.verify("geocode(location: CLLocation, completion: @escaping ([CLPlacemark]?, Error?) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	}
+}
+
+ class TMDBLocationServiceStub: TMDBLocationService {
+    
+
+    
+
+    
+     func geocode(location: CLLocation, completion: @escaping ([CLPlacemark]?, Error?) -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+}
+
+
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-13 18:28:00 +0000
 
 //
 //  Session.swift
@@ -241,7 +348,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-13 02:22:21 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-13 18:28:00 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -463,6 +570,214 @@ import Foundation
      func getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest  {
         return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
     }
+    
+}
+
+
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-13 18:28:00 +0000
+
+//
+//  UserDefault.swift
+//  TMDB
+//
+//  Created by Tuyen Le on 10.06.20.
+//  Copyright © 2020 Tuyen Le. All rights reserved.
+//
+
+import Cuckoo
+@testable import TMDB
+
+import Foundation
+
+
+ class MockTMDBUserSettingProtocol: TMDBUserSettingProtocol, Cuckoo.ProtocolMock {
+    
+     typealias MocksType = TMDBUserSettingProtocol
+    
+     typealias Stubbing = __StubbingProxy_TMDBUserSettingProtocol
+     typealias Verification = __VerificationProxy_TMDBUserSettingProtocol
+
+     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: TMDBUserSettingProtocol?
+
+     func enableDefaultImplementation(_ stub: TMDBUserSettingProtocol) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+     var language: String? {
+        get {
+            return cuckoo_manager.getter("language",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.language)
+        }
+        
+        set {
+            cuckoo_manager.setter("language",
+                value: newValue,
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.language = newValue)
+        }
+        
+    }
+    
+    
+    
+     var country: String? {
+        get {
+            return cuckoo_manager.getter("country",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.country)
+        }
+        
+        set {
+            cuckoo_manager.setter("country",
+                value: newValue,
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.country = newValue)
+        }
+        
+    }
+    
+    
+    
+     var region: String? {
+        get {
+            return cuckoo_manager.getter("region",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.region)
+        }
+        
+        set {
+            cuckoo_manager.setter("region",
+                value: newValue,
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.region = newValue)
+        }
+        
+    }
+    
+
+    
+
+    
+
+	 struct __StubbingProxy_TMDBUserSettingProtocol: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	     init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    
+	    var language: Cuckoo.ProtocolToBeStubbedOptionalProperty<MockTMDBUserSettingProtocol, String> {
+	        return .init(manager: cuckoo_manager, name: "language")
+	    }
+	    
+	    
+	    var country: Cuckoo.ProtocolToBeStubbedOptionalProperty<MockTMDBUserSettingProtocol, String> {
+	        return .init(manager: cuckoo_manager, name: "country")
+	    }
+	    
+	    
+	    var region: Cuckoo.ProtocolToBeStubbedOptionalProperty<MockTMDBUserSettingProtocol, String> {
+	        return .init(manager: cuckoo_manager, name: "region")
+	    }
+	    
+	    
+	}
+
+	 struct __VerificationProxy_TMDBUserSettingProtocol: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	     init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    
+	    var language: Cuckoo.VerifyOptionalProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "language", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    
+	    var country: Cuckoo.VerifyOptionalProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "country", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    
+	    var region: Cuckoo.VerifyOptionalProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "region", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	}
+}
+
+ class TMDBUserSettingProtocolStub: TMDBUserSettingProtocol {
+    
+    
+     var language: String? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String?).self)
+        }
+        
+        set { }
+        
+    }
+    
+    
+     var country: String? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String?).self)
+        }
+        
+        set { }
+        
+    }
+    
+    
+     var region: String? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String?).self)
+        }
+        
+        set { }
+        
+    }
+    
+
+    
+
     
 }
 

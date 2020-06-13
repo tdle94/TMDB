@@ -658,6 +658,7 @@
 /* Begin XCBuildConfiguration section */
 		342E663D2489BB33003B5CB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 170017F6FC2619B4BABD180B /* Pods-TMDB.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -870,7 +871,7 @@
 				342E663E2489BB33003B5CB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		342E663F2489BB33003B5CB8 /* Build configuration list for PBXNativeTarget "TMDB" */ = {
 			isa = XCConfigurationList;
@@ -879,7 +880,7 @@
 				342E66412489BB33003B5CB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		342E66422489BB33003B5CB8 /* Build configuration list for PBXNativeTarget "TMDBTests" */ = {
 			isa = XCConfigurationList;
@@ -888,7 +889,7 @@
 				342E66442489BB33003B5CB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

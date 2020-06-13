@@ -19,7 +19,51 @@ class TMDBDataTypeTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
+    func testPopularMovieDecode() {
+        XCTAssertNoThrow(try JSONDecoder().decode(PopularMovieResult.self, from: popularMovieFixture))
+    }
+    
+    func testPopularPeopleDecode() {
+        XCTAssertNoThrow(try JSONDecoder().decode(PopularPeopleResult.self, from: popularPeopleFixture))
+    }
+
     func testMovieDetailDecode() {
         XCTAssertNoThrow(try JSONDecoder().decode(MovieDetail.self, from: movieDetailFixture))
+    }
+
+    func testPopularOnTVDecode() {
+        XCTAssertNoThrow(try JSONDecoder().decode(PopularOnTVResult.self, from: popularOnTVFixture))
+    }
+
+    func testTrendingMovieDecode() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: trendingMovieTodayFixture))
+    }
+
+    func testTrendingOnTVDecode() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: trendingOnTVTodayFixture))
+    }
+    
+    func testTrendingPeopleDecode() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: trendingPeopleTodayFixture))
+    }
+    
+    func testAllTrendingToday() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: allTodayTrending))
+    }
+    
+    func testAllTrendingThisWeek() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: allTrendingThisWeekFixture))
+    }
+    
+    func testTrendingMovieThisWeek() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: trendingMovieThisWeekFixture))
+    }
+    
+    func testTrendingOnTVThisWeek() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: trendingOnTVThisWeekFixture))
+    }
+    
+    func testTrendingPeopleThisWeek() {
+        XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: trendingPeopleThisWeekFixture))
     }
 }

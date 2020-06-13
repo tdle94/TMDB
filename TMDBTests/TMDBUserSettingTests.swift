@@ -94,13 +94,13 @@ class TMDBUserSettingTests: XCTestCase {
         setting.language = "en"
         setting.region = "US"
         
-        XCTAssertNotNil(userSetting.country)
-        XCTAssertEqual(userSetting.country, "US")
+        XCTAssertNotNil(setting.country)
+        XCTAssertEqual(setting.country, "US")
         
-        XCTAssertNotNil(userSetting.language)
-        XCTAssertEqual(userSetting.language, "en")
+        XCTAssertNotNil(setting.language)
+        XCTAssertEqual(setting.language, "en")
         
-        XCTAssertNotNil(userSetting.region)
-        XCTAssertEqual(userSetting.region, "US")
+        XCTAssertNotNil(setting.region)
+        XCTAssertEqual(setting.region, "US")
     }
 }

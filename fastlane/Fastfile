@@ -16,7 +16,7 @@
 setup_travis
 
 default_platform(:ios)
-$xcode_version = "~> 11.2"
+$xcode_version = "~> 11.0"
 $test_scheme = "TMDB"
 
 platform :ios do

@@ -11,6 +11,7 @@ end
 target 'TMDB' do
   use_frameworks!
   pod 'RealmSwift'
+  pod 'FloatingPanel'
   # Pods for TMDB
 
   target 'TMDBTests' do

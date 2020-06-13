@@ -62,7 +62,7 @@ class MovieDetail: Object, Decodable {
         overview = try container.decodeIfPresent(String.self, forKey: .overview)
         popularity = try container.decode(Double.self, forKey: .popularity)
         revenue = try container.decode(Double.self, forKey: .revenue)
-        runtime = try container.decodeIfPresent(Int.self, forKey: .runtime) ?? 0
+        runtime = try container.decode(Int.self, forKey: .runtime)
         status = try container.decode(String.self, forKey: .status)
         tagline = try container.decodeIfPresent(String.self, forKey: .tagline)
         title = try container.decode(String.self, forKey: .title)

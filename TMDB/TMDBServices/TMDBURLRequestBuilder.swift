@@ -39,12 +39,6 @@ extension TMDBURLRequestBuilderProtocol {
         return getPopularPeopleURLRequest(page: page, language: language)
     }
 
-    // MARK: - trending
-
-    func getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest {
-        return getTrendingURLRequest(time: time, type: type)
-    }
-
     // MARK: - detail
 
     func getMovieDetailURLRequest(id: Int, language: String? = "en-US") -> URLRequest {

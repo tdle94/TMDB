@@ -35,23 +35,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let movieVC = TMDBMovieViewController()
         let tvVC = TMDBTelevisionViewController()
         let peopleVC = TMDBPeopleViewController()
+        
+        let tmdbLogo = UIImage(named: Constant.imageLogo)?.withRenderingMode(.alwaysOriginal)
+        let imageBarButtonItem = UIBarButtonItem(image: tmdbLogo, landscapeImagePhone: tmdbLogo, style: .plain, target: nil, action: nil)
+        homeVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
 
         // set navigation controller
         let homeNavController = UINavigationController(rootViewController: homeVC)
         homeNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         homeNavController.tabBarItem.title = NSLocalizedString("Home", comment: "")
+        homeNavController.tabBarItem.image = UIImage(systemName: "house.fill")
         
         let movieNavController = UINavigationController(rootViewController: movieVC)
         movieNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         movieNavController.tabBarItem.title = NSLocalizedString("Movies", comment: "")
+        movieNavController.tabBarItem.image = UIImage(systemName: "film.fill")
 
         let tvNavController = UINavigationController(rootViewController: tvVC)
         tvNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         tvNavController.tabBarItem.title = NSLocalizedString("TV Shows", comment: "")
+        tvNavController.tabBarItem.image = UIImage(systemName: "tv.fill")
         
         let peopleNavController = UINavigationController(rootViewController: peopleVC)
         peopleNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         peopleNavController.tabBarItem.title = NSLocalizedString("People", comment: "")
+        peopleNavController.tabBarItem.image = UIImage(systemName: "person.2.fill")
 
         // set coordinators
         homeCoordinator = MainCoordinator(navigationController: homeNavController)

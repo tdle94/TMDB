@@ -20,9 +20,10 @@ struct TMDBSession: TMDBSessionProtocol {
         case cannotDecode
     }
 
-    func send<T: Decodable>(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
-        URLSession.shared.dataTask(with: request) { data, urlResponse, error in
+    let session: TMDBURLSessionProtocol
 
+    func send<T: Decodable>(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
+        let task = session.tmdbDataTask(with: request) { data, urlResponse, error in
             if let error = error {
                 completion(.failure(error))
                 return
@@ -45,6 +46,7 @@ struct TMDBSession: TMDBSessionProtocol {
                 debugPrint(error)
                 completion(.failure(APIError.cannotDecode))
             }
-        }.resume()
+        }
+        task.tmdbResume()
     }
 }

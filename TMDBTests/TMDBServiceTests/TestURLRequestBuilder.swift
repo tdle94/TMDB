@@ -16,8 +16,12 @@ class TestURLRequestBuilder: XCTestCase {
 
     // MARK: - popular
     func testPopularMovieURL() {
-        let matchRequest = urlRequestBuilder.getPopularMovieURLRequest(page: 1)
-        let urlMatcher = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        var matchRequest = urlRequestBuilder.getPopularMovieURLRequest(page: 1)
+        var urlMatcher = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+        
+        matchRequest = urlRequestBuilder.getPopularMovieURLRequest(page: 1, region: "US")
+        urlMatcher = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     

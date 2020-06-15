@@ -16,6 +16,5 @@ class TMDBMovieViewController: UIViewController {
     // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constant.Color.backgroundColor
     }
 }

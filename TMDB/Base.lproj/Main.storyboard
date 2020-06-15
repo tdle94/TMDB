@@ -7,20 +7,47 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Home View Controllerr-->
+        <!--Home View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="TMDBHomeViewControllerr" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TMDBHomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="TMDBHomeViewController" customModule="TMDB" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TRg-7i-pXj">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Pd-Dn-hp9" userLabel="ContentView">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                        <color key="backgroundColor" red="0.90588235294117647" green="0.90980392156862744" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="0Pd-Dn-hp9" secondAttribute="trailing" id="XbA-1L-9X6"/>
+                                    <constraint firstItem="0Pd-Dn-hp9" firstAttribute="top" secondItem="TRg-7i-pXj" secondAttribute="top" id="nKJ-oK-9rY"/>
+                                    <constraint firstAttribute="bottom" secondItem="0Pd-Dn-hp9" secondAttribute="bottom" id="p1u-Ok-x5j"/>
+                                    <constraint firstItem="0Pd-Dn-hp9" firstAttribute="leading" secondItem="TRg-7i-pXj" secondAttribute="leading" id="wgX-6S-QWh"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="QBm-Cf-kY6"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="2zA-Yq-6jc"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.90588235294117647" green="0.90980392156862744" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="0Pd-Dn-hp9" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="OzQ-IC-6fe"/>
+                            <constraint firstItem="0Pd-Dn-hp9" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" priority="250" id="Q5u-zG-aIp"/>
+                            <constraint firstItem="TRg-7i-pXj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="c70-vP-Zh5"/>
+                            <constraint firstItem="TRg-7i-pXj" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="geT-q9-XSS"/>
+                            <constraint firstItem="TRg-7i-pXj" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="yfT-Kv-Ijl"/>
+                            <constraint firstItem="TRg-7i-pXj" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="zkl-zf-ylj"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="133" y="139"/>
+            <point key="canvasLocation" x="131.8840579710145" y="138.61607142857142"/>
         </scene>
     </scenes>
 </document>

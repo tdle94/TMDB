@@ -31,7 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         locationManager.manager.requestWhenInUseAuthorization()
 
         // set view controller
-        let homeVC = TMDBHomeViewController()
+        let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome)
         let movieVC = TMDBMovieViewController()
         let tvVC = TMDBTelevisionViewController()
         let peopleVC = TMDBPeopleViewController()

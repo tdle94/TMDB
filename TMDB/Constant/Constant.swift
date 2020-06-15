@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 struct Constant {
+    struct ViewControllerIdentifier {
+        static let tmdbHome = "TMDBHomeViewController"
+    }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)
         static let secondaryColor = UIColor(displayP3Red: 1/255, green: 180/255, blue: 228/255, alpha: 1)

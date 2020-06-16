@@ -9,9 +9,13 @@
 import UIKit
 
 class TMDBHomeViewController: UIViewController {
-    var popularCollectionView: UICollectionView!
-    
-    var dataSource: UICollectionViewDiffableDataSource<Int, UUID>!
+    var collectionView: UICollectionView!
+
+    var dataSource: UICollectionViewDiffableDataSource<Section, PopularMovie>!
+
+    var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: URLSession.shared as! TMDBSessionProtocol,
+                                                                                   urlRequestBuilder: TMDBURLRequestBuilder()),
+                                                            localDataSource: TMDBLocalDataSource())
 
     // MARK: - coordinator
     var coordinator: MainCoordinator?
@@ -22,27 +26,33 @@ class TMDBHomeViewController: UIViewController {
         configurePopularCollectionView()
         configureDataSource()
     }
-    
+
     enum Section: String, CaseIterable {
         case popularMovie = "Popular Movies"
+        case trending = "Trends"
+    }
+
+    func getPopularMovie() {
+        repository.getPopularMovie(page: 1) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    debugPrint(error)
+                case .success(let popularMovieResult):
+                    var snapshot = NSDiffableDataSourceSnapshot<Section, PopularMovie>()
+                    snapshot.appendSections([Section.popularMovie])
+                    snapshot.appendItems(Array(popularMovieResult.movies))
+                    self.dataSource.apply(snapshot)
+                }
+            }
+        }
     }
 }
 
 extension TMDBHomeViewController {
-    func snapshotForCurrentState() -> NSDiffableDataSourceSnapshot<Int, UUID> {
-
-        var snapshot = NSDiffableDataSourceSnapshot<Int, UUID>()
-        snapshot.appendSections([0])
-        snapshot.appendItems([UUID(), UUID(), UUID(), UUID(), UUID()])
-
-        return snapshot
-    }
-
     func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Int, UUID>(collectionView: popularCollectionView) { collectionView , indexPath, id in
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, id in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Popular", for: indexPath) as! PopularItemCell
-            cell.featuredPhotoView.image = UIImage(systemName: "house.fill")
-            cell.contentView.addSubview(cell.featuredPhotoView)
             return cell
         }
         
@@ -55,18 +65,12 @@ extension TMDBHomeViewController {
           
           return cell
         }
-
-
-        let snapshot = snapshotForCurrentState()
-        dataSource.apply(snapshot)
     }
 
     func configurePopularCollectionView() {
-        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: generateLayout())
-        view.addSubview(collectionView)
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: generateLayout())
         collectionView.register(PopularItemCell.self, forCellWithReuseIdentifier: "Popular")
-        popularCollectionView = collectionView
-        popularCollectionView.backgroundColor = .white
+        view.addSubview(collectionView)
     }
     
     func generateLayout() -> UICollectionViewLayout {
@@ -99,10 +103,10 @@ extension TMDBHomeViewController {
 }
 
 class PopularItemCell: UICollectionViewCell {
-    let featuredPhotoView: UIImageView
+    let posterImageView: UIImageView
 
     override init(frame: CGRect) {
-        featuredPhotoView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
+        posterImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         super.init(frame: frame)
     }
 
@@ -110,7 +114,6 @@ class PopularItemCell: UICollectionViewCell {
       fatalError("init(coder:) has not been implemented")
     }
 }
-
 
 class HeaderView: UICollectionReusableView {
   static let reuseIdentifier = "my pussy"

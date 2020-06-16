@@ -213,4 +213,42 @@ class TMDBServiceTests: XCTestCase {
         verify(urlRequestBuilder).getTrendingURLRequest(time: trendingTime, type: trendingType)
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(TrendingResult.Type.self), completion: anyClosure())
     }
+
+    // MARK: - image
+
+    func testFetchImageDataWithValidURL() {
+        let expectation = self.expectation(description: "")
+        let imageURL = "test.com"
+        let urlMatcher = ParameterMatcher<URL>(matchesFunction: { $0.absoluteString == imageURL })
+
+        stub(session) { stub in
+            when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
+                implementation.1(.success(Data()))
+            }
+        }
+
+        services.getImageData(from: imageURL) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(url: urlMatcher, completion: anyClosure())
+    }
+
+    func testFetchImageDataWithInvalidURL() {
+        let expectation = self.expectation(description: "")
+        let imageURL = "why you valid"
+
+        services.getImageData(from: imageURL) { result in
+            do {
+                let _ = try result.get()
+            } catch let error {
+                XCTAssertEqual(error.localizedDescription, TMDBSession.APIError.invalidURL.localizedDescription)
+            }
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
+    }
 }

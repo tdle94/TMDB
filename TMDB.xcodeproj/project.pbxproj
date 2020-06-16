@@ -15,6 +15,8 @@
 		342E662B2489BB33003B5CB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342E66292489BB33003B5CB8 /* Main.storyboard */; };
 		342E662D2489BB33003B5CB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 342E662C2489BB33003B5CB8 /* Assets.xcassets */; };
 		342E66302489BB33003B5CB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342E662E2489BB33003B5CB8 /* LaunchScreen.storyboard */; };
+		343CC9DE2498245600FEC4F6 /* TMDBImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343CC9DD2498245600FEC4F6 /* TMDBImageService.swift */; };
+		343CC9E02498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343CC9DF2498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift */; };
 		345CC92E24951D8600991A8B /* TMDBUserSettingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */; };
 		345CC9312495376B00991A8B /* TMDBLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC9302495376B00991A8B /* TMDBLocationService.swift */; };
 		347520B82490932B000ABA00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347520BA2490932B000ABA00 /* Localizable.strings */; };
@@ -92,6 +94,8 @@
 		342E66312489BB33003B5CB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		342E66362489BB33003B5CB8 /* TMDBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TMDBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		342E663C2489BB33003B5CB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		343CC9DD2498245600FEC4F6 /* TMDBImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBImageService.swift; sourceTree = "<group>"; };
+		343CC9DF2498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBServices+TMDBImageService.swift"; sourceTree = "<group>"; };
 		345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBUserSettingTests.swift; sourceTree = "<group>"; };
 		345CC9302495376B00991A8B /* TMDBLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBLocationService.swift; sourceTree = "<group>"; };
 		347520B92490932B000ABA00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -297,6 +301,7 @@
 				348F635C2491C3C100245BE6 /* TMDBTVService.swift */,
 				348F635E2491C49700245BE6 /* TMDBPeopleService.swift */,
 				348F63602491C4D100245BE6 /* TMDBTrendingService.swift */,
+				343CC9DD2498245600FEC4F6 /* TMDBImageService.swift */,
 			);
 			path = SubServices;
 			sourceTree = "<group>";
@@ -318,6 +323,7 @@
 				348F63642491C85500245BE6 /* TMDBServices+TMDBTVService.swift */,
 				348F63662491C87600245BE6 /* TMDBServices+TMDBTrendingService.swift */,
 				348F63682491C88900245BE6 /* TMDBService+TMDBPeopleService.swift */,
+				343CC9DF2498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift */,
 				34A31D14248C7CCC00D56C10 /* TMDBSession.swift */,
 				34A31D18248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift */,
 				34995AEE2496832E0088576B /* TMDBURLSessionProtocol.swift */,
@@ -627,10 +633,12 @@
 				34A31D15248C7CCC00D56C10 /* TMDBSession.swift in Sources */,
 				348F635F2491C49700245BE6 /* TMDBPeopleService.swift in Sources */,
 				348F635D2491C3C100245BE6 /* TMDBTVService.swift in Sources */,
+				343CC9E02498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift in Sources */,
 				34A31D19248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift in Sources */,
 				348F63632491C83000245BE6 /* TMDBServices+TMDBMovieService.swift in Sources */,
 				34A31D1E248C96AF00D56C10 /* TMDBServices.swift in Sources */,
 				342E66282489BB33003B5CB8 /* TMDBHomeViewController.swift in Sources */,
+				343CC9DE2498245600FEC4F6 /* TMDBImageService.swift in Sources */,
 				348F636B2491C96600245BE6 /* TMDBRepository.swift in Sources */,
 				34CB501F249076EE00E9B5CF /* TMDBPeopleViewController.swift in Sources */,
 				34995AF324968C340088576B /* TMDBURLSessionDataTaskProtocol.swift in Sources */,

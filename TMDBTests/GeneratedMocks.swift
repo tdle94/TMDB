@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-14 19:06:01 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-16 00:25:41 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -256,7 +256,7 @@ import RealmSwift
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-14 19:06:01 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-16 00:25:41 +0000
 
 //
 //  LocationService.swift
@@ -363,7 +363,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-14 19:06:01 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-16 00:25:41 +0000
 
 //
 //  Session.swift
@@ -417,6 +417,21 @@ import Foundation
         
     }
     
+    
+    
+     func send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)  {
+        
+    return cuckoo_manager.call("send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)",
+            parameters: (url, completion),
+            escapingParameters: (url, completion),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.send(url: url, completion: completion))
+        
+    }
+    
 
 	 struct __StubbingProxy_TMDBSessionProtocol: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -429,6 +444,11 @@ import Foundation
 	    func send<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, T: Decodable>(request: M1, responseType: M2, completion: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(URLRequest, T.Type, (Result<T, Error>) -> Void)> where M1.MatchedType == URLRequest, M2.MatchedType == T.Type, M3.MatchedType == (Result<T, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(URLRequest, T.Type, (Result<T, Error>) -> Void)>] = [wrap(matchable: request) { $0.0 }, wrap(matchable: responseType) { $0.1 }, wrap(matchable: completion) { $0.2 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBSessionProtocol.self, method: "send(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)", parameterMatchers: matchers))
+	    }
+	    
+	    func send<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(url: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(URL, (Result<Data, Error>) -> Void)> where M1.MatchedType == URL, M2.MatchedType == (Result<Data, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(URL, (Result<Data, Error>) -> Void)>] = [wrap(matchable: url) { $0.0 }, wrap(matchable: completion) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBSessionProtocol.self, method: "send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -453,6 +473,12 @@ import Foundation
 	        return cuckoo_manager.verify("send(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
+	    @discardableResult
+	    func send<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(url: M1, completion: M2) -> Cuckoo.__DoNotUse<(URL, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == URL, M2.MatchedType == (Result<Data, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(URL, (Result<Data, Error>) -> Void)>] = [wrap(matchable: url) { $0.0 }, wrap(matchable: completion) { $0.1 }]
+	        return cuckoo_manager.verify("send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
 	}
 }
 
@@ -466,10 +492,14 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
+     func send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-14 19:06:01 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-16 00:25:41 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -695,7 +725,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-14 19:06:01 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-16 00:25:41 +0000
 
 //
 //  URLSessionDataTaskProtocol.swift
@@ -801,7 +831,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-14 19:06:01 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-16 00:25:41 +0000
 
 //
 //  URLSessionProtocol.swift
@@ -855,6 +885,21 @@ import Foundation
         
     }
     
+    
+    
+     func tmdbDataTask(with: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol {
+        
+    return cuckoo_manager.call("tmdbDataTask(with: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol",
+            parameters: (with, completionHandler),
+            escapingParameters: (with, completionHandler),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.tmdbDataTask(with: with, completionHandler: completionHandler))
+        
+    }
+    
 
 	 struct __StubbingProxy_TMDBURLSessionProtocol: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -867,6 +912,11 @@ import Foundation
 	    func tmdbDataTask<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with: M1, completionHandler: M2) -> Cuckoo.ProtocolStubFunction<(URLRequest, (Data?, URLResponse?, Error?) -> Void), TMDBURLSessionDataTaskProtocol> where M1.MatchedType == URLRequest, M2.MatchedType == (Data?, URLResponse?, Error?) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(URLRequest, (Data?, URLResponse?, Error?) -> Void)>] = [wrap(matchable: with) { $0.0 }, wrap(matchable: completionHandler) { $0.1 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLSessionProtocol.self, method: "tmdbDataTask(with: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol", parameterMatchers: matchers))
+	    }
+	    
+	    func tmdbDataTask<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with: M1, completionHandler: M2) -> Cuckoo.ProtocolStubFunction<(URL, (Data?, URLResponse?, Error?) -> Void), TMDBURLSessionDataTaskProtocol> where M1.MatchedType == URL, M2.MatchedType == (Data?, URLResponse?, Error?) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(URL, (Data?, URLResponse?, Error?) -> Void)>] = [wrap(matchable: with) { $0.0 }, wrap(matchable: completionHandler) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLSessionProtocol.self, method: "tmdbDataTask(with: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -891,6 +941,12 @@ import Foundation
 	        return cuckoo_manager.verify("tmdbDataTask(with: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
+	    @discardableResult
+	    func tmdbDataTask<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with: M1, completionHandler: M2) -> Cuckoo.__DoNotUse<(URL, (Data?, URLResponse?, Error?) -> Void), TMDBURLSessionDataTaskProtocol> where M1.MatchedType == URL, M2.MatchedType == (Data?, URLResponse?, Error?) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(URL, (Data?, URLResponse?, Error?) -> Void)>] = [wrap(matchable: with) { $0.0 }, wrap(matchable: completionHandler) { $0.1 }]
+	        return cuckoo_manager.verify("tmdbDataTask(with: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
 	}
 }
 
@@ -904,10 +960,14 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (TMDBURLSessionDataTaskProtocol).self)
     }
     
+     func tmdbDataTask(with: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol  {
+        return DefaultValueRegistry.defaultValue(for: (TMDBURLSessionDataTaskProtocol).self)
+    }
+    
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-14 19:06:01 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-16 00:25:41 +0000
 
 //
 //  UserDefault.swift

@@ -16,10 +16,11 @@ class TMDBRepositoryTests: XCTestCase {
     let session: MockTMDBSessionProtocol = MockTMDBSessionProtocol()
     let requestBuilder: MockTMDBURLRequestBuilderProtocol = MockTMDBURLRequestBuilderProtocol()
     let localDataSource: MockTMDBLocalDataSourceProtocol = MockTMDBLocalDataSourceProtocol()
+    let userSetting: MockTMDBUserSettingProtocol = MockTMDBUserSettingProtocol()
     
     override func setUp() {
-        let service = TMDBServices(session: session, urlRequestBuilder: requestBuilder)
-        repository = TMDBRepository(services: service, localDataSource: localDataSource)
+        let service = TMDBServices(session: session, urlRequestBuilder: requestBuilder, userSetting: userSetting)
+        repository = TMDBRepository(services: service, localDataSource: localDataSource, userSetting: userSetting)
     }
 
     // MARK: - movie detail test
@@ -43,7 +44,7 @@ class TMDBRepositoryTests: XCTestCase {
         
         stub(localDataSource) { stub in
             when(stub.getMovieDetail(id: 3)).thenReturn(nil)
-            when(stub.save(movie: any())).thenReturn(true)
+            when(stub.saveMovie(any())).thenReturn(true)
         }
 
         /*WHEN*/
@@ -78,7 +79,7 @@ class TMDBRepositoryTests: XCTestCase {
         
         stub(localDataSource) { stub in
             when(stub.getMovieDetail(id: 3)).thenReturn(nil)
-            when(stub.save(movie: any())).thenReturn(false)
+            when(stub.saveMovie(any())).thenReturn(false)
         }
 
         /*WHEN*/
@@ -130,15 +131,8 @@ class TMDBRepositoryTests: XCTestCase {
     func testGetMovieDetailCase4() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3)
-        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
-        stub(session) { stub in
-            when(stub.send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())).then { implementation in
-                implementation.2(.success(MovieDetail()))
-            }
-        }
-
         stub(requestBuilder) { stub in
             when(stub.getMovieDetailURLRequest(id: 3, language: "en-US")).thenReturn(request)
         }
@@ -312,7 +306,8 @@ class TMDBRepositoryTests: XCTestCase {
     func testURLImageData() {
         let expectation = self.expectation(description: "")
         let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
-        
+        let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
+
         /*GIVEN*/
         stub(session) { stub in
             when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
@@ -320,13 +315,109 @@ class TMDBRepositoryTests: XCTestCase {
             }
         }
         
-        /*WHEN*/
-        repository.getImageData(from: "test.com") { _ in
-            expectation.fulfill()
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
         }
         
+        stub(requestBuilder) { stub in
+            when(stub).getImageConfigURLRequest().thenReturn(request)
+        }
+
+        /*WHEN*/
+        
+        repository.getPosterImageData(from: "/test") { _ in
+            expectation.fulfill()
+        }
+
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(url: urlMatcher, completion: anyClosure())
+        verify(userSetting, times(2)).imageConfig.get()
+    }
+
+    // MARK: - test update config
+    
+    // no image config in user setting yet, make service call, success
+    func testUpdateImageConfigCase0() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let imageConfig = ImageConfigResult()
+        let matcher: ParameterMatcher<ImageConfigResult> = ParameterMatcher<ImageConfigResult>()
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(imageConfig))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getImageConfigURLRequest().thenReturn(request)
+        }
+
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+            when(stub).imageConfig.set(matcher).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.updateImageConfig()
+        expectation.fulfill()
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure())
+        verify(userSetting).imageConfig.get()
+        verify(requestBuilder).getImageConfigURLRequest()
+    }
+    
+    // no image config in user setting yet, make service call, not success
+    func testUpdateImageConfigCase1() {
+        let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getImageConfigURLRequest().thenReturn(request)
+        }
+
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+        }
+
+        /*WHEN*/
+        repository.updateImageConfig()
+
+        /*THEN*/
+        verify(session).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure())
+        verify(userSetting).imageConfig.get()
+        verify(requestBuilder).getImageConfigURLRequest()
+    }
+    
+    // image config in user setting yet, don't make service call, less than 10 days
+    func testUpdateImageConfigCase2() {
+        /*GIVEN*/
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.then { implementation in
+                let todayDate = Date()
+                let fiveDaysAgo = Calendar.current.date(byAdding: .day, value: -5, to: todayDate)
+                var imageConfig = ImageConfigResult()
+                imageConfig.dateUpdate = fiveDaysAgo
+                return imageConfig
+            }
+        }
+
+        /*WHEN*/
+        repository.updateImageConfig()
+        
+        /*THEN*/
+        verify(userSetting).imageConfig.get()
     }
 }

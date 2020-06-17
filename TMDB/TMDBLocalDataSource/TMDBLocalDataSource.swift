@@ -10,34 +10,35 @@ import Foundation
 import RealmSwift
 
 protocol TMDBLocalDataSourceProtocol {
+    // movie detail
     func getMovieDetail(id: Int) -> MovieDetail?
-    func save(movie: MovieDetail) -> Bool
+    func saveMovie(_ movie: MovieDetail) -> Bool
 }
 
 class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
-    let realm: Realm?
+    let realm: Realm
     
-    init(realm: Realm?) {
+    init(realm: Realm) {
         self.realm = realm
     }
 
     convenience init() {
-        self.init(realm: try? Realm())
+        self.init(realm: try! Realm())
     }
 
     func getMovieDetail(id: Int) -> MovieDetail? {
-        return realm?.object(ofType: MovieDetail.self, forPrimaryKey: id)
+        return realm.object(ofType: MovieDetail.self, forPrimaryKey: id)
     }
 
-    func save(movie: MovieDetail) -> Bool {
-        realm?.beginWrite()
-        if let _ = realm?.object(ofType: MovieDetail.self, forPrimaryKey: movie.id) {
-            realm?.cancelWrite()
+    func saveMovie(_ movie: MovieDetail) -> Bool {
+        realm.beginWrite()
+        if let _ = realm.object(ofType: MovieDetail.self, forPrimaryKey: movie.id) {
+            realm.cancelWrite()
             return false
         }
-        realm?.add(movie)
-        try? realm?.commitWrite()
+        realm.add(movie)
+        try? realm.commitWrite()
         return true
     }
 }

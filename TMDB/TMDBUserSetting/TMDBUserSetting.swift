@@ -12,6 +12,7 @@ protocol TMDBUserSettingProtocol {
     var language: String? { get set }
     var country: String? { get set }
     var region: String? { get set }
+    var imageConfig: ImageConfigResult { get set }
 }
 
 struct TMDBUserSetting: TMDBUserSettingProtocol {
@@ -39,6 +40,19 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
         }
         set {
             UserDefaults.standard.setValue(newValue, forKey: Constant.UserSetting.region)
+        }
+    }
+
+    var imageConfig: ImageConfigResult {
+        get {
+            guard let data = UserDefaults.standard.value(forKey: Constant.UserSetting.imageConfig) as? Data else {
+                return ImageConfigResult() // return default
+            }
+            let imageConfig = try! PropertyListDecoder().decode(ImageConfigResult.self, from: data)
+            return imageConfig
+        }
+        set {
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(newValue), forKey: Constant.UserSetting.imageConfig)
         }
     }
 }

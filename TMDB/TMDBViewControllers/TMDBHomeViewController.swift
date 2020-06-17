@@ -14,8 +14,10 @@ class TMDBHomeViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, PopularMovie>!
 
     var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                                                   urlRequestBuilder: TMDBURLRequestBuilder()),
-                                                            localDataSource: TMDBLocalDataSource())
+                                                                                   urlRequestBuilder: TMDBURLRequestBuilder(),
+                                                                                   userSetting: TMDBUserSetting()),
+                                                            localDataSource: TMDBLocalDataSource(),
+                                                            userSetting: TMDBUserSetting())
 
     // MARK: - coordinator
     var coordinator: MainCoordinator?
@@ -57,7 +59,7 @@ extension TMDBHomeViewController {
             cell.title.text = popularMovie.originalTitle
             cell.releaseDate.text = popularMovie.releaseDate
             if let posterPath = popularMovie.posterPath {
-                self.repository.getImageData(from: posterPath) { result in
+                self.repository.getPosterImageData(from: posterPath) { result in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(let data):

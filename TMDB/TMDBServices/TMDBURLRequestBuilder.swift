@@ -22,6 +22,10 @@ protocol TMDBURLRequestBuilderProtocol {
     // MARK: - detail
 
     func getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest
+
+    // MARK: - configuration
+
+    func getImageConfigURLRequest() -> URLRequest
 }
 
 extension TMDBURLRequestBuilderProtocol {
@@ -118,5 +122,10 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "language", value: language)
         ]
         return buildURLRequest(path: "/3/movie/\(id)", queryItems: queryItems)
+    }
+    
+    // MARK: - config
+    func getImageConfigURLRequest() -> URLRequest {
+        return buildURLRequest(path: "/3/configuration", queryItems: nil)
     }
 }

@@ -13,12 +13,20 @@ protocol TMDBRepositoryProtocol {
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
-    func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void)
+    func getPosterImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void)
+    func updateImageConfig()
 }
 
-struct TMDBRepository: TMDBRepositoryProtocol {
+class TMDBRepository: TMDBRepositoryProtocol {
     let services: TMDBServices
     let localDataSource: TMDBLocalDataSourceProtocol
+    var userSetting: TMDBUserSettingProtocol
+
+    init(services: TMDBServices, localDataSource: TMDBLocalDataSourceProtocol, userSetting: TMDBUserSettingProtocol) {
+        self.services = services
+        self.localDataSource = localDataSource
+        self.userSetting = userSetting
+    }
 
     func getMovieDetail(id: Int, completion: @escaping (Result<MovieDetail, Error>) -> Void) {
         if let movieDetail = localDataSource.getMovieDetail(id: id) {
@@ -30,7 +38,7 @@ struct TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movie):
-                    if !self.localDataSource.save(movie: movie) {
+                    if !self.localDataSource.saveMovie(movie) {
                         completion(.failure(NSError()))
                     } else {
                         completion(.success(movie))
@@ -58,7 +66,25 @@ struct TMDBRepository: TMDBRepositoryProtocol {
         services.getPopularPeople(page: page, completion: completion)
     }
 
-    func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        services.getImageData(from: url, completion: completion)
+    func getPosterImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        services.getPosterImageData(from: url, completion: completion)
+    }
+
+    func updateImageConfig() {
+        if
+            let lastUpdateDate = userSetting.imageConfig.dateUpdate,
+            let daysBetweenDates = Calendar.current.dateComponents([.day], from: lastUpdateDate, to: Date()).day,
+            daysBetweenDates < 10 { return }
+
+        services.updateImageConfig { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    debugPrint(error)
+                case .success(let imageConfigResult):
+                    self.userSetting.imageConfig = imageConfigResult
+                }
+            }
+        }
     }
 }

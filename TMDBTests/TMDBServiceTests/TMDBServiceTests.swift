@@ -16,6 +16,7 @@ class TMDBServiceTests: XCTestCase {
 
     let session = MockTMDBSessionProtocol()
     let urlRequestBuilder = MockTMDBURLRequestBuilderProtocol()
+    let userSetting = MockTMDBUserSettingProtocol()
     var services: TMDBServices!
     
     struct TrendingTimeMatchable: Matchable {
@@ -37,7 +38,7 @@ class TMDBServiceTests: XCTestCase {
     let personTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .person })
 
     override func setUp() {
-        services = TMDBServices(session: session, urlRequestBuilder: urlRequestBuilder)
+        services = TMDBServices(session: session, urlRequestBuilder: urlRequestBuilder, userSetting: userSetting)
     }
 
     // MARK: - popular
@@ -216,10 +217,10 @@ class TMDBServiceTests: XCTestCase {
 
     // MARK: - image
 
-    func testFetchImageDataWithValidURL() {
+    func testFetchPosterImageDataWithValidURL() {
         let expectation = self.expectation(description: "")
-        let imageURL = "/test.com"
-        let urlMatcher = ParameterMatcher<URL>(matchesFunction: { $0.absoluteString == "https://image.tmdb.org/t/p/w185\(imageURL)" })
+        let imageURL = "/test"
+        let urlMatcher = ParameterMatcher<URL>(matchesFunction: { $0.absoluteString == "https://image.tmdb.org/t/p/original\(imageURL)" })
 
         stub(session) { stub in
             when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
@@ -227,20 +228,29 @@ class TMDBServiceTests: XCTestCase {
             }
         }
 
-        services.getImageData(from: imageURL) { result in
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+        }
+
+        services.getPosterImageData(from: imageURL) { result in
             XCTAssertNoThrow(try! result.get())
             expectation.fulfill()
         }
 
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(url: urlMatcher, completion: anyClosure())
+        verify(userSetting, times(2)).imageConfig.get()
     }
 
-    func testFetchImageDataWithInvalidURL() {
+    func testFetchPosterImageDataWithInvalidURL() {
         let expectation = self.expectation(description: "")
         let imageURL = "why you valid"
+        
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+        }
 
-        services.getImageData(from: imageURL) { result in
+        services.getPosterImageData(from: imageURL) { result in
             do {
                 let _ = try result.get()
             } catch let error {
@@ -250,5 +260,34 @@ class TMDBServiceTests: XCTestCase {
         }
 
         waitForExpectations(timeout: 5, handler: nil)
+        verify(userSetting, times(2)).imageConfig.get()
+    }
+
+    // MARK: - update image config
+    func testUpdateImageConfig() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /**GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ImageConfigResult()))
+            }
+        }
+
+        stub(urlRequestBuilder) { stub in
+            when(stub).getImageConfigURLRequest().thenReturn(request)
+        }
+
+        /**WHEN*/
+        services.updateImageConfig { _ in
+            expectation.fulfill()
+        }
+
+        /**THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getImageConfigURLRequest()
+        verify(session).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure())
     }
 }

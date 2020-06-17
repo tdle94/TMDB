@@ -38,7 +38,7 @@ class LocalDataSourceTests: QuickSpec {
                 // add
                 expect(testRealm.objects(MovieDetail.self).count).to(equal(0))
                 let movieDetail = MovieDetail()
-                var success = localDataSource.save(movie: movieDetail)
+                var success = localDataSource.saveMovie(movieDetail)
                 expect(success).to(beTrue())
                 expect(testRealm.objects(MovieDetail.self).count).to(equal(1))
                 
@@ -46,7 +46,7 @@ class LocalDataSourceTests: QuickSpec {
                 expect(localDataSource.getMovieDetail(id: 0)).to(equal(movieDetail))
                 
                 // duplicate, throw error
-                success = localDataSource.save(movie: movieDetail)
+                success = localDataSource.saveMovie(movieDetail)
                 expect(testRealm.objects(MovieDetail.self).count).to(equal(1))
                 expect(success).to(beFalse())
             }

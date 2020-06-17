@@ -28,6 +28,7 @@ struct Constant {
         static let language = "language"
         static let region = "region"
         static let country = "country"
+        static let imageConfig = "image config"
     }
     static let imageLogo = "TMDB"
     static let regionCode = [

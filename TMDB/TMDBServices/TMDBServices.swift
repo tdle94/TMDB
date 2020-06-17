@@ -11,4 +11,5 @@ import Foundation
 struct TMDBServices {
     let session: TMDBSessionProtocol
     let urlRequestBuilder: TMDBURLRequestBuilderProtocol
+    let userSetting: TMDBUserSettingProtocol
 }

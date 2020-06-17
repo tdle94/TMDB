@@ -9,11 +9,17 @@
 import Foundation
 
 extension TMDBServices: TMDBImageService {
-    func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w185\(url)") else {
+    func getPosterImageData(from path: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        let base = userSetting.imageConfig.images.secureBaseURL
+        guard let size = userSetting.imageConfig.images.posterSizes.last, let url = URL(string: "\(base)\(size)\(path)") else {
             completion(.failure(TMDBSession.APIError.invalidURL))
             return
         }
         session.send(url: url, completion: completion)
+    }
+
+    func updateImageConfig(completion: @escaping (Result<ImageConfigResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getImageConfigURLRequest()
+        session.send(request: request, responseType: ImageConfigResult.self, completion: completion)
     }
 }

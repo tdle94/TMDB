@@ -45,7 +45,7 @@ class PopularMovie: Object, Decodable {
     var posterPath: String?
     dynamic var adult: Bool = false
     dynamic var overview: String = ""
-    dynamic var releaseDate: String = ""
+    dynamic var releaseDate: String?
     let genreIds: List<Int> = List<Int>()
     dynamic var originalTitle: String = ""
     dynamic var originalLanguage: String = ""
@@ -82,7 +82,7 @@ class PopularMovie: Object, Decodable {
         overview = try container.decode(String.self, forKey: .overview)
         video = try container.decode(Bool.self, forKey: .video)
         posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
-        releaseDate = try container.decode(String.self, forKey: .releaseDate)
+        releaseDate = try container.decodeIfPresent(String.self, forKey: .releaseDate)
         originalTitle = try container.decode(String.self, forKey: .originalTitle)
         originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
         title = try container.decode(String.self, forKey: .title)

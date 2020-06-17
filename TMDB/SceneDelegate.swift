@@ -32,13 +32,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         locationManager.manager.requestWhenInUseAuthorization()
 
         // set view controller
-        let homeVC = TMDBHomeViewController()
+        let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome)
         let movieVC = TMDBMovieViewController()
         let tvVC = TMDBTelevisionViewController()
         let peopleVC = TMDBPeopleViewController()
         
         let tmdbLogo = UIImage(named: Constant.imageLogo)?.withRenderingMode(.alwaysOriginal)
         let imageBarButtonItem = UIBarButtonItem(image: tmdbLogo, landscapeImagePhone: tmdbLogo, style: .plain, target: nil, action: nil)
+
+        (homeVC as? TMDBHomeViewController)?.repository.updateImageConfig()
 
         homeVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
         movieVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)

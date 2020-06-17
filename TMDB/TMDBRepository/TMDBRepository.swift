@@ -13,13 +13,20 @@ protocol TMDBRepositoryProtocol {
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
-    func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void)
+    func getPosterImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void)
     func updateImageConfig()
 }
 
-struct TMDBRepository: TMDBRepositoryProtocol {
+class TMDBRepository: TMDBRepositoryProtocol {
     let services: TMDBServices
     let localDataSource: TMDBLocalDataSourceProtocol
+    var userSetting: TMDBUserSettingProtocol
+
+    init(services: TMDBServices, localDataSource: TMDBLocalDataSourceProtocol, userSetting: TMDBUserSettingProtocol) {
+        self.services = services
+        self.localDataSource = localDataSource
+        self.userSetting = userSetting
+    }
 
     func getMovieDetail(id: Int, completion: @escaping (Result<MovieDetail, Error>) -> Void) {
         if let movieDetail = localDataSource.getMovieDetail(id: id) {
@@ -59,17 +66,15 @@ struct TMDBRepository: TMDBRepositoryProtocol {
         services.getPopularPeople(page: page, completion: completion)
     }
 
-    func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        services.getImageData(from: url, completion: completion)
+    func getPosterImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        services.getPosterImageData(from: url, completion: completion)
     }
 
     func updateImageConfig() {
-        guard
-            let imageConfig = localDataSource.getImageConfig(),
-            let lastUpdateDate = imageConfig.dateUpdate,
+        if
+            let lastUpdateDate = userSetting.imageConfig.dateUpdate,
             let daysBetweenDates = Calendar.current.dateComponents([.day], from: lastUpdateDate, to: Date()).day,
-            daysBetweenDates == 3
-            else { return }
+            daysBetweenDates < 10 { return }
 
         services.updateImageConfig { result in
             DispatchQueue.main.async {
@@ -77,8 +82,7 @@ struct TMDBRepository: TMDBRepositoryProtocol {
                 case .failure(let error):
                     debugPrint(error)
                 case .success(let imageConfigResult):
-                    print(imageConfigResult)
-                    self.localDataSource.saveImageConfig(imageConfigResult)
+                    self.userSetting.imageConfig = imageConfigResult
                 }
             }
         }

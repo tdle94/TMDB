@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-17 04:26:36 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-17 23:34:06 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -68,36 +68,6 @@ import RealmSwift
         
     }
     
-    
-    
-     func getImageConfig() -> ImageConfigResult? {
-        
-    return cuckoo_manager.call("getImageConfig() -> ImageConfigResult?",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getImageConfig())
-        
-    }
-    
-    
-    
-     func saveImageConfig(_ config: ImageConfigResult)  {
-        
-    return cuckoo_manager.call("saveImageConfig(_: ImageConfigResult)",
-            parameters: (config),
-            escapingParameters: (config),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.saveImageConfig(config))
-        
-    }
-    
 
 	 struct __StubbingProxy_TMDBLocalDataSourceProtocol: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -115,16 +85,6 @@ import RealmSwift
 	    func saveMovie<M1: Cuckoo.Matchable>(_ movie: M1) -> Cuckoo.ProtocolStubFunction<(MovieDetail), Bool> where M1.MatchedType == MovieDetail {
 	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "saveMovie(_: MovieDetail) -> Bool", parameterMatchers: matchers))
-	    }
-	    
-	    func getImageConfig() -> Cuckoo.ProtocolStubFunction<(), ImageConfigResult?> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getImageConfig() -> ImageConfigResult?", parameterMatchers: matchers))
-	    }
-	    
-	    func saveImageConfig<M1: Cuckoo.Matchable>(_ config: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(ImageConfigResult)> where M1.MatchedType == ImageConfigResult {
-	        let matchers: [Cuckoo.ParameterMatcher<(ImageConfigResult)>] = [wrap(matchable: config) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "saveImageConfig(_: ImageConfigResult)", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -155,18 +115,6 @@ import RealmSwift
 	        return cuckoo_manager.verify("saveMovie(_: MovieDetail) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
-	    @discardableResult
-	    func getImageConfig() -> Cuckoo.__DoNotUse<(), ImageConfigResult?> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("getImageConfig() -> ImageConfigResult?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func saveImageConfig<M1: Cuckoo.Matchable>(_ config: M1) -> Cuckoo.__DoNotUse<(ImageConfigResult), Void> where M1.MatchedType == ImageConfigResult {
-	        let matchers: [Cuckoo.ParameterMatcher<(ImageConfigResult)>] = [wrap(matchable: config) { $0 }]
-	        return cuckoo_manager.verify("saveImageConfig(_: ImageConfigResult)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
 	}
 }
 
@@ -182,14 +130,6 @@ import RealmSwift
     
      func saveMovie(_ movie: MovieDetail) -> Bool  {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
-    }
-    
-     func getImageConfig() -> ImageConfigResult?  {
-        return DefaultValueRegistry.defaultValue(for: (ImageConfigResult?).self)
-    }
-    
-     func saveImageConfig(_ config: ImageConfigResult)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
 }
@@ -249,36 +189,6 @@ import RealmSwift
         
     }
     
-    
-    
-     override func getImageConfig() -> ImageConfigResult? {
-        
-    return cuckoo_manager.call("getImageConfig() -> ImageConfigResult?",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                super.getImageConfig()
-                ,
-            defaultCall: __defaultImplStub!.getImageConfig())
-        
-    }
-    
-    
-    
-     override func saveImageConfig(_ config: ImageConfigResult)  {
-        
-    return cuckoo_manager.call("saveImageConfig(_: ImageConfigResult)",
-            parameters: (config),
-            escapingParameters: (config),
-            superclassCall:
-                
-                super.saveImageConfig(config)
-                ,
-            defaultCall: __defaultImplStub!.saveImageConfig(config))
-        
-    }
-    
 
 	 struct __StubbingProxy_TMDBLocalDataSource: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -296,16 +206,6 @@ import RealmSwift
 	    func saveMovie<M1: Cuckoo.Matchable>(_ movie: M1) -> Cuckoo.ClassStubFunction<(MovieDetail), Bool> where M1.MatchedType == MovieDetail {
 	        let matchers: [Cuckoo.ParameterMatcher<(MovieDetail)>] = [wrap(matchable: movie) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "saveMovie(_: MovieDetail) -> Bool", parameterMatchers: matchers))
-	    }
-	    
-	    func getImageConfig() -> Cuckoo.ClassStubFunction<(), ImageConfigResult?> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "getImageConfig() -> ImageConfigResult?", parameterMatchers: matchers))
-	    }
-	    
-	    func saveImageConfig<M1: Cuckoo.Matchable>(_ config: M1) -> Cuckoo.ClassStubNoReturnFunction<(ImageConfigResult)> where M1.MatchedType == ImageConfigResult {
-	        let matchers: [Cuckoo.ParameterMatcher<(ImageConfigResult)>] = [wrap(matchable: config) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "saveImageConfig(_: ImageConfigResult)", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -336,18 +236,6 @@ import RealmSwift
 	        return cuckoo_manager.verify("saveMovie(_: MovieDetail) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
-	    @discardableResult
-	    func getImageConfig() -> Cuckoo.__DoNotUse<(), ImageConfigResult?> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("getImageConfig() -> ImageConfigResult?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func saveImageConfig<M1: Cuckoo.Matchable>(_ config: M1) -> Cuckoo.__DoNotUse<(ImageConfigResult), Void> where M1.MatchedType == ImageConfigResult {
-	        let matchers: [Cuckoo.ParameterMatcher<(ImageConfigResult)>] = [wrap(matchable: config) { $0 }]
-	        return cuckoo_manager.verify("saveImageConfig(_: ImageConfigResult)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
 	}
 }
 
@@ -365,18 +253,10 @@ import RealmSwift
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
-     override func getImageConfig() -> ImageConfigResult?  {
-        return DefaultValueRegistry.defaultValue(for: (ImageConfigResult?).self)
-    }
-    
-     override func saveImageConfig(_ config: ImageConfigResult)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-17 04:26:36 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-17 23:34:06 +0000
 
 //
 //  LocationService.swift
@@ -483,7 +363,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-17 04:26:36 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-17 23:34:06 +0000
 
 //
 //  Session.swift
@@ -619,7 +499,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-17 04:26:36 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-17 23:34:06 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -875,7 +755,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-17 04:26:36 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-17 23:34:06 +0000
 
 //
 //  URLSessionDataTaskProtocol.swift
@@ -981,7 +861,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-17 04:26:36 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-17 23:34:06 +0000
 
 //
 //  URLSessionProtocol.swift
@@ -1117,7 +997,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-17 04:26:36 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-17 23:34:06 +0000
 
 //
 //  UserDefault.swift
@@ -1224,6 +1104,30 @@ import Foundation
         
     }
     
+    
+    
+     var imageConfig: ImageConfigResult {
+        get {
+            return cuckoo_manager.getter("imageConfig",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.imageConfig)
+        }
+        
+        set {
+            cuckoo_manager.setter("imageConfig",
+                value: newValue,
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall: __defaultImplStub!.imageConfig = newValue)
+        }
+        
+    }
+    
 
     
 
@@ -1249,6 +1153,11 @@ import Foundation
 	    
 	    var region: Cuckoo.ProtocolToBeStubbedOptionalProperty<MockTMDBUserSettingProtocol, String> {
 	        return .init(manager: cuckoo_manager, name: "region")
+	    }
+	    
+	    
+	    var imageConfig: Cuckoo.ProtocolToBeStubbedProperty<MockTMDBUserSettingProtocol, ImageConfigResult> {
+	        return .init(manager: cuckoo_manager, name: "imageConfig")
 	    }
 	    
 	    
@@ -1279,6 +1188,11 @@ import Foundation
 	    
 	    var region: Cuckoo.VerifyOptionalProperty<String> {
 	        return .init(manager: cuckoo_manager, name: "region", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    
+	    var imageConfig: Cuckoo.VerifyProperty<ImageConfigResult> {
+	        return .init(manager: cuckoo_manager, name: "imageConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	
@@ -1312,6 +1226,16 @@ import Foundation
      var region: String? {
         get {
             return DefaultValueRegistry.defaultValue(for: (String?).self)
+        }
+        
+        set { }
+        
+    }
+    
+    
+     var imageConfig: ImageConfigResult {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (ImageConfigResult).self)
         }
         
         set { }

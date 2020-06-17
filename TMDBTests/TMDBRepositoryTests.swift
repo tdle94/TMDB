@@ -24,10 +24,6 @@ class TMDBRepositoryTests: XCTestCase {
 
     // MARK: - movie detail test
 
-    private func setUpMovieDetailTest() {
-        
-    }
-
     // no movie detail in realm, get from calling service
     func testGetMovieDetailCase1() {
         let expectation = self.expectation(description: "")
@@ -310,5 +306,27 @@ class TMDBRepositoryTests: XCTestCase {
 
     func testTVTrendingThisWeek() {
         self.setUpTrendingTest(time: .week, type: .tv)
+    }
+
+    // MARK: - test url image data
+    func testURLImageData() {
+        let expectation = self.expectation(description: "")
+        let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
+                implementation.1(.success(Data()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getImageData(from: "test.com") { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(url: urlMatcher, completion: anyClosure())
     }
 }

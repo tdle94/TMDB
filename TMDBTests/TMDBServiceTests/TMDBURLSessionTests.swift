@@ -14,12 +14,18 @@ import Cuckoo
 class TMDBURLSessionTests: XCTestCase {
     let session: MockTMDBURLSessionProtocol = MockTMDBURLSessionProtocol()
     let dataTask: MockTMDBURLSessionDataTaskProtocol = MockTMDBURLSessionDataTaskProtocol()
+    let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher()
+    let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
     var tmdbSession: TMDBSession!
-    
+
     override class func setUp() {
         // this is only for increasing test coverage for the sake of testing. It's unused
-        let urlSessionDataTask = URLSession.shared.tmdbDataTask(with: URLRequest(url: URL(string: "test.com")!)) { _,_,_  in }
-        urlSessionDataTask.tmdbResume()
+        let urlSessionDataTaskWithCustomTypeReturn = URLSession.shared.tmdbDataTask(with: URLRequest(url: URL(string: "test.com")!)) { _,_,_  in }
+        let urlSessionDataTaskWithURL = URLSession.shared.tmdbDataTask(with: URL(string: "test.com")!) {_, _, _ in
+        }
+
+        urlSessionDataTaskWithURL.tmdbResume()
+        urlSessionDataTaskWithCustomTypeReturn.tmdbResume()
     }
     
     override func setUp() {
@@ -27,6 +33,8 @@ class TMDBURLSessionTests: XCTestCase {
         tmdbSession = TMDBSession(session: session)
     }
     
+    // MARK: - test URLRequest with custom return type
+
     func common(request: URLRequest) {
         let expectation = self.expectation(description: "")
         stub(dataTask) { stub in
@@ -40,17 +48,16 @@ class TMDBURLSessionTests: XCTestCase {
         
         /**THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).tmdbDataTask(with: any(), completionHandler: anyClosure())
+        verify(session).tmdbDataTask(with: requestMatcher, completionHandler: anyClosure())
         verify(dataTask).tmdbResume()
     }
-    
+
     func testSuccessCall() {
-       // let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1)
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).tmdbDataTask(with: any(), completionHandler: anyClosure()).then { implementation in
+            when(stub).tmdbDataTask(with: requestMatcher, completionHandler: anyClosure()).then { implementation in
                 let urlResponse = HTTPURLResponse(url: URL(string: "test.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 implementation.1(Data(), urlResponse, nil)
                 return self.dataTask
@@ -65,7 +72,7 @@ class TMDBURLSessionTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).tmdbDataTask(with: any(), completionHandler: anyClosure()).then { implementation in
+            when(stub).tmdbDataTask(with: requestMatcher, completionHandler: anyClosure()).then { implementation in
                 implementation.1(nil, nil, NSError())
                 return self.dataTask
             }
@@ -79,7 +86,7 @@ class TMDBURLSessionTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).tmdbDataTask(with: any(), completionHandler: anyClosure()).then { implementation in
+            when(stub).tmdbDataTask(with: requestMatcher, completionHandler: anyClosure()).then { implementation in
                 let urlResponse = HTTPURLResponse(url: URL(string: "test.com")!, statusCode: 500, httpVersion: nil, headerFields: nil)
                 implementation.1(Data(), urlResponse, nil)
                 return self.dataTask
@@ -94,7 +101,7 @@ class TMDBURLSessionTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).tmdbDataTask(with: any(), completionHandler: anyClosure()).then { implementation in
+            when(stub).tmdbDataTask(with: requestMatcher, completionHandler: anyClosure()).then { implementation in
                 let urlResponse = HTTPURLResponse(url: URL(string: "test.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 implementation.1(nil, urlResponse, nil)
                 return self.dataTask
@@ -102,5 +109,72 @@ class TMDBURLSessionTests: XCTestCase {
         }
         
         common(request: request)
+    }
+
+    // MARK: - test get url image data
+    
+    func common1() {
+        let expectation = self.expectation(description: "")
+        stub(dataTask) { stub in
+            when(stub).tmdbResume().thenDoNothing()
+        }
+        
+        tmdbSession.send(url: URL(string: "test.com")!) { result in
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).tmdbDataTask(with: urlMatcher, completionHandler: anyClosure())
+        verify(dataTask).tmdbResume()
+    }
+
+    // valid url, valid data pass back
+    func testURLImageCase1() {
+        stub(session) { stub in
+            when(stub).tmdbDataTask(with: urlMatcher, completionHandler: anyClosure()).then { implementation in
+                let urlResponse = HTTPURLResponse(url: URL(string: "test.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                implementation.1(Data(), urlResponse, nil)
+                return self.dataTask
+            }
+        }
+
+        common1()
+    }
+
+    // valid url, no response
+    func testURLImageCase2() {
+        stub(session) { stub in
+            when(stub).tmdbDataTask(with: urlMatcher, completionHandler: anyClosure()).then { implementation in
+                implementation.1(Data(), nil, nil)
+                return self.dataTask
+            }
+        }
+        
+        common1()
+    }
+    
+    // valid url, with error
+    func testURLImageCase3() {
+        stub(session) { stub in
+            when(stub).tmdbDataTask(with: urlMatcher, completionHandler: anyClosure()).then { implementation in
+                implementation.1(Data(), nil, NSError())
+                return self.dataTask
+            }
+        }
+        
+        common1()
+    }
+    
+    // valid url, no data
+    func testURLImageCase4() {
+        stub(session) { stub in
+            when(stub).tmdbDataTask(with: urlMatcher, completionHandler: anyClosure()).then { implementation in
+                let urlResponse = HTTPURLResponse(url: URL(string: "test.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                implementation.1(nil, urlResponse, nil)
+                return self.dataTask
+            }
+        }
+        
+        common1()
     }
 }

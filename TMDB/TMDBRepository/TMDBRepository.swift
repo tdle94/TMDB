@@ -13,6 +13,7 @@ protocol TMDBRepositoryProtocol {
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
+    func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void)
 }
 
 struct TMDBRepository: TMDBRepositoryProtocol {
@@ -40,20 +41,24 @@ struct TMDBRepository: TMDBRepositoryProtocol {
             }
         }
     }
-    
+
     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovieResult, Error>) -> Void) {
         services.getPopularMovie(page: page, completion: completion)
     }
-    
+
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void) {
         services.getPopularOnTV(page: page, completion: completion)
     }
-    
+
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
         services.getTrending(time: time, type: type, completion: completion)
     }
-    
+
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void) {
         services.getPopularPeople(page: page, completion: completion)
+    }
+
+    func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        services.getImageData(from: url, completion: completion)
     }
 }

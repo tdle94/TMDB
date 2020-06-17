@@ -9,7 +9,10 @@
 import Foundation
 
 protocol TMDBSessionProtocol {
+    // this is for other request that require decoding
     func send<T: Decodable>(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)
+    // this is for getting image
+    func send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)
 }
 
 struct TMDBSession: TMDBSessionProtocol {
@@ -18,6 +21,7 @@ struct TMDBSession: TMDBSessionProtocol {
         case noURLReponse
         case noData
         case cannotDecode
+        case invalidURL
     }
 
     let session: TMDBURLSessionProtocol
@@ -46,6 +50,28 @@ struct TMDBSession: TMDBSessionProtocol {
                 debugPrint(error)
                 completion(.failure(APIError.cannotDecode))
             }
+        }
+        task.tmdbResume()
+    }
+
+    func send(url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
+        let task = session.tmdbDataTask(with: url) { data, urlResponse, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let response = urlResponse as? HTTPURLResponse, response.statusCode == 200 else {
+                completion(.failure(APIError.noURLReponse))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(APIError.noData))
+                return
+            }
+
+            completion(.success(data))
         }
         task.tmdbResume()
     }

@@ -9,11 +9,11 @@
 import UIKit
 
 class TMDBHomeViewController: UIViewController {
-    var collectionView: UICollectionView!
-
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     var dataSource: UICollectionViewDiffableDataSource<Section, PopularMovie>!
 
-    var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: URLSession.shared as! TMDBSessionProtocol,
+    var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                                                    urlRequestBuilder: TMDBURLRequestBuilder()),
                                                             localDataSource: TMDBLocalDataSource())
 
@@ -25,6 +25,7 @@ class TMDBHomeViewController: UIViewController {
         super.viewDidLoad()
         configurePopularCollectionView()
         configureDataSource()
+        getPopularMovie()
     }
 
     enum Section: String, CaseIterable {
@@ -51,48 +52,55 @@ class TMDBHomeViewController: UIViewController {
 
 extension TMDBHomeViewController {
     func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, id in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Popular", for: indexPath) as! PopularItemCell
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, popularMovie in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
+            cell.title.text = popularMovie.originalTitle
+            cell.releaseDate.text = popularMovie.releaseDate
+            if let posterPath = popularMovie.posterPath {
+                self.repository.getImageData(from: posterPath) { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let data):
+                            cell.imageView.image = UIImage(data: data)
+                        case .failure(_):
+                            cell.imageView.image = UIImage(named: "NoImage")
+                        }
+                    }
+                }
+            }
             return cell
         }
-        
-        dataSource.supplementaryViewProvider = { (
-          collectionView: UICollectionView,
-          kind: String,
-          indexPath: IndexPath) -> UICollectionReusableView? in
 
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Popular", for: indexPath) as! PopularItemCell
-          
-          return cell
+        dataSource.supplementaryViewProvider = { (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+            let header = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                              withReuseIdentifier: Constant.Identifier.header,
+                                                                              for: indexPath) as! TMDBPreviewHeaderView
+            header.label.text = "Popular"
+          return header
         }
     }
 
     func configurePopularCollectionView() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: generateLayout())
-        collectionView.register(PopularItemCell.self, forCellWithReuseIdentifier: "Popular")
-        view.addSubview(collectionView)
+        collectionView.collectionViewLayout = generateLayout()
+        collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+        collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.header)
     }
-    
+
     func generateLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
             return self.generatePopularLayout()
         }
     }
-    
-    func generatePopularLayout() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(2/3), heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupFractionalWidth = 0.6
-        let groupFractionalHeight: Float =  2/3
-        let groupSize = NSCollectionLayoutSize(
-          widthDimension: .fractionalWidth(CGFloat(groupFractionalWidth)),
-          heightDimension: .fractionalWidth(CGFloat(groupFractionalHeight)))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
-        group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
 
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(44))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem( layoutSize: headerSize, elementKind: "Popular", alignment: .top)
+    func generatePopularLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalWidth(1))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: "Popular", alignment: .top)
+
+        group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 18, bottom: 5, trailing: 5)
 
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [sectionHeader]
@@ -100,51 +108,4 @@ extension TMDBHomeViewController {
 
         return section
     }
-}
-
-class PopularItemCell: UICollectionViewCell {
-    let posterImageView: UIImageView
-
-    override init(frame: CGRect) {
-        posterImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
-        super.init(frame: frame)
-    }
-
-    required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class HeaderView: UICollectionReusableView {
-  static let reuseIdentifier = "my pussy"
-
-  let label = UILabel()
-
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    configure()
-  }
-
-  required init?(coder: NSCoder) {
-    fatalError()
-  }
-}
-
-extension HeaderView {
-  func configure() {
-    backgroundColor = .systemBackground
-
-    addSubview(label)
-    label.translatesAutoresizingMaskIntoConstraints = false
-    label.adjustsFontForContentSizeCategory = true
-
-    let inset = CGFloat(10)
-    NSLayoutConstraint.activate([
-      label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
-      label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
-      label.topAnchor.constraint(equalTo: topAnchor, constant: inset),
-      label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset)
-    ])
-    label.font = UIFont.preferredFont(forTextStyle: .title3)
-  }
 }

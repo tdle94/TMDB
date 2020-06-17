@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 
 struct Constant {
+    struct Identifier {
+        static let header = "header"
+        static let preview = "preview"
+    }
     struct ViewControllerIdentifier {
         static let tmdbHome = "TMDBHomeViewController"
     }

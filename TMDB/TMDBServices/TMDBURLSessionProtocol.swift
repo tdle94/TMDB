@@ -10,10 +10,16 @@ import Foundation
 
 protocol TMDBURLSessionProtocol {
     func tmdbDataTask(with: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol
+    func tmdbDataTask(with: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol
+    
 }
 
 extension URLSession: TMDBURLSessionProtocol {
     func tmdbDataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol {
         dataTask(with: request, completionHandler: completionHandler)
+    }
+
+    func tmdbDataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TMDBURLSessionDataTaskProtocol {
+        dataTask(with: url, completionHandler: completionHandler)
     }
 }

@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-17 23:34:06 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-17 23:41:38 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -256,7 +256,7 @@ import RealmSwift
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-17 23:34:06 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocationManager/TMDBLocationService.swift at 2020-06-17 23:41:38 +0000
 
 //
 //  LocationService.swift
@@ -363,7 +363,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-17 23:34:06 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-17 23:41:38 +0000
 
 //
 //  Session.swift
@@ -499,7 +499,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-17 23:34:06 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-17 23:41:38 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -755,7 +755,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-17 23:34:06 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-17 23:41:38 +0000
 
 //
 //  URLSessionDataTaskProtocol.swift
@@ -861,7 +861,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-17 23:34:06 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-17 23:41:38 +0000
 
 //
 //  URLSessionProtocol.swift
@@ -997,7 +997,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-17 23:34:06 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-17 23:41:38 +0000
 
 //
 //  UserDefault.swift

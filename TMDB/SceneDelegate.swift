@@ -28,6 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let win = UIWindow(windowScene: windowScene)
 
+        // request user current location
         locationManager.manager.requestWhenInUseAuthorization()
 
         // set view controller

@@ -10,8 +10,12 @@ import Foundation
 import RealmSwift
 
 protocol TMDBLocalDataSourceProtocol {
+    // movie detail
     func getMovieDetail(id: Int) -> MovieDetail?
-    func save(movie: MovieDetail) -> Bool
+    func saveMovie(_ movie: MovieDetail) -> Bool
+    // image config
+    func getImageConfig() -> ImageConfigResult?
+    func saveImageConfig(_ config: ImageConfigResult)
 }
 
 class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
@@ -30,7 +34,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         return realm?.object(ofType: MovieDetail.self, forPrimaryKey: id)
     }
 
-    func save(movie: MovieDetail) -> Bool {
+    func saveMovie(_ movie: MovieDetail) -> Bool {
         realm?.beginWrite()
         if let _ = realm?.object(ofType: MovieDetail.self, forPrimaryKey: movie.id) {
             realm?.cancelWrite()
@@ -39,5 +43,16 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         realm?.add(movie)
         try? realm?.commitWrite()
         return true
+    }
+
+    func getImageConfig() -> ImageConfigResult? {
+        return realm?.objects(ImageConfigResult.self).first
+    }
+
+    func saveImageConfig(_ config: ImageConfigResult) {
+        realm?.beginWrite()
+        config.dateUpdate = Date()
+        realm?.add(config, update: .modified)
+        try? realm?.commitWrite()
     }
 }

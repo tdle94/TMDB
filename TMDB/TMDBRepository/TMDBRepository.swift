@@ -14,6 +14,7 @@ protocol TMDBRepositoryProtocol {
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
     func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void)
+    func updateImageConfig()
 }
 
 struct TMDBRepository: TMDBRepositoryProtocol {
@@ -30,7 +31,7 @@ struct TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movie):
-                    if !self.localDataSource.save(movie: movie) {
+                    if !self.localDataSource.saveMovie(movie) {
                         completion(.failure(NSError()))
                     } else {
                         completion(.success(movie))
@@ -41,24 +42,45 @@ struct TMDBRepository: TMDBRepositoryProtocol {
             }
         }
     }
-    
+
     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovieResult, Error>) -> Void) {
         services.getPopularMovie(page: page, completion: completion)
     }
-    
+
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void) {
         services.getPopularOnTV(page: page, completion: completion)
     }
-    
+
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
         services.getTrending(time: time, type: type, completion: completion)
     }
-    
+
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void) {
         services.getPopularPeople(page: page, completion: completion)
     }
 
     func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
         services.getImageData(from: url, completion: completion)
+    }
+
+    func updateImageConfig() {
+        guard
+            let imageConfig = localDataSource.getImageConfig(),
+            let lastUpdateDate = imageConfig.dateUpdate,
+            let daysBetweenDates = Calendar.current.dateComponents([.day], from: lastUpdateDate, to: Date()).day,
+            daysBetweenDates == 3
+            else { return }
+
+        services.updateImageConfig { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    debugPrint(error)
+                case .success(let imageConfigResult):
+                    print(imageConfigResult)
+                    self.localDataSource.saveImageConfig(imageConfigResult)
+                }
+            }
+        }
     }
 }

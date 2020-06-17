@@ -218,8 +218,8 @@ class TMDBServiceTests: XCTestCase {
 
     func testFetchImageDataWithValidURL() {
         let expectation = self.expectation(description: "")
-        let imageURL = "test.com"
-        let urlMatcher = ParameterMatcher<URL>(matchesFunction: { $0.absoluteString == imageURL })
+        let imageURL = "/test.com"
+        let urlMatcher = ParameterMatcher<URL>(matchesFunction: { $0.absoluteString == "https://image.tmdb.org/t/p/w185\(imageURL)" })
 
         stub(session) { stub in
             when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in

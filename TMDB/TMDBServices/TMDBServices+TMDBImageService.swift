@@ -10,7 +10,7 @@ import Foundation
 
 extension TMDBServices: TMDBImageService {
     func getImageData(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let url = URL(string: url) else {
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w185\(url)") else {
             completion(.failure(TMDBSession.APIError.invalidURL))
             return
         }

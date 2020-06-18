@@ -17,6 +17,7 @@ class TMDBServiceTests: XCTestCase {
     let session = MockTMDBSessionProtocol()
     let urlRequestBuilder = MockTMDBURLRequestBuilderProtocol()
     let userSetting = MockTMDBUserSettingProtocol()
+    let userDefault: UserDefaults = UserDefaults(suiteName: #file)!
     var services: TMDBServices!
     
     struct TrendingTimeMatchable: Matchable {
@@ -39,6 +40,15 @@ class TMDBServiceTests: XCTestCase {
 
     override func setUp() {
         services = TMDBServices(session: session, urlRequestBuilder: urlRequestBuilder, userSetting: userSetting)
+        stub(userSetting) { stub in
+            when(stub).userDefault.get.thenReturn(userDefault)
+        }
+    }
+
+    override func tearDown() {
+        userDefault.dictionaryRepresentation().keys.forEach { key in
+            userDefault.removeObject(forKey: key)
+        }
     }
 
     // MARK: - popular
@@ -245,7 +255,7 @@ class TMDBServiceTests: XCTestCase {
     func testFetchPosterImageDataWithInvalidURL() {
         let expectation = self.expectation(description: "")
         let imageURL = "why you valid"
-        
+
         stub(userSetting) { stub in
             when(stub).imageConfig.get.thenReturn(ImageConfigResult())
         }

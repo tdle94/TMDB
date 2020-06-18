@@ -38,20 +38,34 @@ class LocalDataSourceTests: QuickSpec {
                 // add
                 expect(testRealm.objects(MovieDetail.self).count).to(equal(0))
                 let movieDetail = MovieDetail()
-                var success = localDataSource.saveMovie(movieDetail)
-                expect(success).to(beTrue())
+                localDataSource.saveMovie(movieDetail)
                 expect(testRealm.objects(MovieDetail.self).count).to(equal(1))
                 
                 // retrieve
                 expect(localDataSource.getMovieDetail(id: 0)).to(equal(movieDetail))
                 
                 // duplicate, throw error
-                success = localDataSource.saveMovie(movieDetail)
+                localDataSource.saveMovie(movieDetail)
                 expect(testRealm.objects(MovieDetail.self).count).to(equal(1))
-                expect(success).to(beFalse())
             }
             
-            
+            it ("add popular movie") {
+                // add
+                expect(testRealm.objects(PopularMovie.self).count).to(equal(0))
+                let popularMovies: List<PopularMovie> = List()
+                let movie = PopularMovie()
+                let data = Data()
+
+                popularMovies.append(movie)
+                localDataSource.savePopularMovies(popularMovies)
+                expect(testRealm.objects(PopularMovie.self).count).to(equal(1))
+                
+                // add data to poster
+                localDataSource.savePopularMoviePosterImgData(movie, data)
+                
+                // retrieve poster image data
+                expect(localDataSource.getPopularMoviePosterImgData(movie)).to(equal(data))
+            }
         }
     }
 }

@@ -19,7 +19,8 @@ class TMDBUserSettingTests: XCTestCase {
     let userSetting: MockTMDBUserSettingProtocol = MockTMDBUserSettingProtocol()
     let locationService: MockTMDBLocationService = MockTMDBLocationService()
     let optional = ParameterMatcher<String?>()
-    
+    let userDefault: UserDefaults = UserDefaults(suiteName: #file)!
+
     override func setUp() {
         locationManager = TMDBLocationManager(setting: userSetting, locationService: locationService)
 
@@ -28,6 +29,13 @@ class TMDBUserSettingTests: XCTestCase {
             when(stub).country.set(optional).thenDoNothing()
             when(stub).language.set(optional).thenDoNothing()
             when(stub).region.set(optional).thenDoNothing()
+            when(stub).userDefault.get.thenReturn(userDefault)
+        }
+    }
+
+    override func tearDown() {
+        userDefault.dictionaryRepresentation().keys.forEach { key in
+            userDefault.removeObject(forKey: key)
         }
     }
 
@@ -54,7 +62,7 @@ class TMDBUserSettingTests: XCTestCase {
         verify(userSetting).region.set(optional)
         verify(locationService).geocode(location: locationMatcher, completion: anyClosure())
     }
-    
+
     // with error
     func testUserSettingCase2() {
         let locationMatcher = ParameterMatcher<CLLocation>()
@@ -72,7 +80,7 @@ class TMDBUserSettingTests: XCTestCase {
         /*THEN*/
         verify(locationService).geocode(location: locationMatcher, completion: anyClosure())
     }
-    
+
     // with no location
     func testUserSettingCase3() {
         let locationMatcher = ParameterMatcher<CLLocation>()
@@ -102,5 +110,15 @@ class TMDBUserSettingTests: XCTestCase {
         
         XCTAssertNotNil(setting.region)
         XCTAssertEqual(setting.region, "US")
+    }
+
+    // MARK: - test image config
+    func testImageConfig() {
+        let imageConfigResult = ImageConfigResult()
+        var setting = TMDBUserSetting(userDefault: userDefault)
+        
+        // return new image config
+        setting.imageConfig = imageConfigResult
+        XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)
     }
 }

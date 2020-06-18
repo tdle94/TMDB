@@ -37,16 +37,14 @@ class TMDBHomeViewController: UIViewController {
 
     func getPopularMovie() {
         repository.getPopularMovie(page: 1) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    debugPrint(error)
-                case .success(let popularMovieResult):
-                    var snapshot = NSDiffableDataSourceSnapshot<Section, PopularMovie>()
-                    snapshot.appendSections([Section.popularMovie])
-                    snapshot.appendItems(Array(popularMovieResult.movies))
-                    self.dataSource.apply(snapshot)
-                }
+            switch result {
+            case .failure(let error):
+                debugPrint(error)
+            case .success(let popularMovieResult):
+                var snapshot = NSDiffableDataSourceSnapshot<Section, PopularMovie>()
+                snapshot.appendSections([Section.popularMovie])
+                snapshot.appendItems(Array(popularMovieResult.movies))
+                self.dataSource.apply(snapshot)
             }
         }
     }
@@ -58,16 +56,12 @@ extension TMDBHomeViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
             cell.title.text = popularMovie.originalTitle
             cell.releaseDate.text = popularMovie.releaseDate
-            if let posterPath = popularMovie.posterPath {
-                self.repository.getPosterImageData(from: posterPath) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let data):
-                            cell.imageView.image = UIImage(data: data)
-                        case .failure(_):
-                            cell.imageView.image = UIImage(named: "NoImage")
-                        }
-                    }
+            self.repository.getPosterImageData(from: popularMovie) { result in
+                switch result {
+                case .success(let data):
+                    cell.imageView.image = UIImage(data: data)
+                case .failure(_):
+                    cell.imageView.image = UIImage(named: "NoImage")
                 }
             }
             return cell

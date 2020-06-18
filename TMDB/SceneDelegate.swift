@@ -12,7 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    var locationManager: TMDBLocationManager = TMDBLocationManager(setting: TMDBUserSetting(), locationService: TMDBGeocoder())
+    var locationManager: TMDBLocationManager = TMDBLocationManager(setting: TMDBUserSetting(userDefault: UserDefaults.standard), locationService: TMDBGeocoder())
 
     var homeCoordinator: MainCoordinator?
     var movieCoordinator: MainCoordinator?

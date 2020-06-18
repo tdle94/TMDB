@@ -56,6 +56,7 @@ class PopularMovie: Object, Decodable {
     dynamic var video: Bool = false
     dynamic var voteAverage: Double = 0.0
     dynamic var mediaType: String?
+    dynamic var posterImgData: Data?
     
     enum CodingKeys: String, CodingKey {
         case id, adult, overview, popularity, video, title

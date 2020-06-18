@@ -13,33 +13,36 @@ protocol TMDBUserSettingProtocol {
     var country: String? { get set }
     var region: String? { get set }
     var imageConfig: ImageConfigResult { get set }
+    var userDefault: UserDefaults { get set }
 }
 
 struct TMDBUserSetting: TMDBUserSettingProtocol {
+    var userDefault: UserDefaults = UserDefaults.standard
+
     var language: String? {
         get {
-            return UserDefaults.standard.object(forKey: Constant.UserSetting.language) as? String
+            return userDefault.object(forKey: Constant.UserSetting.language) as? String
         }
         set {
-            UserDefaults.standard.setValue(newValue, forKey: Constant.UserSetting.language)
+            userDefault.setValue(newValue, forKey: Constant.UserSetting.language)
         }
     }
     
     var country: String? {
         get {
-            return UserDefaults.standard.object(forKey: Constant.UserSetting.country) as? String
+            return userDefault.object(forKey: Constant.UserSetting.country) as? String
         }
         set {
-            UserDefaults.standard.setValue(newValue, forKey: Constant.UserSetting.country)
+            userDefault.setValue(newValue, forKey: Constant.UserSetting.country)
         }
     }
     
     var region: String? {
         get {
-            return UserDefaults.standard.object(forKey: Constant.UserSetting.region) as? String
+            return userDefault.object(forKey: Constant.UserSetting.region) as? String
         }
         set {
-            UserDefaults.standard.setValue(newValue, forKey: Constant.UserSetting.region)
+            userDefault.setValue(newValue, forKey: Constant.UserSetting.region)
         }
     }
 
@@ -52,7 +55,7 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
             return imageConfig
         }
         set {
-            UserDefaults.standard.set(try? PropertyListEncoder().encode(newValue), forKey: Constant.UserSetting.imageConfig)
+            userDefault.set(try? PropertyListEncoder().encode(newValue), forKey: Constant.UserSetting.imageConfig)
         }
     }
 }

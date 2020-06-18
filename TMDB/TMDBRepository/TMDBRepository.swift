@@ -38,6 +38,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movie):
+                    self.localDataSource.saveMovie(movie)
                     completion(.success(movie))
                 case .failure(let error):
                     completion(.failure(error))

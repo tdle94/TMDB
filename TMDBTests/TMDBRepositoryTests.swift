@@ -69,40 +69,7 @@ class TMDBRepositoryTests: XCTestCase {
         verify(localDataSource).getMovieDetail(id: 3)
         verify(session).send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())
         verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
-    }
-
-    // no movie detail in realm, get from calling service with valid id, save error
-    func testGetMovieDetailCase2() {
-        let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3)
-        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
-
-        /*GIVEN*/
-        stub(session) { stub in
-            when(stub.send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())).then { implementation in
-                implementation.2(.success(MovieDetail()))
-            }
-        }
-
-        stub(requestBuilder) { stub in
-            when(stub.getMovieDetailURLRequest(id: 3, language: "en-US")).thenReturn(request)
-        }
-        
-        stub(localDataSource) { stub in
-            when(stub.getMovieDetail(id: 3)).thenReturn(nil)
-            when(stub.saveMovie(any())).thenDoNothing()
-        }
-
-        /*WHEN*/
-        repository.getMovieDetail(id: 3) { result in
-            expectation.fulfill()
-        }
-
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovieDetail(id: 3)
-        verify(session).send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
+        verify(localDataSource).saveMovie(any())
     }
 
     // no movie detail in realm, get from calling service with invalid id, service error

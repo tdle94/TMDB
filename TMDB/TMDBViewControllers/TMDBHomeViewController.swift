@@ -66,10 +66,10 @@ class TMDBHomeViewController: UIViewController {
 }
 
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
-    func popularSegmentControl(selected title: String) {
-        if title == "Movie" {
+    func popularSegmentControl(at index: Int) {
+        if index == 0 {
             getPopularMovie()
-        } else if title == "On TV" {
+        } else if index == 1 {
             getPopularTVShow()
         }
     }

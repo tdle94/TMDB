@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol TMDBPreviewSegmentControl: AnyObject {
-    func popularSegmentControl(selected title: String)
+    func popularSegmentControl(at index: Int)
 }
 
 class TMDBPreviewHeaderView: UICollectionReusableView {
@@ -18,13 +18,15 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var segmentControl: UISegmentedControl! {
         didSet {
+            segmentControl.setTitle(NSLocalizedString("Movies", comment: ""), forSegmentAt: 0)
+            segmentControl.setTitle(NSLocalizedString("TV Shows", comment: ""), forSegmentAt: 1)
+            segmentControl.setTitle(NSLocalizedString("People", comment: ""), forSegmentAt: 2)
             segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
         }
     }
 
     @IBAction func segmentControlAction(_ sender: UISegmentedControl) {
-        let selectedTitle = sender.titleForSegment(at: sender.selectedSegmentIndex)!
-        delegate?.popularSegmentControl(selected: selectedTitle)
+        delegate?.popularSegmentControl(at: sender.selectedSegmentIndex)
     }
 }
 

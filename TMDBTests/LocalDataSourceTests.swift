@@ -36,35 +36,35 @@ class LocalDataSourceTests: QuickSpec {
 
             it("add movie detail, retrieve it from Realm and throw error for duplicate") {
                 // add
-                expect(testRealm.objects(MovieDetail.self).count).to(equal(0))
-                let movieDetail = MovieDetail()
+                expect(testRealm.objects(Movie.self).count).to(equal(0))
+                let movieDetail = Movie()
                 localDataSource.saveMovie(movieDetail)
-                expect(testRealm.objects(MovieDetail.self).count).to(equal(1))
+                expect(testRealm.objects(Movie.self).count).to(equal(1))
                 
                 // retrieve
-                expect(localDataSource.getMovieDetail(id: 0)).to(equal(movieDetail))
+                expect(localDataSource.getMovie(id: 0)).to(equal(movieDetail))
                 
                 // duplicate, throw error
                 localDataSource.saveMovie(movieDetail)
-                expect(testRealm.objects(MovieDetail.self).count).to(equal(1))
+                expect(testRealm.objects(Movie.self).count).to(equal(1))
             }
             
             it ("add popular movie") {
                 // add
-                expect(testRealm.objects(PopularMovie.self).count).to(equal(0))
-                let popularMovies: List<PopularMovie> = List()
-                let movie = PopularMovie()
+                expect(testRealm.objects(Movie.self).count).to(equal(0))
+                let popularMovies: List<Movie> = List()
+                let movie = Movie()
                 let data = Data()
 
                 popularMovies.append(movie)
-                localDataSource.savePopularMovies(popularMovies)
-                expect(testRealm.objects(PopularMovie.self).count).to(equal(1))
+                localDataSource.saveMovies(popularMovies)
+                expect(testRealm.objects(Movie.self).count).to(equal(1))
                 
                 // add data to poster
-                localDataSource.savePopularMoviePosterImgData(movie, data)
+                localDataSource.saveMoviePosterImgData(movie, data)
                 
                 // retrieve poster image data
-                expect(localDataSource.getPopularMoviePosterImgData(movie)).to(equal(data))
+                expect(localDataSource.getMoviePosterImgData(movie)).to(equal(data))
             }
         }
     }

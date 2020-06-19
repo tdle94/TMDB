@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 @objcMembers
-class MovieDetail: Object, Decodable {
+class Movie: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var adult: Bool = false
     dynamic var backdropPath: String?
@@ -22,16 +22,17 @@ class MovieDetail: Object, Decodable {
     dynamic var overview: String?
     dynamic var popularity: Double = 0.0
     dynamic var posterPath: String?
-    dynamic var releaseDate: String = ""
+    dynamic var releaseDate: String?
     dynamic var revenue: Double = 0.0
     dynamic var runtime: Int = 0
-    dynamic var status: String = ""
+    dynamic var status: String?
     dynamic var tagline: String?
     dynamic var title: String = ""
     dynamic var video: Bool = false
     dynamic var voteAverage: Double = 0.0
     dynamic var voteCount: Int = 0
     dynamic var belongToCollection: Bool?
+    dynamic var posterImgData: Data?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()
@@ -57,37 +58,42 @@ class MovieDetail: Object, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         adult = try container.decode(Bool.self, forKey: .adult)
-        budget = try container.decode(Double.self, forKey: .budget)
-        homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
         overview = try container.decodeIfPresent(String.self, forKey: .overview)
-        popularity = try container.decode(Double.self, forKey: .popularity)
-        revenue = try container.decode(Double.self, forKey: .revenue)
-        runtime = try container.decode(Int.self, forKey: .runtime)
-        status = try container.decode(String.self, forKey: .status)
-        tagline = try container.decodeIfPresent(String.self, forKey: .tagline)
-        title = try container.decode(String.self, forKey: .title)
         video = try container.decode(Bool.self, forKey: .video)
-        backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
-        imdbId = try container.decodeIfPresent(String.self, forKey: .imdbId)
-        originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
-        originalTitle = try container.decode(String.self, forKey: .originalTitle)
         posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
-        releaseDate = try container.decode(String.self, forKey: .releaseDate)
+        releaseDate = try container.decodeIfPresent(String.self, forKey: .releaseDate)
+        originalTitle = try container.decode(String.self, forKey: .originalTitle)
+        originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
+        title = try container.decode(String.self, forKey: .title)
+        backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         voteCount = try container.decode(Int.self, forKey: .voteCount)
+        
+        budget = try container.decodeIfPresent(Double.self, forKey: .budget) ?? 0
+        homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+        popularity = try container.decodeIfPresent(Double.self, forKey: .popularity) ?? 0
+        revenue = try container.decodeIfPresent(Double.self, forKey: .revenue) ?? 0
+        runtime = try container.decodeIfPresent(Int.self, forKey: .runtime) ?? 0
+        status = try container.decodeIfPresent(String.self, forKey: .status)
+        tagline = try container.decodeIfPresent(String.self, forKey: .tagline)
+        imdbId = try container.decodeIfPresent(String.self, forKey: .imdbId)
         belongToCollection = try container.decodeIfPresent(Bool.self, forKey: .belongToCollection)
 
-        let genres = try container.decode(List<Genre>.self, forKey: .genres)
-        self.genres.append(objectsIn: genres)
+        if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
+            self.genres.append(objectsIn: genres)
+        }
 
-        let spokenLanguages = try container.decode(List<SpokenLanguage>.self, forKey: .spokenLanguages)
-        self.spokenLanguages.append(objectsIn: spokenLanguages)
+        if let spokenLanguages = try container.decodeIfPresent(List<SpokenLanguage>.self, forKey: .spokenLanguages) {
+            self.spokenLanguages.append(objectsIn: spokenLanguages)
+        }
 
-        let productionCompanies = try container.decode(List<ProductionCompany>.self, forKey: .productionCompanies)
-        self.productionCompanies.append(objectsIn: productionCompanies)
+        if let productionCompanies = try container.decodeIfPresent(List<ProductionCompany>.self, forKey: .productionCompanies) {
+            self.productionCompanies.append(objectsIn: productionCompanies)
+        }
 
-        let productionCountries = try container.decode(List<ProductionCountry>.self, forKey: .productionCountries)
-        self.productionCountries.append(objectsIn: productionCountries)
+        if let productionCountries = try container.decodeIfPresent(List<ProductionCountry>.self, forKey: .productionCountries) {
+            self.productionCountries.append(objectsIn: productionCountries)
+        }
     }
 
     required init() {

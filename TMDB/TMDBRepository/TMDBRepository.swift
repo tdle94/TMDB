@@ -8,12 +8,12 @@
 import Foundation
 
 protocol TMDBRepositoryProtocol {
-    func getMovieDetail(id: Int, completion: @escaping (Result<MovieDetail, Error>) -> Void)
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovieResult, Error>) -> Void)
+    func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
+    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
-    func getPosterImageData(from movie: PopularMovie, completion: @escaping (Result<Data, Error>) -> Void)
+    func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)
     func updateImageConfig()
 }
 
@@ -28,8 +28,8 @@ class TMDBRepository: TMDBRepositoryProtocol {
         self.userSetting = userSetting
     }
 
-    func getMovieDetail(id: Int, completion: @escaping (Result<MovieDetail, Error>) -> Void) {
-        if let movieDetail = localDataSource.getMovieDetail(id: id) {
+    func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
+        if let movieDetail = localDataSource.getMovie(id: id) {
             completion(.success(movieDetail))
             return
         }
@@ -47,12 +47,12 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovieResult, Error>) -> Void) {
+    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
         services.getPopularMovie(page: page) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let popularMovieResult):
-                    self.localDataSource.savePopularMovies(popularMovieResult.movies)
+                    self.localDataSource.saveMovies(popularMovieResult.movies)
                     completion(.success(popularMovieResult))
                 case .failure(let error):
                     completion(.failure(error))
@@ -73,13 +73,13 @@ class TMDBRepository: TMDBRepositoryProtocol {
         services.getPopularPeople(page: page, completion: completion)
     }
 
-    func getPosterImageData(from movie: PopularMovie, completion: @escaping (Result<Data, Error>) -> Void) {
+    func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void) {
         guard let path = movie.posterPath else {
             completion(.failure(NSError(domain: "", code: 400, userInfo: nil)))
             return
         }
 
-        if let data = localDataSource.getPopularMoviePosterImgData(movie) {
+        if let data = localDataSource.getMoviePosterImgData(movie) {
             completion(.success(data))
             return
         }
@@ -88,7 +88,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    self.localDataSource.savePopularMoviePosterImgData(movie, data)
+                    self.localDataSource.saveMoviePosterImgData(movie, data)
                     completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))

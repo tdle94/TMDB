@@ -11,7 +11,7 @@ import UIKit
 class TMDBHomeViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, PopularMovie>!
+    var dataSource: UICollectionViewDiffableDataSource<Section, Movie>!
 
     var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                                                    urlRequestBuilder: TMDBURLRequestBuilder(),
@@ -41,7 +41,7 @@ class TMDBHomeViewController: UIViewController {
             case .failure(let error):
                 debugPrint(error)
             case .success(let popularMovieResult):
-                var snapshot = NSDiffableDataSourceSnapshot<Section, PopularMovie>()
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Movie>()
                 snapshot.appendSections([Section.popularMovie])
                 snapshot.appendItems(Array(popularMovieResult.movies))
                 self.dataSource.apply(snapshot)

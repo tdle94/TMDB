@@ -9,13 +9,13 @@
 import Foundation
 
 extension TMDBServices: TMDBMovieService {
-    func getMovieDetail(id: Int, completion: @escaping (Result<MovieDetail, Error>) -> Void) {
+    func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
         let request = urlRequestBuilder.getMovieDetailURLRequest(id: id)
-        session.send(request: request, responseType: MovieDetail.self, completion: completion)
+        session.send(request: request, responseType: Movie.self, completion: completion)
     }
     
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovieResult, Error>) -> Void) {
+    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
         let request = urlRequestBuilder.getPopularMovieURLRequest(page: page)
-        session.send(request: request, responseType: PopularMovieResult.self, completion: completion)
+        session.send(request: request, responseType: PopularMovie.self, completion: completion)
     }
 }

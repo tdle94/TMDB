@@ -9,13 +9,22 @@
 import Foundation
 import UIKit
 
-class TMDBPreviewHeaderView: UICollectionReusableView {
+protocol TMDBPreviewSegmentControl: AnyObject {
+    func popularSegmentControl(selected title: String)
+}
 
+class TMDBPreviewHeaderView: UICollectionReusableView {
+    weak var delegate: TMDBPreviewSegmentControl?
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var segmentControl: UISegmentedControl! {
         didSet {
             segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
         }
+    }
+
+    @IBAction func segmentControlAction(_ sender: UISegmentedControl) {
+        let selectedTitle = sender.titleForSegment(at: sender.selectedSegmentIndex)!
+        delegate?.popularSegmentControl(selected: selectedTitle)
     }
 }
 

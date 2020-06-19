@@ -15,7 +15,7 @@ class PopularOnTVResult: Object, Decodable {
     dynamic var totalPages: Int = 0
     dynamic var totalResults: Int = 0
     let onTV: List<TVShow> = List()
-    
+
     enum CodingKeys: String, CodingKey {
         case page
         case totalPages = "total_pages"
@@ -28,6 +28,8 @@ class PopularOnTVResult: Object, Decodable {
         page = try container.decode(Int.self, forKey: .page)
         totalPages = try container.decode(Int.self, forKey: .totalPages)
         totalResults = try container.decode(Int.self, forKey: .totalResults)
+        let tvShows = try container.decode(List<TVShow>.self, forKey: .onTV)
+        self.onTV.append(objectsIn: tvShows)
     }
 
     required init() {

@@ -14,6 +14,7 @@ protocol TMDBRepositoryProtocol {
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
     func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)
+    func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void)
     func updateImageConfig()
 }
 
@@ -62,7 +63,41 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void) {
-        services.getPopularOnTV(page: page, completion: completion)
+        services.getPopularOnTV(page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let popularTVShowResult):
+                    self.localDataSource.saveTVShows(popularTVShowResult.onTV)
+                    completion(.success(popularTVShowResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void) {
+        guard let path = tvShow.posterPath else {
+            completion(.failure(NSError(domain: "", code: 400, userInfo: nil)))
+            return
+        }
+
+        if let data = localDataSource.getTVPosterImgData(tvShow) {
+            completion(.success(data))
+            return
+        }
+
+        services.getPosterImageData(from: path) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    self.localDataSource.saveTVPosterImgData(tvShow, data)
+                    completion(.success(data))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {

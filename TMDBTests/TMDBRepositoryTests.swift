@@ -309,10 +309,6 @@ class TMDBRepositoryTests: XCTestCase {
         let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
 
         /*GIVEN*/
-        stub(localDataSource) { stub in
-            when(stub).getTVPosterImgData(tvShowMatcher).thenReturn(nil)
-        }
-
         stub(session) { stub in
             when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
                 implementation.1(.failure(NSError(domain: "", code: 500, userInfo: nil)))
@@ -322,6 +318,11 @@ class TMDBRepositoryTests: XCTestCase {
         stub(userSetting) { stub in
             when(stub).imageConfig.get.thenReturn(ImageConfigResult())
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).getTVPosterImgData(tvShowMatcher).thenReturn(nil)
+        }
+
 
         /*WHEN*/
         repository.getPosterImageData(from: tvShow) { result in

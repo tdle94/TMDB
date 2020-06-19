@@ -366,7 +366,13 @@ class TMDBRepositoryTests: XCTestCase {
         tvShow.posterImgData = posterImgData
 
         /*WHEN*/
-        repository.getPosterImageData(from: tvShow) { result in }
+        repository.getPosterImageData(from: tvShow) { result in
+            do {
+                let _ = try result.get()
+            } catch let error {
+                XCTAssertEqual(error as NSError, NSError(domain: "invalid url", code: 400, userInfo: nil))
+            }
+        }
     }
 
     // MARK: - popular people

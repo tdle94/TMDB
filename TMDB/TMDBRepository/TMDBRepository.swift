@@ -78,7 +78,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
 
     func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void) {
         guard let path = tvShow.posterPath else {
-            completion(.failure(NSError(domain: "", code: 400, userInfo: nil)))
+            completion(.failure(NSError(domain: "invalid url", code: 400, userInfo: nil)))
             return
         }
 

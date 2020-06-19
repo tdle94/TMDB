@@ -198,7 +198,9 @@ class TMDBRepositoryTests: XCTestCase {
     }
 
     // MARK: - popular TV Shows
-    func testPopularTVShows() {
+    
+    // success
+    func testPopularTVShowsCase1() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
@@ -213,6 +215,10 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(request)
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).saveTVShows(any()).thenDoNothing()
+        }
 
         /*WHEN*/
         repository.getPopularOnTV(page: 1) { result in
@@ -224,6 +230,149 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
+    }
+    
+    // failure
+    func testPopularTVShowsCase2() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getPopularOnTV(page: 1) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
+    }
+    
+    // MARK: - tv show poster image data
+    
+    // not in realm, service call succeed
+    func testTVShowPosterImgDataCase1() {
+        let expectation = self.expectation(description: "")
+        let tvShow = TVShow()
+        tvShow.posterPath = ""
+        let tvShowMatcher: ParameterMatcher<TVShow> = ParameterMatcher(matchesFunction: { $0 == tvShow })
+        let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVPosterImgData(tvShowMatcher).thenReturn(nil)
+        }
+
+        stub(session) { stub in
+            when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
+                implementation.1(.success(Data()))
+            }
+        }
+
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+        }
+
+        stub(localDataSource) { stub in
+            when(stub).saveTVPosterImgData(any(), any()).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.getPosterImageData(from: tvShow) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(url: urlMatcher, completion: anyClosure())
+        verify(localDataSource).getTVPosterImgData(tvShowMatcher)
+    }
+
+    // not in realm, service call fail
+    func testTVShowPosterImgDataCase2() {
+        let expectation = self.expectation(description: "")
+        let tvShow = TVShow()
+        tvShow.posterPath = ""
+        let tvShowMatcher: ParameterMatcher<TVShow> = ParameterMatcher(matchesFunction: { $0 == tvShow })
+        let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
+                implementation.1(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+        }
+        
+        stub(localDataSource) { stub in
+            when(stub).getTVPosterImgData(tvShowMatcher).thenReturn(nil)
+        }
+
+
+        /*WHEN*/
+        repository.getPosterImageData(from: tvShow) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(url: urlMatcher, completion: anyClosure())
+        verify(localDataSource).getTVPosterImgData(tvShowMatcher)
+    }
+
+    // in realm, no service call
+    func testTVShowPosterImgDataCase3() {
+        let expectation = self.expectation(description: "")
+        let tvShow = TVShow()
+        let posterImgData = Data()
+        tvShow.posterImgData = posterImgData
+        tvShow.posterPath = ""
+        let tvShowMatcher: ParameterMatcher<TVShow> = ParameterMatcher(matchesFunction: { $0 == tvShow })
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVPosterImgData(tvShowMatcher).thenReturn(posterImgData)
+        }
+        
+        /*WHEN*/
+        repository.getPosterImageData(from: tvShow) { result in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(localDataSource).getTVPosterImgData(tvShowMatcher)
+    }
+    
+    // no poster path, return error
+    func testTVShowPosterImgDataCase4() {
+        let tvShow = TVShow()
+        let posterImgData = Data()
+        tvShow.posterImgData = posterImgData
+
+        /*WHEN*/
+        repository.getPosterImageData(from: tvShow) { result in
+            do {
+                let _ = try result.get()
+            } catch let error {
+                XCTAssertEqual(error as NSError, NSError(domain: "invalid url", code: 400, userInfo: nil))
+            }
+        }
     }
 
     // MARK: - popular people

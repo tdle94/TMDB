@@ -39,7 +39,8 @@ class TVShow: Object, Decodable {
     dynamic var type: String = ""
     dynamic var voteAverage: Double = 0.0
     dynamic var voteCount: Int = 0
-    
+    dynamic var posterImgData: Data?
+
     enum CodingKeys: String, CodingKey {
         case genres, hompage, id, languages, name, networks, overview, popularity, seasons, status, type
         case backdropPath = "backdrop_path"
@@ -60,7 +61,7 @@ class TVShow: Object, Decodable {
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 

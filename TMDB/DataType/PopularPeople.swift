@@ -77,7 +77,7 @@ class PopularPeople: Object, Decodable {
 @objcMembers
 class KnownFor: Object, Decodable {
     dynamic var mediaType: String = ""
-    dynamic var popularMovie: PopularMovie?
+    dynamic var popularMovie: Movie?
     dynamic var popularTV: PopularOnTV?
     
     enum CodingKeys: String, CodingKey {
@@ -89,7 +89,7 @@ class KnownFor: Object, Decodable {
         mediaType = try container.decode(String.self, forKey: .mediaType)
 
         if mediaType == "movie" {
-            popularMovie = try PopularMovie(from: decoder)
+            popularMovie = try Movie(from: decoder)
         } else {
             popularTV = try PopularOnTV(from: decoder)
         }

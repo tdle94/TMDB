@@ -10,13 +10,12 @@ import Foundation
 import RealmSwift
 
 protocol TMDBLocalDataSourceProtocol {
-    // movie detail
-    func getMovieDetail(id: Int) -> MovieDetail?
-    func saveMovie(_ movie: MovieDetail)
-    // popular movie
-    func savePopularMovies(_ movies: List<PopularMovie>)
-    func savePopularMoviePosterImgData(_ movie: PopularMovie, _ data: Data)
-    func getPopularMoviePosterImgData(_ movie: PopularMovie) -> Data?
+    // movie
+    func getMovie(id: Int) -> Movie?
+    func saveMovie(_ movie: Movie)
+    func saveMovies(_ movies: List<Movie>)
+    func getMoviePosterImgData(_ movie: Movie) -> Data?
+    func saveMoviePosterImgData(_ movie: Movie, _ data: Data)
 }
 
 class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
@@ -33,40 +32,34 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     // MARK: - movie detail
 
-    func getMovieDetail(id: Int) -> MovieDetail? {
-        return realm.object(ofType: MovieDetail.self, forPrimaryKey: id)
+    func getMovie(id: Int) -> Movie? {
+        return realm.object(ofType: Movie.self, forPrimaryKey: id)
     }
 
-    func saveMovie(_ movie: MovieDetail) {
+    func saveMovie(_ movie: Movie) {
         realm.beginWrite()
-        if let _ = realm.object(ofType: MovieDetail.self, forPrimaryKey: movie.id) {
-            realm.cancelWrite()
-            return
+        if let existedMovie = getMovie(id: movie.id) {
+            movie.posterImgData = existedMovie.posterImgData
         }
-        realm.add(movie)
+        realm.add(movie, update: .modified)
         try? realm.commitWrite()
     }
 
-    // MARK: - popular movie
-
-    func savePopularMovies(_ movies: List<PopularMovie>) {
+    func saveMovies(_ movies: List<Movie>) {
         realm.beginWrite()
-        for movie in movies {
-            if realm.object(ofType: PopularMovie.self, forPrimaryKey: movie.id) == nil {
-                realm.add(movie)
-            }
+        for movie in movies where getMovie(id: movie.id) == nil {
+            realm.add(movie)
         }
         try? realm.commitWrite()
     }
 
-    func savePopularMoviePosterImgData(_ movie: PopularMovie, _ data: Data) {
-        let popularMovie = realm.object(ofType: PopularMovie.self, forPrimaryKey: movie.id)
-        realm.beginWrite()
-        popularMovie?.posterImgData = data
-        try? realm.commitWrite()
+    func getMoviePosterImgData(_ movie: Movie) -> Data? {
+        return getMovie(id: movie.id)?.posterImgData
     }
 
-    func getPopularMoviePosterImgData(_ movie: PopularMovie) -> Data? {
-        realm.object(ofType: PopularMovie.self, forPrimaryKey: movie.id)?.posterImgData
+    func saveMoviePosterImgData(_ movie: Movie, _ data: Data) {
+        realm.beginWrite()
+        movie.posterImgData = data
+        try? realm.commitWrite()
     }
 }

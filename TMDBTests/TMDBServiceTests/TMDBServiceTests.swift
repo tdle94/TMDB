@@ -62,8 +62,8 @@ class TMDBServiceTests: XCTestCase {
         }
 
         stub(session) { stub in
-            when(stub).send(request: any(), responseType: any(PopularMovieResult.Type.self), completion: anyClosure()).then { implementation in
-                let popularMovieResult = PopularMovieResult()
+            when(stub).send(request: any(), responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                let popularMovieResult = PopularMovie()
                 implementation.2(.success(popularMovieResult))
             }
         }
@@ -74,7 +74,7 @@ class TMDBServiceTests: XCTestCase {
 
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: isNil())
-        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularMovieResult.Type.self), completion: anyClosure())
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularMovie.Type.self), completion: anyClosure())
     }
     
     func testGetPopularPeople() {
@@ -135,8 +135,8 @@ class TMDBServiceTests: XCTestCase {
         }
         
         stub(session) { stub in
-            when(stub).send(request: any(), responseType: any(MovieDetail.Type.self), completion: anyClosure()).then { implementation in
-                let movieDetail = MovieDetail()
+            when(stub).send(request: any(), responseType: any(Movie.Type.self), completion: anyClosure()).then { implementation in
+                let movieDetail = Movie()
                 implementation.2(.success(movieDetail))
             }
         }
@@ -147,7 +147,7 @@ class TMDBServiceTests: XCTestCase {
 
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
-        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(MovieDetail.Type.self), completion: anyClosure())
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(Movie.Type.self), completion: anyClosure())
     }
     
     // MARK: - trending

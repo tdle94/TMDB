@@ -8,6 +8,7 @@
 
 import XCTest
 import Cuckoo
+import RealmSwift
 @testable import TMDB
 
 class TMDBRepositoryTests: XCTestCase {
@@ -44,8 +45,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub.send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())).then { implementation in
-                implementation.2(.success(MovieDetail()))
+            when(stub.send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())).then { implementation in
+                implementation.2(.success(Movie()))
             }
         }
 
@@ -54,7 +55,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(localDataSource) { stub in
-            when(stub.getMovieDetail(id: 3)).thenReturn(nil)
+            when(stub.getMovie(id: 3)).thenReturn(nil)
             when(stub.saveMovie(any())).thenDoNothing()
         }
 
@@ -66,8 +67,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovieDetail(id: 3)
-        verify(session).send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())
+        verify(localDataSource).getMovie(id: 3)
+        verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
         verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
         verify(localDataSource).saveMovie(any())
     }
@@ -80,7 +81,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub.send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())).then { implementation in
+            when(stub.send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())).then { implementation in
                 implementation.2(.failure(NSError()))
             }
         }
@@ -90,7 +91,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(localDataSource) { stub in
-            when(stub.getMovieDetail(id: 1)).thenReturn(nil)
+            when(stub.getMovie(id: 1)).thenReturn(nil)
         }
 
         /*WHEN*/
@@ -100,8 +101,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovieDetail(id: 1)
-        verify(session).send(request: requestMatcher, responseType: any(MovieDetail.Type.self), completion: anyClosure())
+        verify(localDataSource).getMovie(id: 1)
+        verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
         verify(requestBuilder).getMovieDetailURLRequest(id: 1, language: "en-US")
     }
 
@@ -116,7 +117,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(localDataSource) { stub in
-            when(stub.getMovieDetail(id: 3)).thenReturn(MovieDetail())
+            when(stub.getMovie(id: 3)).thenReturn(Movie())
         }
 
         /*WHEN*/
@@ -127,7 +128,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovieDetail(id: 3)
+        verify(localDataSource).getMovie(id: 3)
     }
 
     // MARK: - popular movie
@@ -138,10 +139,12 @@ class TMDBRepositoryTests: XCTestCase {
         let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: "en-US")
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let noRegion = ParameterMatcher<String?>()
+        let movieSaveMatcher: ParameterMatcher<List<Movie>> = ParameterMatcher()
+
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovieResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(PopularMovieResult()))
+            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(PopularMovie()))
             }
         }
 
@@ -150,7 +153,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(localDataSource) { stub in
-            when(stub).savePopularMovies(any()).thenDoNothing()
+            when(stub).saveMovies(movieSaveMatcher).thenDoNothing()
         }
 
         /*WHEN*/
@@ -161,8 +164,9 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovieResult.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion)
+        verify(localDataSource).saveMovies(movieSaveMatcher)
     }
     
     // failure
@@ -173,17 +177,13 @@ class TMDBRepositoryTests: XCTestCase {
         let noRegion = ParameterMatcher<String?>()
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovieResult.Type.self), completion: anyClosure()).then { implementation in
+            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
             }
         }
 
         stub(requestBuilder) { stub in
             when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion).thenReturn(request)
-        }
-
-        stub(localDataSource) { stub in
-            when(stub).savePopularMovies(any()).thenDoNothing()
         }
 
         /*WHEN*/
@@ -193,7 +193,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovieResult.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion)
     }
 
@@ -325,9 +325,9 @@ class TMDBRepositoryTests: XCTestCase {
         let expectation = self.expectation(description: "")
         let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
         let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
-        let popularMovie = PopularMovie()
+        let popularMovie = Movie()
         let dataMatcher: ParameterMatcher<Data> = ParameterMatcher(matchesFunction: { $0 == Data() })
-        let movieMatcher: ParameterMatcher<PopularMovie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
+        let movieMatcher: ParameterMatcher<Movie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
         popularMovie.posterPath = "/jfeijsodifoi.jpg"
 
         /*GIVEN*/
@@ -346,8 +346,8 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(localDataSource) { stub in
-            when(stub).getPopularMoviePosterImgData(movieMatcher).thenReturn(nil)
-            when(stub).savePopularMoviePosterImgData(movieMatcher, dataMatcher).thenDoNothing()
+            when(stub).getMoviePosterImgData(movieMatcher).thenReturn(nil)
+            when(stub).saveMoviePosterImgData(movieMatcher, dataMatcher).thenDoNothing()
         }
 
         /*WHEN*/
@@ -360,15 +360,15 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(url: urlMatcher, completion: anyClosure())
         verify(userSetting, times(2)).imageConfig.get()
-        verify(localDataSource).getPopularMoviePosterImgData(movieMatcher)
+        verify(localDataSource).getMoviePosterImgData(movieMatcher)
     }
     
     // no poster data, service call, failure
     func testPosterImageDataCase2() {
         let expectation = self.expectation(description: "")
         let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
-        let popularMovie = PopularMovie()
-        let movieMatcher: ParameterMatcher<PopularMovie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
+        let popularMovie = Movie()
+        let movieMatcher: ParameterMatcher<Movie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
         popularMovie.posterPath = "/jfeijsodifoi.jpg"
 
         /*GIVEN*/
@@ -383,7 +383,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(localDataSource) { stub in
-            when(stub).getPopularMoviePosterImgData(movieMatcher).thenReturn(nil)
+            when(stub).getMoviePosterImgData(movieMatcher).thenReturn(nil)
         }
 
         /*WHEN*/
@@ -396,19 +396,19 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(url: urlMatcher, completion: anyClosure())
         verify(userSetting, times(2)).imageConfig.get()
-        verify(localDataSource).getPopularMoviePosterImgData(movieMatcher)
+        verify(localDataSource).getMoviePosterImgData(movieMatcher)
     }
     
     // poster data in realm, no service call
     func testPosterImageDataCase3() {
         let expectation = self.expectation(description: "")
-        let popularMovie = PopularMovie()
-        let movieMatcher: ParameterMatcher<PopularMovie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
+        let popularMovie = Movie()
+        let movieMatcher: ParameterMatcher<Movie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
         popularMovie.posterPath = "/jfeijsodifoi.jpg"
 
         /*GIVEN*/
         stub(localDataSource) { stub in
-            when(stub).getPopularMoviePosterImgData(movieMatcher).thenReturn(Data())
+            when(stub).getMoviePosterImgData(movieMatcher).thenReturn(Data())
         }
 
         /*WHEN*/
@@ -418,12 +418,12 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getPopularMoviePosterImgData(movieMatcher)
+        verify(localDataSource).getMoviePosterImgData(movieMatcher)
     }
     
     // no poster path, no service call, return error
     func testPosterImageDataCase4() {
-        let popularMovie = PopularMovie()
+        let popularMovie = Movie()
 
         /*WHEN*/
         repository.getPosterImageData(from: popularMovie) { _ in }
@@ -432,8 +432,8 @@ class TMDBRepositoryTests: XCTestCase {
     // invalid poster path, service call, return error
     func testPosterImageDataCase5() {
         let expectation = self.expectation(description: "")
-        let popularMovie = PopularMovie()
-        let movieMatcher: ParameterMatcher<PopularMovie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
+        let popularMovie = Movie()
+        let movieMatcher: ParameterMatcher<Movie> = ParameterMatcher(matchesFunction: { $0 == popularMovie })
         popularMovie.posterPath = "why invalid"
 
         /*GIVEN*/
@@ -442,7 +442,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(localDataSource) { stub in
-            when(stub).getPopularMoviePosterImgData(movieMatcher).thenReturn(nil)
+            when(stub).getMoviePosterImgData(movieMatcher).thenReturn(nil)
         }
 
         /*WHEN*/
@@ -453,7 +453,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getPopularMoviePosterImgData(movieMatcher)
+        verify(localDataSource).getMoviePosterImgData(movieMatcher)
     }
 
     // MARK: - test update config

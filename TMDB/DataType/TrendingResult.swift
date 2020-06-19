@@ -42,7 +42,7 @@ class Trending: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var mediaType: String = ""
     dynamic var people: PopularPeople?
-    dynamic var tv: PopularOnTV?
+    dynamic var tv: TVShow?
     dynamic var movie: Movie?
 
     enum CodingKeys: String, CodingKey {
@@ -58,7 +58,7 @@ class Trending: Object, Decodable {
         if mediaType == "movie" {
             movie = try Movie(from: decoder)
         } else if mediaType == "tv" {
-            tv = try PopularOnTV(from: decoder)
+            tv = try TVShow(from: decoder)
         } else {
             people = try PopularPeople(from: decoder)
         }

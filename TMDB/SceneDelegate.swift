@@ -12,7 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    var locationManager: TMDBLocationManager = TMDBLocationManager(setting: TMDBUserSetting(userDefault: UserDefaults.standard), locationService: TMDBGeocoder())
+    var locationManager: TMDBLocationManager = TMDBLocationManager(setting: TMDBUserSetting(userDefault: UserDefaults.standard))
 
     var homeCoordinator: MainCoordinator?
     var movieCoordinator: MainCoordinator?
@@ -27,9 +27,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let win = UIWindow(windowScene: windowScene)
-
-        // request user current location
-        locationManager.manager.requestWhenInUseAuthorization()
 
         // set view controller
         let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome)

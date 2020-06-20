@@ -45,13 +45,12 @@ class People: Object, Decodable {
         profilePath = try container.decodeIfPresent(String.self, forKey: .profilePath)
         name = try container.decode(String.self, forKey: .name)
         popularity = try container.decode(Double.self, forKey: .popularity)
+        deathday = try container.decodeIfPresent(String.self, forKey: .deathday)
+        homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+
 
         if container.contains(.birthday) {
             birthday = try container.decode(String.self, forKey: .birthday)
-        }
-
-        if container.contains(.deathday) {
-            deathday = try container.decode(String.self, forKey: .deathday)
         }
 
         if container.contains(.knownForDepartment) {
@@ -78,8 +77,8 @@ class People: Object, Decodable {
             imdbId = try container.decode(String.self, forKey: .imdbId)
         }
 
-        if container.contains(.homepage) {
-            homepage = try container.decode(String.self, forKey: .homepage)
+        if container.contains(.knownFor) {
+            knownFor.append(objectsIn: try container.decode(List<KnownFor>.self, forKey: .knownFor))
         }
     }
     
@@ -108,7 +107,7 @@ class KnownFor: Object, Decodable {
 
         if mediaType == "movie" {
             popularMovie = try Movie(from: decoder)
-        } else {
+        } else if mediaType == "tv" {
             popularTV = try TVShow(from: decoder)
         }
     }

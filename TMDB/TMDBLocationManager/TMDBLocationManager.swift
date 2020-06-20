@@ -9,37 +9,18 @@
 import Foundation
 import CoreLocation
 
-class TMDBLocationManager: NSObject, CLLocationManagerDelegate {
-    var manager: CLLocationManager = CLLocationManager()
-    
-    var locationService: TMDBLocationService
+class TMDBLocationManager {
 
     var setting: TMDBUserSettingProtocol
 
-    init(setting: TMDBUserSettingProtocol, locationService: TMDBLocationService) {
+    init(setting: TMDBUserSettingProtocol) {
         self.setting = setting
-        self.locationService = locationService
-        super.init()
-        manager.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(localeChange), name: NSLocale.currentLocaleDidChangeNotification, object: nil)
     }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else {
-            return
-        }
 
-        locationService.geocode(location: location) { placemarks, error in
-            guard error == nil else { return }
-
-            self.setting.country = placemarks?.first?.isoCountryCode
-            self.setting.language = Locale.current.languageCode
-            self.setting.region = Locale.current.regionCode
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            manager.startUpdatingLocation()
-        }
+    @objc func localeChange() {
+        self.setting.country = Locale.current.regionCode
+        self.setting.language = Locale.current.languageCode
+        self.setting.region = Locale.current.regionCode
     }
 }

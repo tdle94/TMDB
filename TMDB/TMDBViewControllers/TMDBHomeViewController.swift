@@ -77,7 +77,9 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularMovieResult.movies))
-                self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                }
             }
         }
     }
@@ -91,7 +93,9 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularTVShow.onTV), toSection: .popular)
-                self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                }
             }
         }
     }
@@ -105,7 +109,9 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularPeopleResult.peoples), toSection: .popular)
-                self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                }
             }
         }
     }

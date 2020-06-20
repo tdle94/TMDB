@@ -26,7 +26,7 @@ class TMDBHomeViewController: UIViewController {
 
     var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
 
-    let imageHandler: (TMDBPreviewItemCell) -> ((Result<Data, Error>) -> Void) = { cell in
+    var imageHandler: (TMDBPreviewItemCell) -> ((Result<Data, Error>) -> Void) = { cell in
         return { result in
             switch result {
             case .success(let data):
@@ -63,6 +63,7 @@ class TMDBHomeViewController: UIViewController {
             snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
             snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
             self.dataSource.apply(snapshot, animatingDifferences: true) {
+                snapshot.reloadSections([.trending])
                 self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
             }
         }
@@ -204,7 +205,7 @@ extension TMDBHomeViewController {
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalWidth(1))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: "Popular", alignment: .top)
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
 
         group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 18, bottom: 5, trailing: 5)
 

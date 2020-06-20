@@ -102,13 +102,20 @@ class KnownFor: Object, Decodable {
     }
     
     required init(from decoder: Decoder) throws {
+        super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
         mediaType = try container.decode(String.self, forKey: .mediaType)
 
         if mediaType == "movie" {
             popularMovie = try Movie(from: decoder)
+            if let existedMovie = realm?.object(ofType: Movie.self, forPrimaryKey: popularMovie!.id) {
+                popularMovie?.posterImgData = existedMovie.posterImgData
+            }
         } else if mediaType == "tv" {
             popularTV = try TVShow(from: decoder)
+            if let existedTV = realm?.object(ofType: TVShow.self, forPrimaryKey: popularTV!.id) {
+                popularTV?.posterImgData = existedTV.posterImgData
+            }
         }
     }
 

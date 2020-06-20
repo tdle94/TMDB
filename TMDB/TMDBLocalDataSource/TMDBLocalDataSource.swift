@@ -21,6 +21,11 @@ protocol TMDBLocalDataSourceProtocol {
     func saveTVShows(_ tvShows: List<TVShow>)
     func saveTVPosterImgData(_ tvShow: TVShow, _ data: Data)
     func getTVPosterImgData(_ tvShow: TVShow) -> Data?
+    // people
+    func getPerson(id: Int) -> People?
+    func savePeople(_ people: List<People>)
+    func savePersonProfileImgData(_ person: People, _ data: Data)
+    func getPersonProfileImgData(_ person: People) -> Data?
 }
 
 class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
@@ -89,5 +94,28 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func getTVPosterImgData(_ tvShow: TVShow) -> Data? {
         return getTVShow(id: tvShow.id)?.posterImgData
+    }
+
+    // MARK: - people
+    func getPerson(id: Int) -> People? {
+        return realm.object(ofType: People.self, forPrimaryKey: id)
+    }
+
+    func savePeople(_ people: List<People>) {
+        realm.beginWrite()
+        for person in people where getPerson(id: person.id) == nil {
+            realm.add(person)
+        }
+        try? realm.commitWrite()
+    }
+    
+    func savePersonProfileImgData(_ person: People, _ data: Data) {
+        realm.beginWrite()
+        person.profileImgData = data
+        try? realm.commitWrite()
+    }
+    
+    func getPersonProfileImgData(_ person: People) -> Data? {
+        return getPerson(id: person.id)?.profileImgData
     }
 }

@@ -41,7 +41,7 @@ class TrendingResult: Object, Decodable {
 class Trending: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var mediaType: String = ""
-    dynamic var people: PopularPeople?
+    dynamic var people: People?
     dynamic var tv: TVShow?
     dynamic var movie: Movie?
 
@@ -60,7 +60,7 @@ class Trending: Object, Decodable {
         } else if mediaType == "tv" {
             tv = try TVShow(from: decoder)
         } else {
-            people = try PopularPeople(from: decoder)
+            people = try People(from: decoder)
         }
     }
 

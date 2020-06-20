@@ -10,15 +10,49 @@ import UIKit
 import RealmSwift
 
 class TMDBHomeViewController: UIViewController {
-    @IBOutlet weak var collectionView: UICollectionView!
-
-    var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
-
+    // MARK: - repository
     var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                                                    urlRequestBuilder: TMDBURLRequestBuilder(),
                                                                                    userSetting: TMDBUserSetting()),
                                                             localDataSource: TMDBLocalDataSource(),
                                                             userSetting: TMDBUserSetting())
+    // MARK: - collectionview configuration
+    enum Section: String, CaseIterable {
+        case popular = "Popular"
+        case trending = "Trends"
+    }
+
+    @IBOutlet weak var collectionView: UICollectionView!
+
+    var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
+
+    let imageHandler: (TMDBPreviewItemCell) -> ((Result<Data, Error>) -> Void) = { cell in
+        return { result in
+            switch result {
+            case .success(let data):
+                cell.imageView.image = UIImage(data: data)
+            case .failure(_):
+                cell.imageView.image = UIImage(named: "NoImage")
+            }
+        }
+    }
+
+    lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { [unowned self] collectionView, indexPath, popularItem in
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
+        if let item = popularItem as? Movie {
+            cell.title.text = item.originalTitle
+            cell.releaseDate.text = item.releaseDate
+            self.repository.getPosterImageData(from: item, completion: self.imageHandler(cell))
+        } else if let item = popularItem as? TVShow {
+            cell.title.text = item.originalName
+            cell.releaseDate.text = item.firstAirDate
+            self.repository.getPosterImageData(from: item, completion: self.imageHandler(cell))
+        } else if let item = popularItem as? People {
+            cell.title.text = item.name
+            self.repository.getProfileImageData(from: item, completion: self.imageHandler(cell))
+        }
+        return cell
+    }
 
     // MARK: - coordinator
     var coordinator: MainCoordinator?
@@ -30,12 +64,10 @@ class TMDBHomeViewController: UIViewController {
         configureDataSource()
         getPopularMovie()
     }
+}
 
-    enum Section: String, CaseIterable {
-        case popular = "Popular"
-        case trending = "Trends"
-    }
-
+extension TMDBHomeViewController {
+    // MARK: - collection view make request base on user interaction
     func getPopularMovie() {
         repository.getPopularMovie(page: 1) { result in
             switch result {
@@ -45,7 +77,7 @@ class TMDBHomeViewController: UIViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularMovieResult.movies))
-                self.dataSource.apply(snapshot)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
     }
@@ -59,51 +91,44 @@ class TMDBHomeViewController: UIViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularTVShow.onTV), toSection: .popular)
-                self.dataSource.apply(snapshot)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
+            }
+        }
+    }
+
+    func getPopularPeople() {
+        repository.getPopularPeople(page: 1) { result in
+            switch result {
+            case .failure(let error):
+                debugPrint(error)
+            case .success(let popularPeopleResult):
+                var snapshot = self.dataSource.snapshot()
+                snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
+                snapshot.appendItems(Array(popularPeopleResult.peoples), toSection: .popular)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
     }
 }
 
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
+    // MARK: - collection view interaction
     func popularSegmentControl(at index: Int) {
         if index == 0 {
             getPopularMovie()
         } else if index == 1 {
             getPopularTVShow()
+        } else if index == 2 {
+            getPopularPeople()
         }
     }
 }
 
 extension TMDBHomeViewController {
+    // MARK: - collection view configuration
     func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, popularItem in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-            if let item = popularItem as? Movie {
-                cell.title.text = item.originalTitle
-                cell.releaseDate.text = item.releaseDate
-                self.repository.getPosterImageData(from: item) { result in
-                    switch result {
-                    case .success(let data):
-                        cell.imageView.image = UIImage(data: data)
-                    case .failure(_):
-                        cell.imageView.image = UIImage(named: "NoImage")
-                    }
-                }
-            } else if let item = popularItem as? TVShow {
-                cell.title.text = item.originalName
-                cell.releaseDate.text = item.firstAirDate
-                self.repository.getPosterImageData(from: item) { result in
-                    switch result {
-                    case .success(let data):
-                        cell.imageView.image = UIImage(data: data)
-                    case .failure(_):
-                        cell.imageView.image = UIImage(named: "NoImage")
-                    }
-                }
-            }
-            return cell
-        }
+
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: cellProvider)
 
         dataSource.supplementaryViewProvider = { (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
             let header = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,

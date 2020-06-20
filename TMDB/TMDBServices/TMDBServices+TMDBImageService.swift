@@ -9,7 +9,7 @@
 import Foundation
 
 extension TMDBServices: TMDBImageService {
-    func getPosterImageData(from path: String, completion: @escaping (Result<Data, Error>) -> Void) {
+    func getImageData(from path: String, completion: @escaping (Result<Data, Error>) -> Void) {
         let base = userSetting.imageConfig.images.secureBaseURL
         guard let size = userSetting.imageConfig.images.posterSizes.last, let url = URL(string: "\(base)\(size)\(path)") else {
             completion(.failure(TMDBSession.APIError.invalidURL))

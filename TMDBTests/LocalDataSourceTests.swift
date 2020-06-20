@@ -85,6 +85,24 @@ class LocalDataSourceTests: QuickSpec {
                 // retrieve poster image data
                 expect(localDataSource.getTVPosterImgData(tvShow)).to(equal(posterImgData))
             }
+            
+            it("add people") {
+                // add
+                expect(testRealm.objects(People.self).count).to(equal(0))
+                let profileImgData = Data()
+                let people: List<People> = List()
+                let person = People()
+
+                people.append(person)
+                localDataSource.savePeople(people)
+                expect(testRealm.objects(People.self).count).to(equal(1))
+                
+                // add profile image data
+                localDataSource.savePersonProfileImgData(person, profileImgData)
+                
+                // retrieve profile image data
+                expect(localDataSource.getPersonProfileImgData(person)).to(equal(profileImgData))
+            }
         }
     }
 }

@@ -8,13 +8,27 @@
 import Foundation
 
 protocol TMDBRepositoryProtocol {
+    // MARK: - movie
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
-    func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
+
+    // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
+
+    // MARK: - popular
+
+    // popular people
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
+    func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void)
+
+    // popular movie
+    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
     func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)
+
+    // popular tv
+    func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
     func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void)
+
+    // MARK: - image configuration
     func updateImageConfig()
 }
 
@@ -87,7 +101,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
             return
         }
 
-        services.getPosterImageData(from: path) { result in
+        services.getImageData(from: path) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
@@ -105,7 +119,41 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void) {
-        services.getPopularPeople(page: page, completion: completion)
+        services.getPopularPeople(page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let popularPeopleResult):
+                    self.localDataSource.savePeople(popularPeopleResult.peoples)
+                    completion(.success(popularPeopleResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void) {
+        guard let path = people.profilePath else {
+            completion(.failure(NSError(domain: "", code: 400, userInfo: nil)))
+            return
+        }
+        
+        if let data = localDataSource.getPersonProfileImgData(people) {
+            completion(.success(data))
+            return
+        }
+
+        services.getImageData(from: path) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    self.localDataSource.savePersonProfileImgData(people, data)
+                    completion(.success(data))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 
     func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void) {
@@ -119,7 +167,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
             return
         }
 
-        services.getPosterImageData(from: path) { result in
+        services.getImageData(from: path) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):

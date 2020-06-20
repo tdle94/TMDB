@@ -242,7 +242,7 @@ class TMDBServiceTests: XCTestCase {
             when(stub).imageConfig.get.thenReturn(ImageConfigResult())
         }
 
-        services.getPosterImageData(from: imageURL) { result in
+        services.getImageData(from: imageURL) { result in
             XCTAssertNoThrow(try! result.get())
             expectation.fulfill()
         }
@@ -260,7 +260,7 @@ class TMDBServiceTests: XCTestCase {
             when(stub).imageConfig.get.thenReturn(ImageConfigResult())
         }
 
-        services.getPosterImageData(from: imageURL) { result in
+        services.getImageData(from: imageURL) { result in
             do {
                 let _ = try result.get()
             } catch let error {

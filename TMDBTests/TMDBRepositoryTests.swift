@@ -376,7 +376,9 @@ class TMDBRepositoryTests: XCTestCase {
     }
 
     // MARK: - popular people
-    func testPopularPeople() {
+
+    // success
+    func testPopularPeopleCase1() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
@@ -391,6 +393,10 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(request)
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).savePeople(any()).thenDoNothing()
+        }
 
         /*WHEN*/
         repository.getPopularPeople(page: 1) { result in
@@ -402,6 +408,132 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
+        verify(localDataSource).savePeople(any())
+    }
+
+    // failure
+    func testPopularPeopleCase2() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getPopularPeople(page: 1) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
+    }
+
+    // MARK: - people profile image data
+
+    // not in realm, service call, success
+    func testPeopleProfileImgDataCase1() {
+        let expectation = self.expectation(description: "")
+        let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
+        let people = People()
+        people.profilePath = ""
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
+                implementation.1(.success(Data()))
+            }
+        }
+
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+        }
+
+        stub(localDataSource) { stub in
+            when(stub).getPersonProfileImgData(any()).thenReturn(nil)
+            when(stub).savePersonProfileImgData(any(), any()).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.getProfileImageData(from: people) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(url: urlMatcher, completion: anyClosure())
+        verify(userSetting, times(2)).imageConfig.get()
+        verify(localDataSource).savePersonProfileImgData(any(), any(Data.self))
+    }
+
+    // not in realm, service call, failure
+    func testPeopleProfileImgDataCase2() {
+        let expectation = self.expectation(description: "")
+        let urlMatcher: ParameterMatcher<URL> = ParameterMatcher()
+        let people = People()
+        people.profilePath = ""
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
+                implementation.1(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(userSetting) { stub in
+            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
+        }
+        
+        stub(localDataSource) { stub in
+            when(stub).getPersonProfileImgData(any()).thenReturn(nil)
+        }
+
+        /*WHEN*/
+        repository.getProfileImageData(from: people) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(url: urlMatcher, completion: anyClosure())
+        verify(userSetting, times(2)).imageConfig.get()
+    }
+
+    // in realm, no service call
+    func testPeopleProfileImgDataCase3() {
+        let expectation = self.expectation(description: "")
+        let people = People()
+        people.profilePath = ""
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getPersonProfileImgData(any()).thenReturn(Data())
+        }
+
+        /*THEN*/
+        repository.getProfileImageData(from: people) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getPersonProfileImgData(any())
+    }
+
+    // no profile path
+    func testPeopleProfileImgDataCase4() {
+        let people = People()
+        repository.getProfileImageData(from: people) { _ in }
     }
 
     // MARK: - trending

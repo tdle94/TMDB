@@ -119,17 +119,15 @@ extension TMDBHomeViewController {
 
     func getTrendingThisWeek() {
         repository.getTrending(time: .week, type: .all) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    debugPrint(error)
-                case .success(let trendingResult):
-                    var snapshot = self.dataSource.snapshot()
-                    snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
-                    snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
-                    self.dataSource.apply(snapshot, animatingDifferences: true) {
-                        self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
-                    }
+            switch result {
+            case .failure(let error):
+                debugPrint(error)
+            case .success(let trendingResult):
+                var snapshot = self.dataSource.snapshot()
+                snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
+                snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
                 }
             }
         }
@@ -137,17 +135,15 @@ extension TMDBHomeViewController {
     
     func getTrendingToday() {
         repository.getTrending(time: .today, type: .all) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    debugPrint(error)
-                case .success(let trendingResult):
-                    var snapshot = self.dataSource.snapshot()
-                    snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
-                    snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
-                    self.dataSource.apply(snapshot, animatingDifferences: true) {
-                        self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
-                    }
+            switch result {
+            case .failure(let error):
+                debugPrint(error)
+            case .success(let trendingResult):
+                var snapshot = self.dataSource.snapshot()
+                snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
+                snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
                 }
             }
         }

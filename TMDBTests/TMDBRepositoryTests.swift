@@ -550,6 +550,10 @@ class TMDBRepositoryTests: XCTestCase {
                 implementation.2(.success(TrendingResult()))
             }
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).saveTrendings(any()).thenDoNothing()
+        }
 
         stub(requestBuilder) { stub in
             when(stub).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher).thenReturn(request)
@@ -565,6 +569,7 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher)
+        verify(localDataSource).saveTrendings(any())
     }
 
     func testAllTrendingToday() {
@@ -597,6 +602,35 @@ class TMDBRepositoryTests: XCTestCase {
 
     func testTVTrendingThisWeek() {
         self.setUpTrendingTest(time: .week, type: .tv)
+    }
+    
+    func testTrendingFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTrendingURLRequest(time: .today, type: .all)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        let trendingTimeMatcher = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .today })
+        let trendingTypeMatcher = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .all })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getTrending(time: .today, type: .all) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher)
     }
 
     // MARK: - test url image data

@@ -115,7 +115,17 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
-        services.getTrending(time: time, type: type, completion: completion)
+        services.getTrending(time: time, type: type) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let trendingResult):
+                    self.localDataSource.saveTrendings(trendingResult.trending)
+                    completion(.success(trendingResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void) {

@@ -10,17 +10,17 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="OFp-g2-STo" customClass="TMDBPreviewItemCell" customModule="TMDB" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="350" height="500"/>
+            <rect key="frame" x="0.0" y="0.0" width="350" height="300"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="MBB-W3-fAB">
-                <rect key="frame" x="0.0" y="0.0" width="350" height="500"/>
+                <rect key="frame" x="0.0" y="0.0" width="350" height="300"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-1R-kYe">
-                        <rect key="frame" x="0.0" y="0.0" width="350" height="347.5"/>
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="220"/>
                     </imageView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="fry-iD-S0E">
-                        <rect key="frame" x="0.0" y="357.5" width="350" height="37"/>
+                        <rect key="frame" x="0.0" y="230" width="350" height="37"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDK-nq-0mA">
                                 <rect key="frame" x="0.0" y="0.0" width="350" height="18"/>
@@ -41,7 +41,7 @@
                     <constraint firstAttribute="trailing" secondItem="Ka1-1R-kYe" secondAttribute="trailing" id="3kB-k8-Cze"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="top" secondItem="MBB-W3-fAB" secondAttribute="top" id="7Lh-px-yyY"/>
                     <constraint firstItem="fry-iD-S0E" firstAttribute="top" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="10" id="BN0-Sa-bay"/>
-                    <constraint firstAttribute="bottom" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="152.5" id="IwW-2f-WWV"/>
+                    <constraint firstAttribute="bottom" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="80" id="IwW-2f-WWV"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="dxB-WE-kKJ"/>
                     <constraint firstItem="fry-iD-S0E" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="u6T-fe-rkI"/>
                     <constraint firstAttribute="trailing" secondItem="fry-iD-S0E" secondAttribute="trailing" id="w5J-G6-akv"/>

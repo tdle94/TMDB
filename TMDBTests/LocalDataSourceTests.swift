@@ -72,18 +72,21 @@ class LocalDataSourceTests: QuickSpec {
                 expect(testRealm.objects(TVShow.self).count).to(equal(0))
                 let posterImgData = Data()
                 let tvShows: List<TVShow> = List()
-                let tvShow = TVShow()
+                let tvShow1 = TVShow()
+                let tvShow2 = TVShow()
+                tvShow2.id = 2
 
-                tvShows.append(tvShow)
+                tvShows.append(tvShow1)
                 localDataSource.saveTVShows(tvShows)
-                expect(testRealm.objects(TVShow.self).count).to(equal(1))
-                expect(localDataSource.getTVShow(id: 0)).to(equal(tvShow))
+                localDataSource.saveTVShow(tvShow2)
+                expect(testRealm.objects(TVShow.self).count).to(equal(2))
+                expect(localDataSource.getTVShow(id: 0)).to(equal(tvShow1))
 
                 // add poster image data
-                localDataSource.saveTVPosterImgData(tvShow, posterImgData)
+                localDataSource.saveTVPosterImgData(tvShow1, posterImgData)
 
                 // retrieve poster image data
-                expect(localDataSource.getTVPosterImgData(tvShow)).to(equal(posterImgData))
+                expect(localDataSource.getTVPosterImgData(tvShow1)).to(equal(posterImgData))
             }
             
             it("add people") {
@@ -91,17 +94,45 @@ class LocalDataSourceTests: QuickSpec {
                 expect(testRealm.objects(People.self).count).to(equal(0))
                 let profileImgData = Data()
                 let people: List<People> = List()
-                let person = People()
+                let person1 = People()
+                let person2 = People()
+                person2.id = 3
 
-                people.append(person)
+                people.append(person1)
                 localDataSource.savePeople(people)
-                expect(testRealm.objects(People.self).count).to(equal(1))
+                localDataSource.savePerson(person1) // save duplicate
+                localDataSource.savePerson(person2)
+                expect(testRealm.objects(People.self).count).to(equal(2))
                 
                 // add profile image data
-                localDataSource.savePersonProfileImgData(person, profileImgData)
+                localDataSource.savePersonProfileImgData(person1, profileImgData)
                 
                 // retrieve profile image data
-                expect(localDataSource.getPersonProfileImgData(person)).to(equal(profileImgData))
+                expect(localDataSource.getPersonProfileImgData(person1)).to(equal(profileImgData))
+            }
+            
+            it("add trending") {
+                // add
+                let trendingResult = TrendingResult()
+                let movie = Movie()
+                let person = People()
+                let tvShow = TVShow()
+                let trending1 = Trending()
+                let trending2 = Trending()
+                let trending3 = Trending()
+                trending1.people = person
+                trending2.tv = tvShow
+                trending3.movie = movie
+
+                trendingResult.trending.append(trending1)
+                trendingResult.trending.append(trending2)
+                trendingResult.trending.append(trending3)
+                
+                localDataSource.saveTrendings(trendingResult.trending)
+                
+                expect(testRealm.objects(Movie.self).count).to(equal(1))
+                expect(testRealm.objects(TVShow.self).count).to(equal(1))
+                expect(testRealm.objects(People.self).count).to(equal(1))
             }
         }
     }

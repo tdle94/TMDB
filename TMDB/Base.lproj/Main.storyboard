@@ -22,10 +22,10 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Pd-Dn-hp9" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                         <subviews>
-                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="IwL-TQ-6vc">
-                                                <rect key="frame" x="0.0" y="8" width="414" height="888"/>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="IwL-TQ-6vc">
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
-                                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Sdo-Qn-n8g">
+                                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Sdo-Qn-n8g">
                                                     <size key="itemSize" width="124" height="123"/>
                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -46,7 +46,7 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstItem="IwL-TQ-6vc" firstAttribute="top" secondItem="0Pd-Dn-hp9" secondAttribute="top" constant="8" id="5ch-6l-zOp"/>
+                                            <constraint firstItem="IwL-TQ-6vc" firstAttribute="top" secondItem="0Pd-Dn-hp9" secondAttribute="top" id="5ch-6l-zOp"/>
                                             <constraint firstAttribute="bottom" secondItem="IwL-TQ-6vc" secondAttribute="bottom" id="8IP-hd-K84"/>
                                             <constraint firstAttribute="trailing" secondItem="IwL-TQ-6vc" secondAttribute="trailing" id="VSt-J0-sH1"/>
                                             <constraint firstItem="IwL-TQ-6vc" firstAttribute="leading" secondItem="0Pd-Dn-hp9" secondAttribute="leading" id="d3h-Wb-23f"/>

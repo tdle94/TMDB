@@ -37,17 +37,17 @@ class TMDBHomeViewController: UIViewController {
         }
     }
 
-    lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { [unowned self] collectionView, indexPath, popularItem in
+    lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { [unowned self] collectionView, indexPath, item in
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-        if let item = popularItem as? Movie {
+        if let item = item as? Movie ?? (item as? Trending)?.movie {
             cell.title.text = item.originalTitle
             cell.releaseDate.text = item.releaseDate
             self.repository.getPosterImageData(from: item, completion: self.imageHandler(cell))
-        } else if let item = popularItem as? TVShow {
+        } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
             cell.title.text = item.originalName
             cell.releaseDate.text = item.firstAirDate
             self.repository.getPosterImageData(from: item, completion: self.imageHandler(cell))
-        } else if let item = popularItem as? People {
+        } else if let item = item as? People ?? (item as? Trending)?.people {
             cell.title.text = item.name
             self.repository.getProfileImageData(from: item, completion: self.imageHandler(cell))
         }
@@ -63,6 +63,7 @@ class TMDBHomeViewController: UIViewController {
         configurePopularCollectionView()
         configureDataSource()
         getPopularMovie()
+        getTrendingToday()
     }
 }
 
@@ -76,9 +77,9 @@ extension TMDBHomeViewController {
             case .success(let popularMovieResult):
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
-                snapshot.appendItems(Array(popularMovieResult.movies))
+                snapshot.appendItems(Array(popularMovieResult.movies), toSection: .popular)
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
                 }
             }
         }
@@ -94,7 +95,7 @@ extension TMDBHomeViewController {
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularTVShow.onTV), toSection: .popular)
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
                 }
             }
         }
@@ -110,7 +111,43 @@ extension TMDBHomeViewController {
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularPeopleResult.peoples), toSection: .popular)
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                }
+            }
+        }
+    }
+
+    func getTrendingThisWeek() {
+        repository.getTrending(time: .week, type: .all) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    debugPrint(error)
+                case .success(let trendingResult):
+                    var snapshot = self.dataSource.snapshot()
+                    snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
+                    snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
+                    self.dataSource.apply(snapshot, animatingDifferences: true) {
+                        self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
+                    }
+                }
+            }
+        }
+    }
+    
+    func getTrendingToday() {
+        repository.getTrending(time: .today, type: .all) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    debugPrint(error)
+                case .success(let trendingResult):
+                    var snapshot = self.dataSource.snapshot()
+                    snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
+                    snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
+                    self.dataSource.apply(snapshot, animatingDifferences: true) {
+                        self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
+                    }
                 }
             }
         }
@@ -118,13 +155,20 @@ extension TMDBHomeViewController {
 }
 
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
-    // MARK: - collection view interaction
-    func popularSegmentControl(at index: Int) {
+    func segmentControlSelected(at index: Int, text selected: String) {
         if index == 0 {
-            getPopularMovie()
+            if selected == NSLocalizedString("Today", comment: "") {
+                getTrendingToday()
+            } else {
+                getPopularMovie()
+            }
         } else if index == 1 {
-            getPopularTVShow()
-        } else if index == 2 {
+            if selected == NSLocalizedString("This Week", comment: "") {
+                getTrendingThisWeek()
+            } else {
+                getPopularTVShow()
+            }
+        } else {
             getPopularPeople()
         }
     }
@@ -136,28 +180,34 @@ extension TMDBHomeViewController {
 
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: cellProvider)
 
-        dataSource.supplementaryViewProvider = { (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
             let header = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                              withReuseIdentifier: Constant.Identifier.header,
-                                                                              for: indexPath) as! TMDBPreviewHeaderView
-            header.label.text = "Popular"
-            header.delegate = self
-          return header
+                                                                              withReuseIdentifier: Constant.Identifier.popularHeader,
+                                                                              for: indexPath) as? TMDBPreviewHeaderView
+            header?.delegate = self
+            
+            if indexPath.section == 1 {
+                header?.segmentControl.removeSegment(at: 2, animated: false)
+                header?.segmentControl.setTitle(NSLocalizedString("Today", comment: ""), forSegmentAt: 0)
+                header?.segmentControl.setTitle(NSLocalizedString("This Week", comment: ""), forSegmentAt: 1)
+                header?.label.text = NSLocalizedString("Trends", comment: "")
+            }
+            return header
         }
 
         var snapshot = dataSource.snapshot()
-        snapshot.appendSections([.popular])
+        snapshot.appendSections([.popular, .trending])
         dataSource.apply(snapshot)
     }
 
     func configurePopularCollectionView() {
         collectionView.collectionViewLayout = generateLayout()
         collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-        collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.header)
+        collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
     }
 
     func generateLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+        return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
             return self.generatePopularLayout()
         }
     }

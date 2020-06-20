@@ -48,7 +48,7 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
 
     var imageConfig: ImageConfigResult {
         get {
-            guard let data = UserDefaults.standard.value(forKey: Constant.UserSetting.imageConfig) as? Data else {
+            guard let data = userDefault.value(forKey: Constant.UserSetting.imageConfig) as? Data else {
                 return ImageConfigResult() // return default
             }
             let imageConfig = try! PropertyListDecoder().decode(ImageConfigResult.self, from: data)

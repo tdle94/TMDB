@@ -20,6 +20,9 @@ class TMDBUserSettingTests: XCTestCase {
     let userDefault: UserDefaults = UserDefaults(suiteName: #file)!
 
     override func setUp() {
+        userDefault.dictionaryRepresentation().keys.forEach { key in
+            userDefault.removeObject(forKey: key)
+        }
         locationManager = TMDBLocationManager(setting: userSetting)
     }
 
@@ -69,7 +72,8 @@ class TMDBUserSettingTests: XCTestCase {
     func testImageConfig() {
         let imageConfigResult = ImageConfigResult()
         var setting = TMDBUserSetting(userDefault: userDefault)
-
+        // return default one
+        XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)
         // return new image config
         setting.imageConfig = imageConfigResult
         XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)

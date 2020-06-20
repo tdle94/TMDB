@@ -84,7 +84,6 @@ class TVShow: Object, Decodable {
         backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         overview  = try container.decode(String.self, forKey: .overview)
-        firstAirDate = try container.decode(String.self, forKey: .firstAirDate)
         originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
         voteCount = try container.decode(Int.self, forKey: .voteCount)
         name = try container.decode(String.self, forKey: .name)

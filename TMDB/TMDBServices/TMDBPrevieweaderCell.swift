@@ -10,12 +10,16 @@ import Foundation
 import UIKit
 
 protocol TMDBPreviewSegmentControl: AnyObject {
-    func popularSegmentControl(at index: Int)
+    func segmentControlSelected(at index: Int, text selected: String)
 }
 
 class TMDBPreviewHeaderView: UICollectionReusableView {
     weak var delegate: TMDBPreviewSegmentControl?
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var label: UILabel! {
+        didSet {
+            label.text = NSLocalizedString("Popular", comment: "")
+        }
+    }
     @IBOutlet weak var segmentControl: UISegmentedControl! {
         didSet {
             segmentControl.setTitle(NSLocalizedString("Movies", comment: ""), forSegmentAt: 0)
@@ -26,7 +30,8 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
     }
 
     @IBAction func segmentControlAction(_ sender: UISegmentedControl) {
-        delegate?.popularSegmentControl(at: sender.selectedSegmentIndex)
+        let text = sender.titleForSegment(at: sender.selectedSegmentIndex)!
+        delegate?.segmentControlSelected(at: sender.selectedSegmentIndex, text: text)
     }
 }
 

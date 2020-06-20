@@ -11,7 +11,8 @@ import UIKit
 
 struct Constant {
     struct Identifier {
-        static let header = "header"
+        static let popularHeader = "popular header"
+        static let trendHeader = "trend header"
         static let preview = "preview"
     }
     struct ViewControllerIdentifier {

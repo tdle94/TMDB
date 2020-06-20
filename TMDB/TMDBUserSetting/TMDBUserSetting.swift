@@ -21,7 +21,7 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
 
     var language: String? {
         get {
-            return userDefault.object(forKey: Constant.UserSetting.language) as? String
+            return userDefault.object(forKey: Constant.UserSetting.language) as? String ?? Locale.current.languageCode
         }
         set {
             userDefault.setValue(newValue, forKey: Constant.UserSetting.language)
@@ -30,7 +30,7 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
     
     var country: String? {
         get {
-            return userDefault.object(forKey: Constant.UserSetting.country) as? String
+            return userDefault.object(forKey: Constant.UserSetting.country) as? String ?? Locale.current.regionCode
         }
         set {
             userDefault.setValue(newValue, forKey: Constant.UserSetting.country)
@@ -39,7 +39,7 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
     
     var region: String? {
         get {
-            return userDefault.object(forKey: Constant.UserSetting.region) as? String
+            return userDefault.object(forKey: Constant.UserSetting.region) as? String ?? Locale.current.regionCode
         }
         set {
             userDefault.setValue(newValue, forKey: Constant.UserSetting.region)

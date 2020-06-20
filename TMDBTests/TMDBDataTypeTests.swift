@@ -26,6 +26,10 @@ class TMDBDataTypeTests: XCTestCase {
     func testPopularPeopleDecode() {
         XCTAssertNoThrow(try JSONDecoder().decode(PopularPeopleResult.self, from: popularPeopleFixture))
     }
+    
+    func testPeopleDetailDecode() {
+        XCTAssertNoThrow(try JSONDecoder().decode(People.self, from: peopleDetailFixture))
+    }
 
     func testMovieDetailDecode() {
         XCTAssertNoThrow(try JSONDecoder().decode(Movie.self, from: movieDetailFixture))

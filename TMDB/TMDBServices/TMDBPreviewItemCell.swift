@@ -23,6 +23,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
     @IBOutlet weak var releaseDate: UILabel!
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         imageView.image = nil
         title.text = ""
         releaseDate.text = ""

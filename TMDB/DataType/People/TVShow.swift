@@ -88,9 +88,8 @@ class TVShow: Object, Decodable {
         voteCount = try container.decode(Int.self, forKey: .voteCount)
         name = try container.decode(String.self, forKey: .name)
         originalName = try container.decode(String.self, forKey: .originalName)
-        
-        let originCountry = try container.decode(List<String>.self, forKey: .originCountry)
-        self.originCountry.append(objectsIn: originCountry)
+
+        originCountry.append(objectsIn: try container.decode(List<String>.self, forKey: .originCountry))
 
         if let genre = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genre)

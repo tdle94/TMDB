@@ -13,4 +13,9 @@ struct MainCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+
+    func navigateToCountryVC() {
+        let countryVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbCountryNavigation)
+        navigationController.present(countryVC, animated: true, completion: nil)
+    }
 }

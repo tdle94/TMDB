@@ -39,10 +39,8 @@ class TMDBUserSettingTests: XCTestCase {
         let optional = ParameterMatcher<String?>()
         /*GIVEN*/
         stub(userSetting) { stub in
-            when(stub).country.set(optional).thenDoNothing()
             when(stub).language.set(optional).thenDoNothing()
             when(stub).region.set(optional).thenDoNothing()
-            when(stub).country.get.thenReturn(nil)
             when(stub).language.get.thenReturn(nil)
             when(stub).region.get.thenReturn(nil)
             when(stub).userDefault.get.thenReturn(userDefault)
@@ -51,7 +49,6 @@ class TMDBUserSettingTests: XCTestCase {
         /*WHEN*/
         locationManager.localeChange()
         /*THEN*/
-        verify(userSetting).country.set(any())
         verify(userSetting).language.set(any())
         verify(userSetting).region.set(any())
     }
@@ -59,11 +56,9 @@ class TMDBUserSettingTests: XCTestCase {
     // MARK: - test user location setting
     func testUserLocationSetting() {
         var setting = TMDBUserSetting(userDefault: userDefault)
-        setting.country = nil
         setting.language = nil
         setting.region = nil
 
-        XCTAssertNotNil(setting.country)
         XCTAssertNotNil(setting.language)
         XCTAssertNotNil(setting.region)
     }

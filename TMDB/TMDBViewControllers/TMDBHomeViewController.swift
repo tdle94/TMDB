@@ -11,11 +11,13 @@ import RealmSwift
 
 class TMDBHomeViewController: UIViewController {
     // MARK: - repository
-    var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
+    let userSetting: TMDBUserSetting = TMDBUserSetting()
+
+    lazy var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                                                    urlRequestBuilder: TMDBURLRequestBuilder(),
-                                                                                   userSetting: TMDBUserSetting()),
+                                                                                   userSetting: self.userSetting),
                                                             localDataSource: TMDBLocalDataSource(),
-                                                            userSetting: TMDBUserSetting())
+                                                            userSetting: self.userSetting)
     // MARK: - collectionview configuration
     enum Section: String, CaseIterable {
         case popular = "Popular"
@@ -75,6 +77,7 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureLanguageAndRegion()
         configurePopularCollectionView()
         configureDataSource()
         getPopularMovie()
@@ -162,6 +165,23 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
 }
 
 extension TMDBHomeViewController {
+    // MARK: - configure navigation item
+    func configureLanguageAndRegion() {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
+        button.setTitle(userSetting.language?.uppercased(), for: .normal)
+        button.addTarget(self, action: #selector(changeLanguageAndRegion), for: .touchUpInside)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = Constant.Color.tabBarSelectedTextColor.cgColor
+        button.layer.cornerRadius = 5
+        button.showsTouchWhenHighlighted = true
+        let languageSetting = UIBarButtonItem(customView: button)
+        navigationItem.setRightBarButton(languageSetting, animated: false)
+    }
+
+    @objc func changeLanguageAndRegion() {
+        coordinator?.navigateToCountryVC()
+    }
+
     // MARK: - collection view configuration
     func configureDataSource() {
 
@@ -172,7 +192,7 @@ extension TMDBHomeViewController {
                                                                               withReuseIdentifier: Constant.Identifier.popularHeader,
                                                                               for: indexPath) as? TMDBPreviewHeaderView
             header?.delegate = self
-            
+
             if indexPath.section == 1 {
                 header?.segmentControl.removeSegment(at: 2, animated: false)
                 header?.segmentControl.setTitle(NSLocalizedString("Today", comment: ""), forSegmentAt: 0)

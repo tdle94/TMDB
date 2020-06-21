@@ -39,7 +39,7 @@ class TMDBHomeViewController: UIViewController {
         }
     }
 
-    lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { [unowned self] collectionView, indexPath, item in
+    lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { collectionView, indexPath, item in
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             cell.title.text = item.originalTitle
@@ -56,7 +56,7 @@ class TMDBHomeViewController: UIViewController {
         return cell
     }
 
-    lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { [unowned self] result in
+    lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { result in
         switch result {
         case .failure(let error):
             debugPrint(error)
@@ -65,7 +65,6 @@ class TMDBHomeViewController: UIViewController {
             snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
             snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
             self.dataSource.apply(snapshot, animatingDifferences: true) {
-                snapshot.reloadSections([.trending])
                 self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
             }
         }
@@ -167,7 +166,7 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
 extension TMDBHomeViewController {
     // MARK: - configure navigation item
     func configureLanguageAndRegion() {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         button.setTitle(userSetting.language?.uppercased(), for: .normal)
         button.addTarget(self, action: #selector(changeLanguageAndRegion), for: .touchUpInside)
         button.layer.borderWidth = 1
@@ -189,7 +188,7 @@ extension TMDBHomeViewController {
 
         dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
             let header = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                              withReuseIdentifier: Constant.Identifier.popularHeader,
+                                                                              withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                               for: indexPath) as? TMDBPreviewHeaderView
             header?.delegate = self
 
@@ -198,6 +197,13 @@ extension TMDBHomeViewController {
                 header?.segmentControl.setTitle(NSLocalizedString("Today", comment: ""), forSegmentAt: 0)
                 header?.segmentControl.setTitle(NSLocalizedString("This Week", comment: ""), forSegmentAt: 1)
                 header?.label.text = NSLocalizedString("Trends", comment: "")
+            } else {
+                header?.label.text = NSLocalizedString("Popular", comment: "")
+                header?.segmentControl.setTitle(NSLocalizedString("Movies", comment: ""), forSegmentAt: 0)
+                header?.segmentControl.setTitle(NSLocalizedString("TV Shows", comment: ""), forSegmentAt: 1)
+                if header?.segmentControl.numberOfSegments == 2 {
+                    header?.segmentControl.insertSegment(withTitle: NSLocalizedString("People", comment: ""), at: 2, animated: false)
+                }
             }
             return header
         }
@@ -210,7 +216,7 @@ extension TMDBHomeViewController {
     func configurePopularCollectionView() {
         collectionView.collectionViewLayout = generateLayout()
         collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-        collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
+        collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
     }
 
     func generateLayout() -> UICollectionViewLayout {

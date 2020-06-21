@@ -22,9 +22,6 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
     }
     @IBOutlet weak var segmentControl: UISegmentedControl! {
         didSet {
-            segmentControl.setTitle(NSLocalizedString("Movies", comment: ""), forSegmentAt: 0)
-            segmentControl.setTitle(NSLocalizedString("TV Shows", comment: ""), forSegmentAt: 1)
-            segmentControl.setTitle(NSLocalizedString("People", comment: ""), forSegmentAt: 2)
             segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
         }
     }

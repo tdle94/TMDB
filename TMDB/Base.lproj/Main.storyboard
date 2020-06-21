@@ -83,7 +83,7 @@
             </objects>
             <point key="canvasLocation" x="-222" y="69"/>
         </scene>
-        <!--Country Setting View Controller-->
+        <!--Region-->
         <scene sceneID="Tvo-LP-4Xq">
             <objects>
                 <tableViewController storyboardIdentifier="TMDBCountryViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YFu-ej-WDB" customClass="TMDBCountrySettingViewController" customModule="TMDB" customModuleProvider="target" sceneMemberID="viewController">
@@ -115,10 +115,29 @@
                             <outlet property="delegate" destination="YFu-ej-WDB" id="gOi-ck-E45"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Region" id="xSa-ms-RUW"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HkV-JL-abe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="907" y="-55"/>
+            <point key="canvasLocation" x="2224.6376811594205" y="-87.053571428571431"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="YYh-RX-MIq">
+            <objects>
+                <navigationController storyboardIdentifier="TMDBCountrySettingNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IpS-RP-2tK" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6jn-dd-5Qm">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="YFu-ej-WDB" kind="relationship" relationship="rootViewController" id="Ylw-eX-UnM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2ng-9k-gdl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1315.9420289855072" y="-87.053571428571431"/>
         </scene>
     </scenes>
 </document>

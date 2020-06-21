@@ -14,8 +14,10 @@ struct Constant {
         static let previewHeader = "preview header"
         static let preview = "preview"
         static let country = "CountryCell"
+        static let countrySearch = "CountrySearch"
     }
     struct ViewControllerIdentifier {
+        static let tmdbCountrySearch = "TMDBCountrySearchResultController"
         static let tmdbCountry = "TMDBCountryViewController"
         static let tmdbHome = "TMDBHomeViewController"
         static let tmdbCountryNavigation = "TMDBCountrySettingNavigation"

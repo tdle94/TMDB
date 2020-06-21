@@ -9,13 +9,43 @@
 import Foundation
 import UIKit
 
+class TMDBCountrySearchResultController: UITableViewController {
+    var selectedIndexPath: IndexPath?
+
+    var searchCountries: [String] = []
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchCountries.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.countrySearch, for: indexPath)
+        cell.textLabel?.text = searchCountries[indexPath.row]
+        if let image = UIImage(named: "CountryFlags/\(searchCountries[indexPath.row])") {
+            cell.imageView?.image = image.resize(newWidth: 30)
+        }
+        return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        selectedIndexPath = indexPath
+    }
+
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = .none
+    }
+}
+
 class TMDBCountrySettingViewController: UITableViewController {
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
     var selectedIndexPath: IndexPath?
     
+    let countrySearchResultController: TMDBCountrySearchResultController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Constant.ViewControllerIdentifier.tmdbCountrySearch) as! TMDBCountrySearchResultController
+
     lazy var searchController: UISearchController = {
-       let searchController = UISearchController(searchResultsController: nil)
+       let searchController = UISearchController(searchResultsController: countrySearchResultController)
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "region, country"
         searchController.hidesNavigationBarDuringPresentation = false
@@ -39,7 +69,7 @@ class TMDBCountrySettingViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell", for: indexPath)
         cell.textLabel?.text = "\(Constant.countryName[Constant.countryCode[indexPath.row]] ?? "") (\(Constant.countryCode[indexPath.row]))"
-        
+
         if let image = UIImage(named: "CountryFlags/\(Constant.countryName[Constant.countryCode[indexPath.row]] ?? "")") {
             cell.imageView?.image = image.resize(newWidth: 30)
         }
@@ -49,6 +79,7 @@ class TMDBCountrySettingViewController: UITableViewController {
         } else {
             cell.accessoryType = .none
         }
+
         return cell
     }
 
@@ -87,6 +118,10 @@ class TMDBCountrySettingViewController: UITableViewController {
 
 extension TMDBCountrySettingViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        
+        guard let searchText = searchController.searchBar.text else { return }
+        let countries = Array(Constant.countryName.values).filter { $0.contains(searchText) }
+
+        countrySearchResultController.searchCountries = countries
+        countrySearchResultController.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }

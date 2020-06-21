@@ -10,7 +10,6 @@ import Foundation
 
 protocol TMDBUserSettingProtocol {
     var language: String? { get set }
-    var country: String? { get set }
     var region: String? { get set }
     var imageConfig: ImageConfigResult { get set }
     var userDefault: UserDefaults { get set }
@@ -25,15 +24,6 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
         }
         set {
             userDefault.setValue(newValue, forKey: Constant.UserSetting.language)
-        }
-    }
-    
-    var country: String? {
-        get {
-            return userDefault.object(forKey: Constant.UserSetting.country) as? String ?? Locale.current.regionCode
-        }
-        set {
-            userDefault.setValue(newValue, forKey: Constant.UserSetting.country)
         }
     }
     

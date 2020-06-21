@@ -19,7 +19,6 @@ class TMDBLocationManager {
     }
 
     @objc func localeChange() {
-        self.setting.country = Locale.current.regionCode
         self.setting.language = Locale.current.languageCode
         self.setting.region = Locale.current.regionCode
     }

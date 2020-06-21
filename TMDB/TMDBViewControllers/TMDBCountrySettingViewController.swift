@@ -13,6 +13,10 @@ class TMDBCountrySearchResultController: UITableViewController {
     var selectedIndexPath: IndexPath?
 
     var searchCountries: [String] = []
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        selectedIndexPath = nil
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchCountries.count
@@ -68,7 +72,7 @@ class TMDBCountrySettingViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell", for: indexPath)
-        cell.textLabel?.text = "\(Constant.countryName[Constant.countryCode[indexPath.row]] ?? "") (\(Constant.countryCode[indexPath.row]))"
+        cell.textLabel?.text = "\(Constant.countryName[Constant.countryCode[indexPath.row]] ?? "")"
 
         if let image = UIImage(named: "CountryFlags/\(Constant.countryName[Constant.countryCode[indexPath.row]] ?? "")") {
             cell.imageView?.image = image.resize(newWidth: 30)
@@ -112,7 +116,17 @@ class TMDBCountrySettingViewController: UITableViewController {
     }
 
     @objc func doneButtonTap() {
-
+        if
+            let indexPath = countrySearchResultController.selectedIndexPath,
+            let countryCode = Constant.reverseCountryName[countrySearchResultController.searchCountries[indexPath.row]]  {
+            userSetting.region = countryCode
+        } else if
+            let indexPath = selectedIndexPath,
+            let country = tableView.cellForRow(at: indexPath)?.textLabel?.text,
+            let countryCode = Constant.reverseCountryName[country] {
+            userSetting.region = countryCode
+        }
+        navigationController?.dismiss(animated: true, completion: nil)
     }
 }
 

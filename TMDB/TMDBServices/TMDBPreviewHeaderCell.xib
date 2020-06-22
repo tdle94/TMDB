@@ -20,12 +20,11 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="inV-8m-AWi">
-                    <rect key="frame" x="87" y="56.5" width="185" height="32"/>
+                    <rect key="frame" x="87" y="56.5" width="115" height="32"/>
                     <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                     <segments>
                         <segment title="Movie"/>
                         <segment title="On TV"/>
-                        <segment title="People"/>
                     </segments>
                     <color key="selectedSegmentTintColor" red="0.050980392156862744" green="0.14509803921568626" blue="0.24705882352941178" alpha="1" colorSpace="calibratedRGB"/>
                     <userDefinedRuntimeAttributes>

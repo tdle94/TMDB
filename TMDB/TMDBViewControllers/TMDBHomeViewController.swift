@@ -76,10 +76,13 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureLanguageAndRegion()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(configureLanguageAndRegion),
+                                               name: NSNotification.Name(rawValue: Constant.UserSetting.regionLanguageChange),
+                                               object: nil)
         configurePopularCollectionView()
         configureDataSource()
-        getPopularMovie()
+        configureLanguageAndRegion()
         getTrendingToday()
     }
 }
@@ -165,20 +168,43 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
 
 extension TMDBHomeViewController {
     // MARK: - configure navigation item
-    func configureLanguageAndRegion() {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+    @objc func configureLanguageAndRegion() {
+
+        navigationItem.rightBarButtonItems = nil
+
+        // refresh and go select popular movie in a region
+        let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) as! TMDBPreviewHeaderView
+        header.segmentControl.selectedSegmentIndex = 0
+        header.segmentControlAction(header.segmentControl)
+
+        // language
+        let button = UIButton()
         button.setTitle(userSetting.language?.uppercased(), for: .normal)
-        button.addTarget(self, action: #selector(changeLanguageAndRegion), for: .touchUpInside)
+        button.addTarget(self, action: #selector(changeLanguage), for: .touchUpInside)
         button.layer.borderWidth = 1
         button.layer.borderColor = Constant.Color.tabBarSelectedTextColor.cgColor
         button.layer.cornerRadius = 5
         button.showsTouchWhenHighlighted = true
         let languageSetting = UIBarButtonItem(customView: button)
-        navigationItem.setRightBarButton(languageSetting, animated: false)
+
+        // region
+        if let region = userSetting.region {
+            let regionFlag = UIImage(named: "CountryFlags/\(Constant.countryName[region] ?? "")")?.resize(newWidth: 30)?.withRenderingMode(.alwaysOriginal)
+            let regionSetting = UIBarButtonItem(image: regionFlag, style: .plain, target: self, action: #selector(changeRegion))
+            navigationItem.setRightBarButtonItems([
+                languageSetting,
+                regionSetting
+            ], animated: false)
+        }
+        
     }
 
-    @objc func changeLanguageAndRegion() {
+    @objc func changeRegion() {
         coordinator?.navigateToCountryVC()
+    }
+    
+    @objc func changeLanguage() {
+        
     }
 
     // MARK: - collection view configuration

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 import RealmSwift
 
 class TMDBHomeViewController: UIViewController {
@@ -14,10 +15,10 @@ class TMDBHomeViewController: UIViewController {
     let userSetting: TMDBUserSetting = TMDBUserSetting()
 
     lazy var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                                                   urlRequestBuilder: TMDBURLRequestBuilder(),
-                                                                                   userSetting: self.userSetting),
-                                                            localDataSource: TMDBLocalDataSource(),
-                                                            userSetting: self.userSetting)
+                                                                                        urlRequestBuilder: TMDBURLRequestBuilder(),
+                                                                                        userSetting: self.userSetting),
+                                                                 localDataSource: TMDBLocalDataSource(),
+                                                                 userSetting: self.userSetting)
     // MARK: - collectionview configuration
     enum Section: String, CaseIterable {
         case popular = "Popular"
@@ -28,31 +29,32 @@ class TMDBHomeViewController: UIViewController {
 
     var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
 
-    var imageHandler: (TMDBPreviewItemCell) -> ((Result<Data, Error>) -> Void) = { cell in
-        return { result in
-            switch result {
-            case .success(let data):
-                cell.imageView.image = UIImage(data: data)
-            case .failure(_):
-                cell.imageView.image = UIImage(named: "NoImage")
-            }
-        }
-    }
-
     lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { collectionView, indexPath, item in
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
+        var url: URL?
+
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             cell.title.text = item.originalTitle
             cell.releaseDate.text = item.releaseDate
-            self.repository.getPosterImageData(from: item, completion: self.imageHandler(cell))
+            if let path = item.posterPath {
+                url = self.repository.getImageURL(from: path)
+            }
         } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
             cell.title.text = item.originalName
             cell.releaseDate.text = item.firstAirDate
-            self.repository.getPosterImageData(from: item, completion: self.imageHandler(cell))
+            if let path = item.posterPath {
+                url = self.repository.getImageURL(from: path)
+            }
         } else if let item = item as? People ?? (item as? Trending)?.people {
             cell.title.text = item.name
-            self.repository.getProfileImageData(from: item, completion: self.imageHandler(cell))
+            if let path = item.profilePath {
+                url = self.repository.getImageURL(from: path)
+            }
         }
+
+        cell.imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0), completed: { _, _, _, _ in
+            cell.imageLoadingIndicator.stopAnimating()
+        })
         return cell
     }
 
@@ -64,9 +66,8 @@ class TMDBHomeViewController: UIViewController {
             var snapshot = self.dataSource.snapshot()
             snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
             snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
-            self.dataSource.apply(snapshot, animatingDifferences: true) {
-                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
-            }
+            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
+            self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
 
@@ -98,9 +99,8 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularMovieResult.movies), toSection: .popular)
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
-                }
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
     }
@@ -114,9 +114,8 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularTVShow.onTV), toSection: .popular)
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
-                }
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
     }
@@ -130,9 +129,8 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularPeopleResult.peoples), toSection: .popular)
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
-                }
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
     }

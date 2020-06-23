@@ -36,18 +36,24 @@
                             </label>
                         </subviews>
                     </stackView>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="g35-Lj-Eex">
+                        <rect key="frame" x="165" y="100" width="20" height="20"/>
+                    </activityIndicatorView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="Ka1-1R-kYe" secondAttribute="trailing" id="3kB-k8-Cze"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="top" secondItem="MBB-W3-fAB" secondAttribute="top" id="7Lh-px-yyY"/>
                     <constraint firstItem="fry-iD-S0E" firstAttribute="top" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="10" id="BN0-Sa-bay"/>
+                    <constraint firstItem="g35-Lj-Eex" firstAttribute="centerY" secondItem="Ka1-1R-kYe" secondAttribute="centerY" id="Irs-mI-11S"/>
                     <constraint firstAttribute="bottom" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="80" id="IwW-2f-WWV"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="dxB-WE-kKJ"/>
+                    <constraint firstItem="g35-Lj-Eex" firstAttribute="centerX" secondItem="Ka1-1R-kYe" secondAttribute="centerX" id="gbg-0g-lOF"/>
                     <constraint firstItem="fry-iD-S0E" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="u6T-fe-rkI"/>
                     <constraint firstAttribute="trailing" secondItem="fry-iD-S0E" secondAttribute="trailing" id="w5J-G6-akv"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>
+                <outlet property="imageLoadingIndicator" destination="g35-Lj-Eex" id="SMS-uQ-Wue"/>
                 <outlet property="imageView" destination="Ka1-1R-kYe" id="6Cc-ty-yvR"/>
                 <outlet property="releaseDate" destination="PHH-GT-xVK" id="Haw-8s-VDL"/>
                 <outlet property="title" destination="oDK-nq-0mA" id="WZv-ZI-TdB"/>

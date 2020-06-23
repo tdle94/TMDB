@@ -11,8 +11,7 @@ end
 target 'TMDB' do
   use_frameworks!
   pod 'RealmSwift'
-
-  # Pods for TMDB
+  pod 'SDWebImage'
 
   target 'TMDBTests' do
     inherit! :search_paths

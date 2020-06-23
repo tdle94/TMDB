@@ -18,18 +18,16 @@ protocol TMDBRepositoryProtocol {
 
     // popular people
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
-    func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void)
 
     // popular movie
     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
-    func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)
 
     // popular tv
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
-    func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void)
 
     // MARK: - image configuration
     func updateImageConfig()
+    func getImageURL(from path: String) -> URL?
 }
 
 class TMDBRepository: TMDBRepositoryProtocol {
@@ -90,30 +88,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
-    func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let path = tvShow.posterPath else {
-            completion(.failure(NSError(domain: "invalid url", code: 400, userInfo: nil)))
-            return
-        }
-
-        if let data = localDataSource.getTVPosterImgData(tvShow) {
-            completion(.success(data))
-            return
-        }
-
-        services.getImageData(from: path) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    self.localDataSource.saveTVPosterImgData(tvShow, data)
-                    completion(.success(data))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
         services.getTrending(time: time, type: type) { result in
             DispatchQueue.main.async {
@@ -141,54 +115,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
             }
         }
     }
-    
-    func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let path = people.profilePath else {
-            completion(.failure(NSError(domain: "", code: 400, userInfo: nil)))
-            return
-        }
-        
-        if let data = localDataSource.getPersonProfileImgData(people) {
-            completion(.success(data))
-            return
-        }
-
-        services.getImageData(from: path) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    self.localDataSource.savePersonProfileImgData(people, data)
-                    completion(.success(data))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
-    func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let path = movie.posterPath else {
-            completion(.failure(NSError(domain: "", code: 400, userInfo: nil)))
-            return
-        }
-
-        if let data = localDataSource.getMoviePosterImgData(movie) {
-            completion(.success(data))
-            return
-        }
-
-        services.getImageData(from: path) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    self.localDataSource.saveMoviePosterImgData(movie, data)
-                    completion(.success(data))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
 
     func updateImageConfig() {
         if
@@ -207,4 +133,9 @@ class TMDBRepository: TMDBRepositoryProtocol {
             }
         }
     }
+
+    func getImageURL(from path: String) -> URL? {
+        return services.getImageURL(from: path)
+    }
+
 }

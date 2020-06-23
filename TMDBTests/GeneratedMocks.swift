@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-22 04:01:59 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-23 02:37:53 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -1096,7 +1096,7 @@ import RealmSwift
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-22 04:01:59 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-23 02:37:53 +0000
 
 //
 //  Repository.swift
@@ -1181,21 +1181,6 @@ import Foundation
     
     
     
-     func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("getProfileImageData(from: People, completion: @escaping (Result<Data, Error>) -> Void)",
-            parameters: (people, completion),
-            escapingParameters: (people, completion),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getProfileImageData(from: people, completion: completion))
-        
-    }
-    
-    
-    
      func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)  {
         
     return cuckoo_manager.call("getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)",
@@ -1206,21 +1191,6 @@ import Foundation
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
             defaultCall: __defaultImplStub!.getPopularMovie(page: page, completion: completion))
-        
-    }
-    
-    
-    
-     func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("getPosterImageData(from: Movie, completion: @escaping (Result<Data, Error>) -> Void)",
-            parameters: (movie, completion),
-            escapingParameters: (movie, completion),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getPosterImageData(from: movie, completion: completion))
         
     }
     
@@ -1241,21 +1211,6 @@ import Foundation
     
     
     
-     func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("getPosterImageData(from: TVShow, completion: @escaping (Result<Data, Error>) -> Void)",
-            parameters: (tvShow, completion),
-            escapingParameters: (tvShow, completion),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getPosterImageData(from: tvShow, completion: completion))
-        
-    }
-    
-    
-    
      func updateImageConfig()  {
         
     return cuckoo_manager.call("updateImageConfig()",
@@ -1266,6 +1221,21 @@ import Foundation
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
             defaultCall: __defaultImplStub!.updateImageConfig())
+        
+    }
+    
+    
+    
+     func getImageURL(from path: String) -> URL? {
+        
+    return cuckoo_manager.call("getImageURL(from: String) -> URL?",
+            parameters: (path),
+            escapingParameters: (path),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getImageURL(from: path))
         
     }
     
@@ -1293,19 +1263,9 @@ import Foundation
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
-	    func getProfileImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from people: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(People, (Result<Data, Error>) -> Void)> where M1.MatchedType == People, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, (Result<Data, Error>) -> Void)>] = [wrap(matchable: people) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getProfileImageData(from: People, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
 	    func getPopularMovie<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularMovie, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from movie: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Movie, (Result<Data, Error>) -> Void)> where M1.MatchedType == Movie, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, (Result<Data, Error>) -> Void)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPosterImageData(from: Movie, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
 	    func getPopularOnTV<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, (Result<PopularOnTVResult, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularOnTVResult, Error>) -> Void {
@@ -1313,14 +1273,14 @@ import Foundation
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from tvShow: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(TVShow, (Result<Data, Error>) -> Void)> where M1.MatchedType == TVShow, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, (Result<Data, Error>) -> Void)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPosterImageData(from: TVShow, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
 	    func updateImageConfig() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "updateImageConfig()", parameterMatchers: matchers))
+	    }
+	    
+	    func getImageURL<M1: Cuckoo.Matchable>(from path: M1) -> Cuckoo.ProtocolStubFunction<(String), URL?> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: path) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getImageURL(from: String) -> URL?", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -1358,21 +1318,9 @@ import Foundation
 	    }
 	    
 	    @discardableResult
-	    func getProfileImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from people: M1, completion: M2) -> Cuckoo.__DoNotUse<(People, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == People, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, (Result<Data, Error>) -> Void)>] = [wrap(matchable: people) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("getProfileImageData(from: People, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func getPopularMovie<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.__DoNotUse<(Int, (Result<PopularMovie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularMovie, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
 	        return cuckoo_manager.verify("getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from movie: M1, completion: M2) -> Cuckoo.__DoNotUse<(Movie, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == Movie, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, (Result<Data, Error>) -> Void)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("getPosterImageData(from: Movie, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -1382,15 +1330,15 @@ import Foundation
 	    }
 	    
 	    @discardableResult
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from tvShow: M1, completion: M2) -> Cuckoo.__DoNotUse<(TVShow, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == TVShow, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, (Result<Data, Error>) -> Void)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("getPosterImageData(from: TVShow, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func updateImageConfig() -> Cuckoo.__DoNotUse<(), Void> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return cuckoo_manager.verify("updateImageConfig()", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getImageURL<M1: Cuckoo.Matchable>(from path: M1) -> Cuckoo.__DoNotUse<(String), URL?> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: path) { $0 }]
+	        return cuckoo_manager.verify("getImageURL(from: String) -> URL?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	}
@@ -1414,15 +1362,7 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
      func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -1430,12 +1370,12 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void)   {
+     func updateImageConfig()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     func updateImageConfig()   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
+     func getImageURL(from path: String) -> URL?  {
+        return DefaultValueRegistry.defaultValue(for: (URL?).self)
     }
     
 }
@@ -1536,21 +1476,6 @@ import Foundation
     
     
     
-     override func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("getPosterImageData(from: TVShow, completion: @escaping (Result<Data, Error>) -> Void)",
-            parameters: (tvShow, completion),
-            escapingParameters: (tvShow, completion),
-            superclassCall:
-                
-                super.getPosterImageData(from: tvShow, completion: completion)
-                ,
-            defaultCall: __defaultImplStub!.getPosterImageData(from: tvShow, completion: completion))
-        
-    }
-    
-    
-    
      override func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)  {
         
     return cuckoo_manager.call("getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)",
@@ -1581,36 +1506,6 @@ import Foundation
     
     
     
-     override func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("getProfileImageData(from: People, completion: @escaping (Result<Data, Error>) -> Void)",
-            parameters: (people, completion),
-            escapingParameters: (people, completion),
-            superclassCall:
-                
-                super.getProfileImageData(from: people, completion: completion)
-                ,
-            defaultCall: __defaultImplStub!.getProfileImageData(from: people, completion: completion))
-        
-    }
-    
-    
-    
-     override func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("getPosterImageData(from: Movie, completion: @escaping (Result<Data, Error>) -> Void)",
-            parameters: (movie, completion),
-            escapingParameters: (movie, completion),
-            superclassCall:
-                
-                super.getPosterImageData(from: movie, completion: completion)
-                ,
-            defaultCall: __defaultImplStub!.getPosterImageData(from: movie, completion: completion))
-        
-    }
-    
-    
-    
      override func updateImageConfig()  {
         
     return cuckoo_manager.call("updateImageConfig()",
@@ -1621,6 +1516,21 @@ import Foundation
                 super.updateImageConfig()
                 ,
             defaultCall: __defaultImplStub!.updateImageConfig())
+        
+    }
+    
+    
+    
+     override func getImageURL(from path: String) -> URL? {
+        
+    return cuckoo_manager.call("getImageURL(from: String) -> URL?",
+            parameters: (path),
+            escapingParameters: (path),
+            superclassCall:
+                
+                super.getImageURL(from: path)
+                ,
+            defaultCall: __defaultImplStub!.getImageURL(from: path))
         
     }
     
@@ -1653,11 +1563,6 @@ import Foundation
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from tvShow: M1, completion: M2) -> Cuckoo.ClassStubNoReturnFunction<(TVShow, (Result<Data, Error>) -> Void)> where M1.MatchedType == TVShow, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, (Result<Data, Error>) -> Void)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getPosterImageData(from: TVShow, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
 	    func getTrending<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(time: M1, type: M2, completion: M3) -> Cuckoo.ClassStubNoReturnFunction<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void)> where M1.MatchedType == TrendingTime, M2.MatchedType == TrendingMediaType, M3.MatchedType == (Result<TrendingResult, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void)>] = [wrap(matchable: time) { $0.0 }, wrap(matchable: type) { $0.1 }, wrap(matchable: completion) { $0.2 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)", parameterMatchers: matchers))
@@ -1668,19 +1573,14 @@ import Foundation
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
-	    func getProfileImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from people: M1, completion: M2) -> Cuckoo.ClassStubNoReturnFunction<(People, (Result<Data, Error>) -> Void)> where M1.MatchedType == People, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, (Result<Data, Error>) -> Void)>] = [wrap(matchable: people) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getProfileImageData(from: People, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from movie: M1, completion: M2) -> Cuckoo.ClassStubNoReturnFunction<(Movie, (Result<Data, Error>) -> Void)> where M1.MatchedType == Movie, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, (Result<Data, Error>) -> Void)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getPosterImageData(from: Movie, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
 	    func updateImageConfig() -> Cuckoo.ClassStubNoReturnFunction<()> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "updateImageConfig()", parameterMatchers: matchers))
+	    }
+	    
+	    func getImageURL<M1: Cuckoo.Matchable>(from path: M1) -> Cuckoo.ClassStubFunction<(String), URL?> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: path) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getImageURL(from: String) -> URL?", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -1723,12 +1623,6 @@ import Foundation
 	    }
 	    
 	    @discardableResult
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from tvShow: M1, completion: M2) -> Cuckoo.__DoNotUse<(TVShow, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == TVShow, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, (Result<Data, Error>) -> Void)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("getPosterImageData(from: TVShow, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func getTrending<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(time: M1, type: M2, completion: M3) -> Cuckoo.__DoNotUse<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void), Void> where M1.MatchedType == TrendingTime, M2.MatchedType == TrendingMediaType, M3.MatchedType == (Result<TrendingResult, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void)>] = [wrap(matchable: time) { $0.0 }, wrap(matchable: type) { $0.1 }, wrap(matchable: completion) { $0.2 }]
 	        return cuckoo_manager.verify("getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -1741,21 +1635,15 @@ import Foundation
 	    }
 	    
 	    @discardableResult
-	    func getProfileImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from people: M1, completion: M2) -> Cuckoo.__DoNotUse<(People, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == People, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, (Result<Data, Error>) -> Void)>] = [wrap(matchable: people) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("getProfileImageData(from: People, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func getPosterImageData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from movie: M1, completion: M2) -> Cuckoo.__DoNotUse<(Movie, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == Movie, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, (Result<Data, Error>) -> Void)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("getPosterImageData(from: Movie, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func updateImageConfig() -> Cuckoo.__DoNotUse<(), Void> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return cuckoo_manager.verify("updateImageConfig()", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getImageURL<M1: Cuckoo.Matchable>(from path: M1) -> Cuckoo.__DoNotUse<(String), URL?> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: path) { $0 }]
+	        return cuckoo_manager.verify("getImageURL(from: String) -> URL?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	}
@@ -1789,10 +1677,6 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     override func getPosterImageData(from tvShow: TVShow, completion: @escaping (Result<Data, Error>) -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
      override func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
@@ -1801,22 +1685,18 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     override func getProfileImageData(from people: People, completion: @escaping (Result<Data, Error>) -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     override func getPosterImageData(from movie: Movie, completion: @escaping (Result<Data, Error>) -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
      override func updateImageConfig()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+     override func getImageURL(from path: String) -> URL?  {
+        return DefaultValueRegistry.defaultValue(for: (URL?).self)
     }
     
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-22 04:01:59 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-23 02:37:53 +0000
 
 //
 //  Session.swift
@@ -1870,21 +1750,6 @@ import Foundation
         
     }
     
-    
-    
-     func send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)",
-            parameters: (url, completion),
-            escapingParameters: (url, completion),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.send(url: url, completion: completion))
-        
-    }
-    
 
 	 struct __StubbingProxy_TMDBSessionProtocol: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -1897,11 +1762,6 @@ import Foundation
 	    func send<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, T: Decodable>(request: M1, responseType: M2, completion: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(URLRequest, T.Type, (Result<T, Error>) -> Void)> where M1.MatchedType == URLRequest, M2.MatchedType == T.Type, M3.MatchedType == (Result<T, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(URLRequest, T.Type, (Result<T, Error>) -> Void)>] = [wrap(matchable: request) { $0.0 }, wrap(matchable: responseType) { $0.1 }, wrap(matchable: completion) { $0.2 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBSessionProtocol.self, method: "send(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
-	    func send<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(url: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(URL, (Result<Data, Error>) -> Void)> where M1.MatchedType == URL, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(URL, (Result<Data, Error>) -> Void)>] = [wrap(matchable: url) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBSessionProtocol.self, method: "send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -1926,12 +1786,6 @@ import Foundation
 	        return cuckoo_manager.verify("send(request: URLRequest, responseType: T.Type, completion: @escaping (Result<T, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
-	    @discardableResult
-	    func send<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(url: M1, completion: M2) -> Cuckoo.__DoNotUse<(URL, (Result<Data, Error>) -> Void), Void> where M1.MatchedType == URL, M2.MatchedType == (Result<Data, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(URL, (Result<Data, Error>) -> Void)>] = [wrap(matchable: url) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
 	}
 }
 
@@ -1945,14 +1799,10 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     func send(url: URL, completion: @escaping (Result<Data, Error>) -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-22 04:01:59 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-23 02:37:53 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -2208,7 +2058,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-22 04:01:59 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-23 02:37:53 +0000
 
 //
 //  URLSessionDataTaskProtocol.swift
@@ -2314,7 +2164,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-22 04:01:59 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-23 02:37:53 +0000
 
 //
 //  URLSessionProtocol.swift
@@ -2450,7 +2300,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-22 04:01:59 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-23 02:37:53 +0000
 
 //
 //  UserDefault.swift

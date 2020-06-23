@@ -7,15 +7,15 @@
 //
 
 import Foundation
+import SDWebImage
 
 extension TMDBServices: TMDBImageService {
-    func getImageData(from path: String, completion: @escaping (Result<Data, Error>) -> Void) {
+    func getImageURL(from path: String) -> URL? {
         let base = userSetting.imageConfig.images.secureBaseURL
         guard let size = userSetting.imageConfig.images.posterSizes.last, let url = URL(string: "\(base)\(size)\(path)") else {
-            completion(.failure(TMDBSession.APIError.invalidURL))
-            return
+            return nil
         }
-        session.send(url: url, completion: completion)
+        return url
     }
 
     func updateImageConfig(completion: @escaping (Result<ImageConfigResult, Error>) -> Void) {

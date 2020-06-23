@@ -56,9 +56,10 @@ class TMDBServiceTests: XCTestCase {
     func testGetPopularMovie() {
         let expectation = self.expectation(description: "")
         let matchRequest = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1)
-        
+
+        /*GIVEN*/
         stub(urlRequestBuilder) { stub in
-            when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: isNil()).thenReturn(matchRequest)
+            when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: "US").thenReturn(matchRequest)
         }
 
         stub(session) { stub in
@@ -68,19 +69,28 @@ class TMDBServiceTests: XCTestCase {
             }
         }
 
+        stub(userSetting) { stub in
+            when(stub).language.get.thenReturn("en")
+            when(stub).region.get.thenReturn("US")
+        }
+
+        /*WHEN*/
         services.getPopularMovie(page: 1) { result in
             expectation.fulfill()
         }
 
+        /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(urlRequestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: isNil())
+        verify(urlRequestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: "US")
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(userSetting, times(2)).language.get()
+        verify(userSetting, times(3)).region.get()
     }
     
     func testGetPopularPeople() {
         let expectation = self.expectation(description: "")
         let matchRequest = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1)
-        
+        /*GIVEN*/
         stub(urlRequestBuilder) { stub in
             when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(matchRequest)
         }
@@ -92,19 +102,28 @@ class TMDBServiceTests: XCTestCase {
             }
         }
         
+        stub(userSetting) { stub in
+            when(stub).language.get.thenReturn("en")
+            when(stub).region.get.thenReturn("US")
+        }
+        /*WHEN*/
         services.getPopularPeople(page: 1) { result in
             expectation.fulfill()
         }
         
+        /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
+        verify(userSetting, times(2)).language.get()
+        verify(userSetting, times(2)).region.get()
     }
     
     func testGetPopularOnTV() {
         let expectation = self.expectation(description: "")
         let matchRequest = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1)
         
+        /*GIVEN*/
         stub(urlRequestBuilder) { stub in
             when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(matchRequest)
         }
@@ -116,13 +135,22 @@ class TMDBServiceTests: XCTestCase {
             }
         }
         
+        stub(userSetting) { stub in
+            when(stub).language.get.thenReturn("en")
+            when(stub).region.get.thenReturn("US")
+        }
+        
+        /*WHEN*/
         services.getPopularOnTV(page: 1) { result in
             expectation.fulfill()
         }
         
+        /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
+        verify(userSetting, times(2)).language.get()
+        verify(userSetting, times(2)).region.get()
     }
     
     // MARK: - detail
@@ -223,54 +251,6 @@ class TMDBServiceTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getTrendingURLRequest(time: trendingTime, type: trendingType)
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(TrendingResult.Type.self), completion: anyClosure())
-    }
-
-    // MARK: - image
-
-    func testFetchPosterImageDataWithValidURL() {
-        let expectation = self.expectation(description: "")
-        let imageURL = "/test"
-        let urlMatcher = ParameterMatcher<URL>(matchesFunction: { $0.absoluteString == "https://image.tmdb.org/t/p/original\(imageURL)" })
-
-        stub(session) { stub in
-            when(stub).send(url: urlMatcher, completion: anyClosure()).then { implementation in
-                implementation.1(.success(Data()))
-            }
-        }
-
-        stub(userSetting) { stub in
-            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
-        }
-
-        services.getImageData(from: imageURL) { result in
-            XCTAssertNoThrow(try! result.get())
-            expectation.fulfill()
-        }
-
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(session).send(url: urlMatcher, completion: anyClosure())
-        verify(userSetting, times(2)).imageConfig.get()
-    }
-
-    func testFetchPosterImageDataWithInvalidURL() {
-        let expectation = self.expectation(description: "")
-        let imageURL = "why you valid"
-
-        stub(userSetting) { stub in
-            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
-        }
-
-        services.getImageData(from: imageURL) { result in
-            do {
-                let _ = try result.get()
-            } catch let error {
-                XCTAssertEqual(error.localizedDescription, TMDBSession.APIError.invalidURL.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(userSetting, times(2)).imageConfig.get()
     }
 
     // MARK: - update image config

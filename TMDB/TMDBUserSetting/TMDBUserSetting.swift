@@ -33,6 +33,7 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
         }
         set {
             userDefault.setValue(newValue, forKey: Constant.UserSetting.region)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constant.UserSetting.regionLanguageChange), object: nil)
         }
     }
 

@@ -19,11 +19,13 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             imageView.layer.cornerCurve = .circular
         }
     }
+    @IBOutlet weak var imageLoadingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var releaseDate: UILabel!
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageLoadingIndicator.startAnimating()
         imageView.image = nil
         title.text = ""
         releaseDate.text = ""

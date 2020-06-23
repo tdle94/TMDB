@@ -14,20 +14,14 @@ protocol TMDBLocalDataSourceProtocol {
     func getMovie(id: Int) -> Movie?
     func saveMovie(_ movie: Movie)
     func saveMovies(_ movies: List<Movie>)
-    func getMoviePosterImgData(_ movie: Movie) -> Data?
-    func saveMoviePosterImgData(_ movie: Movie, _ data: Data)
     // tv show
     func getTVShow(id: Int) -> TVShow?
     func saveTVShows(_ tvShows: List<TVShow>)
     func saveTVShow(_ tvShow: TVShow)
-    func saveTVPosterImgData(_ tvShow: TVShow, _ data: Data)
-    func getTVPosterImgData(_ tvShow: TVShow) -> Data?
     // people
     func getPerson(id: Int) -> People?
     func savePeople(_ people: List<People>)
     func savePerson(_ person: People)
-    func savePersonProfileImgData(_ person: People, _ data: Data)
-    func getPersonProfileImgData(_ person: People) -> Data?
     // trending
     func saveTrendings(_ trending: List<Trending>)
 }
@@ -67,16 +61,6 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         try? realm.commitWrite()
     }
 
-    func getMoviePosterImgData(_ movie: Movie) -> Data? {
-        return getMovie(id: movie.id)?.posterImgData
-    }
-
-    func saveMoviePosterImgData(_ movie: Movie, _ data: Data) {
-        realm.beginWrite()
-        movie.posterImgData = data
-        try? realm.commitWrite()
-    }
-
     // MARK: - tv show
     func getTVShow(id: Int) -> TVShow? {
         return realm.object(ofType: TVShow.self, forPrimaryKey: id)
@@ -97,16 +81,6 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
             realm.add(tvShow, update: .modified)
         }
         try? realm.commitWrite()
-    }
-
-    func saveTVPosterImgData(_ tvShow: TVShow, _ data: Data) {
-        realm.beginWrite()
-        tvShow.posterImgData = data
-        try? realm.commitWrite()
-    }
-
-    func getTVPosterImgData(_ tvShow: TVShow) -> Data? {
-        return getTVShow(id: tvShow.id)?.posterImgData
     }
 
     // MARK: - people
@@ -131,15 +105,6 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         try? realm.commitWrite()
     }
     
-    func savePersonProfileImgData(_ person: People, _ data: Data) {
-        realm.beginWrite()
-        person.profileImgData = data
-        try? realm.commitWrite()
-    }
-    
-    func getPersonProfileImgData(_ person: People) -> Data? {
-        return getPerson(id: person.id)?.profileImgData
-    }
 
     // MARK: - trending
     func saveTrendings(_ trendings: List<Trending>) {

@@ -46,6 +46,286 @@ class TMDBCountrySettingViewController: UITableViewController {
 
     var selectedIndexPath: IndexPath?
     
+    var country: [[String]] = [
+        [
+            "Afghanistan",
+            "Aland Islands",
+            "Albania",
+            "Algeria",
+            "American Samoa",
+            "Andorra",
+            "Angola",
+            "Anguilla",
+            "Antigua and Barbuda",
+            "Argentina",
+            "Armenia",
+            "Aruba",
+            "Australia",
+            "Austria",
+            "Azerbaijan",
+        ],
+        [
+            "Bahamas",
+            "Bahrain",
+            "Bangladesh",
+            "Barbados",
+            "Belarus",
+            "Belgium",
+            "Belize",
+            "Benin",
+            "Bermuda",
+            "Bhutan",
+            "Bolivia",
+            "Bosnia and Herzegovina",
+            "Botswana",
+            "Brazil",
+            "British Indian Ocean Territory",
+            "Brunei",
+            "Bulgaria",
+            "Burkina Faso",
+            "Burundi",
+            "British Virgin Islands"
+        ],
+        [
+            "Cambodia",
+            "Cameroon",
+            "Canada",
+            "Cape Verde",
+            "Cayman Islands",
+            "Central African Republic",
+            "Chad",
+            "Chile",
+            "China",
+            "Christmas Island",
+            "Colombia",
+            "Comoros",
+            "Congo",
+            "Democratic Republic of Congo",
+            "Cook Islands",
+            "Costa Rica",
+            "Croatia",
+            "Cuba",
+            "Curacao",
+            "Cyprus",
+            "Czech Republic",
+        ],
+        [
+            "Denmark",
+            "Djibouti",
+            "Dominica",
+            "Dominican Republic",
+        ],
+        [
+            "Ecuador",
+            "Egypt",
+            "El Salvador",
+            "Equatorial Guinea",
+            "Eritrea",
+            "Estonia",
+            "Ethiopia",
+        ],
+        [
+            "Falkland Islands",
+            "Faroe Islands",
+            "Fiji",
+            "Finland",
+            "France",
+            "French Polynesia",
+        ],
+         [
+            "Gabon",
+            "Gambia",
+            "Georgia",
+            "Germany",
+            "Ghana",
+            "Gibraltar",
+            "Greece",
+            "Greenland",
+            "Grenada",
+            "Guam",
+            "Guatemala",
+            "Guernsey",
+            "Guinea",
+            "Guinea Bissau",
+            "Guyana",
+        ],
+        [
+            "Haiti",
+            "Holy See (Vatican City State)",
+            "Honduras",
+            "Hong Kong",
+            "Hungary",
+        ],
+        [
+            "Iceland",
+            "India",
+            "Indonesia",
+            "Iran",
+            "Iraq",
+            "Ireland",
+            "Isle of Man",
+            "Israel",
+            "Italy",
+        ],
+        [
+            "Jamaica",
+            "Japan",
+            "Jersey",
+            "Jordan",
+        ],
+        [
+            "Kazakhstan",
+            "Kenya",
+            "Kiribati",
+            "South Korea",
+            "Kuwait",
+            "Kyrgyzstan",
+        ],
+        [
+            "Laos",
+            "Latvia",
+            "Lebanon",
+            "Lesotho",
+            "Liberia",
+            "Libya",
+            "Liechtenstein",
+            "Lithuania",
+            "Luxembourg",
+        ],
+        [
+            "Macao",
+            "Republic of Macedonia",
+            "Madagascar",
+            "Malawi",
+            "Malaysia",
+            "Maldives",
+            "Mali",
+            "Malta",
+            "Marshall Islands",
+            "Martinique",
+            "Mauritania",
+            "Mauritius",
+            "Mexico",
+            "Moldova",
+            "Monaco",
+            "Mongolia",
+            "Montenegro",
+            "Montserrat",
+            "Morocco",
+            "Mozambique",
+            "Myanmar",
+        ],
+        [
+            "Namibia",
+            "Nauru",
+            "Nepal",
+            "Netherlands",
+            "New Zealand",
+            "Nicaragua",
+            "Niger",
+            "Nigeria",
+            "Niue",
+            "Norfolk Island",
+            "Northern Mariana Islands",
+            "Norway",
+        ],
+        [
+            "Oman",
+        ],
+        [
+            "Pakistan",
+            "Palau",
+            "Palestine",
+            "Panama",
+            "Papua New Guinea",
+            "Paraguay",
+            "Peru",
+            "Philippines",
+            "Pitcairn Islands",
+            "Poland",
+            "Portugal",
+            "Puerto Rico",
+        ],
+        [
+            "Qatar",
+        ],
+         [
+            "Romania",
+            "Russia",
+            "Rwanda",
+        ],
+         [
+            "Saint Barts",
+            "Saint Kitts and Nevis",
+            "Saint Lucia",
+            "Saint Vincent and the Grenadines",
+            "Samoa",
+            "San Marino",
+            "Sao Tome and Principe",
+            "Saudi Arabia",
+            "Senegal",
+            "Serbia",
+            "Seychelles",
+            "Sierra Leone",
+            "Singapore",
+            "Sint Maarten",
+            "Slovakia",
+            "Slovenia",
+            "Solomon Islands",
+            "Somalia",
+            "South Africa",
+            "South Sudan",
+            "Spain",
+            "Sri Lanka",
+            "Sudan",
+            "Suriname",
+            "Swaziland",
+            "Sweden",
+            "Switzerland",
+        ],
+        [
+            "Taiwan",
+            "Tajikistan",
+            "Tanzania",
+            "Thailand",
+            "East Timor",
+            "Togo",
+            "Tokelau",
+            "Tonga",
+            "Trinidad and Tobago",
+            "Tunisia",
+            "Turkey",
+            "Turkmenistan",
+            "Turks and Caicos Islands",
+            "Tuvalu",
+        ],
+        [
+            "Uganda",
+            "Ukraine",
+            "United Arab Emirates",
+            "United Kingdom",
+            "United States of America",
+            "Uruguay",
+            "Uzbekistan",
+        ],
+        [
+            "Vanuatu",
+            "Venezuela",
+            "Viet Nam",
+            "Virgin Islands, U.S."
+        ],
+        [
+            "Western Sahara"
+        ],
+        [
+            "Yemen"
+        ],
+        [
+            "Zambia",
+            "Zimbabwe"
+        ]
+    ]
+    
     let countrySearchResultController: TMDBCountrySearchResultController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Constant.ViewControllerIdentifier.tmdbCountrySearch) as! TMDBCountrySearchResultController
 
     lazy var searchController: UISearchController = {
@@ -65,16 +345,20 @@ class TMDBCountrySettingViewController: UITableViewController {
         definesPresentationContext = true
         scrollToUserSettingCountry()
     }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return country.count
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Constant.countryCode.count
+        return country[section].count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell", for: indexPath)
-        cell.textLabel?.text = "\(Constant.countryName[Constant.countryCode[indexPath.row]] ?? "")"
+        cell.textLabel?.text = country[indexPath.section][indexPath.row]
 
-        if let image = UIImage(named: "CountryFlags/\(Constant.countryName[Constant.countryCode[indexPath.row]] ?? "")") {
+        if let image = UIImage(named: "CountryFlags/\(country[indexPath.section][indexPath.row])") {
             cell.imageView?.image = image.resize(newWidth: 30)
         }
 

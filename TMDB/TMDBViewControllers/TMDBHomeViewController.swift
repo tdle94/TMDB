@@ -52,7 +52,10 @@ class TMDBHomeViewController: UIViewController {
             }
         }
 
-        cell.imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0), completed: { _, _, _, _ in
+        cell.imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0), completed: { _, error, _, _ in
+            if error != nil {
+                cell.imageView.image = UIImage(named: "NoImage")
+            }
             cell.imageLoadingIndicator.stopAnimating()
         })
         return cell

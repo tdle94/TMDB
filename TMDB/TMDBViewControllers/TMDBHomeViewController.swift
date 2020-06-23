@@ -99,6 +99,7 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularMovieResult.movies), toSection: .popular)
+                snapshot.reloadSections([.popular])
                 self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
             }

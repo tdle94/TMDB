@@ -418,12 +418,12 @@ class TMDBCountrySettingViewController: UITableViewController {
     @objc func doneButtonTap() {
         if
             let indexPath = countrySearchResultController.selectedIndexPath,
-            let countryCode = Constant.reverseCountryName[countrySearchResultController.searchCountries[indexPath.row]] {
+            let countryCode = Constant.countryCode[countrySearchResultController.searchCountries[indexPath.row]] {
             userSetting.region = countryCode
         } else if
             let indexPath = selectedIndexPath,
             let country = tableView.cellForRow(at: indexPath)?.textLabel?.text,
-            let countryCode = Constant.reverseCountryName[country] {
+            let countryCode = Constant.countryCode[country] {
             userSetting.region = countryCode
         }
         navigationController?.dismiss(animated: true, completion: nil)

@@ -171,7 +171,6 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
 extension TMDBHomeViewController {
     // MARK: - configure navigation item
     @objc func configureLanguageAndRegion() {
-
         navigationItem.rightBarButtonItems = nil
 
         // refresh and go select popular movie in a region
@@ -206,7 +205,7 @@ extension TMDBHomeViewController {
     }
     
     @objc func changeLanguage() {
-        
+        coordinator?.navigateToLanuageVC()
     }
 
     // MARK: - collection view configuration

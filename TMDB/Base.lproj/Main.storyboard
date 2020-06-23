@@ -121,10 +121,10 @@
             </objects>
             <point key="canvasLocation" x="2224.6376811594205" y="-87.053571428571431"/>
         </scene>
-        <!--Country Search Result Controller-->
+        <!--Search Result Controller-->
         <scene sceneID="ICf-wa-pdd">
             <objects>
-                <tableViewController storyboardIdentifier="TMDBCountrySearchResultController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ssG-8C-2oy" customClass="TMDBCountrySearchResultController" customModule="TMDB" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TMDBCountrySearchResultController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ssG-8C-2oy" customClass="TMDBSearchResultController" customModule="TMDB" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="qvo-ya-xKG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -163,6 +163,44 @@
             </objects>
             <point key="canvasLocation" x="3332" y="-82"/>
         </scene>
+        <!--Languages-->
+        <scene sceneID="SYe-OW-1Pv">
+            <objects>
+                <tableViewController id="Rdy-b2-Baf" customClass="TMDBLanguageSettingViewController" customModule="TMDB" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Lpf-JF-Rx5">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LanguageCell" textLabel="ckm-cU-6qp" style="IBUITableViewCellStyleDefault" id="juK-UZ-Ypt">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="juK-UZ-Ypt" id="uRX-nx-LTt">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ckm-cU-6qp">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Rdy-b2-Baf" id="Mnh-vD-e3b"/>
+                            <outlet property="delegate" destination="Rdy-b2-Baf" id="XYG-gJ-WdA"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Languages" id="3hp-To-MHf"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rrE-9v-mVZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5589.8550724637689" y="-87.053571428571431"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="YYh-RX-MIq">
             <objects>
@@ -180,6 +218,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2ng-9k-gdl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1315.9420289855072" y="-87.053571428571431"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="IRE-vD-svM">
+            <objects>
+                <navigationController storyboardIdentifier="TMDBLanguageSettingNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="a2i-Du-23W" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bFK-Xp-EfL">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Rdy-b2-Baf" kind="relationship" relationship="rootViewController" id="NuM-D2-9Hv"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y5J-eE-deJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4679.7101449275369" y="-87.053571428571431"/>
         </scene>
     </scenes>
 </document>

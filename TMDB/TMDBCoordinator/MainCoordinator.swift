@@ -18,4 +18,9 @@ struct MainCoordinator: Coordinator {
         let countryVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbCountryNavigation)
         navigationController.present(countryVC, animated: true, completion: nil)
     }
+    
+    func navigateToLanuageVC() {
+        let languageVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbLanguageNavigation)
+        navigationController.present(languageVC, animated: true, completion: nil)
+    }
 }

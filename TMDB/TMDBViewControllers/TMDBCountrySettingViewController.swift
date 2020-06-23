@@ -326,6 +326,10 @@ class TMDBCountrySettingViewController: UITableViewController {
         ]
     ]
     
+    let header: [String] =  [
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "K", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    ]
+    
     let countrySearchResultController: TMDBCountrySearchResultController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Constant.ViewControllerIdentifier.tmdbCountrySearch) as! TMDBCountrySearchResultController
 
     lazy var searchController: UISearchController = {
@@ -388,11 +392,13 @@ class TMDBCountrySettingViewController: UITableViewController {
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return [
-            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "K", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-        ]
+        return header
     }
-    
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return header[section]
+    }
+
     func scrollToUserSettingCountry() {
         guard
             let userSettingCountryCode = userSetting.region?.uppercased(),

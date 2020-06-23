@@ -54,7 +54,6 @@ class LocalDataSourceTests: QuickSpec {
                 expect(testRealm.objects(Movie.self).count).to(equal(0))
                 let popularMovies: List<Movie> = List()
                 let movie = Movie()
-                let data = Data()
 
                 popularMovies.append(movie)
                 localDataSource.saveMovies(popularMovies)
@@ -64,7 +63,6 @@ class LocalDataSourceTests: QuickSpec {
             it("add tv shows") {
                 // add
                 expect(testRealm.objects(TVShow.self).count).to(equal(0))
-                let posterImgData = Data()
                 let tvShows: List<TVShow> = List()
                 let tvShow1 = TVShow()
                 let tvShow2 = TVShow()
@@ -80,7 +78,6 @@ class LocalDataSourceTests: QuickSpec {
             it("add people") {
                 // add
                 expect(testRealm.objects(People.self).count).to(equal(0))
-                let profileImgData = Data()
                 let people: List<People> = List()
                 let person1 = People()
                 let person2 = People()

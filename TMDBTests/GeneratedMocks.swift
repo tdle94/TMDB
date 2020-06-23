@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-23 02:37:53 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-23 03:44:08 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -85,36 +85,6 @@ import RealmSwift
     
     
     
-     func getMoviePosterImgData(_ movie: Movie) -> Data? {
-        
-    return cuckoo_manager.call("getMoviePosterImgData(_: Movie) -> Data?",
-            parameters: (movie),
-            escapingParameters: (movie),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getMoviePosterImgData(movie))
-        
-    }
-    
-    
-    
-     func saveMoviePosterImgData(_ movie: Movie, _ data: Data)  {
-        
-    return cuckoo_manager.call("saveMoviePosterImgData(_: Movie, _: Data)",
-            parameters: (movie, data),
-            escapingParameters: (movie, data),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.saveMoviePosterImgData(movie, data))
-        
-    }
-    
-    
-    
      func getTVShow(id: Int) -> TVShow? {
         
     return cuckoo_manager.call("getTVShow(id: Int) -> TVShow?",
@@ -155,36 +125,6 @@ import RealmSwift
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
             defaultCall: __defaultImplStub!.saveTVShow(tvShow))
-        
-    }
-    
-    
-    
-     func saveTVPosterImgData(_ tvShow: TVShow, _ data: Data)  {
-        
-    return cuckoo_manager.call("saveTVPosterImgData(_: TVShow, _: Data)",
-            parameters: (tvShow, data),
-            escapingParameters: (tvShow, data),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.saveTVPosterImgData(tvShow, data))
-        
-    }
-    
-    
-    
-     func getTVPosterImgData(_ tvShow: TVShow) -> Data? {
-        
-    return cuckoo_manager.call("getTVPosterImgData(_: TVShow) -> Data?",
-            parameters: (tvShow),
-            escapingParameters: (tvShow),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getTVPosterImgData(tvShow))
         
     }
     
@@ -235,36 +175,6 @@ import RealmSwift
     
     
     
-     func savePersonProfileImgData(_ person: People, _ data: Data)  {
-        
-    return cuckoo_manager.call("savePersonProfileImgData(_: People, _: Data)",
-            parameters: (person, data),
-            escapingParameters: (person, data),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.savePersonProfileImgData(person, data))
-        
-    }
-    
-    
-    
-     func getPersonProfileImgData(_ person: People) -> Data? {
-        
-    return cuckoo_manager.call("getPersonProfileImgData(_: People) -> Data?",
-            parameters: (person),
-            escapingParameters: (person),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getPersonProfileImgData(person))
-        
-    }
-    
-    
-    
      func saveTrendings(_ trending: List<Trending>)  {
         
     return cuckoo_manager.call("saveTrendings(_: List<Trending>)",
@@ -302,16 +212,6 @@ import RealmSwift
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "saveMovies(_: List<Movie>)", parameterMatchers: matchers))
 	    }
 	    
-	    func getMoviePosterImgData<M1: Cuckoo.Matchable>(_ movie: M1) -> Cuckoo.ProtocolStubFunction<(Movie), Data?> where M1.MatchedType == Movie {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie)>] = [wrap(matchable: movie) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getMoviePosterImgData(_: Movie) -> Data?", parameterMatchers: matchers))
-	    }
-	    
-	    func saveMoviePosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ movie: M1, _ data: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Movie, Data)> where M1.MatchedType == Movie, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, Data)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "saveMoviePosterImgData(_: Movie, _: Data)", parameterMatchers: matchers))
-	    }
-	    
 	    func getTVShow<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.ProtocolStubFunction<(Int), TVShow?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getTVShow(id: Int) -> TVShow?", parameterMatchers: matchers))
@@ -327,16 +227,6 @@ import RealmSwift
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "saveTVShow(_: TVShow)", parameterMatchers: matchers))
 	    }
 	    
-	    func saveTVPosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ tvShow: M1, _ data: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(TVShow, Data)> where M1.MatchedType == TVShow, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, Data)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "saveTVPosterImgData(_: TVShow, _: Data)", parameterMatchers: matchers))
-	    }
-	    
-	    func getTVPosterImgData<M1: Cuckoo.Matchable>(_ tvShow: M1) -> Cuckoo.ProtocolStubFunction<(TVShow), Data?> where M1.MatchedType == TVShow {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow)>] = [wrap(matchable: tvShow) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getTVPosterImgData(_: TVShow) -> Data?", parameterMatchers: matchers))
-	    }
-	    
 	    func getPerson<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.ProtocolStubFunction<(Int), People?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getPerson(id: Int) -> People?", parameterMatchers: matchers))
@@ -350,16 +240,6 @@ import RealmSwift
 	    func savePerson<M1: Cuckoo.Matchable>(_ person: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(People)> where M1.MatchedType == People {
 	        let matchers: [Cuckoo.ParameterMatcher<(People)>] = [wrap(matchable: person) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "savePerson(_: People)", parameterMatchers: matchers))
-	    }
-	    
-	    func savePersonProfileImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ person: M1, _ data: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(People, Data)> where M1.MatchedType == People, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, Data)>] = [wrap(matchable: person) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "savePersonProfileImgData(_: People, _: Data)", parameterMatchers: matchers))
-	    }
-	    
-	    func getPersonProfileImgData<M1: Cuckoo.Matchable>(_ person: M1) -> Cuckoo.ProtocolStubFunction<(People), Data?> where M1.MatchedType == People {
-	        let matchers: [Cuckoo.ParameterMatcher<(People)>] = [wrap(matchable: person) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSourceProtocol.self, method: "getPersonProfileImgData(_: People) -> Data?", parameterMatchers: matchers))
 	    }
 	    
 	    func saveTrendings<M1: Cuckoo.Matchable>(_ trending: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(List<Trending>)> where M1.MatchedType == List<Trending> {
@@ -402,18 +282,6 @@ import RealmSwift
 	    }
 	    
 	    @discardableResult
-	    func getMoviePosterImgData<M1: Cuckoo.Matchable>(_ movie: M1) -> Cuckoo.__DoNotUse<(Movie), Data?> where M1.MatchedType == Movie {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie)>] = [wrap(matchable: movie) { $0 }]
-	        return cuckoo_manager.verify("getMoviePosterImgData(_: Movie) -> Data?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func saveMoviePosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ movie: M1, _ data: M2) -> Cuckoo.__DoNotUse<(Movie, Data), Void> where M1.MatchedType == Movie, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, Data)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return cuckoo_manager.verify("saveMoviePosterImgData(_: Movie, _: Data)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func getTVShow<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.__DoNotUse<(Int), TVShow?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return cuckoo_manager.verify("getTVShow(id: Int) -> TVShow?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -432,18 +300,6 @@ import RealmSwift
 	    }
 	    
 	    @discardableResult
-	    func saveTVPosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ tvShow: M1, _ data: M2) -> Cuckoo.__DoNotUse<(TVShow, Data), Void> where M1.MatchedType == TVShow, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, Data)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return cuckoo_manager.verify("saveTVPosterImgData(_: TVShow, _: Data)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func getTVPosterImgData<M1: Cuckoo.Matchable>(_ tvShow: M1) -> Cuckoo.__DoNotUse<(TVShow), Data?> where M1.MatchedType == TVShow {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow)>] = [wrap(matchable: tvShow) { $0 }]
-	        return cuckoo_manager.verify("getTVPosterImgData(_: TVShow) -> Data?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func getPerson<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.__DoNotUse<(Int), People?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return cuckoo_manager.verify("getPerson(id: Int) -> People?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -459,18 +315,6 @@ import RealmSwift
 	    func savePerson<M1: Cuckoo.Matchable>(_ person: M1) -> Cuckoo.__DoNotUse<(People), Void> where M1.MatchedType == People {
 	        let matchers: [Cuckoo.ParameterMatcher<(People)>] = [wrap(matchable: person) { $0 }]
 	        return cuckoo_manager.verify("savePerson(_: People)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func savePersonProfileImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ person: M1, _ data: M2) -> Cuckoo.__DoNotUse<(People, Data), Void> where M1.MatchedType == People, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, Data)>] = [wrap(matchable: person) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return cuckoo_manager.verify("savePersonProfileImgData(_: People, _: Data)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func getPersonProfileImgData<M1: Cuckoo.Matchable>(_ person: M1) -> Cuckoo.__DoNotUse<(People), Data?> where M1.MatchedType == People {
-	        let matchers: [Cuckoo.ParameterMatcher<(People)>] = [wrap(matchable: person) { $0 }]
-	        return cuckoo_manager.verify("getPersonProfileImgData(_: People) -> Data?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -500,14 +344,6 @@ import RealmSwift
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     func getMoviePosterImgData(_ movie: Movie) -> Data?  {
-        return DefaultValueRegistry.defaultValue(for: (Data?).self)
-    }
-    
-     func saveMoviePosterImgData(_ movie: Movie, _ data: Data)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
      func getTVShow(id: Int) -> TVShow?  {
         return DefaultValueRegistry.defaultValue(for: (TVShow?).self)
     }
@@ -520,14 +356,6 @@ import RealmSwift
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     func saveTVPosterImgData(_ tvShow: TVShow, _ data: Data)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     func getTVPosterImgData(_ tvShow: TVShow) -> Data?  {
-        return DefaultValueRegistry.defaultValue(for: (Data?).self)
-    }
-    
      func getPerson(id: Int) -> People?  {
         return DefaultValueRegistry.defaultValue(for: (People?).self)
     }
@@ -538,14 +366,6 @@ import RealmSwift
     
      func savePerson(_ person: People)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     func savePersonProfileImgData(_ person: People, _ data: Data)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     func getPersonProfileImgData(_ person: People) -> Data?  {
-        return DefaultValueRegistry.defaultValue(for: (Data?).self)
     }
     
      func saveTrendings(_ trending: List<Trending>)   {
@@ -626,36 +446,6 @@ import RealmSwift
     
     
     
-     override func getMoviePosterImgData(_ movie: Movie) -> Data? {
-        
-    return cuckoo_manager.call("getMoviePosterImgData(_: Movie) -> Data?",
-            parameters: (movie),
-            escapingParameters: (movie),
-            superclassCall:
-                
-                super.getMoviePosterImgData(movie)
-                ,
-            defaultCall: __defaultImplStub!.getMoviePosterImgData(movie))
-        
-    }
-    
-    
-    
-     override func saveMoviePosterImgData(_ movie: Movie, _ data: Data)  {
-        
-    return cuckoo_manager.call("saveMoviePosterImgData(_: Movie, _: Data)",
-            parameters: (movie, data),
-            escapingParameters: (movie, data),
-            superclassCall:
-                
-                super.saveMoviePosterImgData(movie, data)
-                ,
-            defaultCall: __defaultImplStub!.saveMoviePosterImgData(movie, data))
-        
-    }
-    
-    
-    
      override func getTVShow(id: Int) -> TVShow? {
         
     return cuckoo_manager.call("getTVShow(id: Int) -> TVShow?",
@@ -696,36 +486,6 @@ import RealmSwift
                 super.saveTVShows(tvShows)
                 ,
             defaultCall: __defaultImplStub!.saveTVShows(tvShows))
-        
-    }
-    
-    
-    
-     override func saveTVPosterImgData(_ tvShow: TVShow, _ data: Data)  {
-        
-    return cuckoo_manager.call("saveTVPosterImgData(_: TVShow, _: Data)",
-            parameters: (tvShow, data),
-            escapingParameters: (tvShow, data),
-            superclassCall:
-                
-                super.saveTVPosterImgData(tvShow, data)
-                ,
-            defaultCall: __defaultImplStub!.saveTVPosterImgData(tvShow, data))
-        
-    }
-    
-    
-    
-     override func getTVPosterImgData(_ tvShow: TVShow) -> Data? {
-        
-    return cuckoo_manager.call("getTVPosterImgData(_: TVShow) -> Data?",
-            parameters: (tvShow),
-            escapingParameters: (tvShow),
-            superclassCall:
-                
-                super.getTVPosterImgData(tvShow)
-                ,
-            defaultCall: __defaultImplStub!.getTVPosterImgData(tvShow))
         
     }
     
@@ -776,36 +536,6 @@ import RealmSwift
     
     
     
-     override func savePersonProfileImgData(_ person: People, _ data: Data)  {
-        
-    return cuckoo_manager.call("savePersonProfileImgData(_: People, _: Data)",
-            parameters: (person, data),
-            escapingParameters: (person, data),
-            superclassCall:
-                
-                super.savePersonProfileImgData(person, data)
-                ,
-            defaultCall: __defaultImplStub!.savePersonProfileImgData(person, data))
-        
-    }
-    
-    
-    
-     override func getPersonProfileImgData(_ person: People) -> Data? {
-        
-    return cuckoo_manager.call("getPersonProfileImgData(_: People) -> Data?",
-            parameters: (person),
-            escapingParameters: (person),
-            superclassCall:
-                
-                super.getPersonProfileImgData(person)
-                ,
-            defaultCall: __defaultImplStub!.getPersonProfileImgData(person))
-        
-    }
-    
-    
-    
      override func saveTrendings(_ trendings: List<Trending>)  {
         
     return cuckoo_manager.call("saveTrendings(_: List<Trending>)",
@@ -843,16 +573,6 @@ import RealmSwift
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "saveMovies(_: List<Movie>)", parameterMatchers: matchers))
 	    }
 	    
-	    func getMoviePosterImgData<M1: Cuckoo.Matchable>(_ movie: M1) -> Cuckoo.ClassStubFunction<(Movie), Data?> where M1.MatchedType == Movie {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie)>] = [wrap(matchable: movie) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "getMoviePosterImgData(_: Movie) -> Data?", parameterMatchers: matchers))
-	    }
-	    
-	    func saveMoviePosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ movie: M1, _ data: M2) -> Cuckoo.ClassStubNoReturnFunction<(Movie, Data)> where M1.MatchedType == Movie, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, Data)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "saveMoviePosterImgData(_: Movie, _: Data)", parameterMatchers: matchers))
-	    }
-	    
 	    func getTVShow<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.ClassStubFunction<(Int), TVShow?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "getTVShow(id: Int) -> TVShow?", parameterMatchers: matchers))
@@ -868,16 +588,6 @@ import RealmSwift
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "saveTVShows(_: List<TVShow>)", parameterMatchers: matchers))
 	    }
 	    
-	    func saveTVPosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ tvShow: M1, _ data: M2) -> Cuckoo.ClassStubNoReturnFunction<(TVShow, Data)> where M1.MatchedType == TVShow, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, Data)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "saveTVPosterImgData(_: TVShow, _: Data)", parameterMatchers: matchers))
-	    }
-	    
-	    func getTVPosterImgData<M1: Cuckoo.Matchable>(_ tvShow: M1) -> Cuckoo.ClassStubFunction<(TVShow), Data?> where M1.MatchedType == TVShow {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow)>] = [wrap(matchable: tvShow) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "getTVPosterImgData(_: TVShow) -> Data?", parameterMatchers: matchers))
-	    }
-	    
 	    func getPerson<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.ClassStubFunction<(Int), People?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "getPerson(id: Int) -> People?", parameterMatchers: matchers))
@@ -891,16 +601,6 @@ import RealmSwift
 	    func savePeople<M1: Cuckoo.Matchable>(_ people: M1) -> Cuckoo.ClassStubNoReturnFunction<(List<People>)> where M1.MatchedType == List<People> {
 	        let matchers: [Cuckoo.ParameterMatcher<(List<People>)>] = [wrap(matchable: people) { $0 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "savePeople(_: List<People>)", parameterMatchers: matchers))
-	    }
-	    
-	    func savePersonProfileImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ person: M1, _ data: M2) -> Cuckoo.ClassStubNoReturnFunction<(People, Data)> where M1.MatchedType == People, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, Data)>] = [wrap(matchable: person) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "savePersonProfileImgData(_: People, _: Data)", parameterMatchers: matchers))
-	    }
-	    
-	    func getPersonProfileImgData<M1: Cuckoo.Matchable>(_ person: M1) -> Cuckoo.ClassStubFunction<(People), Data?> where M1.MatchedType == People {
-	        let matchers: [Cuckoo.ParameterMatcher<(People)>] = [wrap(matchable: person) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBLocalDataSource.self, method: "getPersonProfileImgData(_: People) -> Data?", parameterMatchers: matchers))
 	    }
 	    
 	    func saveTrendings<M1: Cuckoo.Matchable>(_ trendings: M1) -> Cuckoo.ClassStubNoReturnFunction<(List<Trending>)> where M1.MatchedType == List<Trending> {
@@ -943,18 +643,6 @@ import RealmSwift
 	    }
 	    
 	    @discardableResult
-	    func getMoviePosterImgData<M1: Cuckoo.Matchable>(_ movie: M1) -> Cuckoo.__DoNotUse<(Movie), Data?> where M1.MatchedType == Movie {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie)>] = [wrap(matchable: movie) { $0 }]
-	        return cuckoo_manager.verify("getMoviePosterImgData(_: Movie) -> Data?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func saveMoviePosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ movie: M1, _ data: M2) -> Cuckoo.__DoNotUse<(Movie, Data), Void> where M1.MatchedType == Movie, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(Movie, Data)>] = [wrap(matchable: movie) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return cuckoo_manager.verify("saveMoviePosterImgData(_: Movie, _: Data)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func getTVShow<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.__DoNotUse<(Int), TVShow?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return cuckoo_manager.verify("getTVShow(id: Int) -> TVShow?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -973,18 +661,6 @@ import RealmSwift
 	    }
 	    
 	    @discardableResult
-	    func saveTVPosterImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ tvShow: M1, _ data: M2) -> Cuckoo.__DoNotUse<(TVShow, Data), Void> where M1.MatchedType == TVShow, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow, Data)>] = [wrap(matchable: tvShow) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return cuckoo_manager.verify("saveTVPosterImgData(_: TVShow, _: Data)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func getTVPosterImgData<M1: Cuckoo.Matchable>(_ tvShow: M1) -> Cuckoo.__DoNotUse<(TVShow), Data?> where M1.MatchedType == TVShow {
-	        let matchers: [Cuckoo.ParameterMatcher<(TVShow)>] = [wrap(matchable: tvShow) { $0 }]
-	        return cuckoo_manager.verify("getTVPosterImgData(_: TVShow) -> Data?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func getPerson<M1: Cuckoo.Matchable>(id: M1) -> Cuckoo.__DoNotUse<(Int), People?> where M1.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: id) { $0 }]
 	        return cuckoo_manager.verify("getPerson(id: Int) -> People?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -1000,18 +676,6 @@ import RealmSwift
 	    func savePeople<M1: Cuckoo.Matchable>(_ people: M1) -> Cuckoo.__DoNotUse<(List<People>), Void> where M1.MatchedType == List<People> {
 	        let matchers: [Cuckoo.ParameterMatcher<(List<People>)>] = [wrap(matchable: people) { $0 }]
 	        return cuckoo_manager.verify("savePeople(_: List<People>)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func savePersonProfileImgData<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ person: M1, _ data: M2) -> Cuckoo.__DoNotUse<(People, Data), Void> where M1.MatchedType == People, M2.MatchedType == Data {
-	        let matchers: [Cuckoo.ParameterMatcher<(People, Data)>] = [wrap(matchable: person) { $0.0 }, wrap(matchable: data) { $0.1 }]
-	        return cuckoo_manager.verify("savePersonProfileImgData(_: People, _: Data)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func getPersonProfileImgData<M1: Cuckoo.Matchable>(_ person: M1) -> Cuckoo.__DoNotUse<(People), Data?> where M1.MatchedType == People {
-	        let matchers: [Cuckoo.ParameterMatcher<(People)>] = [wrap(matchable: person) { $0 }]
-	        return cuckoo_manager.verify("getPersonProfileImgData(_: People) -> Data?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -1041,14 +705,6 @@ import RealmSwift
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     override func getMoviePosterImgData(_ movie: Movie) -> Data?  {
-        return DefaultValueRegistry.defaultValue(for: (Data?).self)
-    }
-    
-     override func saveMoviePosterImgData(_ movie: Movie, _ data: Data)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
      override func getTVShow(id: Int) -> TVShow?  {
         return DefaultValueRegistry.defaultValue(for: (TVShow?).self)
     }
@@ -1059,14 +715,6 @@ import RealmSwift
     
      override func saveTVShows(_ tvShows: List<TVShow>)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     override func saveTVPosterImgData(_ tvShow: TVShow, _ data: Data)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     override func getTVPosterImgData(_ tvShow: TVShow) -> Data?  {
-        return DefaultValueRegistry.defaultValue(for: (Data?).self)
     }
     
      override func getPerson(id: Int) -> People?  {
@@ -1081,14 +729,6 @@ import RealmSwift
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-     override func savePersonProfileImgData(_ person: People, _ data: Data)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     override func getPersonProfileImgData(_ person: People) -> Data?  {
-        return DefaultValueRegistry.defaultValue(for: (Data?).self)
-    }
-    
      override func saveTrendings(_ trendings: List<Trending>)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
@@ -1096,7 +736,7 @@ import RealmSwift
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-23 02:37:53 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-23 03:44:08 +0000
 
 //
 //  Repository.swift
@@ -1696,7 +1336,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-23 02:37:53 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-23 03:44:08 +0000
 
 //
 //  Session.swift
@@ -1802,7 +1442,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-23 02:37:53 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-23 03:44:08 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -2058,7 +1698,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-23 02:37:53 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-23 03:44:08 +0000
 
 //
 //  URLSessionDataTaskProtocol.swift
@@ -2164,7 +1804,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-23 02:37:53 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-23 03:44:08 +0000
 
 //
 //  URLSessionProtocol.swift
@@ -2300,7 +1940,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-23 02:37:53 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-23 03:44:08 +0000
 
 //
 //  UserDefault.swift

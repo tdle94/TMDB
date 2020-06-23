@@ -137,5 +137,4 @@ class TMDBRepository: TMDBRepositoryProtocol {
     func getImageURL(from path: String) -> URL? {
         return services.getImageURL(from: path)
     }
-
 }

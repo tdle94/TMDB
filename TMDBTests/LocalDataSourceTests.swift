@@ -59,12 +59,6 @@ class LocalDataSourceTests: QuickSpec {
                 popularMovies.append(movie)
                 localDataSource.saveMovies(popularMovies)
                 expect(testRealm.objects(Movie.self).count).to(equal(1))
-                
-                // add data to poster
-                localDataSource.saveMoviePosterImgData(movie, data)
-                
-                // retrieve poster image data
-                expect(localDataSource.getMoviePosterImgData(movie)).to(equal(data))
             }
 
             it("add tv shows") {
@@ -81,12 +75,6 @@ class LocalDataSourceTests: QuickSpec {
                 localDataSource.saveTVShow(tvShow2)
                 expect(testRealm.objects(TVShow.self).count).to(equal(2))
                 expect(localDataSource.getTVShow(id: 0)).to(equal(tvShow1))
-
-                // add poster image data
-                localDataSource.saveTVPosterImgData(tvShow1, posterImgData)
-
-                // retrieve poster image data
-                expect(localDataSource.getTVPosterImgData(tvShow1)).to(equal(posterImgData))
             }
             
             it("add people") {
@@ -103,12 +91,6 @@ class LocalDataSourceTests: QuickSpec {
                 localDataSource.savePerson(person1) // save duplicate
                 localDataSource.savePerson(person2)
                 expect(testRealm.objects(People.self).count).to(equal(2))
-                
-                // add profile image data
-                localDataSource.savePersonProfileImgData(person1, profileImgData)
-                
-                // retrieve profile image data
-                expect(localDataSource.getPersonProfileImgData(person1)).to(equal(profileImgData))
             }
             
             it("add trending") {

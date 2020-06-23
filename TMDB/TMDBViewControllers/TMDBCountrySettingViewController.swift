@@ -46,7 +46,7 @@ class TMDBCountrySettingViewController: UITableViewController {
 
     var selectedIndexPath: IndexPath?
     
-    var country: [[String]] = [
+    var countries: [[String]] = [
         [
             "Afghanistan",
             "Aland Islands",
@@ -334,6 +334,8 @@ class TMDBCountrySettingViewController: UITableViewController {
         searchController.searchBar.placeholder = "region, country"
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.returnKeyType = .done
+        searchController.searchBar.delegate = self
         return searchController
     }()
 
@@ -347,18 +349,18 @@ class TMDBCountrySettingViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return country.count
+        return countries.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return country[section].count
+        return countries[section].count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell", for: indexPath)
-        cell.textLabel?.text = country[indexPath.section][indexPath.row]
+        cell.textLabel?.text = countries[indexPath.section][indexPath.row]
 
-        if let image = UIImage(named: "CountryFlags/\(country[indexPath.section][indexPath.row])") {
+        if let image = UIImage(named: "CountryFlags/\(countries[indexPath.section][indexPath.row])") {
             cell.imageView?.image = image.resize(newWidth: 30)
         }
 
@@ -392,17 +394,25 @@ class TMDBCountrySettingViewController: UITableViewController {
     }
     
     func scrollToUserSettingCountry() {
-        let userSettingCountryCode = userSetting.region?.uppercased()
-        if let row = Constant.countryCode.firstIndex(where: { $0 == userSettingCountryCode }) {
-            selectedIndexPath = IndexPath(row: row, section: 0)
-            tableView.selectRow(at: selectedIndexPath!, animated: true, scrollPosition: .top)
+        guard
+            let userSettingCountryCode = userSetting.region?.uppercased(),
+            let countrySelected = Constant.countryName[userSettingCountryCode] else { return }
+
+        for (section, group) in countries.enumerated() {
+            for (row, country) in group.enumerated() {
+                if country == countrySelected {
+                    selectedIndexPath = IndexPath(row: row, section: section)
+                    tableView.selectRow(at: selectedIndexPath!, animated: true, scrollPosition: .top)
+                    return
+                }
+            }
         }
     }
 
     @objc func doneButtonTap() {
         if
             let indexPath = countrySearchResultController.selectedIndexPath,
-            let countryCode = Constant.reverseCountryName[countrySearchResultController.searchCountries[indexPath.row]]  {
+            let countryCode = Constant.reverseCountryName[countrySearchResultController.searchCountries[indexPath.row]] {
             userSetting.region = countryCode
         } else if
             let indexPath = selectedIndexPath,
@@ -421,5 +431,11 @@ extension TMDBCountrySettingViewController: UISearchResultsUpdating {
 
         countrySearchResultController.searchCountries = countries
         countrySearchResultController.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+    }
+}
+
+extension TMDBCountrySettingViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        doneButtonTap()
     }
 }

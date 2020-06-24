@@ -46,18 +46,13 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveMovie(_ movie: Movie) {
         realm.beginWrite()
-        if let existedMovie = getMovie(id: movie.id) {
-            movie.posterImgData = existedMovie.posterImgData
-        }
         realm.add(movie, update: .modified)
         try? realm.commitWrite()
     }
 
     func saveMovies(_ movies: List<Movie>) {
         realm.beginWrite()
-        for movie in movies where getMovie(id: movie.id) == nil {
-            realm.add(movie, update: .modified)
-        }
+        realm.add(movies, update: .modified)
         try? realm.commitWrite()
     }
 
@@ -68,18 +63,13 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveTVShow(_ tvShow: TVShow) {
         realm.beginWrite()
-        if let existedTV = getTVShow(id: tvShow.id) {
-            tvShow.posterImgData = existedTV.posterImgData
-        }
         realm.add(tvShow, update: .modified)
         try? realm.commitWrite()
     }
 
     func saveTVShows(_ tvShows: List<TVShow>) {
         realm.beginWrite()
-        for tvShow in tvShows where getTVShow(id: tvShow.id) == nil {
-            realm.add(tvShow, update: .modified)
-        }
+        realm.add(tvShows, update: .modified)
         try? realm.commitWrite()
     }
 
@@ -90,18 +80,13 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func savePerson(_ person: People) {
         realm.beginWrite()
-        if let exitedPerson = getPerson(id: person.id) {
-            person.profileImgData = exitedPerson.profileImgData
-        }
         realm.add(person, update: .modified)
         try? realm.commitWrite()
     }
 
     func savePeople(_ people: List<People>) {
         realm.beginWrite()
-        for person in people where getPerson(id: person.id) == nil {
-            realm.add(person, update: .modified)
-        }
+        realm.add(people, update: .modified)
         try? realm.commitWrite()
     }
     

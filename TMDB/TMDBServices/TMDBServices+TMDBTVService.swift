@@ -10,10 +10,7 @@ import Foundation
 
 extension TMDBServices: TMDBTVService {
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void) {
-        let language: String? = NSLocale.current.languageCode != nil && NSLocale.current.regionCode != nil
-                                ? "\(NSLocale.current.languageCode!)-\(NSLocale.current.regionCode!)"
-                                : nil
-        let request = urlRequestBuilder.getPopularTVURLRequest(page: page, language: language)
+        let request = urlRequestBuilder.getPopularTVURLRequest(page: page, language: NSLocale.preferredLanguages.first)
         session.send(request: request, responseType: PopularOnTVResult.self, completion: completion)
     }
 }

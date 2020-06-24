@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-23 22:08:45 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-24 00:48:30 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -736,7 +736,7 @@ import RealmSwift
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-23 22:08:45 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-24 00:48:30 +0000
 
 //
 //  Repository.swift
@@ -1336,7 +1336,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-23 22:08:45 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-24 00:48:30 +0000
 
 //
 //  Session.swift
@@ -1442,7 +1442,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-23 22:08:45 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-24 00:48:30 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -1698,7 +1698,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-23 22:08:45 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-24 00:48:30 +0000
 
 //
 //  URLSessionDataTaskProtocol.swift
@@ -1804,7 +1804,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-23 22:08:45 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-24 00:48:30 +0000
 
 //
 //  URLSessionProtocol.swift
@@ -1940,7 +1940,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-23 22:08:45 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-24 00:48:30 +0000
 
 //
 //  UserDefault.swift
@@ -1974,54 +1974,6 @@ import Foundation
     }
     
 
-    
-    
-    
-     var language: String? {
-        get {
-            return cuckoo_manager.getter("language",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall: __defaultImplStub!.language)
-        }
-        
-        set {
-            cuckoo_manager.setter("language",
-                value: newValue,
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall: __defaultImplStub!.language = newValue)
-        }
-        
-    }
-    
-    
-    
-     var region: String? {
-        get {
-            return cuckoo_manager.getter("region",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall: __defaultImplStub!.region)
-        }
-        
-        set {
-            cuckoo_manager.setter("region",
-                value: newValue,
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall: __defaultImplStub!.region = newValue)
-        }
-        
-    }
     
     
     
@@ -2084,16 +2036,6 @@ import Foundation
 	    }
 	    
 	    
-	    var language: Cuckoo.ProtocolToBeStubbedOptionalProperty<MockTMDBUserSettingProtocol, String> {
-	        return .init(manager: cuckoo_manager, name: "language")
-	    }
-	    
-	    
-	    var region: Cuckoo.ProtocolToBeStubbedOptionalProperty<MockTMDBUserSettingProtocol, String> {
-	        return .init(manager: cuckoo_manager, name: "region")
-	    }
-	    
-	    
 	    var imageConfig: Cuckoo.ProtocolToBeStubbedProperty<MockTMDBUserSettingProtocol, ImageConfigResult> {
 	        return .init(manager: cuckoo_manager, name: "imageConfig")
 	    }
@@ -2119,16 +2061,6 @@ import Foundation
 	
 	    
 	    
-	    var language: Cuckoo.VerifyOptionalProperty<String> {
-	        return .init(manager: cuckoo_manager, name: "language", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    
-	    var region: Cuckoo.VerifyOptionalProperty<String> {
-	        return .init(manager: cuckoo_manager, name: "region", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    
 	    var imageConfig: Cuckoo.VerifyProperty<ImageConfigResult> {
 	        return .init(manager: cuckoo_manager, name: "imageConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
@@ -2144,26 +2076,6 @@ import Foundation
 }
 
  class TMDBUserSettingProtocolStub: TMDBUserSettingProtocol {
-    
-    
-     var language: String? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String?).self)
-        }
-        
-        set { }
-        
-    }
-    
-    
-     var region: String? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String?).self)
-        }
-        
-        set { }
-        
-    }
     
     
      var imageConfig: ImageConfigResult {

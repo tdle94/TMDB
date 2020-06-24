@@ -69,11 +69,6 @@ class TMDBServiceTests: XCTestCase {
             }
         }
 
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
-
         /*WHEN*/
         services.getPopularMovie(page: 1) { result in
             expectation.fulfill()
@@ -83,8 +78,6 @@ class TMDBServiceTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: "US")
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularMovie.Type.self), completion: anyClosure())
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(3)).region.get()
     }
     
     func testGetPopularPeople() {
@@ -101,11 +94,7 @@ class TMDBServiceTests: XCTestCase {
                 implementation.2(.success(popularPeopleResult))
             }
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
+
         /*WHEN*/
         services.getPopularPeople(page: 1) { result in
             expectation.fulfill()
@@ -115,8 +104,6 @@ class TMDBServiceTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
     }
     
     func testGetPopularOnTV() {
@@ -135,11 +122,6 @@ class TMDBServiceTests: XCTestCase {
             }
         }
         
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
-        
         /*WHEN*/
         services.getPopularOnTV(page: 1) { result in
             expectation.fulfill()
@@ -149,8 +131,6 @@ class TMDBServiceTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(urlRequestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
     }
     
     // MARK: - detail

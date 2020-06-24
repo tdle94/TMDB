@@ -30,22 +30,6 @@ class TMDBUserSettingTests: XCTestCase {
         }
     }
 
-    // MARK: - test user location setting
-    func testUserLocationSetting() {
-        var setting = TMDBUserSetting(userDefault: userDefault)
-        setting.language = nil
-        setting.region = nil
-
-        XCTAssertNotNil(setting.language)
-        XCTAssertNotNil(setting.region)
-        
-        setting.language = "en"
-        setting.region = "US"
-        
-        XCTAssertEqual(setting.language, "en")
-        XCTAssertEqual(setting.region, "US")
-    }
-
     // MARK: - test image config
     func testImageConfig() {
         let imageConfigResult = ImageConfigResult()

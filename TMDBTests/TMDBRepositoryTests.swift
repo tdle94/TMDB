@@ -155,11 +155,7 @@ class TMDBRepositoryTests: XCTestCase {
         stub(localDataSource) { stub in
             when(stub).saveMovies(movieSaveMatcher).thenDoNothing()
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
+
 
         /*WHEN*/
         repository.getPopularMovie(page: 1) { result in
@@ -172,8 +168,6 @@ class TMDBRepositoryTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion)
         verify(localDataSource).saveMovies(movieSaveMatcher)
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(3)).region.get()
     }
     
     // failure
@@ -192,11 +186,6 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion).thenReturn(request)
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
 
         /*WHEN*/
         repository.getPopularMovie(page: 1) { result in
@@ -207,8 +196,6 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion)
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(3)).region.get()
     }
 
     // MARK: - popular TV Shows
@@ -233,11 +220,6 @@ class TMDBRepositoryTests: XCTestCase {
         stub(localDataSource) { stub in
             when(stub).saveTVShows(any()).thenDoNothing()
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
 
         /*WHEN*/
         repository.getPopularOnTV(page: 1) { result in
@@ -249,8 +231,6 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
     }
     
     // failure
@@ -269,11 +249,6 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(request)
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
 
 
         /*WHEN*/
@@ -285,8 +260,6 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
     }
 
     // MARK: - popular people
@@ -311,12 +284,6 @@ class TMDBRepositoryTests: XCTestCase {
         stub(localDataSource) { stub in
             when(stub).savePeople(any()).thenDoNothing()
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
-
 
         /*WHEN*/
         repository.getPopularPeople(page: 1) { result in
@@ -329,8 +296,6 @@ class TMDBRepositoryTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
         verify(localDataSource).savePeople(any())
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
     }
 
     // failure
@@ -349,11 +314,6 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(request)
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
 
 
         /*WHEN*/
@@ -365,8 +325,6 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
     }
 
     // MARK: - trending

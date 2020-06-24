@@ -15,7 +15,6 @@ import Contacts
 
 class TMDBUserSettingTests: XCTestCase {
 
-    var locationManager: TMDBLocationManager!
     let userSetting: MockTMDBUserSettingProtocol = MockTMDBUserSettingProtocol()
     let userDefault: UserDefaults = UserDefaults(suiteName: #file)!
 
@@ -23,44 +22,12 @@ class TMDBUserSettingTests: XCTestCase {
         userDefault.dictionaryRepresentation().keys.forEach { key in
             userDefault.removeObject(forKey: key)
         }
-        locationManager = TMDBLocationManager(setting: userSetting)
     }
 
     override func tearDown() {
         userDefault.dictionaryRepresentation().keys.forEach { key in
             userDefault.removeObject(forKey: key)
         }
-    }
-
-    // MARK: - test updated location
-
-    // no error
-    func testUserSetting() {
-        let optional = ParameterMatcher<String?>()
-        /*GIVEN*/
-        stub(userSetting) { stub in
-            when(stub).language.set(optional).thenDoNothing()
-            when(stub).region.set(optional).thenDoNothing()
-            when(stub).language.get.thenReturn(nil)
-            when(stub).region.get.thenReturn(nil)
-            when(stub).userDefault.get.thenReturn(userDefault)
-        }
-
-        /*WHEN*/
-        locationManager.localeChange()
-        /*THEN*/
-        verify(userSetting).language.set(any())
-        verify(userSetting).region.set(any())
-    }
-
-    // MARK: - test user location setting
-    func testUserLocationSetting() {
-        var setting = TMDBUserSetting(userDefault: userDefault)
-        setting.language = nil
-        setting.region = nil
-
-        XCTAssertNotNil(setting.language)
-        XCTAssertNotNil(setting.region)
     }
 
     // MARK: - test image config

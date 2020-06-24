@@ -26,7 +26,6 @@ class People: Object, Decodable {
     dynamic var imdbId: String = ""
     dynamic var homepage: String?
     let knownFor: List<KnownFor> = List<KnownFor>()
-    dynamic var profileImgData: Data?
     
     enum CodingKeys: String, CodingKey {
         case birthday, deathday, id, name, gender, biography, popularity, adult, homepage
@@ -108,14 +107,8 @@ class KnownFor: Object, Decodable {
 
         if mediaType == "movie" {
             popularMovie = try Movie(from: decoder)
-            if let existedMovie = realm?.object(ofType: Movie.self, forPrimaryKey: popularMovie!.id) {
-                popularMovie?.posterImgData = existedMovie.posterImgData
-            }
         } else if mediaType == "tv" {
             popularTV = try TVShow(from: decoder)
-            if let existedTV = realm?.object(ofType: TVShow.self, forPrimaryKey: popularTV!.id) {
-                popularTV?.posterImgData = existedTV.posterImgData
-            }
         }
     }
 

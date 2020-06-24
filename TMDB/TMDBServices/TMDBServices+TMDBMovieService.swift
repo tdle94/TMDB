@@ -15,8 +15,7 @@ extension TMDBServices: TMDBMovieService {
     }
 
     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
-        let language: String? = userSetting.language != nil && userSetting.region != nil ? "\(userSetting.language!)-\(userSetting.region!)" : nil
-        let request = urlRequestBuilder.getPopularMovieURLRequest(page: page, language: language, region: userSetting.region)
+        let request = urlRequestBuilder.getPopularMovieURLRequest(page: page, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
         session.send(request: request, responseType: PopularMovie.self, completion: completion)
     }
 }

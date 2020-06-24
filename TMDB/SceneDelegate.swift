@@ -12,8 +12,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    var locationManager: TMDBLocationManager = TMDBLocationManager(setting: TMDBUserSetting(userDefault: UserDefaults.standard))
-
     var homeCoordinator: MainCoordinator?
     var movieCoordinator: MainCoordinator?
     var tvCoordinator: MainCoordinator?

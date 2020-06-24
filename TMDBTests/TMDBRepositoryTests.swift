@@ -136,9 +136,8 @@ class TMDBRepositoryTests: XCTestCase {
     // sucess
     func testPopularMovieCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: "en-US")
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
-        let noRegion = ParameterMatcher<String?>()
         let movieSaveMatcher: ParameterMatcher<List<Movie>> = ParameterMatcher()
 
         /*GIVEN*/
@@ -149,16 +148,11 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion).thenReturn(request)
+            when(stub).getPopularMovieURLRequest(page: 1, language: any(), region: any()).thenReturn(request)
         }
 
         stub(localDataSource) { stub in
             when(stub).saveMovies(movieSaveMatcher).thenDoNothing()
-        }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
         }
 
         /*WHEN*/
@@ -170,18 +164,16 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion)
+        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
         verify(localDataSource).saveMovies(movieSaveMatcher)
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(3)).region.get()
     }
     
     // failure
     func testPopularMovieCase2() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: "en-US")
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
-        let noRegion = ParameterMatcher<String?>()
+
         /*GIVEN*/
         stub(session) { stub in
             when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
@@ -190,12 +182,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion).thenReturn(request)
-        }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
+            when(stub).getPopularMovieURLRequest(page: 1, language: any(), region: any()).thenReturn(request)
         }
 
         /*WHEN*/
@@ -206,9 +193,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: "en-US", region: noRegion)
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(3)).region.get()
+        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
     }
 
     // MARK: - popular TV Shows
@@ -216,7 +201,7 @@ class TMDBRepositoryTests: XCTestCase {
     // success
     func testPopularTVShowsCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -227,16 +212,11 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(request)
+            when(stub).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
             when(stub).saveTVShows(any()).thenDoNothing()
-        }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
         }
 
         /*WHEN*/
@@ -248,15 +228,13 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
+        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
     }
     
     // failure
     func testPopularTVShowsCase2() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -267,12 +245,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularTVURLRequest(page: 1, language: "en-US").thenReturn(request)
-        }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
+            when(stub).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
 
 
@@ -284,9 +257,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: "en-US")
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
+        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
     }
 
     // MARK: - popular people
@@ -294,7 +265,7 @@ class TMDBRepositoryTests: XCTestCase {
     // success
     func testPopularPeopleCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -305,18 +276,12 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(request)
+            when(stub).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
             when(stub).savePeople(any()).thenDoNothing()
         }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
-        }
-
 
         /*WHEN*/
         repository.getPopularPeople(page: 1) { result in
@@ -327,16 +292,14 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
+        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
         verify(localDataSource).savePeople(any())
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
     }
 
     // failure
     func testPopularPeopleCase2() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -347,12 +310,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularPeopleURLRequest(page: 1, language: "en-US").thenReturn(request)
-        }
-        
-        stub(userSetting) { stub in
-            when(stub).language.get.thenReturn("en")
-            when(stub).region.get.thenReturn("US")
+            when(stub).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
 
 
@@ -364,9 +322,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: "en-US")
-        verify(userSetting, times(2)).language.get()
-        verify(userSetting, times(2)).region.get()
+        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
     }
 
     // MARK: - trending

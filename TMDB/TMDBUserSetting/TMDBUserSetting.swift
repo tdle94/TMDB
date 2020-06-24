@@ -9,33 +9,12 @@
 import Foundation
 
 protocol TMDBUserSettingProtocol {
-    var language: String? { get set }
-    var region: String? { get set }
     var imageConfig: ImageConfigResult { get set }
     var userDefault: UserDefaults { get set }
 }
 
 struct TMDBUserSetting: TMDBUserSettingProtocol {
     var userDefault: UserDefaults = UserDefaults.standard
-
-    var language: String? {
-        get {
-            return userDefault.object(forKey: Constant.UserSetting.language) as? String ?? Locale.current.languageCode
-        }
-        set {
-            userDefault.setValue(newValue, forKey: Constant.UserSetting.language)
-        }
-    }
-    
-    var region: String? {
-        get {
-            return userDefault.object(forKey: Constant.UserSetting.region) as? String ?? Locale.current.regionCode
-        }
-        set {
-            userDefault.setValue(newValue, forKey: Constant.UserSetting.region)
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constant.UserSetting.regionLanguageChange), object: nil)
-        }
-    }
 
     var imageConfig: ImageConfigResult {
         get {

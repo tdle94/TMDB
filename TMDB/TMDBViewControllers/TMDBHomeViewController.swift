@@ -80,10 +80,6 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(configureLanguageAndRegion),
-                                               name: NSNotification.Name(rawValue: Constant.UserSetting.regionLanguageChange),
-                                               object: nil)
         configurePopularCollectionView()
         configureDataSource()
         configureLanguageAndRegion()
@@ -171,7 +167,6 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
 extension TMDBHomeViewController {
     // MARK: - configure navigation item
     @objc func configureLanguageAndRegion() {
-
         navigationItem.rightBarButtonItems = nil
 
         // refresh and go select popular movie in a region
@@ -181,7 +176,7 @@ extension TMDBHomeViewController {
 
         // language
         let button = UIButton()
-        button.setTitle(userSetting.language?.uppercased(), for: .normal)
+        button.setTitle(NSLocale.current.languageCode?.uppercased(), for: .normal)
         button.addTarget(self, action: #selector(changeLanguage), for: .touchUpInside)
         button.layer.borderWidth = 1
         button.layer.borderColor = Constant.Color.tabBarSelectedTextColor.cgColor
@@ -190,7 +185,7 @@ extension TMDBHomeViewController {
         let languageSetting = UIBarButtonItem(customView: button)
 
         // region
-        if let region = userSetting.region {
+        if let region = NSLocale.current.regionCode {
             let regionFlag = UIImage(named: "CountryFlags/\(Constant.countryName[region] ?? "")")?.resize(newWidth: 30)?.withRenderingMode(.alwaysOriginal)
             let regionSetting = UIBarButtonItem(image: regionFlag, style: .plain, target: self, action: #selector(changeRegion))
             navigationItem.setRightBarButtonItems([
@@ -202,11 +197,13 @@ extension TMDBHomeViewController {
     }
 
     @objc func changeRegion() {
-        coordinator?.navigateToCountryVC()
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
     }
     
     @objc func changeLanguage() {
-        
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
     }
 
     // MARK: - collection view configuration

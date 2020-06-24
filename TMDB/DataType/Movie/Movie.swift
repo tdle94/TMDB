@@ -32,7 +32,6 @@ class Movie: Object, Decodable {
     dynamic var voteAverage: Double = 0.0
     dynamic var voteCount: Int = 0
     dynamic var belongToCollection: Bool?
-    dynamic var posterImgData: Data?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()

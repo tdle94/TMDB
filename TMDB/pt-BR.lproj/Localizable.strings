@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  TMDB
+
+  Created by Tuyen Le on 6/9/20.
+  Copyright © 2020 Tuyen Le. All rights reserved.
+*/
+
+"Home" = "Pagina inicial";
+"Movies" = "Filmes";
+"TV Shows" = "Series";
+"People" = "Pessoas";
+"Trends" = "Tendências";
+"Popular" = "Popular";
+"Today" = "Hoje";
+"This Week" = "Esta semana";

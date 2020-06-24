@@ -10,8 +10,7 @@ import Foundation
 
 extension TMDBServices: TMDBPeopleService {
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void) {
-        let language: String? = userSetting.language != nil && userSetting.region != nil ? "\(userSetting.language!)-\(userSetting.region!)" : nil
-        let request = urlRequestBuilder.getPopularPeopleURLRequest(page: page, language: language)
+        let request = urlRequestBuilder.getPopularPeopleURLRequest(page: page, language: NSLocale.preferredLanguages.first)
         session.send(request: request, responseType: PopularPeopleResult.self, completion: completion)
     }
 }

@@ -31,7 +31,7 @@ class Movie: Object, Decodable {
     dynamic var video: Bool = false
     dynamic var voteAverage: Double = 0.0
     dynamic var voteCount: Int = 0
-    dynamic var belongToCollection: Bool?
+    dynamic var belongToCollection: Collection?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()
@@ -67,7 +67,7 @@ class Movie: Object, Decodable {
         backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         voteCount = try container.decode(Int.self, forKey: .voteCount)
-        
+
         budget = try container.decodeIfPresent(Double.self, forKey: .budget) ?? 0
         homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
         popularity = try container.decodeIfPresent(Double.self, forKey: .popularity) ?? 0
@@ -76,7 +76,7 @@ class Movie: Object, Decodable {
         status = try container.decodeIfPresent(String.self, forKey: .status)
         tagline = try container.decodeIfPresent(String.self, forKey: .tagline)
         imdbId = try container.decodeIfPresent(String.self, forKey: .imdbId)
-        belongToCollection = try container.decodeIfPresent(Bool.self, forKey: .belongToCollection)
+        belongToCollection = try container.decodeIfPresent(Collection.self, forKey: .belongToCollection)
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genres)
@@ -97,6 +97,24 @@ class Movie: Object, Decodable {
 
     required init() {
         super.init()
+    }
+    
+    override class func primaryKey() -> String? {
+        return "id"
+    }
+}
+
+@objcMembers
+class Collection: Object, Decodable {
+    dynamic var id: Int = 0
+    dynamic var name: String = ""
+    dynamic var posterPath: String = ""
+    dynamic var backdropPath: String = ""
+
+    enum CodingKeys: String, CodingKey {
+        case id, name
+        case posterPath = "poster_path"
+        case backdropPath = "backdrop_path"
     }
     
     override class func primaryKey() -> String? {
@@ -153,6 +171,10 @@ class ProductionCountry: Object, Decodable {
 
     required init() {
         super.init()
+    }
+
+    override class func primaryKey() -> String? {
+        return "ios31661"
     }
 }
 

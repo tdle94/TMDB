@@ -165,7 +165,6 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
-        verify(localDataSource).saveMovies(movieSaveMatcher)
     }
     
     // failure
@@ -293,7 +292,6 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
-        verify(localDataSource).savePeople(any())
     }
 
     // failure
@@ -358,7 +356,6 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher)
-        verify(localDataSource).saveTrendings(any())
     }
 
     func testAllTrendingToday() {

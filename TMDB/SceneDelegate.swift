@@ -48,6 +48,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         homeNavController.tabBarItem.title = NSLocalizedString("Home", comment: "")
         homeNavController.tabBarItem.image = UIImage(systemName: "house.fill")
         
+        homeVC.navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        homeVC.navigationItem.backBarButtonItem?.tintColor = Constant.Color.backgroundColor
+        
         let movieNavController = UINavigationController(rootViewController: movieVC)
         movieNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         movieNavController.tabBarItem.title = NSLocalizedString("Movies", comment: "")

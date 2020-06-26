@@ -154,6 +154,6 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language)
         ]
-        return buildURLRequest(path: "/3/movie/\(movieId)/similar", queryItems: queryItems)
+        return buildURLRequest(path: "/3/movie/\(movieId)/recommendations", queryItems: queryItems)
     }
 }

@@ -53,7 +53,7 @@ class TestURLRequestBuilder: XCTestCase {
     
     func testRecommendMovieURL() {
         let matchRequest = urlRequestBuilder.getRecommendMoviesURLRequest(from: 3, page: 1, language: "en-US")
-        let urlMatcher = "https://api.themoviedb.org/3/movie/3/similar?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3/recommendations?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     

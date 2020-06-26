@@ -145,10 +145,10 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QAP-PK-dZh">
-                                                <rect key="frame" x="0.0" y="544.33333333333337" width="414" height="415"/>
+                                                <rect key="frame" x="0.0" y="544.33333333333337" width="414" height="200"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="415" id="ysa-id-BOL"/>
+                                                    <constraint firstAttribute="height" constant="200" id="OHz-b7-NZG"/>
                                                 </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4j6-zN-rHA">
                                                     <size key="itemSize" width="128" height="128"/>
@@ -193,6 +193,7 @@
                                             <constraint firstAttribute="trailing" secondItem="R7C-ED-NVl" secondAttribute="trailing" constant="20" id="Zwv-21-C9X"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="YHO-Z0-urX" secondAttribute="trailing" constant="20" symbolic="YES" id="cFo-Yy-Wwp"/>
                                             <constraint firstItem="wGh-Ep-VQ7" firstAttribute="leading" secondItem="yEe-Ut-ac7" secondAttribute="leading" constant="18" id="daQ-xU-VMO"/>
+                                            <constraint firstAttribute="bottom" secondItem="QAP-PK-dZh" secondAttribute="bottom" constant="755.66999999999996" id="dhZ-zd-fGE"/>
                                             <constraint firstItem="mpK-9C-Zub" firstAttribute="top" secondItem="yEe-Ut-ac7" secondAttribute="top" constant="-1" id="h9N-89-zDD"/>
                                             <constraint firstItem="t70-qs-8dp" firstAttribute="leading" secondItem="Ilv-qd-jvq" secondAttribute="trailing" constant="10" id="hPv-En-J7W"/>
                                             <constraint firstAttribute="trailing" secondItem="QAP-PK-dZh" secondAttribute="trailing" id="hmu-cI-Y3c"/>
@@ -215,7 +216,7 @@
                                 <constraints>
                                     <constraint firstItem="yEe-Ut-ac7" firstAttribute="leading" secondItem="xZu-XV-mlQ" secondAttribute="leading" id="IcV-2Z-6qL"/>
                                     <constraint firstItem="yEe-Ut-ac7" firstAttribute="top" secondItem="xZu-XV-mlQ" secondAttribute="top" id="LUH-vA-H02"/>
-                                    <constraint firstAttribute="bottom" secondItem="yEe-Ut-ac7" secondAttribute="bottom" constant="120" id="Wci-Q0-rMM"/>
+                                    <constraint firstAttribute="bottom" secondItem="yEe-Ut-ac7" secondAttribute="bottom" id="Wci-Q0-rMM"/>
                                     <constraint firstAttribute="trailing" secondItem="yEe-Ut-ac7" secondAttribute="trailing" id="iSp-J0-u1l"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="nzV-KT-ta6"/>

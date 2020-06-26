@@ -19,6 +19,8 @@ class TMDBMovieDetailViewController: UIViewController {
     var movieId: Int?
 
     var dataSource: UICollectionViewDiffableDataSource<Section, ProductionCompany>!
+    
+    var movieDetail: TMDBMovieDetailDisplayProtocol = TMDBMovieDetailDisplay()
 
     // MARK: - repository
     let userSetting: TMDBUserSetting = TMDBUserSetting()
@@ -31,7 +33,6 @@ class TMDBMovieDetailViewController: UIViewController {
     
     // MARK: - ui views
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var productionCompanyCollectionViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var taglineLabel: UILabel!
@@ -61,23 +62,22 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
         configureProductionCompaniesDataSource()
         getMovieDetail()
-
-        if UIScreen.main.bounds.height >= 896.0 {
-            contentViewBottomConstraint.constant = 0
-        } else if UIScreen.main.bounds.height <= 568.0 {
-            contentViewBottomConstraint.constant = 200
-        }
     }
+
+    // MARK: - movie detail display and configuration
 
     func configureProductionCompaniesDataSource() {
         dataSource = UICollectionViewDiffableDataSource(collectionView: productionCompaniesCollectionView) { collectionView, indexPath, productionCompany in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
             cell.title.text = productionCompany.name
-            cell.releaseDate.text = ""
             cell.imageView.contentMode = .scaleAspectFit
+            cell.imageView.layer.borderColor = .none
+            cell.imageView.layer.borderWidth = 0
+
             if let path = productionCompany.logoPath, let url = self.repository.getImageURL(from: path) {
                 cell.imageView.sd_setImage(with: url) { image, error, _, _ in
                     if error != nil || image == nil {
@@ -86,6 +86,7 @@ class TMDBMovieDetailViewController: UIViewController {
                     cell.imageLoadingIndicator.stopAnimating()
                 }
             } else {
+                cell.imageView.image = UIImage(named: "NoImage")
                 cell.imageLoadingIndicator.stopAnimating()
             }
             return cell
@@ -107,12 +108,30 @@ class TMDBMovieDetailViewController: UIViewController {
             case .success(let movie):
                 self.displayMovieDetail(movie)
                 self.displayProductionCompanies(movie: movie)
+                self.getPosterImage(movie: movie)
+                self.getBackdropImage(movie: movie)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
         }
     }
 
+    func getPosterImage(movie: Movie) {
+        if let posterPath = movie.posterPath, let url = self.repository.getImageURL(from: posterPath) {
+            self.moviePosterImageView.sd_setImage(with: url) { image, _, _, _ in
+                image?.getColors { colors in
+                    self.moviePosterImageView.layer.borderColor = colors?.secondary.cgColor
+                }
+            }
+        }
+    }
+    
+    func getBackdropImage(movie: Movie) {
+        if let backdropPath = movie.backdropPath, let url = self.repository.getImageURL(from: backdropPath) {
+            self.backdropImageView.sd_setImage(with: url)
+        }
+    }
+    
     func displayProductionCompanies(movie: Movie) {
         let productionCompanies = Array(movie.productionCompanies)
         var snapshot = dataSource.snapshot()
@@ -122,77 +141,19 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     func displayMovieDetail(_ movie: Movie) {
-        let textAttrs = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
-        let numberFormatter = NumberFormatter()
-        let paragraphStyle = NSMutableParagraphStyle()
 
-        paragraphStyle.lineSpacing = 3
-        numberFormatter.numberStyle = .decimal
-
-        navigationController?.navigationBar.titleTextAttributes = textAttrs
         title = movie.originalTitle
-        statusLabel.attributedText = constructAttrsString(title: "Status: ", subTitle: movie.status ?? "unknown")
-        originalLanguageLabel.attributedText = constructAttrsString(title: "Original Language: ", subTitle: Constant.languageCode[movie.originalLanguage] ?? "None")
-        budgetLabel.attributedText = constructAttrsString(title: "Budget: ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.budget)) ?? "0.0")")
-        revenueLabel.attributedText = constructAttrsString(title: "Revenue: ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.revenue)) ?? "0.0")")
-        titleLabel.attributedText = NSAttributedString(string: movie.originalTitle, attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!])
-        overviewLabel.attributedText = NSAttributedString(string: "Overview", attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
-        overviewDetail.attributedText = NSAttributedString(string: movie.overview ?? "", attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!, NSAttributedString.Key.foregroundColor: UIColor.darkGray, NSAttributedString.Key.paragraphStyle: paragraphStyle])
         taglineLabel.text = movie.tagline
 
-        // production countries
-        var productionCountries = ""
-        if movie.productionCountries.count == 1 {
-            productionCountries = movie.productionCountries.first!.ios31661
-        } else {
-            for country in movie.productionCountries {
-                if country == movie.productionCountries.last {
-                    productionCountries += " \(country.ios31661)"
-                } else {
-                    productionCountries += "\(country.ios31661), "
-                }
-            }
-        }
-        runtimeLabel.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \u{2022} \(movie.releaseDate ?? "") (\(productionCountries))",
-                                                         attributes: [
-                                                            NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
-                                                            NSAttributedString.Key.foregroundColor: UIColor.darkGray
-                                                         ])
-        // generes
-        var genres = ""
-        if movie.genres.count == 1 {
-            genres = movie.genres.first!.name
-        } else {
-            for genre in movie.genres {
-                if genre == movie.genres.last {
-                    genres += " \(genre.name)"
-                } else {
-                    genres += "\(genre.name), "
-                }
-            }
-        }
-        generes.attributedText = NSAttributedString(string: genres, attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
-
-        if let posterPath = movie.posterPath, let url = repository.getImageURL(from: posterPath) {
-            moviePosterImageView.sd_setImage(with: url) { image, _, _, _ in
-                image?.getColors { colors in
-                    self.moviePosterImageView.layer.borderColor = colors?.secondary.cgColor
-                }
-            }
-        }
-        if let backdropPath = movie.backdropPath, let url = repository.getImageURL(from: backdropPath) {
-            backdropImageView.sd_setImage(with: url)
-        }
-    }
-    
-    func constructAttrsString(title: String, subTitle: String) -> NSAttributedString {
-        let firstString = NSMutableAttributedString(string: title, attributes: [
-            NSAttributedString.Key.font: UIFont(name: "Circular-Black", size: UIFont.smallSystemFontSize)!,
-        ])
-        let secondString = NSMutableAttributedString(string: subTitle, attributes: [
-            NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
-        ])
-        firstString.append(secondString)
-        return firstString
+        movieDetail.displayTitle(label: titleLabel, movie: movie)
+        movieDetail.displayBudget(label: budgetLabel, movie: movie)
+        movieDetail.displayGenere(label: generes, movie: movie)
+        movieDetail.displayOriginalLanguage(label: originalLanguageLabel, movie: movie)
+        movieDetail.displayOverview(label: overviewLabel)
+        movieDetail.displayOverviewDetail(label: overviewDetail, movie: movie)
+        movieDetail.displayRevenue(label: revenueLabel, movie: movie)
+        movieDetail.displayRuntime(label: runtimeLabel, movie: movie)
+        movieDetail.displayStatus(label: statusLabel, movie: movie)
+        movieDetail.displayTitle(label: titleLabel, movie: movie)
     }
 }

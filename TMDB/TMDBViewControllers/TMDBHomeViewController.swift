@@ -25,7 +25,13 @@ class TMDBHomeViewController: UIViewController {
         case trending = "Trends"
     }
 
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView! {
+        didSet {
+            collectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+        }
+    }
 
     var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
 
@@ -80,10 +86,24 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
-        configurePopularCollectionView()
         configureDataSource()
         configureLanguageAndRegion()
         getTrendingToday()
+    }
+}
+
+extension TMDBHomeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item: Object
+        if indexPath.section == 0 {
+            item = dataSource.snapshot().itemIdentifiers(inSection: .popular)[indexPath.row]
+        } else {
+            item = dataSource.snapshot().itemIdentifiers(inSection: .trending)[indexPath.row]
+        }
+
+        if let item = item as? Movie ?? (item as? Trending)?.movie {
+            coordinator?.navigateToMovieDetail(id: item.id)
+        }
     }
 }
 
@@ -179,7 +199,7 @@ extension TMDBHomeViewController {
         button.setTitle(NSLocale.current.languageCode?.uppercased(), for: .normal)
         button.addTarget(self, action: #selector(changeLanguage), for: .touchUpInside)
         button.layer.borderWidth = 1
-        button.layer.borderColor = Constant.Color.tabBarSelectedTextColor.cgColor
+        button.layer.borderColor = Constant.Color.backgroundColor.cgColor
         button.layer.cornerRadius = 5
         button.showsTouchWhenHighlighted = true
         let languageSetting = UIBarButtonItem(customView: button)
@@ -212,7 +232,7 @@ extension TMDBHomeViewController {
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: cellProvider)
 
         dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-            let header = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                               withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                               for: indexPath) as? TMDBPreviewHeaderView
             header?.delegate = self
@@ -236,34 +256,5 @@ extension TMDBHomeViewController {
         var snapshot = dataSource.snapshot()
         snapshot.appendSections([.popular, .trending])
         dataSource.apply(snapshot)
-    }
-
-    func configurePopularCollectionView() {
-        collectionView.collectionViewLayout = generateLayout()
-        collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-        collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
-    }
-
-    func generateLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
-            return self.generatePopularLayout()
-        }
-    }
-
-    func generatePopularLayout() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalWidth(1))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-
-        group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 18, bottom: 5, trailing: 5)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.boundarySupplementaryItems = [sectionHeader]
-        section.orthogonalScrollingBehavior = .continuous
-
-        return section
     }
 }

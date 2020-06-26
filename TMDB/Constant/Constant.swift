@@ -23,6 +23,7 @@ struct Constant {
         static let tmdbHome = "TMDBHomeViewController"
         static let tmdbCountryNavigation = "TMDBCountrySettingNavigation"
         static let tmdbLanguageNavigation = "TMDBLanguageSettingNavigation"
+        static let tmdbMovieDetail = "TMDBMovieDetailViewController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)
@@ -751,7 +752,6 @@ struct Constant {
         "is": "Icelandic",
         "id": "Idonesian",
         "ig": "Igbo",
-        "id": "Indonesian",
         "iu": "Inuktitut",
         "ja": "Japanese",
         "jv": "Javanese",
@@ -830,11 +830,11 @@ struct Constant {
         "su": "Sundanese",
         "sw": "Swahili",
         "ss": "Swati",
-        "sw": "Swedish",
+        "sv": "Swedish",
         "ta": "Tamil",
         "te": "Telugu",
         "tg": "Tajik",
-        "Thai": "th",
+        "th": "Thai",
         "ti": "Tigrinya",
         "bo": "Tibetan",
         "tk": "Turkmen",

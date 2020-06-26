@@ -14,13 +14,13 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Popular" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1o1-lv-nR4">
-                    <rect key="frame" x="20" y="61.5" width="59" height="21"/>
+                    <rect key="frame" x="0.0" y="61.5" width="59" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="inV-8m-AWi">
-                    <rect key="frame" x="87" y="56.5" width="115" height="32"/>
+                    <rect key="frame" x="67" y="56.5" width="115" height="32"/>
                     <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                     <segments>
                         <segment title="Movie"/>
@@ -39,7 +39,7 @@
                 <constraint firstItem="1o1-lv-nR4" firstAttribute="centerY" secondItem="156-Gm-CWp" secondAttribute="centerY" id="Ioh-pG-aAS"/>
                 <constraint firstItem="inV-8m-AWi" firstAttribute="leading" secondItem="1o1-lv-nR4" secondAttribute="trailing" constant="8" id="hhK-Af-ODU"/>
                 <constraint firstItem="inV-8m-AWi" firstAttribute="centerY" secondItem="156-Gm-CWp" secondAttribute="centerY" id="wHh-NK-qW1"/>
-                <constraint firstItem="1o1-lv-nR4" firstAttribute="leading" secondItem="156-Gm-CWp" secondAttribute="leading" constant="20" id="zZk-Ui-FEq"/>
+                <constraint firstItem="1o1-lv-nR4" firstAttribute="leading" secondItem="156-Gm-CWp" secondAttribute="leading" id="zZk-Ui-FEq"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="156-Gm-CWp"/>
             <connections>

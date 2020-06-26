@@ -65,7 +65,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let popularMovieResult):
-                    self.localDataSource.saveMovies(popularMovieResult.movies)
                     completion(.success(popularMovieResult))
                 case .failure(let error):
                     completion(.failure(error))
@@ -79,7 +78,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let popularTVShowResult):
-                    self.localDataSource.saveTVShows(popularTVShowResult.onTV)
                     completion(.success(popularTVShowResult))
                 case .failure(let error):
                     completion(.failure(error))
@@ -93,7 +91,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let trendingResult):
-                    self.localDataSource.saveTrendings(trendingResult.trending)
                     completion(.success(trendingResult))
                 case .failure(let error):
                     completion(.failure(error))
@@ -107,7 +104,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let popularPeopleResult):
-                    self.localDataSource.savePeople(popularPeopleResult.peoples)
                     completion(.success(popularPeopleResult))
                 case .failure(let error):
                     completion(.failure(error))

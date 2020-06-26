@@ -12,11 +12,7 @@ import UIKit
 class TMDBPreviewItemCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
-            imageView.layer.cornerRadius = 10
-            imageView.layer.masksToBounds = true
-            imageView.layer.borderColor = UIColor.lightGray.cgColor
-            imageView.layer.borderWidth = 1.0
-            imageView.layer.cornerCurve = .circular
+            imageView.roundImage()
         }
     }
     @IBOutlet weak var imageLoadingIndicator: UIActivityIndicatorView!
@@ -26,7 +22,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageLoadingIndicator.startAnimating()
-        imageView.image = nil
+        imageView.image = UIImage(named: "NoImage")
         title.text = ""
         releaseDate.text = ""
     }

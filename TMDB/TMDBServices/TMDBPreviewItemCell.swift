@@ -22,7 +22,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageLoadingIndicator.startAnimating()
-        imageView.image = nil
+        imageView.image = UIImage(named: "NoImage")
         title.text = ""
         releaseDate.text = ""
     }

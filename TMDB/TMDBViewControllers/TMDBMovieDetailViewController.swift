@@ -11,13 +11,13 @@ import UIKit
 
 class TMDBMovieDetailViewController: UIViewController {
     // MARK: - properties
-    
+
     enum Section: String, CaseIterable {
         case ProductionCompanies = "Produced By"
     }
-    
+
     var movieId: Int?
-    
+
     var dataSource: UICollectionViewDiffableDataSource<Section, ProductionCompany>!
 
     // MARK: - repository
@@ -30,6 +30,9 @@ class TMDBMovieDetailViewController: UIViewController {
                                                                  userSetting: self.userSetting)
     
     // MARK: - ui views
+    @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var productionCompanyCollectionViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var taglineLabel: UILabel!
     @IBOutlet weak var overviewDetail: UILabel!
@@ -44,7 +47,7 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var generes: UILabel!
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
-            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
         }
@@ -54,20 +57,27 @@ class TMDBMovieDetailViewController: UIViewController {
             moviePosterImageView.roundImage()
         }
     }
-    
+
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
         contentView.bringSubviewToFront(moviePosterImageView)
         configureProductionCompaniesDataSource()
         getMovieDetail()
+
+        if UIScreen.main.bounds.height >= 896.0 {
+            contentViewBottomConstraint.constant = 0
+        } else if UIScreen.main.bounds.height <= 568.0 {
+            contentViewBottomConstraint.constant = 200
+        }
     }
-    
+
     func configureProductionCompaniesDataSource() {
         dataSource = UICollectionViewDiffableDataSource(collectionView: productionCompaniesCollectionView) { collectionView, indexPath, productionCompany in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
             cell.title.text = productionCompany.name
             cell.releaseDate.text = ""
+            cell.imageView.contentMode = .scaleAspectFit
             if let path = productionCompany.logoPath, let url = self.repository.getImageURL(from: path) {
                 cell.imageView.sd_setImage(with: url) { image, error, _, _ in
                     if error != nil || image == nil {
@@ -76,7 +86,6 @@ class TMDBMovieDetailViewController: UIViewController {
                     cell.imageLoadingIndicator.stopAnimating()
                 }
             } else {
-                cell.imageView.image = UIImage(named: "NoImage")
                 cell.imageLoadingIndicator.stopAnimating()
             }
             return cell
@@ -90,14 +99,13 @@ class TMDBMovieDetailViewController: UIViewController {
             return header
         }
     }
-    
-    
+
     func getMovieDetail() {
         guard let id = movieId else { return }
         repository.getMovieDetail(id: id) { result in
             switch result {
             case .success(let movie):
-                self.displayMovie(movie)
+                self.displayMovieDetail(movie)
                 self.displayProductionCompanies(movie: movie)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
@@ -113,11 +121,11 @@ class TMDBMovieDetailViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayMovie(_ movie: Movie) {
+    func displayMovieDetail(_ movie: Movie) {
         let textAttrs = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         let numberFormatter = NumberFormatter()
         let paragraphStyle = NSMutableParagraphStyle()
-        
+
         paragraphStyle.lineSpacing = 3
         numberFormatter.numberStyle = .decimal
 
@@ -132,6 +140,7 @@ class TMDBMovieDetailViewController: UIViewController {
         overviewDetail.attributedText = NSAttributedString(string: movie.overview ?? "", attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!, NSAttributedString.Key.foregroundColor: UIColor.darkGray, NSAttributedString.Key.paragraphStyle: paragraphStyle])
         taglineLabel.text = movie.tagline
 
+        // production countries
         var productionCountries = ""
         if movie.productionCountries.count == 1 {
             productionCountries = movie.productionCountries.first!.ios31661
@@ -144,20 +153,22 @@ class TMDBMovieDetailViewController: UIViewController {
                 }
             }
         }
-        
-        
         runtimeLabel.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \u{2022} \(movie.releaseDate ?? "") (\(productionCountries))",
                                                          attributes: [
                                                             NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
                                                             NSAttributedString.Key.foregroundColor: UIColor.darkGray
                                                          ])
-        
+        // generes
         var genres = ""
-        for genre in movie.genres {
-            if genre == movie.genres.last {
-                genres += " \(genre.name)"
-            } else {
-                genres += "\(genre.name), "
+        if movie.genres.count == 1 {
+            genres = movie.genres.first!.name
+        } else {
+            for genre in movie.genres {
+                if genre == movie.genres.last {
+                    genres += " \(genre.name)"
+                } else {
+                    genres += "\(genre.name), "
+                }
             }
         }
         generes.attributedText = NSAttributedString(string: genres, attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])

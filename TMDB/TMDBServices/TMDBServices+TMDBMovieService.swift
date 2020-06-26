@@ -18,4 +18,14 @@ extension TMDBServices: TMDBMovieService {
         let request = urlRequestBuilder.getPopularMovieURLRequest(page: page, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
         session.send(request: request, responseType: PopularMovie.self, completion: completion)
     }
+
+    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+        let request = urlRequestBuilder.getSimilarMoviesURLRequest(from: movieId, page: page, language: NSLocale.preferredLanguages.first)
+        session.send(request: request, responseType: PopularMovie.self, completion: completion)
+    }
+
+    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+        let request = urlRequestBuilder.getRecommendMoviesURLRequest(from: movieId, page: page, language: NSLocale.preferredLanguages.first)
+        session.send(request: request, responseType: PopularMovie.self, completion: completion)
+    }
 }

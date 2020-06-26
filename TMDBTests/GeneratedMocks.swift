@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-26 18:53:51 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBLocalDataSource/TMDBLocalDataSource.swift at 2020-06-26 22:01:36 +0000
 
 //
 //  TMDBLocalDataSource+TMDBLocalDataSourceProtocol.swift
@@ -736,7 +736,7 @@ import RealmSwift
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-26 18:53:51 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBRepository/TMDBRepository.swift at 2020-06-26 22:01:36 +0000
 
 //
 //  Repository.swift
@@ -791,6 +791,51 @@ import Foundation
     
     
     
+     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)  {
+        
+    return cuckoo_manager.call("getSimilarMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)",
+            parameters: (movieId, page, completion),
+            escapingParameters: (movieId, page, completion),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getSimilarMovies(from: movieId, page: page, completion: completion))
+        
+    }
+    
+    
+    
+     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)  {
+        
+    return cuckoo_manager.call("getRecommendMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)",
+            parameters: (movieId, page, completion),
+            escapingParameters: (movieId, page, completion),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getRecommendMovies(from: movieId, page: page, completion: completion))
+        
+    }
+    
+    
+    
+     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)  {
+        
+    return cuckoo_manager.call("getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)",
+            parameters: (page, completion),
+            escapingParameters: (page, completion),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getPopularMovie(page: page, completion: completion))
+        
+    }
+    
+    
+    
      func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)  {
         
     return cuckoo_manager.call("getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)",
@@ -816,21 +861,6 @@ import Foundation
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
             defaultCall: __defaultImplStub!.getPopularPeople(page: page, completion: completion))
-        
-    }
-    
-    
-    
-     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)  {
-        
-    return cuckoo_manager.call("getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)",
-            parameters: (page, completion),
-            escapingParameters: (page, completion),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getPopularMovie(page: page, completion: completion))
         
     }
     
@@ -893,6 +923,21 @@ import Foundation
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
+	    func getSimilarMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getSimilarMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
+	    }
+	    
+	    func getRecommendMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getRecommendMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
+	    }
+	    
+	    func getPopularMovie<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
+	    }
+	    
 	    func getTrending<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(time: M1, type: M2, completion: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void)> where M1.MatchedType == TrendingTime, M2.MatchedType == TrendingMediaType, M3.MatchedType == (Result<TrendingResult, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void)>] = [wrap(matchable: time) { $0.0 }, wrap(matchable: type) { $0.1 }, wrap(matchable: completion) { $0.2 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)", parameterMatchers: matchers))
@@ -901,11 +946,6 @@ import Foundation
 	    func getPopularPeople<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, (Result<PopularPeopleResult, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularPeopleResult, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularPeopleResult, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)", parameterMatchers: matchers))
-	    }
-	    
-	    func getPopularMovie<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularMovie, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepositoryProtocol.self, method: "getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
 	    func getPopularOnTV<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Int, (Result<PopularOnTVResult, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularOnTVResult, Error>) -> Void {
@@ -946,6 +986,24 @@ import Foundation
 	    }
 	    
 	    @discardableResult
+	    func getSimilarMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.__DoNotUse<(Int, Int, (Result<PopularMovie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return cuckoo_manager.verify("getSimilarMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getRecommendMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.__DoNotUse<(Int, Int, (Result<PopularMovie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return cuckoo_manager.verify("getRecommendMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getPopularMovie<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.__DoNotUse<(Int, (Result<PopularMovie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
+	        return cuckoo_manager.verify("getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
 	    func getTrending<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(time: M1, type: M2, completion: M3) -> Cuckoo.__DoNotUse<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void), Void> where M1.MatchedType == TrendingTime, M2.MatchedType == TrendingMediaType, M3.MatchedType == (Result<TrendingResult, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(TrendingTime, TrendingMediaType, (Result<TrendingResult, Error>) -> Void)>] = [wrap(matchable: time) { $0.0 }, wrap(matchable: type) { $0.1 }, wrap(matchable: completion) { $0.2 }]
 	        return cuckoo_manager.verify("getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -955,12 +1013,6 @@ import Foundation
 	    func getPopularPeople<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.__DoNotUse<(Int, (Result<PopularPeopleResult, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularPeopleResult, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularPeopleResult, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
 	        return cuckoo_manager.verify("getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func getPopularMovie<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.__DoNotUse<(Int, (Result<PopularMovie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularMovie, Error>) -> Void {
-	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
-	        return cuckoo_manager.verify("getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -994,15 +1046,23 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
+     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
      func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
      func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -1081,6 +1141,36 @@ import Foundation
                 super.getMovieDetail(id: id, completion: completion)
                 ,
             defaultCall: __defaultImplStub!.getMovieDetail(id: id, completion: completion))
+        
+    }
+    
+    
+    
+     override func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)  {
+        
+    return cuckoo_manager.call("getSimilarMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)",
+            parameters: (movieId, page, completion),
+            escapingParameters: (movieId, page, completion),
+            superclassCall:
+                
+                super.getSimilarMovies(from: movieId, page: page, completion: completion)
+                ,
+            defaultCall: __defaultImplStub!.getSimilarMovies(from: movieId, page: page, completion: completion))
+        
+    }
+    
+    
+    
+     override func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)  {
+        
+    return cuckoo_manager.call("getRecommendMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)",
+            parameters: (movieId, page, completion),
+            escapingParameters: (movieId, page, completion),
+            superclassCall:
+                
+                super.getRecommendMovies(from: movieId, page: page, completion: completion)
+                ,
+            defaultCall: __defaultImplStub!.getRecommendMovies(from: movieId, page: page, completion: completion))
         
     }
     
@@ -1193,6 +1283,16 @@ import Foundation
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)", parameterMatchers: matchers))
 	    }
 	    
+	    func getSimilarMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.ClassStubNoReturnFunction<(Int, Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getSimilarMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
+	    }
+	    
+	    func getRecommendMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.ClassStubNoReturnFunction<(Int, Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getRecommendMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
+	    }
+	    
 	    func getPopularMovie<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(page: M1, completion: M2) -> Cuckoo.ClassStubNoReturnFunction<(Int, (Result<PopularMovie, Error>) -> Void)> where M1.MatchedType == Int, M2.MatchedType == (Result<PopularMovie, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: completion) { $0.1 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBRepository.self, method: "getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", parameterMatchers: matchers))
@@ -1248,6 +1348,18 @@ import Foundation
 	    func getMovieDetail<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(id: M1, completion: M2) -> Cuckoo.__DoNotUse<(Int, (Result<Movie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == (Result<Movie, Error>) -> Void {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, (Result<Movie, Error>) -> Void)>] = [wrap(matchable: id) { $0.0 }, wrap(matchable: completion) { $0.1 }]
 	        return cuckoo_manager.verify("getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getSimilarMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.__DoNotUse<(Int, Int, (Result<PopularMovie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return cuckoo_manager.verify("getSimilarMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getRecommendMovies<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(from movieId: M1, page: M2, completion: M3) -> Cuckoo.__DoNotUse<(Int, Int, (Result<PopularMovie, Error>) -> Void), Void> where M1.MatchedType == Int, M2.MatchedType == Int, M3.MatchedType == (Result<PopularMovie, Error>) -> Void {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, (Result<PopularMovie, Error>) -> Void)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: completion) { $0.2 }]
+	        return cuckoo_manager.verify("getRecommendMovies(from: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -1309,6 +1421,14 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
+     override func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+     override func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
      override func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
@@ -1336,7 +1456,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-26 18:53:51 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBSession.swift at 2020-06-26 22:01:36 +0000
 
 //
 //  Session.swift
@@ -1442,7 +1562,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-26 18:53:51 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLRequestBuilder.swift at 2020-06-26 22:01:36 +0000
 
 //
 //  URLRequestBuilder.swift
@@ -1480,21 +1600,6 @@ import Foundation
 
     
 
-    
-    
-    
-     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest {
-        
-    return cuckoo_manager.call("getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest",
-            parameters: (page, language, region),
-            escapingParameters: (page, language, region),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getPopularMovieURLRequest(page: page, language: language, region: region))
-        
-    }
     
     
     
@@ -1543,6 +1648,21 @@ import Foundation
     
     
     
+     func getImageConfigURLRequest() -> URLRequest {
+        
+    return cuckoo_manager.call("getImageConfigURLRequest() -> URLRequest",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getImageConfigURLRequest())
+        
+    }
+    
+    
+    
      func getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest {
         
     return cuckoo_manager.call("getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest",
@@ -1558,16 +1678,46 @@ import Foundation
     
     
     
-     func getImageConfigURLRequest() -> URLRequest {
+     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest {
         
-    return cuckoo_manager.call("getImageConfigURLRequest() -> URLRequest",
-            parameters: (),
-            escapingParameters: (),
+    return cuckoo_manager.call("getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest",
+            parameters: (page, language, region),
+            escapingParameters: (page, language, region),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.getImageConfigURLRequest())
+            defaultCall: __defaultImplStub!.getPopularMovieURLRequest(page: page, language: language, region: region))
+        
+    }
+    
+    
+    
+     func getSimilarMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest {
+        
+    return cuckoo_manager.call("getSimilarMoviesURLRequest(from: Int, page: Int, language: String?) -> URLRequest",
+            parameters: (movieId, page, language),
+            escapingParameters: (movieId, page, language),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getSimilarMoviesURLRequest(from: movieId, page: page, language: language))
+        
+    }
+    
+    
+    
+     func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest {
+        
+    return cuckoo_manager.call("getRecommendMoviesURLRequest(from: Int, page: Int, language: String?) -> URLRequest",
+            parameters: (movieId, page, language),
+            escapingParameters: (movieId, page, language),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getRecommendMoviesURLRequest(from: movieId, page: page, language: language))
         
     }
     
@@ -1579,11 +1729,6 @@ import Foundation
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    
-	    func getPopularMovieURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(page: M1, language: M2, region: M3) -> Cuckoo.ProtocolStubFunction<(Int, String?, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String, M3.OptionalMatchedType == String {
-	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }, wrap(matchable: region) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest", parameterMatchers: matchers))
-	    }
 	    
 	    func getPopularTVURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(page: M1, language: M2) -> Cuckoo.ProtocolStubFunction<(Int, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }]
@@ -1600,14 +1745,29 @@ import Foundation
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
+	    func getImageConfigURLRequest() -> Cuckoo.ProtocolStubFunction<(), URLRequest> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getImageConfigURLRequest() -> URLRequest", parameterMatchers: matchers))
+	    }
+	    
 	    func getMovieDetailURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(id: M1, language: M2) -> Cuckoo.ProtocolStubFunction<(Int, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?)>] = [wrap(matchable: id) { $0.0 }, wrap(matchable: language) { $0.1 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
-	    func getImageConfigURLRequest() -> Cuckoo.ProtocolStubFunction<(), URLRequest> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getImageConfigURLRequest() -> URLRequest", parameterMatchers: matchers))
+	    func getPopularMovieURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(page: M1, language: M2, region: M3) -> Cuckoo.ProtocolStubFunction<(Int, String?, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String, M3.OptionalMatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }, wrap(matchable: region) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest", parameterMatchers: matchers))
+	    }
+	    
+	    func getSimilarMoviesURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(from movieId: M1, page: M2, language: M3) -> Cuckoo.ProtocolStubFunction<(Int, Int, String?), URLRequest> where M1.MatchedType == Int, M2.MatchedType == Int, M3.OptionalMatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, String?)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: language) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getSimilarMoviesURLRequest(from: Int, page: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
+	    }
+	    
+	    func getRecommendMoviesURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(from movieId: M1, page: M2, language: M3) -> Cuckoo.ProtocolStubFunction<(Int, Int, String?), URLRequest> where M1.MatchedType == Int, M2.MatchedType == Int, M3.OptionalMatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, String?)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: language) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTMDBURLRequestBuilderProtocol.self, method: "getRecommendMoviesURLRequest(from: Int, page: Int, language: String?) -> URLRequest", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -1625,12 +1785,6 @@ import Foundation
 	
 	    
 	
-	    
-	    @discardableResult
-	    func getPopularMovieURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(page: M1, language: M2, region: M3) -> Cuckoo.__DoNotUse<(Int, String?, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String, M3.OptionalMatchedType == String {
-	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }, wrap(matchable: region) { $0.2 }]
-	        return cuckoo_manager.verify("getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
 	    
 	    @discardableResult
 	    func getPopularTVURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(page: M1, language: M2) -> Cuckoo.__DoNotUse<(Int, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String {
@@ -1651,15 +1805,33 @@ import Foundation
 	    }
 	    
 	    @discardableResult
+	    func getImageConfigURLRequest() -> Cuckoo.__DoNotUse<(), URLRequest> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("getImageConfigURLRequest() -> URLRequest", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
 	    func getMovieDetailURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(id: M1, language: M2) -> Cuckoo.__DoNotUse<(Int, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?)>] = [wrap(matchable: id) { $0.0 }, wrap(matchable: language) { $0.1 }]
 	        return cuckoo_manager.verify("getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
-	    func getImageConfigURLRequest() -> Cuckoo.__DoNotUse<(), URLRequest> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("getImageConfigURLRequest() -> URLRequest", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    func getPopularMovieURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(page: M1, language: M2, region: M3) -> Cuckoo.__DoNotUse<(Int, String?, String?), URLRequest> where M1.MatchedType == Int, M2.OptionalMatchedType == String, M3.OptionalMatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, String?, String?)>] = [wrap(matchable: page) { $0.0 }, wrap(matchable: language) { $0.1 }, wrap(matchable: region) { $0.2 }]
+	        return cuckoo_manager.verify("getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getSimilarMoviesURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(from movieId: M1, page: M2, language: M3) -> Cuckoo.__DoNotUse<(Int, Int, String?), URLRequest> where M1.MatchedType == Int, M2.MatchedType == Int, M3.OptionalMatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, String?)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: language) { $0.2 }]
+	        return cuckoo_manager.verify("getSimilarMoviesURLRequest(from: Int, page: Int, language: String?) -> URLRequest", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getRecommendMoviesURLRequest<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(from movieId: M1, page: M2, language: M3) -> Cuckoo.__DoNotUse<(Int, Int, String?), URLRequest> where M1.MatchedType == Int, M2.MatchedType == Int, M3.OptionalMatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Int, Int, String?)>] = [wrap(matchable: movieId) { $0.0 }, wrap(matchable: page) { $0.1 }, wrap(matchable: language) { $0.2 }]
+	        return cuckoo_manager.verify("getRecommendMoviesURLRequest(from: Int, page: Int, language: String?) -> URLRequest", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	}
@@ -1670,10 +1842,6 @@ import Foundation
 
     
 
-    
-     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest  {
-        return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
-    }
     
      func getPopularTVURLRequest(page: Int, language: String?) -> URLRequest  {
         return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
@@ -1687,18 +1855,30 @@ import Foundation
         return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
     }
     
+     func getImageConfigURLRequest() -> URLRequest  {
+        return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
+    }
+    
      func getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest  {
         return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
     }
     
-     func getImageConfigURLRequest() -> URLRequest  {
+     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest  {
+        return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
+    }
+    
+     func getSimilarMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest  {
+        return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
+    }
+    
+     func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest  {
         return DefaultValueRegistry.defaultValue(for: (URLRequest).self)
     }
     
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-26 18:53:51 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionDataTaskProtocol.swift at 2020-06-26 22:01:36 +0000
 
 //
 //  URLSessionDataTaskProtocol.swift
@@ -1804,7 +1984,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-26 18:53:51 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBServices/TMDBURLSessionProtocol.swift at 2020-06-26 22:01:36 +0000
 
 //
 //  URLSessionProtocol.swift
@@ -1940,7 +2120,7 @@ import Foundation
 }
 
 
-// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-26 18:53:51 +0000
+// MARK: - Mocks generated from file: TMDB/TMDBUserSetting/TMDBUserSetting.swift at 2020-06-26 22:01:36 +0000
 
 //
 //  UserDefault.swift

@@ -10,19 +10,17 @@ import Foundation
 protocol TMDBRepositoryProtocol {
     // MARK: - movie
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
+    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
+    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
+    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
 
     // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 
-    // MARK: - popular
-
-    // popular people
+    // MARK: - people
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
 
-    // popular movie
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
-
-    // popular tv
+    // MARK: - tv shows
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
 
     // MARK: - image configuration
@@ -40,6 +38,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
         self.localDataSource = localDataSource
         self.userSetting = userSetting
     }
+    // MAKR: - movies
 
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
         if let movieDetail = localDataSource.getMovie(id: id) {
@@ -60,6 +59,14 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
+    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+        services.getSimilarMovies(from: movieId, page: page, completion: completion)
+    }
+
+    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+        services.getRecommendMovies(from: movieId, page: page, completion: completion)
+    }
+
     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
         services.getPopularMovie(page: page) { result in
             DispatchQueue.main.async {
@@ -72,6 +79,8 @@ class TMDBRepository: TMDBRepositoryProtocol {
             }
         }
     }
+
+    // MARK: - tv show
 
     func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void) {
         services.getPopularOnTV(page: page) { result in
@@ -86,6 +95,8 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
+    // MARK: - trending
+
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
         services.getTrending(time: time, type: type) { result in
             DispatchQueue.main.async {
@@ -99,6 +110,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
+    // MARK: - people
     func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void) {
         services.getPopularPeople(page: page) { result in
             DispatchQueue.main.async {
@@ -112,6 +124,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
+    // MARK: - images
     func updateImageConfig() {
         if
             let lastUpdateDate = userSetting.imageConfig.dateUpdate,

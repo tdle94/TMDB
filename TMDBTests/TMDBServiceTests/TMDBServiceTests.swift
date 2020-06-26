@@ -51,34 +51,7 @@ class TMDBServiceTests: XCTestCase {
         }
     }
 
-    // MARK: - popular
-
-    func testGetPopularMovie() {
-        let expectation = self.expectation(description: "")
-        let matchRequest = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
-
-        /*GIVEN*/
-        stub(urlRequestBuilder) { stub in
-            when(stub).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode).thenReturn(matchRequest)
-        }
-
-        stub(session) { stub in
-            when(stub).send(request: any(), responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
-                let popularMovieResult = PopularMovie()
-                implementation.2(.success(popularMovieResult))
-            }
-        }
-
-        /*WHEN*/
-        services.getPopularMovie(page: 1) { result in
-            expectation.fulfill()
-        }
-
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(urlRequestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
-        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularMovie.Type.self), completion: anyClosure())
-    }
+    // MARK: - people
     
     func testGetPopularPeople() {
         let expectation = self.expectation(description: "")
@@ -105,7 +78,8 @@ class TMDBServiceTests: XCTestCase {
         verify(urlRequestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
     }
-    
+
+    // MARK: - tv shows
     func testGetPopularOnTV() {
         let expectation = self.expectation(description: "")
         let matchRequest = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
@@ -133,7 +107,91 @@ class TMDBServiceTests: XCTestCase {
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
     }
     
-    // MARK: - detail
+    // MARK: - movie
+    
+    func testGetSimilarMovies() {
+        let expectation = self.expectation(description: "")
+        let urlRequest = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == urlRequest })
+
+        /*GIVEN*/
+        stub(urlRequestBuilder) { stub in
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(urlRequest)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                let movieResult = PopularMovie()
+                implementation.2(.success(movieResult))
+            }
+        }
+        
+        /*WHEN*/
+        services.getSimilarMovies(from: 3, page: 1) { result in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+    }
+    
+    func testGetRecommendMovies() {
+        let expectation = self.expectation(description: "")
+        let urlRequest = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == urlRequest })
+
+        /*GIVEN*/
+        stub(urlRequestBuilder) { stub in
+            when(stub).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(urlRequest)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                let movieResult = PopularMovie()
+                implementation.2(.success(movieResult))
+            }
+        }
+        
+        /*WHEN*/
+        services.getRecommendMovies(from: 3, page: 1) { result in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+    }
+    
+    func testGetPopularMovie() {
+        let expectation = self.expectation(description: "")
+        let matchRequest = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+
+        /*GIVEN*/
+        stub(urlRequestBuilder) { stub in
+            when(stub).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode).thenReturn(matchRequest)
+        }
+
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                let popularMovieResult = PopularMovie()
+                implementation.2(.success(popularMovieResult))
+            }
+        }
+
+        /*WHEN*/
+        services.getPopularMovie(page: 1) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(PopularMovie.Type.self), completion: anyClosure())
+    }
+
     func testGetMovieDetail() {
         let expectation = self.expectation(description: "")
         let matchRequest = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3)

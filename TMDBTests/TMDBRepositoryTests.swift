@@ -504,4 +504,122 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         verify(userSetting).imageConfig.get()
     }
+    
+    // MARK: - similar movies
+    
+    // success
+    func testSimilarMovieSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(PopularMovie()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getSimilarMovies(from: 3, page: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+    }
+    
+    // fail
+    func testSimilarMovieFailure() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 400, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getSimilarMovies(from: 3, page: 1) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+    }
+    
+    // MARK: - recommend movies
+    
+    // success
+    func testRecommendMovieSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(PopularMovie()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getRecommendMovies(from: 3, page: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+    }
+    
+    // failure
+    func testRecommendMovieFailure() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 400, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getRecommendMovies(from: 3, page: 1) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+    }
 }

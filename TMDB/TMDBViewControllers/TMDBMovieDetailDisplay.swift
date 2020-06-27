@@ -72,7 +72,12 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
                 }
             }
         }
-        label.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \u{2022} \(movie.releaseDate ?? "") (\(productionCountries))",
+
+        if productionCountries != "" {
+            productionCountries = "(\(productionCountries))"
+        }
+        
+        label.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \u{2022} \(movie.releaseDate ?? "") \(productionCountries)",
                                                          attributes: [
                                                             NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
                                                             NSAttributedString.Key.foregroundColor: UIColor.darkGray

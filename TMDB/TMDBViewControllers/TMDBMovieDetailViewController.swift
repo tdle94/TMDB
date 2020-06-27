@@ -43,6 +43,7 @@ class TMDBMovieDetailViewController: UIViewController {
                                                                  userSetting: self.userSetting)
     
     // MARK: - ui views
+    @IBOutlet weak var matchingMoviesCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -225,6 +226,7 @@ class TMDBMovieDetailViewController: UIViewController {
         if movie.productionCompanies.isEmpty {
             productionCompanyCollectionViewTopConstraint.constant = 0
             productionCompanyCollectionViewHeightConstraint.constant = 0
+            matchingMoviesCollectionViewTopConstraint.constant = 0
             return
         }
         let productionCompanies = Array(movie.productionCompanies)
@@ -249,6 +251,10 @@ class TMDBMovieDetailViewController: UIViewController {
 
         title = movie.originalTitle
         taglineLabel.text = movie.tagline
+        
+        if movie.tagline == "" {
+            taglineTopConstraint.constant = 0
+        }
 
         movieDetail.displayTitle(label: titleLabel, movie: movie)
         movieDetail.displayBudget(label: budgetLabel, movie: movie)

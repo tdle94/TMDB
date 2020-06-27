@@ -78,7 +78,7 @@
                                                     <constraint firstAttribute="height" constant="207" id="ruA-Kf-AtO"/>
                                                 </constraints>
                                             </imageView>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mpK-9C-Zub">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="mpK-9C-Zub">
                                                 <rect key="frame" x="0.0" y="-1" width="414" height="213"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="213" id="t1b-oI-4X4"/>
@@ -271,6 +271,7 @@
                         <outlet property="contentViewBottomConstraint" destination="Wci-Q0-rMM" id="Bkc-6t-5vH"/>
                         <outlet property="generes" destination="wrj-Bv-m36" id="aAN-Cy-HI7"/>
                         <outlet property="matchingMoviesCollectionView" destination="r88-4U-zXN" id="JEC-bt-7sH"/>
+                        <outlet property="matchingMoviesCollectionViewTopConstraint" destination="yhx-Jc-0dv" id="Ylk-b3-VKF"/>
                         <outlet property="moviePosterImageView" destination="Ilv-qd-jvq" id="wTS-eD-guB"/>
                         <outlet property="originalLanguageLabel" destination="3Tf-wJ-qKA" id="wTQ-wr-Kz4"/>
                         <outlet property="overviewDetail" destination="O9B-cz-kRE" id="usk-2V-sGT"/>

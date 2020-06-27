@@ -19,11 +19,11 @@ extension UICollectionViewLayout {
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
             let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
 
-            group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 10)
+            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10)
 
             let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets.trailing = 18
-            section.contentInsets.leading = 18
+
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18)
             section.boundarySupplementaryItems = [sectionHeader]
             section.orthogonalScrollingBehavior = .continuous
 

@@ -29,19 +29,19 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
     }
 
     func displayStatus(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: "Status: ", subTitle: movie.status ?? "unknown")
+        label.attributedText = constructAttrsString(title: NSLocalizedString("Status", comment: "") + ": ", subTitle: movie.status ?? "unknown")
     }
     
     func displayOriginalLanguage(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: "Original Language: ", subTitle: Constant.languageCode[movie.originalLanguage] ?? "None")
+        label.attributedText = constructAttrsString(title: NSLocalizedString("Original Language", comment: "") + ": ", subTitle: Constant.languageCode[movie.originalLanguage] ?? "None")
     }
     
     func displayBudget(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: "Budget: ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.budget)) ?? "0.0")")
+        label.attributedText = constructAttrsString(title: NSLocalizedString("Budget", comment: "") + ": ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.budget)) ?? "0.0")")
     }
     
     func displayRevenue(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: "Revenue: ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.revenue)) ?? "0.0")")
+        label.attributedText = constructAttrsString(title: NSLocalizedString("Revenue", comment: "") + ": ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.revenue)) ?? "0.0")")
     }
     
     func displayTitle(label: UILabel, movie: Movie) {
@@ -49,7 +49,7 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
     }
     
     func displayOverview(label: UILabel) {
-        label.attributedText = NSAttributedString(string: "Overview", attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
+        label.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ", attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
     }
     
     func displayOverviewDetail(label: UILabel, movie: Movie) {

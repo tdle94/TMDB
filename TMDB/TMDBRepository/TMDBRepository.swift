@@ -41,11 +41,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
     // MAKR: - movies
 
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
-        if let movieDetail = localDataSource.getMovie(id: id) {
-            completion(.success(movieDetail))
-            return
-        }
-
         services.getMovieDetail(id: id) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -60,11 +55,29 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
-        services.getSimilarMovies(from: movieId, page: page, completion: completion)
+        services.getSimilarMovies(from: movieId, page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let popularMovieResult):
+                    completion(.success(popularMovieResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
-        services.getRecommendMovies(from: movieId, page: page, completion: completion)
+        services.getRecommendMovies(from: movieId, page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let popularMovieResult):
+                    completion(.success(popularMovieResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 
     func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {

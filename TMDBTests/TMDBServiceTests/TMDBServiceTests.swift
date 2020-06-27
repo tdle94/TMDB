@@ -194,10 +194,10 @@ class TMDBServiceTests: XCTestCase {
 
     func testGetMovieDetail() {
         let expectation = self.expectation(description: "")
-        let matchRequest = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3)
+        let matchRequest = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
         
         stub(urlRequestBuilder) { stub in
-            when(stub).getMovieDetailURLRequest(id: 3, language: "en-US").thenReturn(matchRequest)
+            when(stub).getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first).thenReturn(matchRequest)
         }
         
         stub(session) { stub in
@@ -212,7 +212,7 @@ class TMDBServiceTests: XCTestCase {
         }
 
         waitForExpectations(timeout: 5, handler: nil)
-        verify(urlRequestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
+        verify(urlRequestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(Movie.Type.self), completion: anyClosure())
     }
     

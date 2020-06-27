@@ -37,33 +37,7 @@ class TMDBHomeViewController: UIViewController {
 
     lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { collectionView, indexPath, item in
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-        var url: URL?
-
-        if let item = item as? Movie ?? (item as? Trending)?.movie {
-            cell.title.text = item.originalTitle
-            cell.releaseDate.text = item.releaseDate
-            if let path = item.posterPath {
-                url = self.repository.getImageURL(from: path)
-            }
-        } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
-            cell.title.text = item.originalName
-            cell.releaseDate.text = item.firstAirDate
-            if let path = item.posterPath {
-                url = self.repository.getImageURL(from: path)
-            }
-        } else if let item = item as? People ?? (item as? Trending)?.people {
-            cell.title.text = item.name
-            if let path = item.profilePath {
-                url = self.repository.getImageURL(from: path)
-            }
-        }
-
-        cell.imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0), completed: { _, error, _, _ in
-            if error != nil {
-                cell.imageView.image = UIImage(named: "NoImage")
-            }
-            cell.imageLoadingIndicator.stopAnimating()
-        })
+        cell.configure(item: item, with: self.repository)
         return cell
     }
 

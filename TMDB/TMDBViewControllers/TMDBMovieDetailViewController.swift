@@ -44,6 +44,8 @@ class TMDBMovieDetailViewController: UIViewController {
     
     // MARK: - ui views
     @IBOutlet weak var overviewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var productionCompanyCollectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var productionCompanyCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var taglineTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewDetailTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompaniesCollectionViewTopConstraint: NSLayoutConstraint!
@@ -219,8 +221,13 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     func displayProductionCompanies(movie: Movie) {
-        let productionCompanies = Array(movie.productionCompanies)
         var snapshot = productionCompanyDataSource.snapshot()
+        if movie.productionCompanies.isEmpty {
+            productionCompanyCollectionViewTopConstraint.constant = 0
+            productionCompanyCollectionViewHeightConstraint.constant = 0
+            return
+        }
+        let productionCompanies = Array(movie.productionCompanies)
         snapshot.appendSections([.ProductionCompanies])
         snapshot.appendItems(productionCompanies)
         productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
@@ -258,16 +265,13 @@ class TMDBMovieDetailViewController: UIViewController {
 
 extension TMDBMovieDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item: Movie?
-
-        if indexPath.section == 0 {
-            item = matchingMoviesDataSource.snapshot().itemIdentifiers(inSection: .SimilarMovie)[indexPath.row] as? Movie
-        } else {
-            item = matchingMoviesDataSource.snapshot().itemIdentifiers(inSection: .RecommendMovie)[indexPath.row] as? Movie
-        }
-
-        if let item = item {
-            coordinator?.navigateToMovieDetail(id: item.id)
+        let cell = collectionView.cellForItem(at: indexPath) as? TMDBPreviewItemCell
+        
+        for item in matchingMoviesDataSource.snapshot().itemIdentifiers {
+            if let movie = item as? Movie, movie.originalTitle == cell?.title.text {
+                coordinator?.navigateToMovieDetail(id: movie.id)
+                break
+            }
         }
     }
 }

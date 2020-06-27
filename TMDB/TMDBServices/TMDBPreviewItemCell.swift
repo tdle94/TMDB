@@ -27,6 +27,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
         stackViewTopConstraint.constant = 10
         imageLoadingIndicator.startAnimating()
         imageView.image = UIImage(named: "NoImage")
+        imageView.isHidden = false
         title.text = ""
         releaseDate.text = ""
     }
@@ -64,10 +65,11 @@ class TMDBPreviewItemCell: UICollectionViewCell {
                 stackViewTopConstraint.constant = -25
                 title.text = item.name
                 imageLoadingIndicator.stopAnimating()
+                imageView.isHidden = true
             }
         }
 
-        imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0)) { _, error, _, _ in
+        imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"), options: .init(rawValue: 0)) { [unowned self]  image, error, _, _ in
             self.imageLoadingIndicator.stopAnimating()
         }
     }

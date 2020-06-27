@@ -279,6 +279,8 @@
                         <outlet property="overviewTopConstraint" destination="DCk-9g-ujb" id="m9C-eL-Qz3"/>
                         <outlet property="productionCompaniesCollectionView" destination="QAP-PK-dZh" id="YMY-cH-eLO"/>
                         <outlet property="productionCompaniesCollectionViewTopConstraint" destination="KiL-XL-4o1" id="qK0-vu-S8y"/>
+                        <outlet property="productionCompanyCollectionViewHeightConstraint" destination="OHz-b7-NZG" id="J7f-vH-K7W"/>
+                        <outlet property="productionCompanyCollectionViewTopConstraint" destination="KiL-XL-4o1" id="6ZY-pl-NpJ"/>
                         <outlet property="revenueLabel" destination="zFV-uz-zgQ" id="bnI-hC-v3U"/>
                         <outlet property="runtimeLabel" destination="YHO-Z0-urX" id="G6w-pw-Ao3"/>
                         <outlet property="scrollView" destination="xZu-XV-mlQ" id="nJi-yd-slk"/>

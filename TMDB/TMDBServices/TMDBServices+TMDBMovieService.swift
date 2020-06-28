@@ -14,18 +14,18 @@ extension TMDBServices: TMDBMovieService {
         session.send(request: request, responseType: Movie.self, completion: completion)
     }
 
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+    func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         let request = urlRequestBuilder.getPopularMovieURLRequest(page: page, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
-        session.send(request: request, responseType: PopularMovie.self, completion: completion)
+        session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
 
-    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         let request = urlRequestBuilder.getSimilarMoviesURLRequest(from: movieId, page: page, language: NSLocale.preferredLanguages.first)
-        session.send(request: request, responseType: PopularMovie.self, completion: completion)
+        session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
 
-    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         let request = urlRequestBuilder.getRecommendMoviesURLRequest(from: movieId, page: page, language: NSLocale.preferredLanguages.first)
-        session.send(request: request, responseType: PopularMovie.self, completion: completion)
+        session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
 }

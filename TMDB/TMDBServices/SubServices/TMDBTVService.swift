@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TMDBTVService {
-    func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
+    func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
 }

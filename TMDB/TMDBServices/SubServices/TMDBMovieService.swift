@@ -9,8 +9,8 @@
 import Foundation
 
 protocol TMDBMovieService {
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
+    func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
-    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
-    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
+    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
+    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
 }

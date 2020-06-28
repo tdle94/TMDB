@@ -42,7 +42,7 @@ class TMDBURLSessionTests: XCTestCase {
         }
 
         /*WHEN*/
-        tmdbSession.send(request: request, responseType: PopularMovie.self) { _ in
+        tmdbSession.send(request: request, responseType: MovieResult.self) { _ in
             expectation.fulfill()
         }
         

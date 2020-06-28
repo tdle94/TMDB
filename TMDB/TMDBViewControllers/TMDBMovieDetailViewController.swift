@@ -197,7 +197,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     // MARK: - display
 
-    func displayRecommendMovies(_ popularMovie: PopularMovie) {
+    func displayRecommendMovies(_ popularMovie: MovieResult) {
         var snapshot = matchingMoviesDataSource.snapshot()
         if popularMovie.movies.isEmpty {
             snapshot.deleteSections([.RecommendMovie])
@@ -209,7 +209,7 @@ class TMDBMovieDetailViewController: UIViewController {
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    func displaySimilarMovies(_ popularMovie: PopularMovie) {
+    func displaySimilarMovies(_ popularMovie: MovieResult) {
         var snapshot = matchingMoviesDataSource.snapshot()
         if popularMovie.movies.isEmpty {
             snapshot.deleteSections([.SimilarMovie])

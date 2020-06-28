@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 @objcMembers
-class PopularOnTVResult: Object, Decodable {
+class TVShowResult: Object, Decodable {
     dynamic var page: Int = 0
     dynamic var totalPages: Int = 0
     dynamic var totalResults: Int = 0

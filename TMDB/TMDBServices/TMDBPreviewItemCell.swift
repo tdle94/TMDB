@@ -9,23 +9,23 @@
 import Foundation
 import UIKit
 import RealmSwift
+import SDWebImage
 
 class TMDBPreviewItemCell: UICollectionViewCell {
     @IBOutlet weak var stackViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
+            imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
             imageView.roundImage()
         }
     }
-    @IBOutlet weak var imageLoadingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var releaseDate: UILabel!
     
     override func prepareForReuse() {
         super.prepareForReuse()
         stackViewTopConstraint.constant = 10
-        imageLoadingIndicator.startAnimating()
         imageView.image = UIImage(named: "NoImage")
         imageView.isHidden = false
         title.text = ""
@@ -64,13 +64,9 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             } else {
                 stackViewTopConstraint.constant = -25
                 title.text = item.name
-                imageLoadingIndicator.stopAnimating()
                 imageView.isHidden = true
             }
         }
-
-        imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"), options: .init(rawValue: 0)) { [unowned self]  image, error, _, _ in
-            self.imageLoadingIndicator.stopAnimating()
-        }
+        imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0))
     }
 }

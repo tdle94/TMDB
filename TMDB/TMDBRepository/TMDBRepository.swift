@@ -10,18 +10,19 @@ import Foundation
 protocol TMDBRepositoryProtocol {
     // MARK: - movie
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
-    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
-    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void)
+    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
+    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
+    func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
+    func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void)
 
     // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 
     // MARK: - people
-    func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void)
+    func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void)
 
     // MARK: - tv shows
-    func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void)
+    func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
 
     // MARK: - image configuration
     func updateImageConfig()
@@ -39,6 +40,19 @@ class TMDBRepository: TMDBRepositoryProtocol {
         self.userSetting = userSetting
     }
     // MAKR: - movies
+    
+    func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void) {
+        services.getMovieCredit(from: movieId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let credit):
+                    completion(.success(credit))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
 
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
         services.getMovieDetail(id: id) { result in
@@ -54,7 +68,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
-    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         services.getSimilarMovies(from: movieId, page: page) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -67,7 +81,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
-    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         services.getRecommendMovies(from: movieId, page: page) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -80,7 +94,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
-    func getPopularMovie(page: Int, completion: @escaping (Result<PopularMovie, Error>) -> Void) {
+    func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         services.getPopularMovie(page: page) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -95,7 +109,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
 
     // MARK: - tv show
 
-    func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void) {
+    func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
         services.getPopularOnTV(page: page) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -124,7 +138,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     // MARK: - people
-    func getPopularPeople(page: Int, completion: @escaping (Result<PopularPeopleResult, Error>) -> Void) {
+    func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void) {
         services.getPopularPeople(page: page) { result in
             DispatchQueue.main.async {
                 switch result {

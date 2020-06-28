@@ -115,8 +115,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(PopularMovie()))
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
             }
         }
 
@@ -136,7 +136,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
     }
     
@@ -148,7 +148,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
             }
         }
@@ -164,7 +164,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
     }
 
@@ -178,8 +178,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(PopularOnTVResult()))
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
             }
         }
 
@@ -199,7 +199,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
     }
     
@@ -211,7 +211,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure()).then { implementation in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
             }
         }
@@ -228,7 +228,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularOnTVResult.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
     }
 
@@ -242,8 +242,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(PopularPeopleResult()))
+            when(stub).send(request: requestMatcher, responseType: any(PeopleResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(PeopleResult()))
             }
         }
 
@@ -263,7 +263,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(PeopleResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
     }
 
@@ -275,7 +275,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure()).then { implementation in
+            when(stub).send(request: requestMatcher, responseType: any(PeopleResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
             }
         }
@@ -292,7 +292,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularPeopleResult.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(PeopleResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
     }
 
@@ -488,8 +488,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(PopularMovie()))
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
             }
         }
 
@@ -505,7 +505,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
     }
     
@@ -517,7 +517,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.failure(NSError(domain: "", code: 400, userInfo: nil)))
             }
         }
@@ -533,7 +533,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
     }
     
@@ -547,8 +547,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(PopularMovie()))
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
             }
         }
 
@@ -564,7 +564,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
     }
     
@@ -576,7 +576,7 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure()).then { implementation in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.failure(NSError(domain: "", code: 400, userInfo: nil)))
             }
         }
@@ -592,7 +592,37 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(PopularMovie.Type.self), completion: anyClosure())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+    }
+    
+    // MARK: - movie credit
+    
+    // success
+    func testGetMovieCredit() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieCreditURLRequest(from: 3)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(CreditResult()))
+            }
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getMovieCreditURLRequest(from: 3).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        repository.getMovieCredit(from: 3) { result in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getMovieCreditURLRequest(from: 3)
     }
 }

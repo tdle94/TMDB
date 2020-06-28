@@ -9,8 +9,8 @@
 import Foundation
 
 extension TMDBServices: TMDBTVService {
-    func getPopularOnTV(page: Int, completion: @escaping (Result<PopularOnTVResult, Error>) -> Void) {
+    func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
         let request = urlRequestBuilder.getPopularTVURLRequest(page: page, language: NSLocale.preferredLanguages.first)
-        session.send(request: request, responseType: PopularOnTVResult.self, completion: completion)
+        session.send(request: request, responseType: TVShowResult.self, completion: completion)
     }
 }

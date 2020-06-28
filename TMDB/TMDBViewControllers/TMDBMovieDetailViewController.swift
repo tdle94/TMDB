@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import RealmSwift
+import SDWebImage
 
 class TMDBMovieDetailViewController: UIViewController {
     // MARK: - coordinator
@@ -62,7 +63,12 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var budgetLabel: UILabel!
     @IBOutlet weak var revenueLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var backdropImageView: UIImageView!
+    @IBOutlet weak var backdropImageView: UIImageView! {
+        didSet {
+            backdropImageView.layer.borderWidth = 1
+            backdropImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        }
+    }
     @IBOutlet weak var generes: UILabel!
     @IBOutlet weak var matchingMoviesCollectionView: UICollectionView! {
         didSet {
@@ -73,13 +79,14 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
-            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.3)
+            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.3, fractionHeight: 0.3)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
         }
     }
     @IBOutlet weak var moviePosterImageView: UIImageView! {
         didSet {
+            moviePosterImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
             moviePosterImageView.roundImage()
         }
     }
@@ -192,7 +199,11 @@ class TMDBMovieDetailViewController: UIViewController {
     
     func getBackdropImage(movie: Movie) {
         if let backdropPath = movie.backdropPath, let url = self.repository.getImageURL(from: backdropPath) {
-            self.backdropImageView.sd_setImage(with: url)
+            self.backdropImageView.sd_setImage(with: url) { image, _, _, _ in
+                image?.getColors() { colors in
+                    self.backdropImageView.layer.borderColor = colors?.secondary.cgColor
+                }
+            }
         }
     }
     // MARK: - display

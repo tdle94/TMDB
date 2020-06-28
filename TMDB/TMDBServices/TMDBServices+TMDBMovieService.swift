@@ -28,4 +28,9 @@ extension TMDBServices: TMDBMovieService {
         let request = urlRequestBuilder.getRecommendMoviesURLRequest(from: movieId, page: page, language: NSLocale.preferredLanguages.first)
         session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
+
+    func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getMovieCreditURLRequest(from: movieId)
+        session.send(request: request, responseType: CreditResult.self, completion: completion)
+    }
 }

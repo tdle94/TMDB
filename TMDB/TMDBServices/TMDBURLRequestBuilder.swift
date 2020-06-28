@@ -26,6 +26,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest
     func getSimilarMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest
     func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest
+    func getMovieCreditURLRequest(from movieId: Int) -> URLRequest
 }
 
 extension TMDBURLRequestBuilderProtocol {
@@ -72,9 +73,9 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         ]
         return buildURLRequest(path: "/3/tv/popular", queryItems: queryItems)
     }
-    
+
     // MARK: - peopel
-    
+
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "page", value: String(page)),
@@ -82,7 +83,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         ]
         return buildURLRequest(path: "/3/person/popular", queryItems: queryItems)
     }
-    
+
     // MARK: - trending
     func getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest {
         var path = "/3/trending/"
@@ -105,7 +106,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         }
         return buildURLRequest(path: path, queryItems: nil)
     }
-    
+
     private func buildURLRequest(path: String, queryItems: [URLQueryItem]?) -> URLRequest {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
@@ -115,14 +116,14 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         urlComponent.queryItems?.append(URLQueryItem(name: "api_key", value: apiKey))
         return URLRequest(url: urlComponent.url!)
     }
-    
+
     // MARK: - image config
     func getImageConfigURLRequest() -> URLRequest {
         return buildURLRequest(path: "/3/configuration", queryItems: nil)
     }
 
     // MARK: - movies
-    
+
     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest {
         var queryItems = [
             URLQueryItem(name: "page", value: String(page)),
@@ -133,7 +134,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         }
         return buildURLRequest(path: "/3/movie/popular", queryItems: queryItems)
     }
-    
+
     func getMovieDetailURLRequest(id: Int, language: String? = "en-US") -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "language", value: language)
@@ -155,5 +156,9 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "language", value: language)
         ]
         return buildURLRequest(path: "/3/movie/\(movieId)/recommendations", queryItems: queryItems)
+    }
+
+    func getMovieCreditURLRequest(from movieId: Int) -> URLRequest {
+        return buildURLRequest(path: "/3/movie/\(movieId)/credits", queryItems: nil)
     }
 }

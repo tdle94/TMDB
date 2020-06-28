@@ -57,6 +57,12 @@ class TestURLRequestBuilder: XCTestCase {
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
+    func testMovieCreditURL() {
+        let matchRequest = urlRequestBuilder.getMovieCreditURLRequest(from: 3)
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3/credits?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
+    
     // MARK: - trending
     func testTodayAllTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .today, type: .all)

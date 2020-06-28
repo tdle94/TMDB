@@ -32,26 +32,28 @@ class TMDBPreviewItemCell: UICollectionViewCell {
         subTitle.text = ""
     }
 
-    func configure(item: Object, with repository: TMDBRepositoryProtocol) {
-        var url: URL?
+    private func getImage(from path: String?, repository: TMDBRepositoryProtocol) {
+        guard
+            let path = path,
+            let url = repository.getImageURL(from: path) else {
+                imageView.image = UIImage(named: "NoImage")
+                return
+        }
+        imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0))
+    }
 
+    func configure(item: Object, with repository: TMDBRepositoryProtocol) {
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             title.text = item.originalTitle
             subTitle.text = item.releaseDate
-            if let path = item.posterPath {
-                url = repository.getImageURL(from: path)
-            }
+            getImage(from: item.posterPath, repository: repository)
         } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
             title.text = item.originalName
             subTitle.text = item.firstAirDate
-            if let path = item.posterPath {
-                url = repository.getImageURL(from: path)
-            }
+            getImage(from: item.posterPath, repository: repository)
         } else if let item = item as? People ?? (item as? Trending)?.people {
             title.text = item.name
-            if let path = item.profilePath {
-                url = repository.getImageURL(from: path)
-            }
+            getImage(from: item.profilePath, repository: repository)
         } else if let item = item as? ProductionCompany {
             title.textAlignment = .center
             title.text = ""
@@ -60,7 +62,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             imageView.layer.borderWidth = 0
             stackViewTopConstraint.constant = 10
             if let path = item.logoPath {
-                url = repository.getImageURL(from: path)
+                getImage(from: path, repository: repository)
             } else {
                 stackViewTopConstraint.constant = -25
                 title.text = item.name
@@ -70,18 +72,12 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             title.text = item.name
             subTitle.text = item.character
             
-            if let path = item.profilePath {
-                url = repository.getImageURL(from: path)
-            }
+            getImage(from: item.profilePath, repository: repository)
         } else if let item = item as? Crew {
             title.text = item.name
             subTitle.text = item.job
             
-            if let path = item.profilePath {
-                url = repository.getImageURL(from: path)
-            }
+            getImage(from: item.profilePath, repository: repository)
         }
-        
-        imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"), options: .init(rawValue: 0))
     }
 }

@@ -14,11 +14,8 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - repository
     let userSetting: TMDBUserSetting = TMDBUserSetting()
 
-    lazy var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                                                        urlRequestBuilder: TMDBURLRequestBuilder(),
-                                                                                        userSetting: self.userSetting),
-                                                                 localDataSource: TMDBLocalDataSource(),
-                                                                 userSetting: self.userSetting)
+    var repository: TMDBRepositoryProtocol!
+
     // MARK: - collectionview configuration
     enum Section: String, CaseIterable {
         case popular = "Popular"
@@ -60,9 +57,20 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
+                                                           urlRequestBuilder: TMDBURLRequestBuilder(),
+                                                           userSetting: userSetting),
+                                    localDataSource: TMDBLocalDataSource(),
+                                    userSetting: userSetting)
+        repository.updateImageConfig()
         configureDataSource()
         configureLanguageAndRegion()
         getTrendingToday()
+    }
+
+    override func didReceiveMemoryWarning() {
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk()
     }
 }
 
@@ -92,7 +100,6 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularMovieResult.movies), toSection: .popular)
-                snapshot.reloadSections([.popular])
                 self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
             }
@@ -203,12 +210,16 @@ extension TMDBHomeViewController {
     // MARK: - collection view configuration
     func configureDataSource() {
 
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: cellProvider)
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
+            cell.configure(item: item, with: self.repository)
+            return cell
+        }
 
         dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                              withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                              for: indexPath) as? TMDBPreviewHeaderView
+                                                                         withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                         for: indexPath) as? TMDBPreviewHeaderView
             header?.delegate = self
 
             if indexPath.section == 1 {

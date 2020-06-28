@@ -39,11 +39,7 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - repository
     let userSetting: TMDBUserSetting = TMDBUserSetting()
 
-    lazy var repository: TMDBRepositoryProtocol = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                                                        urlRequestBuilder: TMDBURLRequestBuilder(),
-                                                                                        userSetting: self.userSetting),
-                                                                 localDataSource: TMDBLocalDataSource(),
-                                                                 userSetting: self.userSetting)
+    var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
     @IBOutlet weak var matchingMoviesCollectionViewTopConstraint: NSLayoutConstraint!
@@ -96,6 +92,13 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
+                                                           urlRequestBuilder: TMDBURLRequestBuilder(),
+                                                           userSetting: userSetting),
+                                    localDataSource: TMDBLocalDataSource(),
+                                    userSetting: userSetting)
+        
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
         configureProductionCompaniesDataSource()
@@ -104,6 +107,11 @@ class TMDBMovieDetailViewController: UIViewController {
         getSimilarMovies()
         getRecommendMovies()
         getMovieCredit()
+    }
+
+    override func didReceiveMemoryWarning() {
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk()
     }
 
     // MARK: - configuration

@@ -35,8 +35,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tmdbLogo = UIImage(named: Constant.imageLogo)?.withRenderingMode(.alwaysOriginal)
         let imageBarButtonItem = UIBarButtonItem(image: tmdbLogo, landscapeImagePhone: tmdbLogo, style: .plain, target: nil, action: nil)
 
-        homeVC.repository.updateImageConfig()
-
         homeVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
         movieVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
         tvVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)

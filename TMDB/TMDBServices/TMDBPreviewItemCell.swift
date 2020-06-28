@@ -21,15 +21,15 @@ class TMDBPreviewItemCell: UICollectionViewCell {
         }
     }
     @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var releaseDate: UILabel!
+    @IBOutlet weak var subTitle: UILabel!
     
     override func prepareForReuse() {
         super.prepareForReuse()
         stackViewTopConstraint.constant = 10
-        imageView.image = UIImage(named: "NoImage")
+        imageView.image = nil
         imageView.isHidden = false
         title.text = ""
-        releaseDate.text = ""
+        subTitle.text = ""
     }
 
     func configure(item: Object, with repository: TMDBRepositoryProtocol) {
@@ -37,13 +37,13 @@ class TMDBPreviewItemCell: UICollectionViewCell {
 
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             title.text = item.originalTitle
-            releaseDate.text = item.releaseDate
+            subTitle.text = item.releaseDate
             if let path = item.posterPath {
                 url = repository.getImageURL(from: path)
             }
         } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
             title.text = item.originalName
-            releaseDate.text = item.firstAirDate
+            subTitle.text = item.firstAirDate
             if let path = item.posterPath {
                 url = repository.getImageURL(from: path)
             }
@@ -66,7 +66,22 @@ class TMDBPreviewItemCell: UICollectionViewCell {
                 title.text = item.name
                 imageView.isHidden = true
             }
+        } else if let item = item as? Cast {
+            title.text = item.name
+            subTitle.text = item.character
+            
+            if let path = item.profilePath {
+                url = repository.getImageURL(from: path)
+            }
+        } else if let item = item as? Crew {
+            title.text = item.name
+            subTitle.text = item.job
+            
+            if let path = item.profilePath {
+                url = repository.getImageURL(from: path)
+            }
         }
-        imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0))
+        
+        imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"), options: .init(rawValue: 0))
     }
 }

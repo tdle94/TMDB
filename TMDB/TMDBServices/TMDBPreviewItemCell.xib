@@ -50,8 +50,8 @@
             <connections>
                 <outlet property="imageView" destination="Ka1-1R-kYe" id="6Cc-ty-yvR"/>
                 <outlet property="imageViewBottomConstraint" destination="IwW-2f-WWV" id="0Qj-fb-IFe"/>
-                <outlet property="releaseDate" destination="PHH-GT-xVK" id="Haw-8s-VDL"/>
                 <outlet property="stackViewTopConstraint" destination="BN0-Sa-bay" id="9o3-yM-iaS"/>
+                <outlet property="subTitle" destination="PHH-GT-xVK" id="Eh9-CL-R0G"/>
                 <outlet property="title" destination="oDK-nq-0mA" id="WZv-ZI-TdB"/>
             </connections>
             <point key="canvasLocation" x="134.78260869565219" y="136.60714285714286"/>

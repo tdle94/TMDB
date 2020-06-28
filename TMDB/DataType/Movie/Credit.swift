@@ -12,11 +12,22 @@ import RealmSwift
 @objcMembers
 class CreditResult: Object, Decodable {
     dynamic var id: Int = 0
-    dynamic var cast: Cast?
-    dynamic var crew: Crew?
+    let cast: List<Cast> = List()
+    let crew: List<Crew> = List()
 
     enum CodingKeys: String, CodingKey {
         case id, cast, crew
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        cast.append(objectsIn: try container.decode(List<Cast>.self, forKey: .cast))
+        crew.append(objectsIn: try container.decode(List<Crew>.self, forKey: .crew))
+    }
+
+    required init() {
+        super.init()
     }
 }
 

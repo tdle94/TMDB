@@ -75,4 +75,8 @@ class TMDBDataTypeTests: XCTestCase {
     func testTrendingPeopleThisWeek() {
         XCTAssertNoThrow(try JSONDecoder().decode(TrendingResult.self, from: trendingPeopleThisWeekFixture))
     }
+
+    func testMovieCredit() {
+        XCTAssertNoThrow(try JSONDecoder().decode(CreditResult.self, from: movieCreditFixture))
+    }
 }

@@ -40,7 +40,7 @@ class TMDBRepositoryTests: XCTestCase {
     // no movie detail in realm, get from calling service
     func testGetMovieDetailCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3)
+        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -51,7 +51,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub.getMovieDetailURLRequest(id: 3, language: "en-US")).thenReturn(request)
+            when(stub.getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
@@ -67,16 +67,15 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovie(id: 3)
         verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: "en-US")
+        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
         verify(localDataSource).saveMovie(any())
     }
 
     // no movie detail in realm, get from calling service with invalid id, service error
     func testGetMovieDetailCase3() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 1)
+        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 1, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -87,7 +86,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub.getMovieDetailURLRequest(id: 1, language: "en-US")).thenReturn(request)
+            when(stub.getMovieDetailURLRequest(id: 1, language: NSLocale.preferredLanguages.first)).thenReturn(request)
         }
 
         stub(localDataSource) { stub in
@@ -101,34 +100,8 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovie(id: 1)
         verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieDetailURLRequest(id: 1, language: "en-US")
-    }
-
-    // get movie detail in realm
-    func testGetMovieDetailCase4() {
-        let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3)
-
-        /*GIVEN*/
-        stub(requestBuilder) { stub in
-            when(stub.getMovieDetailURLRequest(id: 3, language: "en-US")).thenReturn(request)
-        }
-        
-        stub(localDataSource) { stub in
-            when(stub.getMovie(id: 3)).thenReturn(Movie())
-        }
-
-        /*WHEN*/
-        repository.getMovieDetail(id: 3) { result in
-            XCTAssertNoThrow(try! result.get())
-            expectation.fulfill()
-        }
-
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovie(id: 3)
+        verify(requestBuilder).getMovieDetailURLRequest(id: 1, language: NSLocale.preferredLanguages.first)
     }
 
     // MARK: - popular movie

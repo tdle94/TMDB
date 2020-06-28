@@ -10,7 +10,7 @@ import Foundation
 
 extension TMDBServices: TMDBMovieService {
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
-        let request = urlRequestBuilder.getMovieDetailURLRequest(id: id)
+        let request = urlRequestBuilder.getMovieDetailURLRequest(id: id, language: NSLocale.preferredLanguages.first)
         session.send(request: request, responseType: Movie.self, completion: completion)
     }
 

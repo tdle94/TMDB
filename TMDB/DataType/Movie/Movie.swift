@@ -108,15 +108,27 @@ class Movie: Object, Decodable {
 class Collection: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var name: String = ""
-    dynamic var posterPath: String = ""
-    dynamic var backdropPath: String = ""
+    dynamic var posterPath: String?
+    dynamic var backdropPath: String?
 
     enum CodingKeys: String, CodingKey {
         case id, name
         case posterPath = "poster_path"
         case backdropPath = "backdrop_path"
     }
-    
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
+        backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
+    }
+
+    required init() {
+        super.init()
+    }
+
     override class func primaryKey() -> String? {
         return "id"
     }

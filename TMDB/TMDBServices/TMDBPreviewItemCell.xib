@@ -16,9 +16,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="350" height="300"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-1R-kYe">
-                        <rect key="frame" x="0.0" y="0.0" width="350" height="220"/>
-                    </imageView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="fry-iD-S0E">
                         <rect key="frame" x="0.0" y="230" width="350" height="21"/>
                         <subviews>
@@ -39,6 +36,9 @@
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="g35-Lj-Eex">
                         <rect key="frame" x="165" y="100" width="20" height="20"/>
                     </activityIndicatorView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-1R-kYe">
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="220"/>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="Ka1-1R-kYe" secondAttribute="trailing" id="3kB-k8-Cze"/>
@@ -55,7 +55,9 @@
             <connections>
                 <outlet property="imageLoadingIndicator" destination="g35-Lj-Eex" id="SMS-uQ-Wue"/>
                 <outlet property="imageView" destination="Ka1-1R-kYe" id="6Cc-ty-yvR"/>
+                <outlet property="imageViewBottomConstraint" destination="IwW-2f-WWV" id="0Qj-fb-IFe"/>
                 <outlet property="releaseDate" destination="PHH-GT-xVK" id="Haw-8s-VDL"/>
+                <outlet property="stackViewTopConstraint" destination="BN0-Sa-bay" id="9o3-yM-iaS"/>
                 <outlet property="title" destination="oDK-nq-0mA" id="WZv-ZI-TdB"/>
             </connections>
             <point key="canvasLocation" x="134.78260869565219" y="136.60714285714286"/>

@@ -14,6 +14,7 @@ protocol TMDBRepositoryProtocol {
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void)
+    func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void)
 
     // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
@@ -100,6 +101,19 @@ class TMDBRepository: TMDBRepositoryProtocol {
                 switch result {
                 case .success(let popularMovieResult):
                     completion(.success(popularMovieResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void) {
+        services.getMovieReview(page: page, from: movieId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movieReviewResult):
+                    completion(.success(movieReviewResult))
                 case .failure(let error):
                     completion(.failure(error))
                 }

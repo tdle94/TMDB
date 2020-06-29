@@ -240,6 +240,30 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
     }
     
+    func testGetMovieReview() {
+        let expectation = self.expectation(description: "")
+        let matchRequest = TMDBURLRequestBuilder().getMovieReviewURLRequest(from: 3, page: 1)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == matchRequest })
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getMovieReviewURLRequest(from: 3, page: 1).thenReturn(matchRequest)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: any(), responseType: any(ReviewResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ReviewResult()))
+            }
+        }
+        
+        services.getMovieReview(page: 1, from: 3) { result in
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getMovieReviewURLRequest(from: 3, page: 1)
+        verify(session).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure())
+    }
+    
     // MARK: - trending
     
     func testAllTrendingToday() {

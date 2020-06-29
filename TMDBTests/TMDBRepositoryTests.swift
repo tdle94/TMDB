@@ -597,32 +597,119 @@ class TMDBRepositoryTests: XCTestCase {
     }
     
     // MARK: - movie credit
-    
+
     // success
     func testGetMovieCredit() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getMovieCreditURLRequest(from: 3)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
-        
+
         /*GIVEN*/
         stub(session) { stub in
             when(stub).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.success(CreditResult()))
             }
         }
-        
+
         stub(requestBuilder) { stub in
             when(stub).getMovieCreditURLRequest(from: 3).thenReturn(request)
         }
-        
+
         /*WHEN*/
         repository.getMovieCredit(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
             expectation.fulfill()
         }
-        
+
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getMovieCreditURLRequest(from: 3)
+    }
+
+    // fail
+    func testGetMovieCreditFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieCreditURLRequest(from: 3)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getMovieCreditURLRequest(from: 3).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getMovieCredit(from: 3) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getMovieCreditURLRequest(from: 3)
+    }
+
+    // MARK - movie review
+
+    // sucess
+    func testGetMovieReviewSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieReviewURLRequest(from: 3, page: 1)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ReviewResult()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getMovieReviewURLRequest(from: 3, page: 1).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getMovieReview(page: 1, from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getMovieReviewURLRequest(from: 3, page: 1)
+    }
+
+    func testGetMovieReviewFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieReviewURLRequest(from: 3, page: 1)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getMovieReviewURLRequest(from: 3, page: 1).thenReturn(request)
+        }
+
+        /*WHEN*/
+        repository.getMovieReview(page: 1, from: 3) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getMovieReviewURLRequest(from: 3, page: 1)
     }
 }

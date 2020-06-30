@@ -17,7 +17,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="fry-iD-S0E">
-                        <rect key="frame" x="0.0" y="230" width="350" height="21"/>
+                        <rect key="frame" x="0.0" y="235" width="350" height="21"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDK-nq-0mA">
                                 <rect key="frame" x="0.0" y="0.0" width="350" height="18"/>
@@ -36,12 +36,24 @@
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-1R-kYe">
                         <rect key="frame" x="0.0" y="0.0" width="350" height="220"/>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cY9-cq-cdd" customClass="TMDBCircleUserRating" customModule="TMDB" customModuleProvider="target">
+                        <rect key="frame" x="1" y="195" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="D56-tc-jOW"/>
+                            <constraint firstAttribute="width" constant="40" id="NSf-n9-YEk"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="Ka1-1R-kYe" secondAttribute="trailing" id="3kB-k8-Cze"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="top" secondItem="MBB-W3-fAB" secondAttribute="top" id="7Lh-px-yyY"/>
-                    <constraint firstItem="fry-iD-S0E" firstAttribute="top" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="10" id="BN0-Sa-bay"/>
+                    <constraint firstItem="cY9-cq-cdd" firstAttribute="top" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="-25" id="A3y-Qb-qPp"/>
                     <constraint firstAttribute="bottom" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="80" id="IwW-2f-WWV"/>
+                    <constraint firstItem="fry-iD-S0E" firstAttribute="top" secondItem="cY9-cq-cdd" secondAttribute="bottom" id="Suz-Zd-JFu"/>
+                    <constraint firstItem="cY9-cq-cdd" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" constant="1" id="bbL-dM-Vff"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="dxB-WE-kKJ"/>
                     <constraint firstItem="fry-iD-S0E" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="u6T-fe-rkI"/>
                     <constraint firstAttribute="trailing" secondItem="fry-iD-S0E" secondAttribute="trailing" id="w5J-G6-akv"/>
@@ -50,7 +62,8 @@
             <connections>
                 <outlet property="imageView" destination="Ka1-1R-kYe" id="6Cc-ty-yvR"/>
                 <outlet property="imageViewBottomConstraint" destination="IwW-2f-WWV" id="0Qj-fb-IFe"/>
-                <outlet property="stackViewTopConstraint" destination="BN0-Sa-bay" id="9o3-yM-iaS"/>
+                <outlet property="ratingLabel" destination="cY9-cq-cdd" id="mtq-xO-FlE"/>
+                <outlet property="stackViewTopConstraint" destination="Suz-Zd-JFu" id="xPc-g3-cNx"/>
                 <outlet property="subTitle" destination="PHH-GT-xVK" id="Eh9-CL-R0G"/>
                 <outlet property="title" destination="oDK-nq-0mA" id="WZv-ZI-TdB"/>
             </connections>

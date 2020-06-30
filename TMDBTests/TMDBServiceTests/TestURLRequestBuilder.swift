@@ -62,7 +62,13 @@ class TestURLRequestBuilder: XCTestCase {
         let urlMatcher = "https://api.themoviedb.org/3/movie/3/credits?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
-    
+
+    func testMovieReviewURL() {
+        let matchRequest = urlRequestBuilder.getMovieReviewURLRequest(from: 3, page: 1)
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3/reviews?page=1&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
+
     // MARK: - trending
     func testTodayAllTrendingURL() {
         let matchRequest = urlRequestBuilder.getTrendingURLRequest(time: .today, type: .all)

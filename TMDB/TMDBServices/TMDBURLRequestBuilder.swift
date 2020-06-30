@@ -27,6 +27,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getSimilarMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest
     func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest
     func getMovieCreditURLRequest(from movieId: Int) -> URLRequest
+    func getMovieReviewURLRequest(from movieId: Int, page: Int) -> URLRequest
 }
 
 extension TMDBURLRequestBuilderProtocol {
@@ -160,5 +161,12 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getMovieCreditURLRequest(from movieId: Int) -> URLRequest {
         return buildURLRequest(path: "/3/movie/\(movieId)/credits", queryItems: nil)
+    }
+
+    func getMovieReviewURLRequest(from movieId: Int, page: Int) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
+        ]
+        return buildURLRequest(path: "/3/movie/\(movieId)/reviews", queryItems: queryItems)
     }
 }

@@ -71,9 +71,72 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
         verify(localDataSource).saveMovie(any())
     }
+    
+    // movie detail in realm with same region and language. Get from realm
+    func testGetMovieDetailCase2() {
+        let expectation = self.expectation(description: "")
+        let movie = Movie()
+        movie.region = NSLocale.current.regionCode
+        movie.language = NSLocale.preferredLanguages.first
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub.getMovie(id: 3)).thenReturn(movie)
+            when(stub.saveMovie(any())).thenDoNothing()
+        }
+        
+        /*WHEN*/
+        repository.getMovieDetail(id: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getMovie(id: 3)
+    }
+    
+    // movie detail in realm with different region and language. get from calling service
+    func testGetMovieDetailCase3() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        let movie = Movie()
+        movie.region = ""
+        movie.language = ""
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub.getMovie(id: 3)).thenReturn(movie)
+            when(stub.saveMovie(any())).thenDoNothing()
+        }
+        
+        stub(session) { stub in
+            when(stub.send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())).then { implementation in
+                implementation.2(.success(Movie()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub.getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        repository.getMovieDetail(id: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
+        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        verify(localDataSource).getMovie(id: 3)
+        verify(localDataSource).saveMovie(any())
+    }
 
     // no movie detail in realm, get from calling service with invalid id, service error
-    func testGetMovieDetailCase3() {
+    func testGetMovieDetailCase4() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 1, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })

@@ -48,6 +48,8 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveMovie(_ movie: Movie) {
         realm.beginWrite()
+        movie.region = NSLocale.current.regionCode
+        movie.language = NSLocale.preferredLanguages.first
         realm.add(movie, update: .modified)
         try? realm.commitWrite()
     }

@@ -62,6 +62,15 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
+        if
+            let movie = localDataSource.getMovie(id: id),
+            movie.region == NSLocale.current.regionCode,
+            movie.language == NSLocale.preferredLanguages.first {
+
+            completion(.success(movie))
+            return
+        }
+
         services.getMovieDetail(id: id) { result in
             DispatchQueue.main.async {
                 switch result {

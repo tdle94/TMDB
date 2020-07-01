@@ -29,6 +29,10 @@ class CreditResult: Object, Decodable {
     required init() {
         super.init()
     }
+
+    override class func primaryKey() -> String? {
+        return "id"
+    }
 }
 
 @objcMembers
@@ -40,12 +44,16 @@ class Cast: Object, Decodable {
     dynamic var name: String = ""
     dynamic var order: Int = 0
     dynamic var profilePath: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id, character, name, order
         case creditId = "credit_id"
         case castId = "cast_id"
         case profilePath = "profile_path"
+    }
+
+    override class func primaryKey() -> String? {
+        return "id"
     }
 }
 
@@ -57,7 +65,7 @@ class Crew: Object, Decodable {
     dynamic var job: String = ""
     dynamic var name: String = ""
     dynamic var profilePath: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id, department, job, name
         case creditId = "credit_id"

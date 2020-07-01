@@ -46,7 +46,7 @@ class TMDBHomeViewController: UIViewController {
             var snapshot = self.dataSource.snapshot()
             snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .trending))
             snapshot.appendItems(Array(trendingResult.trending), toSection: .trending)
-            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
+            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: true)
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -100,7 +100,7 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularMovieResult.movies), toSection: .popular)
-                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
@@ -115,7 +115,7 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularTVShow.onTV), toSection: .popular)
-                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
@@ -130,7 +130,7 @@ extension TMDBHomeViewController {
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .popular))
                 snapshot.appendItems(Array(popularPeopleResult.peoples), toSection: .popular)
-                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }

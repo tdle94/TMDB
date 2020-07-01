@@ -12,8 +12,10 @@ import RealmSwift
 protocol TMDBLocalDataSourceProtocol {
     // movie
     func getMovie(id: Int) -> Movie?
+    func getMovieCredit(id: Int) -> CreditResult?
     func saveMovie(_ movie: Movie)
     func saveMovies(_ movies: List<Movie>)
+    func saveMovieCredit(_ creditResult: CreditResult)
     // tv show
     func getTVShow(id: Int) -> TVShow?
     func saveTVShows(_ tvShows: List<TVShow>)
@@ -54,6 +56,16 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         realm.beginWrite()
         realm.add(movies, update: .modified)
         try? realm.commitWrite()
+    }
+
+    func saveMovieCredit(_ creditResult: CreditResult) {
+        realm.beginWrite()
+        realm.add(creditResult, update: .modified)
+        try? realm.commitWrite()
+    }
+    
+    func getMovieCredit(id: Int) -> CreditResult? {
+        return realm.object(ofType: CreditResult.self, forPrimaryKey: id)
     }
 
     // MARK: - tv show

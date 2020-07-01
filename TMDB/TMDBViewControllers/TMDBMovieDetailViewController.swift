@@ -22,10 +22,8 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     
     enum MatchingMovieSection: String, CaseIterable {
-        case Cast = "Cast"
-        case Crew = "Crew"
-        case SimilarMovie = "Similar"
-        case RecommendMovie = "Recommend"
+        case Credit = "Credit"
+        case More = "More"
     }
 
     var movieId: Int?
@@ -98,15 +96,14 @@ class TMDBMovieDetailViewController: UIViewController {
                                                            userSetting: userSetting),
                                     localDataSource: TMDBLocalDataSource(),
                                     userSetting: userSetting)
-        
+
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
         configureProductionCompaniesDataSource()
         configureMatchingMoviesDataSource()
         getMovieDetail()
         getSimilarMovies()
-        getRecommendMovies()
-        getMovieCredit()
+        getMovieCast()
     }
 
     override func didReceiveMemoryWarning() {
@@ -127,21 +124,22 @@ class TMDBMovieDetailViewController: UIViewController {
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                          withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                          for: indexPath) as? TMDBPreviewHeaderView
-            header?.segmentControl.removeAllSegments()
+            header?.delegate = self
             if indexPath.section == 0 {
-                header?.label.text = NSLocalizedString("Crew", comment: "")
+                header?.label.text = NSLocalizedString("Credit", comment: "")
+                header?.segmentControl.setTitle(NSLocalizedString("Cast", comment: ""), forSegmentAt: 0)
+                header?.segmentControl.setTitle(NSLocalizedString("Crew", comment: ""), forSegmentAt: 1)
             } else if indexPath.section == 1 {
-                header?.label.text = NSLocalizedString("Cast", comment: "")
-            } else if indexPath.section == 2 {
-                header?.label.text = NSLocalizedString("Similar", comment: "")
-            } else {
-                header?.label.text = NSLocalizedString("Recommend", comment: "")
+                header?.label.text = NSLocalizedString("More", comment: "")
+                header?.segmentControl.setTitle(NSLocalizedString("Similar", comment: ""), forSegmentAt: 0)
+                header?.segmentControl.setTitle(NSLocalizedString("Recommend", comment: ""), forSegmentAt: 1)
             }
+    
             return header
         }
         
         var snapshot = matchingMoviesDataSource.snapshot()
-        snapshot.appendSections([.Cast, .Crew, .SimilarMovie, .RecommendMovie])
+        snapshot.appendSections([.Credit, .More])
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -163,12 +161,23 @@ class TMDBMovieDetailViewController: UIViewController {
 
     // MARK: - service call
     
-    func getMovieCredit() {
+    func getMovieCast() {
         guard let id = movieId else { return }
         repository.getMovieCredit(from: id) { result in
             switch result {
             case .success(let creditResult):
                 self.displayCast(creditResult)
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+            }
+        }
+    }
+    
+    func getMovieCrew() {
+        guard let id = movieId else { return }
+        repository.getMovieCredit(from: id) { result in
+            switch result {
+            case .success(let creditResult):
                 self.displayCrew(creditResult)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
@@ -235,52 +244,40 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
     // MARK: - display
-    
+
     func displayCast(_ credit: CreditResult) {
         var snapshot = matchingMoviesDataSource.snapshot()
-        if credit.cast.isEmpty {
-            snapshot.deleteSections([.Cast])
-            matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-            return
-        }
         let casts = Array(credit.cast)
-        snapshot.appendItems(casts, toSection: .Cast)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.appendItems(casts, toSection: .Credit)
+        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
-    
+
     func displayCrew(_ credit: CreditResult) {
         var snapshot = matchingMoviesDataSource.snapshot()
-        if credit.crew.isEmpty {
-            snapshot.deleteSections([.Crew])
-            matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-            return
-        }
         let crews = Array(credit.crew)
-        snapshot.appendItems(crews, toSection: .Crew)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.appendItems(crews, toSection: .Credit)
+        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayRecommendMovies(_ popularMovie: MovieResult) {
         var snapshot = matchingMoviesDataSource.snapshot()
-        if popularMovie.movies.isEmpty {
-            snapshot.deleteSections([.RecommendMovie])
-            matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-            return
-        }
         let recommendMovies = Array(popularMovie.movies)
-        snapshot.appendItems(recommendMovies, toSection: .RecommendMovie)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
+        snapshot.appendItems(recommendMovies, toSection: .More)
+        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
-    
+
     func displaySimilarMovies(_ popularMovie: MovieResult) {
         var snapshot = matchingMoviesDataSource.snapshot()
-        if popularMovie.movies.isEmpty {
-            snapshot.deleteSections([.SimilarMovie])
-            matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-            return
-        }
         let similarMovies = Array(popularMovie.movies)
-        snapshot.appendItems(similarMovies, toSection: .SimilarMovie)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
+        snapshot.appendItems(similarMovies, toSection: .More)
+        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -329,6 +326,20 @@ class TMDBMovieDetailViewController: UIViewController {
         movieDetail.displayRuntime(label: runtimeLabel, movie: movie)
         movieDetail.displayStatus(label: statusLabel, movie: movie)
         movieDetail.displayTitle(label: titleLabel, movie: movie)
+    }
+}
+
+extension TMDBMovieDetailViewController: TMDBPreviewSegmentControl {
+    func segmentControlSelected(at index: Int, text selected: String) {
+        if selected == NSLocalizedString("Cast", comment: "") {
+            getMovieCast()
+        } else if selected == NSLocalizedString("Crew", comment: "") {
+            getMovieCrew()
+        } else if selected == NSLocalizedString("Similar", comment: "") {
+            getSimilarMovies()
+        } else {
+            getRecommendMovies()
+        }
     }
 }
 

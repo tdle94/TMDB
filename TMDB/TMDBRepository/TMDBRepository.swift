@@ -43,10 +43,16 @@ class TMDBRepository: TMDBRepositoryProtocol {
     // MAKR: - movies
     
     func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void) {
+        if let creditResult = localDataSource.getMovieCredit(id: movieId) {
+            completion(.success(creditResult))
+            return
+        }
+
         services.getMovieCredit(from: movieId) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let credit):
+                    self.localDataSource.saveMovieCredit(credit)
                     completion(.success(credit))
                 case .failure(let error):
                     completion(.failure(error))

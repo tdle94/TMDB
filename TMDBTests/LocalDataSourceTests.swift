@@ -117,6 +117,16 @@ class LocalDataSourceTests: QuickSpec {
                 expect(testRealm.objects(TVShow.self).count).to(equal(1))
                 expect(testRealm.objects(People.self).count).to(equal(1))
             }
+            
+            it("add movie credit") {
+                // add
+                let credit = CreditResult()
+                localDataSource.saveMovieCredit(credit)
+                
+                expect(testRealm.objects(CreditResult.self).count).to(equal(1))
+                
+                expect(localDataSource.getMovieCredit(id: 0)).to(equal(credit))
+            }
         }
     }
 }

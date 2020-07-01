@@ -615,6 +615,11 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).getMovieCreditURLRequest(from: 3).thenReturn(request)
         }
 
+        stub(localDataSource) { stub in
+            when(stub).getMovieCredit(id: 3).thenReturn(nil)
+            when(stub).saveMovieCredit(any()).thenDoNothing()
+        }
+
         /*WHEN*/
         repository.getMovieCredit(from: 3) { result in
             XCTAssertNoThrow(try! result.get())
@@ -625,6 +630,8 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getMovieCreditURLRequest(from: 3)
+        verify(localDataSource).getMovieCredit(id: 3)
+        verify(localDataSource).saveMovieCredit(any())
     }
 
     // fail
@@ -644,6 +651,10 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).getMovieCreditURLRequest(from: 3).thenReturn(request)
         }
 
+        stub(localDataSource) { stub in
+            when(stub).getMovieCredit(id: 3).thenReturn(nil)
+        }
+
         /*WHEN*/
         repository.getMovieCredit(from: 3) { result in
             expectation.fulfill()
@@ -653,6 +664,29 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getMovieCreditURLRequest(from: 3)
+        verify(localDataSource).getMovieCredit(id: 3)
+    }
+
+    // get movie credit already in realm
+    func testGetMovieCreditInRealm() {
+        let expectation = self.expectation(description: "")
+        let creditResult = CreditResult()
+        creditResult.id = 3
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovieCredit(id: 3).thenReturn(creditResult)
+        }
+
+        /*WHEN*/
+        repository.getMovieCredit(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(localDataSource).getMovieCredit(id: 3)
     }
 
     // MARK - movie review

@@ -61,6 +61,8 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
     
     func displayRuntime(label: UILabel, movie: Movie) {
         var productionCountries = ""
+        var releaseDate = ""
+
         if movie.productionCountries.count == 1 {
             productionCountries = movie.productionCountries.first!.ios31661
         } else {
@@ -77,7 +79,11 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
             productionCountries = "(\(productionCountries))"
         }
         
-        label.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \u{2022} \(movie.releaseDate ?? "") \(productionCountries)",
+        if let date = movie.releaseDate, date != "" {
+            releaseDate = "\u{2022} \(date)"
+        }
+        
+        label.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \(releaseDate) \(productionCountries)",
                                                          attributes: [
                                                             NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
                                                             NSAttributedString.Key.foregroundColor: UIColor.darkGray

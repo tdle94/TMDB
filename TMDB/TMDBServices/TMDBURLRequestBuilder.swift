@@ -138,7 +138,8 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getMovieDetailURLRequest(id: Int, language: String? = "en-US") -> URLRequest {
         let queryItems = [
-            URLQueryItem(name: "language", value: language)
+            URLQueryItem(name: "language", value: language),
+            URLQueryItem(name: "append_to_response", value: "video")
         ]
         return buildURLRequest(path: "/3/movie/\(id)", queryItems: queryItems)
     }

@@ -10,13 +10,14 @@
 - Develop something fun out side of work
 - Boredom :blush:
 
-### Under development
+### Feature
+- Movies from different country, region and languages
 - [SDWebImage](https://github.com/SDWebImage/SDWebImage)
 - [RealmSwift](https://github.com/realm/realm-cocoa)
 - [Material Design](https://material.io/design)
 - Original Logo and Color are from [TMDB](https://www.themoviedb.org/about/logos-attribution) website
 
-![alt text](https://i.ibb.co/qmyM1hW/Webp-net-resizeimage.png) ![alt text](https://i.ibb.co/qWTFHPd/Webp-net-resizeimage-1.png)
+![alt text](https://i.ibb.co/qmyM1hW/Webp-net-resizeimage.png) ![alt text](https://i.ibb.co/qWTFHPd/Webp-net-resizeimage-1.png) ![alt text](https://i.ibb.co/LkSYDmX/Webp-net-resizeimage-2.png)
 
 ### TODO
 - Movie tab

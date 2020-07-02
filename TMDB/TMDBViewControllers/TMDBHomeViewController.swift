@@ -32,12 +32,6 @@ class TMDBHomeViewController: UIViewController {
 
     var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
 
-    lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { collectionView, indexPath, item in
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-        cell.configure(item: item, with: self.repository)
-        return cell
-    }
-
     lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { result in
         switch result {
         case .failure(let error):
@@ -147,20 +141,16 @@ extension TMDBHomeViewController {
 
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
     func segmentControlSelected(at index: Int, text selected: String) {
-        if index == 0 {
-            if selected == NSLocalizedString("Today", comment: "") {
-                getTrendingToday()
-            } else {
-                getPopularMovie()
-            }
-        } else if index == 1 {
-            if selected == NSLocalizedString("This Week", comment: "") {
-                getTrendingThisWeek()
-            } else {
-                getPopularTVShow()
-            }
-        } else {
+        if selected == NSLocalizedString("Today", comment: "") {
+            getTrendingToday()
+        } else if selected == NSLocalizedString("This Week", comment: "")  {
+            getTrendingThisWeek()
+        } else if selected == NSLocalizedString("Movies", comment: "") {
+            getPopularMovie()
+        } else if selected == NSLocalizedString("People", comment: "") {
             getPopularPeople()
+        } else {
+            getPopularTVShow()
         }
     }
 }
@@ -210,13 +200,13 @@ extension TMDBHomeViewController {
     // MARK: - collection view configuration
     func configureDataSource() {
 
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [unowned self] collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
             cell.configure(item: item, with: self.repository)
             return cell
         }
 
-        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+        dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath -> UICollectionReusableView? in
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                          withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                          for: indexPath) as? TMDBPreviewHeaderView

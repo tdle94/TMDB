@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 #if os(OSX)
     import AppKit
@@ -181,6 +182,22 @@ fileprivate extension Double {
 
 
 extension UIImage {
+
+    func createVideoThumbnail(from url: String) -> UIImage? {
+        guard let url = URL(string: url) else { return nil }
+        let asset = AVAsset(url: url)
+        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+        let time = CMTimeMakeWithSeconds(1.0, preferredTimescale: 600)
+        assetImgGenerate.appliesPreferredTrackTransform = true
+
+        do {
+            let image = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+            return UIImage(cgImage: image)
+        } catch {
+            return nil
+        }
+    }
+
     func resize(newWidth: CGFloat) -> UIImage? {
         let scale = newWidth / size.width
         let newHeight = size.height * scale

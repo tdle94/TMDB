@@ -12,8 +12,8 @@
 
 ### Feature
 - Movies from different country, region and languages
-- [SDWebImage](https://github.com/SDWebImage/SDWebImage)
-- [RealmSwift](https://github.com/realm/realm-cocoa)
+- [SDWebImage](https://github.com/SDWebImage/SDWebImage) for image loading & caching
+- [RealmSwift](https://github.com/realm/realm-cocoa) cache movie for faster access
 - [Material Design](https://material.io/design)
 - Original Logo and Color are from [TMDB](https://www.themoviedb.org/about/logos-attribution) website
 

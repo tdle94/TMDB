@@ -30,13 +30,19 @@ class VideoResult: Object, Decodable {
 @objcMembers
 class Video: Object, Decodable {
     dynamic var id: String = ""
-    dynamic var iso_639_1: String = ""
-    dynamic var iso_3166_1: String = ""
+    dynamic var iso6391: String = ""
+    dynamic var iso31661: String = ""
     dynamic var key: String = ""
     dynamic var name: String = ""
     dynamic var site: String = ""
     dynamic var size: Int = 0
     dynamic var type: String = ""
+
+    enum CodingKeys: String, CodingKey {
+        case id, key, name, site, size, type
+        case iso6391 = "iso_639_1"
+        case iso31661 = "iso_3166_1"
+    }
 
     override class func primaryKey() -> String? {
         return "id"

@@ -39,5 +39,7 @@ class TMDBUserSettingTests: XCTestCase {
         // return new image config
         setting.imageConfig = imageConfigResult
         XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)
+        XCTAssertNotNil(setting.getImageURL(from: "/owefijoweifj.png"))
+        XCTAssertNil(setting.getImageURL(from: "\\\\\\"))
     }
 }

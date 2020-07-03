@@ -53,8 +53,7 @@ class TMDBHomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder(),
-                                                           userSetting: userSetting),
+                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
                                     localDataSource: TMDBLocalDataSource(),
                                     userSetting: userSetting)
         repository.updateImageConfig()
@@ -197,9 +196,9 @@ extension TMDBHomeViewController {
     // MARK: - collection view configuration
     func configureDataSource() {
 
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [unowned self] collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-            cell.configure(item: item, with: self.repository)
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+            cell?.configure(item: item)
             return cell
         }
 

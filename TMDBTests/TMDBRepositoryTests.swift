@@ -21,7 +21,7 @@ class TMDBRepositoryTests: XCTestCase {
     let userDefault: UserDefaults = UserDefaults(suiteName: #file)!
     
     override func setUp() {
-        let service = TMDBServices(session: session, urlRequestBuilder: requestBuilder, userSetting: userSetting)
+        let service = TMDBServices(session: session, urlRequestBuilder: requestBuilder)
         repository = TMDBRepository(services: service, localDataSource: localDataSource, userSetting: userSetting)
         
         stub(userSetting) { stub in

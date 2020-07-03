@@ -106,8 +106,7 @@ class TMDBMovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder(),
-                                                           userSetting: userSetting),
+                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
                                     localDataSource: TMDBLocalDataSource(),
                                     userSetting: userSetting)
 
@@ -130,8 +129,8 @@ class TMDBMovieDetailViewController: UIViewController {
     
     func configureCreditMovieDataSource() {
         creditMovieDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-            cell.configure(item: item, with: self.repository)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+            cell?.configure(item: item)
             return cell
         }
         
@@ -151,8 +150,8 @@ class TMDBMovieDetailViewController: UIViewController {
 
     func configureMatchingMoviesDataSource() {
         matchingMoviesDataSource = UICollectionViewDiffableDataSource(collectionView: matchingMoviesCollectionView) { collectionView, indexPath, movie in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-            cell.configure(item: movie, with: self.repository)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+            cell?.configure(item: movie)
             return cell
         }
 
@@ -173,8 +172,8 @@ class TMDBMovieDetailViewController: UIViewController {
 
     func configureProductionCompaniesDataSource() {
         productionCompanyDataSource = UICollectionViewDiffableDataSource(collectionView: productionCompaniesCollectionView) { collectionView, indexPath, productionCompany in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-            cell.configure(item: productionCompany, with: self.repository)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+            cell?.configure(item: productionCompany)
             return cell
         }
         productionCompanyDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
@@ -296,7 +295,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     func getPosterImage(movie: Movie) {
-        if let posterPath = movie.posterPath, let url = self.repository.getImageURL(from: posterPath) {
+        if let posterPath = movie.posterPath, let url = userSetting.getImageURL(from: posterPath) {
             self.moviePosterImageView.sd_setImage(with: url) { image, _, _, _ in
                 image?.getColors { colors in
                     self.moviePosterImageView.layer.borderColor = colors?.secondary.cgColor
@@ -306,7 +305,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     
     func getBackdropImage(movie: Movie) {
-        if let backdropPath = movie.backdropPath, let url = self.repository.getImageURL(from: backdropPath) {
+        if let backdropPath = movie.backdropPath, let url = userSetting.getImageURL(from: backdropPath) {
             self.backdropImageView.sd_setImage(with: url) { image, _, _, _ in
                 image?.getColors() { colors in
                     self.backdropImageView.layer.borderColor = colors?.secondary.cgColor

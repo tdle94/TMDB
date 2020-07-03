@@ -11,6 +11,7 @@ import Foundation
 protocol TMDBUserSettingProtocol {
     var imageConfig: ImageConfigResult { get set }
     var userDefault: UserDefaults { get set }
+    func getImageURL(from path: String) -> URL?
 }
 
 struct TMDBUserSetting: TMDBUserSettingProtocol {
@@ -27,5 +28,13 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
         set {
             userDefault.set(try? PropertyListEncoder().encode(newValue), forKey: Constant.UserSetting.imageConfig)
         }
+    }
+
+    func getImageURL(from path: String) -> URL? {
+        let base = imageConfig.images.secureBaseURL
+        guard let size = imageConfig.images.posterSizes.last, let url = URL(string: "\(base)\(size)\(path)") else {
+            return nil
+        }
+        return url
     }
 }

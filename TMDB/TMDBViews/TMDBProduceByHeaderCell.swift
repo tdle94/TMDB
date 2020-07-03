@@ -9,11 +9,13 @@
 import Foundation
 import UIKit
 
-class TMDBProduceByHeaderCell: UICollectionReusableView {
-    weak var delegate: TMDBPreviewSegmentControl?
-    @IBOutlet weak var label: UILabel! {
-        didSet {
-            label.text = NSLocalizedString("Produce by", comment: "")
-        }
+class TMDBProduceByHeaderView: TMDBPreviewHeaderView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.text = NSLocalizedString("Trends", comment: "")
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }

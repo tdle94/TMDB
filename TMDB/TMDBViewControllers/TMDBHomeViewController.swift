@@ -26,8 +26,8 @@ class TMDBHomeViewController: UIViewController {
         didSet {
             collectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            collectionView.register(UINib(nibName: "TMDBTrendHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
-            collectionView.register(UINib(nibName: "TMDBPopularHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
+            collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
+            collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
         }
     }
 
@@ -206,14 +206,14 @@ extension TMDBHomeViewController {
             if indexPath.section == 0 {
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: Constant.Identifier.popularHeader,
-                                                                             for: indexPath) as? TMDBPopularHeaderCell
+                                                                             for: indexPath) as? TMDBPopularHeaderView
                 header?.delegate = self
                 return header
             }
 
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                          withReuseIdentifier: Constant.Identifier.trendHeader,
-                                                                         for: indexPath) as? TMDBTrendHeaderCell
+                                                                         for: indexPath) as? TMDBTrendHeaderView
             header?.delegate = self
             return header
         }

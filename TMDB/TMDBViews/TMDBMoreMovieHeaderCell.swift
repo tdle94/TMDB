@@ -9,25 +9,16 @@
 import Foundation
 import UIKit
 
-class TMDBMoreMovieHeaderCell: UICollectionReusableView {
-    weak var delegate: TMDBPreviewSegmentControl?
+class TMDBMoreMovieHeaderView: TMDBPreviewHeaderView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.text = NSLocalizedString("More", comment: "")
+        segmentControl.insertSegment(withTitle: NSLocalizedString("Similar", comment: ""), at: 0, animated: true)
+        segmentControl.insertSegment(withTitle: NSLocalizedString("Recommend", comment: ""), at: 1, animated: true)
+        segmentControl.selectedSegmentIndex = 0
+    }
     
-    @IBOutlet weak var label: UILabel! {
-        didSet {
-            label.text = NSLocalizedString("More", comment: "")
-        }
-    }
-
-    @IBOutlet weak var segmentControl: UISegmentedControl! {
-        didSet {
-            segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
-            segmentControl.setTitle(NSLocalizedString("Similar", comment: ""), forSegmentAt: 0)
-            segmentControl.setTitle(NSLocalizedString("Recommend", comment: ""), forSegmentAt: 1)
-        }
-    }
-
-    @IBAction func segmentControlAction(_ sender: UISegmentedControl) {
-        let text = sender.titleForSegment(at: sender.selectedSegmentIndex)!
-        delegate?.segmentControlSelected(at: sender.selectedSegmentIndex, text: text)
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }

@@ -9,25 +9,16 @@
 import Foundation
 import UIKit
 
-class TMDBCreditHeaderCell: UICollectionReusableView {
-    weak var delegate: TMDBPreviewSegmentControl?
-
-    @IBOutlet weak var label: UILabel! {
-        didSet {
-            label.text = NSLocalizedString("Credit", comment: "")
-        }
-    }
-
-    @IBOutlet weak var segmentControl: UISegmentedControl! {
-        didSet {
-            segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
-            segmentControl.setTitle(NSLocalizedString("Cast", comment: ""), forSegmentAt: 0)
-            segmentControl.setTitle(NSLocalizedString("Crew", comment: ""), forSegmentAt: 1)
-        }
+class TMDBCreditHeaderView: TMDBPreviewHeaderView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.text = NSLocalizedString("Credit", comment: "")
+        segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
+        segmentControl.insertSegment(withTitle: NSLocalizedString("Crew", comment: ""), at: 1, animated: true)
+        segmentControl.selectedSegmentIndex = 0
     }
     
-    @IBAction func segmentControlAction(_ sender: UISegmentedControl) {
-        let text = sender.titleForSegment(at: sender.selectedSegmentIndex)!
-        delegate?.segmentControlSelected(at: sender.selectedSegmentIndex, text: text)
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }

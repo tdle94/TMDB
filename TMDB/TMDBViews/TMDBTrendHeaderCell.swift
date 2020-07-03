@@ -9,22 +9,16 @@
 import Foundation
 import UIKit
 
-class TMDBTrendHeaderCell: UICollectionReusableView {
-    weak var delegate: TMDBPreviewSegmentControl?
-    @IBOutlet weak var label: UILabel! {
-        didSet {
-            label.text = NSLocalizedString("Trends", comment: "")
-        }
+class TMDBTrendHeaderView: TMDBPreviewHeaderView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.text = NSLocalizedString("Trends", comment: "")
+        segmentControl.insertSegment(withTitle: NSLocalizedString("Today", comment: ""), at: 0, animated: true)
+        segmentControl.insertSegment(withTitle: NSLocalizedString("This Week", comment: ""), at: 1, animated: true)
+        segmentControl.selectedSegmentIndex = 0
     }
-    @IBOutlet weak var segmentControl: UISegmentedControl! {
-        didSet {
-            segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
-            segmentControl.setTitle(NSLocalizedString("Today", comment: ""), forSegmentAt: 0)
-            segmentControl.setTitle(NSLocalizedString("This Week", comment: ""), forSegmentAt: 1)
-        }
-    }
-    @IBAction func segmentControlAction(_ sender: UISegmentedControl) {
-        let text = sender.titleForSegment(at: sender.selectedSegmentIndex)!
-        delegate?.segmentControlSelected(at: sender.selectedSegmentIndex, text: text)
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }

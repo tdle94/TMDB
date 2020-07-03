@@ -8,41 +8,17 @@
 import Foundation
 import UIKit
 
-protocol TMDBPreviewSegmentControl: AnyObject {
-    func segmentControlSelected(at index: Int, text selected: String)
-}
-
-class TMDBPopularHeaderCell: UICollectionReusableView {
-    weak var delegate: TMDBPreviewSegmentControl?
-    @IBOutlet weak var label: UILabel! {
-        didSet {
-            label.text = NSLocalizedString("Popular", comment: "")
-        }
+class TMDBPopularHeaderView: TMDBPreviewHeaderView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.text = NSLocalizedString("Popular", comment: "")
+        segmentControl.insertSegment(withTitle: NSLocalizedString("Movies", comment: ""), at: 0, animated: true)
+        segmentControl.insertSegment(withTitle: NSLocalizedString("TV Shows", comment: ""), at: 1, animated: true)
+        segmentControl.insertSegment(withTitle: NSLocalizedString("People", comment: ""), at: 2, animated: true)
+        segmentControl.selectedSegmentIndex = 0
     }
-    @IBOutlet weak var segmentControl: UISegmentedControl! {
-        didSet {
-            segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
-        }
-    }
-
-    @IBAction func segmentControlAction(_ sender: UISegmentedControl) {
-        let text = sender.titleForSegment(at: sender.selectedSegmentIndex)!
-        delegate?.segmentControlSelected(at: sender.selectedSegmentIndex, text: text)
-    }
-
-    func configure(from section: Int) {
-        if section == 1 {
-            segmentControl.removeSegment(at: 2, animated: false)
-            segmentControl.setTitle(NSLocalizedString("Today", comment: ""), forSegmentAt: 0)
-            segmentControl.setTitle(NSLocalizedString("This Week", comment: ""), forSegmentAt: 1)
-            label.text = NSLocalizedString("Trends", comment: "")
-        } else {
-            label.text = NSLocalizedString("Popular", comment: "")
-            segmentControl.setTitle(NSLocalizedString("Movies", comment: ""), forSegmentAt: 0)
-            segmentControl.setTitle(NSLocalizedString("TV Shows", comment: ""), forSegmentAt: 1)
-            if segmentControl.numberOfSegments == 2 {
-                segmentControl.insertSegment(withTitle: NSLocalizedString("People", comment: ""), at: 2, animated: false)
-            }
-        }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }

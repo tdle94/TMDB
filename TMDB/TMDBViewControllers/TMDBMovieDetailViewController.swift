@@ -45,8 +45,8 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
-    weak var creditHeader: TMDBCreditHeaderCell?
-    weak var moreMovieHeader: TMDBMoreMovieHeaderCell?
+    weak var creditHeader: TMDBCreditHeaderView?
+    weak var moreMovieHeader: TMDBMoreMovieHeaderView?
     @IBOutlet weak var matchingMovieCollectionViewHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var creditCollectionViewHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var overviewTopConstraint: NSLayoutConstraint!
@@ -78,21 +78,21 @@ class TMDBMovieDetailViewController: UIViewController {
         didSet {
             creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            creditCollectionView.register(UINib(nibName: "TMDBCreditHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            creditCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
         }
     }
     @IBOutlet weak var matchingMoviesCollectionView: UICollectionView! {
         didSet {
             matchingMoviesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            matchingMoviesCollectionView.register(UINib(nibName: "TMDBMoreMovieHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moreMovieHeader)
+            matchingMoviesCollectionView.register(TMDBMoreMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moreMovieHeader)
         }
     }
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
             productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.3, fractionHeight: 0.3)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            productionCompaniesCollectionView.register(UINib(nibName: "TMDBProduceByHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieProduceByHeader)
+            productionCompaniesCollectionView.register(TMDBProduceByHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieProduceByHeader)
         }
     }
     @IBOutlet weak var moviePosterImageView: UIImageView! {
@@ -135,10 +135,10 @@ class TMDBMovieDetailViewController: UIViewController {
         }
         
         creditMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-            self.creditHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBCreditHeaderCell) ??
+            self.creditHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBCreditHeaderView) ??
                              (collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                               withReuseIdentifier: Constant.Identifier.creditMovieHeader,
-                                                                              for: indexPath) as? TMDBCreditHeaderCell)
+                                                                              for: indexPath) as? TMDBCreditHeaderView)
             self.creditHeader?.delegate = self
             return self.creditHeader
         }
@@ -156,10 +156,10 @@ class TMDBMovieDetailViewController: UIViewController {
         }
 
         matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-            self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBMoreMovieHeaderCell) ??
+            self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBMoreMovieHeaderView) ??
                              (collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                               withReuseIdentifier: Constant.Identifier.moreMovieHeader,
-                                                                              for: indexPath) as? TMDBMoreMovieHeaderCell)
+                                                                              for: indexPath) as? TMDBMoreMovieHeaderView)
             self.moreMovieHeader?.delegate = self
 
             return self.moreMovieHeader
@@ -179,7 +179,7 @@ class TMDBMovieDetailViewController: UIViewController {
         productionCompanyDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                          withReuseIdentifier: Constant.Identifier.movieProduceByHeader,
-                                                                         for: indexPath) as? TMDBProduceByHeaderCell
+                                                                         for: indexPath) as? TMDBProduceByHeaderView
             return header
         }
     }

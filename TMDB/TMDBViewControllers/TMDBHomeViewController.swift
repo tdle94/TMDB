@@ -26,7 +26,8 @@ class TMDBHomeViewController: UIViewController {
         didSet {
             collectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+            collectionView.register(UINib(nibName: "TMDBTrendHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
+            collectionView.register(UINib(nibName: "TMDBPopularHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
         }
     }
 
@@ -59,6 +60,7 @@ class TMDBHomeViewController: UIViewController {
         repository.updateImageConfig()
         configureDataSource()
         configureLanguageAndRegion()
+        getPopularMovie()
         getTrendingToday()
     }
 
@@ -160,11 +162,6 @@ extension TMDBHomeViewController {
     @objc func configureLanguageAndRegion() {
         navigationItem.rightBarButtonItems = nil
 
-        // refresh and go select popular movie in a region
-        let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) as! TMDBPreviewHeaderView
-        header.segmentControl.selectedSegmentIndex = 0
-        header.segmentControlAction(header.segmentControl)
-
         // language
         let button = UIButton()
         button.setTitle(NSLocale.current.languageCode?.uppercased(), for: .normal)
@@ -207,24 +204,18 @@ extension TMDBHomeViewController {
         }
 
         dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath -> UICollectionReusableView? in
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                         withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                         for: indexPath) as? TMDBPreviewHeaderView
-            header?.delegate = self
-
-            if indexPath.section == 1 {
-                header?.segmentControl.removeSegment(at: 2, animated: false)
-                header?.segmentControl.setTitle(NSLocalizedString("Today", comment: ""), forSegmentAt: 0)
-                header?.segmentControl.setTitle(NSLocalizedString("This Week", comment: ""), forSegmentAt: 1)
-                header?.label.text = NSLocalizedString("Trends", comment: "")
-            } else {
-                header?.label.text = NSLocalizedString("Popular", comment: "")
-                header?.segmentControl.setTitle(NSLocalizedString("Movies", comment: ""), forSegmentAt: 0)
-                header?.segmentControl.setTitle(NSLocalizedString("TV Shows", comment: ""), forSegmentAt: 1)
-                if header?.segmentControl.numberOfSegments == 2 {
-                    header?.segmentControl.insertSegment(withTitle: NSLocalizedString("People", comment: ""), at: 2, animated: false)
-                }
+            if indexPath.section == 0 {
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.popularHeader,
+                                                                             for: indexPath) as? TMDBPopularHeaderCell
+                header?.delegate = self
+                return header
             }
+
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                         withReuseIdentifier: Constant.Identifier.trendHeader,
+                                                                         for: indexPath) as? TMDBTrendHeaderCell
+            header?.delegate = self
             return header
         }
 

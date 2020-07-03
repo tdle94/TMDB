@@ -26,17 +26,12 @@ class TMDBHomeViewController: UIViewController {
         didSet {
             collectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            collectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+            collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
+            collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
         }
     }
 
     var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
-
-    lazy var cellProvider: (UICollectionView, IndexPath, Object) -> UICollectionViewCell? = { collectionView, indexPath, item in
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-        cell.configure(item: item, with: self.repository)
-        return cell
-    }
 
     lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { result in
         switch result {
@@ -58,13 +53,13 @@ class TMDBHomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder(),
-                                                           userSetting: userSetting),
+                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
                                     localDataSource: TMDBLocalDataSource(),
                                     userSetting: userSetting)
         repository.updateImageConfig()
         configureDataSource()
         configureLanguageAndRegion()
+        getPopularMovie()
         getTrendingToday()
     }
 
@@ -147,20 +142,16 @@ extension TMDBHomeViewController {
 
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
     func segmentControlSelected(at index: Int, text selected: String) {
-        if index == 0 {
-            if selected == NSLocalizedString("Today", comment: "") {
-                getTrendingToday()
-            } else {
-                getPopularMovie()
-            }
-        } else if index == 1 {
-            if selected == NSLocalizedString("This Week", comment: "") {
-                getTrendingThisWeek()
-            } else {
-                getPopularTVShow()
-            }
-        } else {
+        if selected == NSLocalizedString("Today", comment: "") {
+            getTrendingToday()
+        } else if selected == NSLocalizedString("This Week", comment: "")  {
+            getTrendingThisWeek()
+        } else if selected == NSLocalizedString("Movies", comment: "") {
+            getPopularMovie()
+        } else if selected == NSLocalizedString("People", comment: "") {
             getPopularPeople()
+        } else {
+            getPopularTVShow()
         }
     }
 }
@@ -169,11 +160,6 @@ extension TMDBHomeViewController {
     // MARK: - configure navigation item
     @objc func configureLanguageAndRegion() {
         navigationItem.rightBarButtonItems = nil
-
-        // refresh and go select popular movie in a region
-        let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) as! TMDBPreviewHeaderView
-        header.segmentControl.selectedSegmentIndex = 0
-        header.segmentControlAction(header.segmentControl)
 
         // language
         let button = UIButton()
@@ -211,30 +197,24 @@ extension TMDBHomeViewController {
     func configureDataSource() {
 
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
-            cell.configure(item: item, with: self.repository)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+            cell?.configure(item: item)
             return cell
         }
 
-        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                         withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                         for: indexPath) as? TMDBPreviewHeaderView
-            header?.delegate = self
-
-            if indexPath.section == 1 {
-                header?.segmentControl.removeSegment(at: 2, animated: false)
-                header?.segmentControl.setTitle(NSLocalizedString("Today", comment: ""), forSegmentAt: 0)
-                header?.segmentControl.setTitle(NSLocalizedString("This Week", comment: ""), forSegmentAt: 1)
-                header?.label.text = NSLocalizedString("Trends", comment: "")
-            } else {
-                header?.label.text = NSLocalizedString("Popular", comment: "")
-                header?.segmentControl.setTitle(NSLocalizedString("Movies", comment: ""), forSegmentAt: 0)
-                header?.segmentControl.setTitle(NSLocalizedString("TV Shows", comment: ""), forSegmentAt: 1)
-                if header?.segmentControl.numberOfSegments == 2 {
-                    header?.segmentControl.insertSegment(withTitle: NSLocalizedString("People", comment: ""), at: 2, animated: false)
-                }
+        dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath -> UICollectionReusableView? in
+            if indexPath.section == 0 {
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.popularHeader,
+                                                                             for: indexPath) as? TMDBPopularHeaderView
+                header?.delegate = self
+                return header
             }
+
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                         withReuseIdentifier: Constant.Identifier.trendHeader,
+                                                                         for: indexPath) as? TMDBTrendHeaderView
+            header?.delegate = self
             return header
         }
 

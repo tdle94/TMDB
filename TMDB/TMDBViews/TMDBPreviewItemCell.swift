@@ -23,7 +23,9 @@ class TMDBPreviewItemCell: UICollectionViewCell {
     }
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var subTitle: UILabel!
-    
+
+    let userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+
     override func prepareForReuse() {
         super.prepareForReuse()
         stackViewTopConstraint.constant = 0
@@ -34,35 +36,35 @@ class TMDBPreviewItemCell: UICollectionViewCell {
         subTitle.text = ""
     }
 
-    private func getImage(from path: String?, repository: TMDBRepositoryProtocol) {
+    private func getImage(from path: String?) {
         guard
             let path = path,
-            let url = repository.getImageURL(from: path) else {
+            let url = userSetting.getImageURL(from: path) else {
                 imageView.image = UIImage(named: "NoImage")
                 return
         }
         imageView.sd_setImage(with: url, placeholderImage: nil, options: .init(rawValue: 0))
     }
 
-    func configure(item: Object, with repository: TMDBRepositoryProtocol) {
+    func configure(item: Object) {
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             ratingLabel.isHidden = false
             ratingLabel.rating = item.voteAverage
             stackViewTopConstraint.constant = 10
             title.text = item.originalTitle
             subTitle.text = item.releaseDate
-            getImage(from: item.posterPath, repository: repository)
+            getImage(from: item.posterPath)
         } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
             ratingLabel.isHidden = false
             ratingLabel.rating = item.voteAverage
             stackViewTopConstraint.constant = 10
             title.text = item.originalName
             subTitle.text = item.firstAirDate
-            getImage(from: item.posterPath, repository: repository)
+            getImage(from: item.posterPath)
         } else if let item = item as? People ?? (item as? Trending)?.people {
             title.text = item.name
             subTitle.text = item.knownForDepartment
-            getImage(from: item.profilePath, repository: repository)
+            getImage(from: item.profilePath)
         } else if let item = item as? ProductionCompany {
             title.textAlignment = .center
             title.text = ""
@@ -71,7 +73,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             imageView.layer.borderWidth = 0
             stackViewTopConstraint.constant = 0
             if let path = item.logoPath {
-                getImage(from: path, repository: repository)
+                getImage(from: path)
             } else {
                 stackViewTopConstraint.constant = -40
                 title.text = item.name
@@ -80,12 +82,12 @@ class TMDBPreviewItemCell: UICollectionViewCell {
         } else if let item = item as? Cast {
             title.text = item.name
             subTitle.text = item.character
-            getImage(from: item.profilePath, repository: repository)
+            getImage(from: item.profilePath)
         } else if let item = item as? Crew {
             title.text = item.name
             subTitle.text = item.job
             
-            getImage(from: item.profilePath, repository: repository)
+            getImage(from: item.profilePath)
         }
     }
 }

@@ -19,17 +19,17 @@ class TMDBServiceTests: XCTestCase {
     let userSetting = MockTMDBUserSettingProtocol()
     let userDefault: UserDefaults = UserDefaults(suiteName: #file)!
     var services: TMDBServices!
-    
+
     struct TrendingTimeMatchable: Matchable {
         var matcher: ParameterMatcher<TrendingTime>
         typealias MatchedType = TrendingTime
     }
-    
+
     struct TrendingMediaMatchable: Matchable {
         var matcher: ParameterMatcher<TrendingMediaType>
         typealias MatchedType = TrendingMediaType
     }
-    
+
     let todayTrending = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .today })
     let weekTrending = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .week })
 
@@ -39,7 +39,7 @@ class TMDBServiceTests: XCTestCase {
     let personTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .person })
 
     override func setUp() {
-        services = TMDBServices(session: session, urlRequestBuilder: urlRequestBuilder, userSetting: userSetting)
+        services = TMDBServices(session: session, urlRequestBuilder: urlRequestBuilder)
         stub(userSetting) { stub in
             when(stub).userDefault.get.thenReturn(userDefault)
         }

@@ -51,10 +51,6 @@ class Cast: Object, Decodable {
         case castId = "cast_id"
         case profilePath = "profile_path"
     }
-
-    override class func primaryKey() -> String? {
-        return "id"
-    }
 }
 
 @objcMembers

@@ -9,6 +9,5 @@
 import Foundation
 
 protocol TMDBImageService {
-    func getImageURL(from path: String) -> URL?
     func updateImageConfig(completion: @escaping (Result<ImageConfigResult, Error>) -> Void)
 }

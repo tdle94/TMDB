@@ -27,7 +27,6 @@ protocol TMDBRepositoryProtocol {
 
     // MARK: - image configuration
     func updateImageConfig()
-    func getImageURL(from path: String) -> URL?
 }
 
 class TMDBRepository: TMDBRepositoryProtocol {
@@ -197,9 +196,5 @@ class TMDBRepository: TMDBRepositoryProtocol {
                 }
             }
         }
-    }
-
-    func getImageURL(from path: String) -> URL? {
-        return services.getImageURL(from: path)
     }
 }

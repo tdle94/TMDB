@@ -34,13 +34,14 @@ class Movie: Object, Decodable {
     dynamic var belongToCollection: Collection?
     dynamic var region: String?
     dynamic var language: String?
+    dynamic var videos: VideoResult?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()
     let productionCountries: List<ProductionCountry> = List<ProductionCountry>()
 
     enum CodingKeys: String, CodingKey {
-        case id, adult, budget, genres, homepage, overview, popularity, revenue, runtime, status, tagline, title, video
+        case id, adult, budget, genres, homepage, overview, popularity, revenue, runtime, status, tagline, title, video, videos
         case backdropPath = "backdrop_path"
         case imdbId = "imdb_id"
         case originalLanguage = "original_language"
@@ -79,6 +80,7 @@ class Movie: Object, Decodable {
         tagline = try container.decodeIfPresent(String.self, forKey: .tagline)
         imdbId = try container.decodeIfPresent(String.self, forKey: .imdbId)
         belongToCollection = try container.decodeIfPresent(Collection.self, forKey: .belongToCollection)
+        videos = try container.decodeIfPresent(VideoResult.self, forKey: .videos)
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genres)

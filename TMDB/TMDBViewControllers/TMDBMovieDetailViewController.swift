@@ -20,18 +20,23 @@ class TMDBMovieDetailViewController: UIViewController {
     enum Section: String, CaseIterable {
         case ProductionCompanies = "Produced By"
     }
-    
+
     enum MatchingMovieSection: String, CaseIterable {
-        case Credit = "Credit"
         case More = "More"
     }
 
+    enum CreditMovieSection: String, CaseIterable {
+        case Credit = "Credit"
+    }
+
     var movieId: Int?
+    
+    var creditMovieDataSource: UICollectionViewDiffableDataSource<CreditMovieSection, Object>!
 
     var productionCompanyDataSource: UICollectionViewDiffableDataSource<Section, ProductionCompany>!
 
     var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Object>!
-    
+
     var movieDetail: TMDBMovieDetailDisplayProtocol = TMDBMovieDetailDisplay()
 
     // MARK: - repository
@@ -40,7 +45,10 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
-    @IBOutlet weak var matchingMoviesCollectionViewTopConstraint: NSLayoutConstraint!
+    weak var creditHeader: TMDBCreditHeaderCell?
+    weak var moreMovieHeader: TMDBMoreMovieHeaderCell?
+    @IBOutlet weak var matchingMovieCollectionViewHeightContraint: NSLayoutConstraint!
+    @IBOutlet weak var creditCollectionViewHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var overviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -66,18 +74,25 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
     @IBOutlet weak var generes: UILabel!
+    @IBOutlet weak var creditCollectionView: UICollectionView! {
+        didSet {
+            creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            creditCollectionView.register(UINib(nibName: "TMDBCreditHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+        }
+    }
     @IBOutlet weak var matchingMoviesCollectionView: UICollectionView! {
         didSet {
             matchingMoviesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+            matchingMoviesCollectionView.register(UINib(nibName: "TMDBMoreMovieHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moreMovieHeader)
         }
     }
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
             productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.3, fractionHeight: 0.3)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+            productionCompaniesCollectionView.register(UINib(nibName: "TMDBProduceByHeaderCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieProduceByHeader)
         }
     }
     @IBOutlet weak var moviePosterImageView: UIImageView! {
@@ -90,7 +105,6 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder(),
                                                            userSetting: userSetting),
@@ -101,8 +115,9 @@ class TMDBMovieDetailViewController: UIViewController {
         contentView.bringSubviewToFront(moviePosterImageView)
         configureProductionCompaniesDataSource()
         configureMatchingMoviesDataSource()
+        configureCreditMovieDataSource()
         getMovieDetail()
-        getSimilarMovies()
+        getSimilarMovies(shouldGetRecommend: true)
         getMovieCast()
     }
 
@@ -113,33 +128,46 @@ class TMDBMovieDetailViewController: UIViewController {
 
     // MARK: - configuration
     
+    func configureCreditMovieDataSource() {
+        creditMovieDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
+            cell.configure(item: item, with: self.repository)
+            return cell
+        }
+        
+        creditMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+            self.creditHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBCreditHeaderCell) ??
+                             (collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                              withReuseIdentifier: Constant.Identifier.creditMovieHeader,
+                                                                              for: indexPath) as? TMDBCreditHeaderCell)
+            self.creditHeader?.delegate = self
+            return self.creditHeader
+        }
+        
+        var snapshot = creditMovieDataSource.snapshot()
+        snapshot.appendSections([.Credit])
+        creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
     func configureMatchingMoviesDataSource() {
         matchingMoviesDataSource = UICollectionViewDiffableDataSource(collectionView: matchingMoviesCollectionView) { collectionView, indexPath, movie in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as! TMDBPreviewItemCell
             cell.configure(item: movie, with: self.repository)
             return cell
         }
-        
+
         matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                         withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                         for: indexPath) as? TMDBPreviewHeaderView
-            header?.delegate = self
-            if indexPath.section == 0 {
-                header?.label.text = NSLocalizedString("Credit", comment: "")
-                header?.segmentControl.setTitle(NSLocalizedString("Cast", comment: ""), forSegmentAt: 0)
-                header?.segmentControl.setTitle(NSLocalizedString("Crew", comment: ""), forSegmentAt: 1)
-            } else if indexPath.section == 1 {
-                header?.label.text = NSLocalizedString("More", comment: "")
-                header?.segmentControl.setTitle(NSLocalizedString("Similar", comment: ""), forSegmentAt: 0)
-                header?.segmentControl.setTitle(NSLocalizedString("Recommend", comment: ""), forSegmentAt: 1)
-            }
-    
-            return header
+            self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBMoreMovieHeaderCell) ??
+                             (collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                              withReuseIdentifier: Constant.Identifier.moreMovieHeader,
+                                                                              for: indexPath) as? TMDBMoreMovieHeaderCell)
+            self.moreMovieHeader?.delegate = self
+
+            return self.moreMovieHeader
         }
-        
+
         var snapshot = matchingMoviesDataSource.snapshot()
-        snapshot.appendSections([.Credit, .More])
+        snapshot.appendSections([.More])
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -151,10 +179,8 @@ class TMDBMovieDetailViewController: UIViewController {
         }
         productionCompanyDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                         withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                         for: indexPath) as? TMDBPreviewHeaderView
-            header?.label.text = NSLocalizedString("Produce by", comment: "")
-            header?.segmentControl.removeAllSegments()
+                                                                         withReuseIdentifier: Constant.Identifier.movieProduceByHeader,
+                                                                         for: indexPath) as? TMDBProduceByHeaderCell
             return header
         }
     }
@@ -163,10 +189,28 @@ class TMDBMovieDetailViewController: UIViewController {
     
     func getMovieCast() {
         guard let id = movieId else { return }
+
         repository.getMovieCredit(from: id) { result in
             switch result {
             case .success(let creditResult):
-                self.displayCast(creditResult)
+                if creditResult.cast.isEmpty && creditResult.crew.isEmpty {
+                    var snapshot = self.creditMovieDataSource.snapshot()
+                    snapshot.deleteSections([.Credit])
+                    snapshot.reloadSections([.Credit])
+                    self.creditCollectionViewHeightContraint.constant = 0
+                    self.creditMovieDataSource.apply(snapshot)
+                } else if creditResult.cast.isEmpty && !creditResult.crew.isEmpty {
+                    self.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
+                    self.creditHeader?.segmentControl.selectedSegmentIndex = 0
+                    self.creditCollectionView.collectionViewLayout.invalidateLayout()
+                    self.displayCrew(creditResult)
+                } else if creditResult.crew.isEmpty && !creditResult.cast.isEmpty {
+                    self.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
+                    self.creditCollectionView.collectionViewLayout.invalidateLayout()
+                    self.displayCast(creditResult)
+                } else {
+                    self.displayCast(creditResult)
+                }
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
@@ -200,24 +244,51 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
 
-    func getSimilarMovies() {
+    func getSimilarMovies(shouldGetRecommend: Bool = false) {
         guard let id = movieId else { return }
+
         repository.getSimilarMovies(from: id, page: 1) { result in
             switch result {
-            case .success(let movie):
-                self.displaySimilarMovies(movie)
+            case .success(let movieResult):
+                if movieResult.movies.isEmpty {
+                    self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
+                    self.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
+                    self.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+                    if shouldGetRecommend {
+                        self.getRecommendMovies(shouldDisplay: true)
+                    }
+                } else {
+                    self.displaySimilarMovies(movieResult)
+                    if shouldGetRecommend {
+                        self.getRecommendMovies(shouldDisplay: false)
+                    }
+                }
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
         }
     }
     
-    func getRecommendMovies() {
+    func getRecommendMovies(shouldDisplay: Bool = true) {
         guard let id = movieId else { return }
+
         repository.getRecommendMovies(from: id, page: 1) { result in
             switch result {
-            case .success(let movie):
-                self.displayRecommendMovies(movie)
+            case .success(let movieResult):
+                if movieResult.movies.isEmpty {
+                    if self.moreMovieHeader?.segmentControl.numberOfSegments == 2 {
+                        self.moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
+                        self.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+                    } else {
+                        self.matchingMovieCollectionViewHeightContraint.constant = 0
+                        self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
+                        var snapshot = self.matchingMoviesDataSource.snapshot()
+                        snapshot.deleteSections([.More])
+                        self.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+                    }
+                } else if shouldDisplay {
+                    self.displayRecommendMovies(movieResult)
+                }
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
@@ -246,21 +317,21 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - display
 
     func displayCast(_ credit: CreditResult) {
-        var snapshot = matchingMoviesDataSource.snapshot()
+        var snapshot = creditMovieDataSource.snapshot()
         let casts = Array(credit.cast)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
-        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+        creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayCrew(_ credit: CreditResult) {
-        var snapshot = matchingMoviesDataSource.snapshot()
+        var snapshot = creditMovieDataSource.snapshot()
         let crews = Array(credit.crew)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)
-        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+        creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayRecommendMovies(_ popularMovie: MovieResult) {
@@ -268,7 +339,7 @@ class TMDBMovieDetailViewController: UIViewController {
         let recommendMovies = Array(popularMovie.movies)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
         snapshot.appendItems(recommendMovies, toSection: .More)
-        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .right, animated: true)
+        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -277,7 +348,7 @@ class TMDBMovieDetailViewController: UIViewController {
         let similarMovies = Array(popularMovie.movies)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
         snapshot.appendItems(similarMovies, toSection: .More)
-        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .right, animated: true)
+        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -286,7 +357,6 @@ class TMDBMovieDetailViewController: UIViewController {
         if movie.productionCompanies.isEmpty {
             productionCompanyCollectionViewTopConstraint.constant = 0
             productionCompanyCollectionViewHeightConstraint.constant = 0
-            matchingMoviesCollectionViewTopConstraint.constant = 0
             return
         }
         let productionCompanies = Array(movie.productionCompanies)

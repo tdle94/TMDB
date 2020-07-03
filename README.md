@@ -8,7 +8,6 @@
 #### Motivation
 - There is no official mobile app for [TMDB](https://www.themoviedb.org)
 - Develop something fun out side of work
-- Boredom :blush:
 
 ### Feature
 - Movies from different country, region and languages

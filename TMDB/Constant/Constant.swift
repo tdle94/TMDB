@@ -11,9 +11,12 @@ import UIKit
 
 struct Constant {
     struct Identifier {
-        static let previewHeader = "PreviewHeader"
+        static let popularHeader = "PreviewHeader"
+        static let trendHeader = "TrendHeader"
+        static let moreMovieHeader = "MoreMovieHeader"
+        static let creditMovieHeader = "CreditMovieHeader"
+        static let movieProduceByHeader = "ProduceByHeader"
         static let preview = "Preview"
-        static let productionCompanyPreview = "ProductionCompanyPreview"
         static let countryCell = "CountryCell"
         static let languageCell = "LanguageCell"
         static let countrySearch = "CountrySearch"

@@ -463,18 +463,22 @@ extension TMDBMovieDetailViewController: TMDBPreviewSegmentControl {
 extension TMDBMovieDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? TMDBPreviewItemCell
-    
-        for item in matchingMoviesDataSource.snapshot().itemIdentifiers {
-            if let movie = item as? Movie, movie.originalTitle == cell?.title.text {
-                coordinator?.navigateToMovieDetail(id: movie.id)
-                break
+
+        if collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBMoreMovieHeaderView {
+            for item in matchingMoviesDataSource.snapshot().itemIdentifiers {
+                if let movie = item as? Movie, movie.originalTitle == cell?.title.text {
+                    coordinator?.navigateToMovieDetail(id: movie.id)
+                    break
+                }
             }
         }
 
-        for item in videoMovieDataSource.snapshot().itemIdentifiers {
-            if let video = item as? Video, let url = URL(string: "https://www.youtube.com/watch?v=\(video.key)") {
-                coordinator?.navigateToVideoPlayer(with: url)
-                break
+        if collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBVideoHeaderView {
+            for item in videoMovieDataSource.snapshot().itemIdentifiers {
+                if let video = item as? Video, let url = URL(string: "https://www.youtube.com/watch?v=\(video.key)") {
+                    coordinator?.navigateToVideoPlayer(with: url)
+                    break
+                }
             }
         }
     }

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import RealmSwift
-import SDWebImage
+import SDWebImage.SDImageCache
 
 class TMDBMovieDetailViewController: UIViewController {
     // MARK: - coordinator
@@ -17,7 +17,7 @@ class TMDBMovieDetailViewController: UIViewController {
 
     // MARK: - properties
 
-    enum Section: String, CaseIterable {
+    enum ProdcutionCompanySection: String, CaseIterable {
         case ProductionCompanies = "Produced By"
     }
 
@@ -28,12 +28,18 @@ class TMDBMovieDetailViewController: UIViewController {
     enum CreditMovieSection: String, CaseIterable {
         case Credit = "Credit"
     }
+    
+    enum VideoMovieSection: String, CaseIterable {
+        case Video = "Videos"
+    }
 
     var movieId: Int?
     
+    var videoMovieDataSource: UICollectionViewDiffableDataSource<VideoMovieSection, Object>!
+    
     var creditMovieDataSource: UICollectionViewDiffableDataSource<CreditMovieSection, Object>!
 
-    var productionCompanyDataSource: UICollectionViewDiffableDataSource<Section, ProductionCompany>!
+    var productionCompanyDataSource: UICollectionViewDiffableDataSource<ProdcutionCompanySection, ProductionCompany>!
 
     var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Object>!
 
@@ -47,6 +53,8 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - ui views
     weak var creditHeader: TMDBCreditHeaderView?
     weak var moreMovieHeader: TMDBMoreMovieHeaderView?
+    @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var videoCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var matchingMovieCollectionViewHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var creditCollectionViewHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var overviewTopConstraint: NSLayoutConstraint!
@@ -54,7 +62,6 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var productionCompanyCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var taglineTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewDetailTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var productionCompaniesCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var statusLabel: UILabel!
@@ -74,6 +81,13 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
     @IBOutlet weak var generes: UILabel!
+    @IBOutlet weak var videoCollectionView: UICollectionView! {
+        didSet {
+            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            videoCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+        }
+    }
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
             creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
@@ -112,6 +126,7 @@ class TMDBMovieDetailViewController: UIViewController {
 
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
+        configureVideoMovieDataSource()
         configureProductionCompaniesDataSource()
         configureMatchingMoviesDataSource()
         configureCreditMovieDataSource()
@@ -126,6 +141,23 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     // MARK: - configuration
+    
+    func configureVideoMovieDataSource() {
+        videoMovieDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+            cell?.configure(item: item)
+            return cell
+        }
+
+        videoMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.videoMovieHeader, for: indexPath) as? TMDBVideoHeaderView
+            return header
+        }
+        
+        var snapshot = videoMovieDataSource.snapshot()
+        snapshot.appendSections([.Video])
+        videoMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
     
     func configureCreditMovieDataSource() {
         creditMovieDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
@@ -237,6 +269,7 @@ class TMDBMovieDetailViewController: UIViewController {
                 self.displayProductionCompanies(movie: movie)
                 self.getPosterImage(movie: movie)
                 self.getBackdropImage(movie: movie)
+                self.displayVideo(movie.videos)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
@@ -313,7 +346,22 @@ class TMDBMovieDetailViewController: UIViewController {
             }
         }
     }
+
     // MARK: - display
+
+    func displayVideo(_ videoResult: VideoResult?) {
+        var snapshot = videoMovieDataSource.snapshot()
+        guard let videoResult = videoResult, !videoResult.videos.isEmpty else {
+            snapshot.deleteSections([.Video])
+            videoCollectionViewTopConstraint.constant = 0
+            videoCollectionViewHeightConstraint.constant = 0
+            videoMovieDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
+        let videos = Array(videoResult.videos)
+        snapshot.appendItems(videos)
+        videoMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
 
     func displayCast(_ credit: CreditResult) {
         var snapshot = creditMovieDataSource.snapshot()
@@ -367,7 +415,7 @@ class TMDBMovieDetailViewController: UIViewController {
     func displayMovieDetail(_ movie: Movie) {
         if movie.overview == nil || movie.overview == "" {
             overviewDetailTopConstraint.constant = 0
-            productionCompaniesCollectionViewTopConstraint.constant = 0
+            productionCompanyCollectionViewTopConstraint.constant = 0
             overviewTopConstraint.constant = 0
             overviewLabel.isHidden = true
             overviewDetail.isHidden = true
@@ -415,10 +463,17 @@ extension TMDBMovieDetailViewController: TMDBPreviewSegmentControl {
 extension TMDBMovieDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? TMDBPreviewItemCell
-        
+    
         for item in matchingMoviesDataSource.snapshot().itemIdentifiers {
             if let movie = item as? Movie, movie.originalTitle == cell?.title.text {
                 coordinator?.navigateToMovieDetail(id: movie.id)
+                break
+            }
+        }
+
+        for item in videoMovieDataSource.snapshot().itemIdentifiers {
+            if let video = item as? Video, let url = URL(string: "https://www.youtube.com/watch?v=\(video.key)") {
+                coordinator?.navigateToVideoPlayer(with: url)
                 break
             }
         }

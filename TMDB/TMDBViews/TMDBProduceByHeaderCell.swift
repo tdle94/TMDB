@@ -12,7 +12,7 @@ import UIKit
 class TMDBProduceByHeaderView: TMDBPreviewHeaderView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        label.text = NSLocalizedString("Trends", comment: "")
+        label.text = NSLocalizedString("Produce by", comment: "")
     }
     
     required init?(coder: NSCoder) {

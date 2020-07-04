@@ -20,8 +20,7 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        backgroundColor = Constant.Color.backgroundColor
+
         segmentControl.selectedSegmentTintColor = Constant.Color.primaryColor
         segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
         segmentControl.addTarget(self, action: #selector(segmentControlAction(_:)), for: .valueChanged)

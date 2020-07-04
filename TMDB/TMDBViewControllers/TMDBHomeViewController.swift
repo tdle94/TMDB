@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SDWebImage
+import SDWebImage.SDImageCache
 import RealmSwift
 
 class TMDBHomeViewController: UIViewController {

@@ -8,6 +8,18 @@
 
 import Foundation
 
+enum TrendingTime: String {
+    case today
+    case week
+}
+
+enum TrendingMediaType: String {
+    case all
+    case movie
+    case tv
+    case person
+}
+
 protocol TMDBTrendingService {
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 }

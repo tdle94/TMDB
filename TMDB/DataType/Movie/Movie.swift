@@ -38,13 +38,14 @@ class Movie: Object, Decodable {
     dynamic var recommendations: MovieResult?
     dynamic var similar: MovieResult?
     dynamic var credits: CreditResult?
+    dynamic var keywords: KeywordResult?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()
     let productionCountries: List<ProductionCountry> = List<ProductionCountry>()
 
     enum CodingKeys: String, CodingKey {
-        case id, adult, budget, genres, homepage, overview, popularity, revenue, runtime, status, tagline, title, video, videos, similar, recommendations, credits
+        case id, adult, budget, genres, homepage, overview, popularity, revenue, runtime, status, tagline, title, video, videos, similar, recommendations, credits, keywords
         case backdropPath = "backdrop_path"
         case imdbId = "imdb_id"
         case originalLanguage = "original_language"
@@ -87,6 +88,7 @@ class Movie: Object, Decodable {
         similar = try container.decodeIfPresent(MovieResult.self, forKey: .similar)
         recommendations = try container.decodeIfPresent(MovieResult.self, forKey: .recommendations)
         credits = try container.decodeIfPresent(CreditResult.self, forKey: .credits)
+        keywords = try container.decodeIfPresent(KeywordResult.self, forKey: .keywords)
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genres)
@@ -112,6 +114,17 @@ class Movie: Object, Decodable {
     override class func primaryKey() -> String? {
         return "id"
     }
+}
+
+@objcMembers
+class KeywordResult: Object, Decodable {
+    let keywords: List<Keyword> = List()
+}
+
+@objcMembers
+class Keyword: Object, Decodable {
+    dynamic var id: Int = 0
+    dynamic var name: String = ""
 }
 
 @objcMembers

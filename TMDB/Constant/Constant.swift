@@ -21,6 +21,7 @@ struct Constant {
         static let countryCell = "CountryCell"
         static let languageCell = "LanguageCell"
         static let countrySearch = "CountrySearch"
+        static let keywordMovieCell = "KeywordMovieCell"
     }
     struct ViewControllerIdentifier {
         static let tmdbSearchController = "TMDBCountrySearchResultController"

@@ -32,6 +32,10 @@ class TMDBMovieDetailViewController: UIViewController {
     enum VideoMovieSection: String, CaseIterable {
         case Video = "Videos"
     }
+    
+    enum KeywordMovieSection: String, CaseIterable {
+        case Keyword = "Keyword"
+    }
 
     var movieId: Int?
     
@@ -42,6 +46,8 @@ class TMDBMovieDetailViewController: UIViewController {
     var productionCompanyDataSource: UICollectionViewDiffableDataSource<ProdcutionCompanySection, ProductionCompany>!
 
     var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Object>!
+
+    var keywordMovieDataSource: UICollectionViewDiffableDataSource<KeywordMovieSection, Keyword>!
 
     var movieDetail: TMDBMovieDetailDisplayProtocol = TMDBMovieDetailDisplay()
 
@@ -81,6 +87,13 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
     @IBOutlet weak var generes: UILabel!
+    @IBOutlet weak var keywordCollectionView: UICollectionView! {
+        didSet {
+            keywordCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.3, fractionHeight: 0.4)
+            keywordCollectionView.register(TMDBMovieKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordMovieCell)
+            keywordCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+        }
+    }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
             videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
@@ -130,6 +143,7 @@ class TMDBMovieDetailViewController: UIViewController {
         configureProductionCompaniesDataSource()
         configureMatchingMoviesDataSource()
         configureCreditMovieDataSource()
+       // configureKeywordDataSource()
         getMovieDetail()
     }
 
@@ -139,7 +153,25 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     // MARK: - configuration
-    
+
+    func configureKeywordDataSource() {
+        keywordMovieDataSource = UICollectionViewDiffableDataSource(collectionView: keywordCollectionView) { collectionView, indexPath, item in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordMovieCell, for: indexPath) as? TMDBMovieKeywordCell
+            cell?.configure(keyword: item)
+            return cell
+        }
+        
+        keywordMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.videoMovieHeader, for: indexPath) as? TMDBVideoHeaderView
+            header?.label.text = ""
+            return header
+        }
+        
+        var snapshot = keywordMovieDataSource.snapshot()
+        snapshot.appendSections([.Keyword])
+        keywordMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
     func configureVideoMovieDataSource() {
         videoMovieDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
@@ -264,6 +296,7 @@ class TMDBMovieDetailViewController: UIViewController {
                 self.displayVideo(movie.videos)
                 self.displayCredit(movie)
                 self.displayMatchingMovie(movie)
+               // self.displayKeyword(movie)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
@@ -291,6 +324,13 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     // MARK: - display
+
+    func displayKeyword(_ movie: Movie) {
+        guard let keywords = movie.keywords?.keywords else { return }
+        var snapshot = keywordMovieDataSource.snapshot()
+        snapshot.appendItems(Array(keywords))
+        keywordMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
     
     func displayMatchingMovie(_ movie: Movie) {
         guard let similar = movie.similar, let recommend = movie.recommendations else { return }
@@ -465,3 +505,4 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
         }
     }
 }
+

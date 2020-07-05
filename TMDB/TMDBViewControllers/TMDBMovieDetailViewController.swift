@@ -131,8 +131,6 @@ class TMDBMovieDetailViewController: UIViewController {
         configureMatchingMoviesDataSource()
         configureCreditMovieDataSource()
         getMovieDetail()
-        getSimilarMovies(shouldGetRecommend: true)
-        getMovieCast()
     }
 
     override func didReceiveMemoryWarning() {
@@ -220,42 +218,36 @@ class TMDBMovieDetailViewController: UIViewController {
     
     func getMovieCast() {
         guard let id = movieId else { return }
-
-        repository.getMovieCredit(from: id) { result in
-            switch result {
-            case .success(let creditResult):
-                if creditResult.cast.isEmpty && creditResult.crew.isEmpty {
-                    var snapshot = self.creditMovieDataSource.snapshot()
-                    snapshot.deleteSections([.Credit])
-                    snapshot.reloadSections([.Credit])
-                    self.creditCollectionViewHeightContraint.constant = 0
-                    self.creditMovieDataSource.apply(snapshot)
-                } else if creditResult.cast.isEmpty && !creditResult.crew.isEmpty {
-                    self.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
-                    self.creditHeader?.segmentControl.selectedSegmentIndex = 0
-                    self.creditCollectionView.collectionViewLayout.invalidateLayout()
-                    self.displayCrew(creditResult)
-                } else if creditResult.crew.isEmpty && !creditResult.cast.isEmpty {
-                    self.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
-                    self.creditCollectionView.collectionViewLayout.invalidateLayout()
-                    self.displayCast(creditResult)
-                } else {
-                    self.displayCast(creditResult)
-                }
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            }
-        }
+        let casts = repository.getMovieCast(from: id)
+        displayCast(casts)
     }
     
     func getMovieCrew() {
         guard let id = movieId else { return }
-        repository.getMovieCredit(from: id) { result in
+        let crews = repository.getMovieCrew(from: id)
+        displayCrew(crews)
+    }
+    
+    func getSimilarMovies() {
+        guard let id = movieId else { return }
+        repository.getSimilarMovies(from: id, page: 1) { result in
             switch result {
-            case .success(let creditResult):
-                self.displayCrew(creditResult)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
+            case .success(let similar):
+                self.displaySimilarMovies(Array(similar.movies))
+            }
+        }
+    }
+    
+    func getRecommendMovies() {
+        guard let id = movieId else { return }
+        repository.getRecommendMovies(from: id, page: 1) { result in
+            switch result {
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+            case .success(let recommend):
+                self.displayRecommendMovies(Array(recommend.movies))
             }
         }
     }
@@ -270,56 +262,44 @@ class TMDBMovieDetailViewController: UIViewController {
                 self.getPosterImage(movie: movie)
                 self.getBackdropImage(movie: movie)
                 self.displayVideo(movie.videos)
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            }
-        }
-    }
 
-    func getSimilarMovies(shouldGetRecommend: Bool = false) {
-        guard let id = movieId else { return }
-
-        repository.getSimilarMovies(from: id, page: 1) { result in
-            switch result {
-            case .success(let movieResult):
-                if movieResult.movies.isEmpty {
-                    self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
-                    self.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
-                    self.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-                    if shouldGetRecommend {
-                        self.getRecommendMovies(shouldDisplay: true)
-                    }
-                } else {
-                    self.displaySimilarMovies(movieResult)
-                    if shouldGetRecommend {
-                        self.getRecommendMovies(shouldDisplay: false)
+                
+                if let credit = movie.credits {
+                    if credit.cast.isEmpty, !credit.crew.isEmpty {
+                        self.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
+                        self.creditHeader?.segmentControl.selectedSegmentIndex = 0
+                        self.creditCollectionView.collectionViewLayout.invalidateLayout()
+                        self.displayCrew(Array(credit.crew))
+                    } else if credit.crew.isEmpty, !credit.cast.isEmpty {
+                        self.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
+                        self.creditCollectionView.collectionViewLayout.invalidateLayout()
+                        self.displayCast(Array(credit.cast))
+                    } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
+                        self.displayCast(Array(credit.cast))
+                    } else {
+                        var snapshot = self.creditMovieDataSource.snapshot()
+                        snapshot.deleteSections([.Credit])
+                        self.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
                     }
                 }
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            }
-        }
-    }
-    
-    func getRecommendMovies(shouldDisplay: Bool = true) {
-        guard let id = movieId else { return }
-
-        repository.getRecommendMovies(from: id, page: 1) { result in
-            switch result {
-            case .success(let movieResult):
-                if movieResult.movies.isEmpty {
-                    if self.moreMovieHeader?.segmentControl.numberOfSegments == 2 {
+                
+                if let similar = movie.similar, let recommend = movie.recommendations {
+                    if similar.movies.isEmpty, !recommend.movies.isEmpty {
+                        self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
+                        self.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
+                        self.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+                        self.displayRecommendMovies(Array(recommend.movies))
+                    } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
                         self.moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
                         self.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+                        self.displaySimilarMovies(Array(similar.movies))
+                    } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
+                        self.displaySimilarMovies(Array(similar.movies))
                     } else {
-                        self.matchingMovieCollectionViewHeightContraint.constant = 0
-                        self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
                         var snapshot = self.matchingMoviesDataSource.snapshot()
                         snapshot.deleteSections([.More])
                         self.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
                     }
-                } else if shouldDisplay {
-                    self.displayRecommendMovies(movieResult)
                 }
             case .failure(let error):
                 debugPrint(error.localizedDescription)
@@ -363,36 +343,32 @@ class TMDBMovieDetailViewController: UIViewController {
         videoMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayCast(_ credit: CreditResult) {
+    func displayCast(_ casts: [Cast]) {
         var snapshot = creditMovieDataSource.snapshot()
-        let casts = Array(credit.cast)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
         creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayCrew(_ credit: CreditResult) {
+    func displayCrew(_ crews: [Crew]) {
         var snapshot = creditMovieDataSource.snapshot()
-        let crews = Array(credit.crew)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)
         creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayRecommendMovies(_ popularMovie: MovieResult) {
+    func displayRecommendMovies(_ recommendMovies: [Movie]) {
         var snapshot = matchingMoviesDataSource.snapshot()
-        let recommendMovies = Array(popularMovie.movies)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
         snapshot.appendItems(recommendMovies, toSection: .More)
         matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displaySimilarMovies(_ popularMovie: MovieResult) {
+    func displaySimilarMovies(_ similarMovies: [Movie]) {
         var snapshot = matchingMoviesDataSource.snapshot()
-        let similarMovies = Array(popularMovie.movies)
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
         snapshot.appendItems(similarMovies, toSection: .More)
         matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)

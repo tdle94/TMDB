@@ -262,45 +262,8 @@ class TMDBMovieDetailViewController: UIViewController {
                 self.getPosterImage(movie: movie)
                 self.getBackdropImage(movie: movie)
                 self.displayVideo(movie.videos)
-
-                
-                if let credit = movie.credits {
-                    if credit.cast.isEmpty, !credit.crew.isEmpty {
-                        self.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
-                        self.creditHeader?.segmentControl.selectedSegmentIndex = 0
-                        self.creditCollectionView.collectionViewLayout.invalidateLayout()
-                        self.displayCrew(Array(credit.crew))
-                    } else if credit.crew.isEmpty, !credit.cast.isEmpty {
-                        self.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
-                        self.creditCollectionView.collectionViewLayout.invalidateLayout()
-                        self.displayCast(Array(credit.cast))
-                    } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
-                        self.displayCast(Array(credit.cast))
-                    } else {
-                        var snapshot = self.creditMovieDataSource.snapshot()
-                        snapshot.deleteSections([.Credit])
-                        self.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
-                    }
-                }
-                
-                if let similar = movie.similar, let recommend = movie.recommendations {
-                    if similar.movies.isEmpty, !recommend.movies.isEmpty {
-                        self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
-                        self.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
-                        self.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-                        self.displayRecommendMovies(Array(recommend.movies))
-                    } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
-                        self.moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
-                        self.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-                        self.displaySimilarMovies(Array(similar.movies))
-                    } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
-                        self.displaySimilarMovies(Array(similar.movies))
-                    } else {
-                        var snapshot = self.matchingMoviesDataSource.snapshot()
-                        snapshot.deleteSections([.More])
-                        self.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-                    }
-                }
+                self.displayCredit(movie)
+                self.displayMatchingMovie(movie)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
@@ -328,6 +291,49 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     // MARK: - display
+    
+    func displayMatchingMovie(_ movie: Movie) {
+        guard let similar = movie.similar, let recommend = movie.recommendations else { return }
+
+        if similar.movies.isEmpty, !recommend.movies.isEmpty {
+            self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
+            self.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
+            matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+            displayRecommendMovies(Array(recommend.movies))
+        } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
+            moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
+            matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+            displaySimilarMovies(Array(similar.movies))
+        } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
+            displaySimilarMovies(Array(similar.movies))
+        } else {
+            var snapshot = self.matchingMoviesDataSource.snapshot()
+            snapshot.deleteSections([.More])
+            matchingMovieCollectionViewHeightContraint.constant = 0
+            matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+
+    func displayCredit(_ movie: Movie) {
+        guard let credit = movie.credits else { return }
+
+        if credit.cast.isEmpty, !credit.crew.isEmpty {
+            creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
+            creditHeader?.segmentControl.selectedSegmentIndex = 0
+            creditCollectionView.collectionViewLayout.invalidateLayout()
+            displayCrew(Array(credit.crew))
+        } else if credit.crew.isEmpty, !credit.cast.isEmpty {
+            creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
+            creditCollectionView.collectionViewLayout.invalidateLayout()
+            displayCast(Array(credit.cast))
+        } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
+            displayCast(Array(credit.cast))
+        } else {
+            var snapshot = self.creditMovieDataSource.snapshot()
+            snapshot.deleteSections([.Credit])
+            creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
 
     func displayVideo(_ videoResult: VideoResult?) {
         var snapshot = videoMovieDataSource.snapshot()

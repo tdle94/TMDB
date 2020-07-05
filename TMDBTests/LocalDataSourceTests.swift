@@ -49,21 +49,17 @@ class LocalDataSourceTests: QuickSpec {
                 expect(testRealm.objects(Movie.self).count).to(equal(1))
             }
             
-            it("add popular movie") {
+            it("add pmovie") {
                 // add
                 expect(testRealm.objects(Movie.self).count).to(equal(0))
-                let popularMovies: List<Movie> = List()
                 let movie = Movie()
-
-                popularMovies.append(movie)
-                localDataSource.saveMovies(popularMovies)
+                localDataSource.saveMovie(movie)
                 expect(testRealm.objects(Movie.self).count).to(equal(1))
             }
 
             it("add tv shows") {
                 // add
                 expect(testRealm.objects(TVShow.self).count).to(equal(0))
-                let tvShows: List<TVShow> = List()
                 let tvShow1 = TVShow()
                 let tvShow2 = TVShow()
                 let tvShow3 = TVShow()
@@ -71,8 +67,7 @@ class LocalDataSourceTests: QuickSpec {
                 tvShow2.id = 2
                 tvShow3.id = 3
 
-                tvShows.append(tvShow1)
-                localDataSource.saveTVShows(tvShows)
+                localDataSource.saveTVShow(tvShow1)
                 localDataSource.saveTVShow(tvShow2)
                 localDataSource.saveTVShow(tvShow3)
                 expect(testRealm.objects(TVShow.self).count).to(equal(3))
@@ -82,50 +77,58 @@ class LocalDataSourceTests: QuickSpec {
             it("add people") {
                 // add
                 expect(testRealm.objects(People.self).count).to(equal(0))
-                let people: List<People> = List()
                 let person1 = People()
                 let person2 = People()
-                person2.id = 3
+                person2.id = 1
 
-                people.append(person1)
-                localDataSource.savePeople(people)
-                localDataSource.savePerson(person1) // save duplicate
+                localDataSource.savePerson(person1)
                 localDataSource.savePerson(person2)
                 expect(testRealm.objects(People.self).count).to(equal(2))
+                expect(localDataSource.getPerson(id: 1)).to(equal(person2))
             }
             
-            it("add trending") {
-                // add
-                let trendingResult = TrendingResult()
-                let movie = Movie()
-                let person = People()
-                let tvShow = TVShow()
-                let trending1 = Trending()
-                let trending2 = Trending()
-                let trending3 = Trending()
-                trending1.people = person
-                trending2.tv = tvShow
-                trending3.movie = movie
-
-                trendingResult.trending.append(trending1)
-                trendingResult.trending.append(trending2)
-                trendingResult.trending.append(trending3)
+            it("save similar movie") {
+                let result = MovieResult()
+                let similarMovie = Movie()
+                similarMovie.id = 3
+                result.movies.append(similarMovie)
                 
-                localDataSource.saveTrendings(trendingResult.trending)
+                let movieInRealm = Movie()
+                movieInRealm.id = 2
+                movieInRealm.similar = MovieResult()
+                movieInRealm.similar?.movies.append(Movie())
+                movieInRealm.similar?.totalPages = 2
+                movieInRealm.similar?.totalResults = 2
+                movieInRealm.similar?.page = 1
                 
-                expect(testRealm.objects(Movie.self).count).to(equal(1))
-                expect(testRealm.objects(TVShow.self).count).to(equal(1))
-                expect(testRealm.objects(People.self).count).to(equal(1))
+                localDataSource.saveMovie(movieInRealm)
+                expect(localDataSource.getMovie(id: 2)).to(equal(movieInRealm))
+                
+                localDataSource.saveSimilarMovie(result.movies, to: movieInRealm)
+                expect(localDataSource.getMovie(id: 2)?.similar?.movies.count).to(equal(2))
+                expect(localDataSource.getMovie(id: 2)?.similar?.page).to(equal(2))
             }
             
-            it("add movie credit") {
-                // add
-                let credit = CreditResult()
-                localDataSource.saveMovieCredit(credit)
+            it("save recommend movie") {
+                let result = MovieResult()
+                let recommendMovie = Movie()
+                recommendMovie.id = 3
+                result.movies.append(recommendMovie)
                 
-                expect(testRealm.objects(CreditResult.self).count).to(equal(1))
+                let movieInRealm = Movie()
+                movieInRealm.id = 2
+                movieInRealm.recommendations = MovieResult()
+                movieInRealm.recommendations?.movies.append(Movie())
+                movieInRealm.recommendations?.totalPages = 2
+                movieInRealm.recommendations?.totalResults = 2
+                movieInRealm.recommendations?.page = 1
                 
-                expect(localDataSource.getMovieCredit(id: 0)).to(equal(credit))
+                localDataSource.saveMovie(movieInRealm)
+                expect(localDataSource.getMovie(id: 2)).to(equal(movieInRealm))
+                
+                localDataSource.saveRecommendMovie(result.movies, to: movieInRealm)
+                expect(localDataSource.getMovie(id: 2)?.recommendations?.movies.count).to(equal(2))
+                expect(localDataSource.getMovie(id: 2)?.recommendations?.page).to(equal(2))
             }
         }
     }

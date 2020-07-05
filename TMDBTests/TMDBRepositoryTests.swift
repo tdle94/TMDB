@@ -174,7 +174,6 @@ class TMDBRepositoryTests: XCTestCase {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
-        let movieSaveMatcher: ParameterMatcher<List<Movie>> = ParameterMatcher()
 
         /*GIVEN*/
         stub(session) { stub in
@@ -185,10 +184,6 @@ class TMDBRepositoryTests: XCTestCase {
 
         stub(requestBuilder) { stub in
             when(stub).getPopularMovieURLRequest(page: 1, language: any(), region: any()).thenReturn(request)
-        }
-
-        stub(localDataSource) { stub in
-            when(stub).saveMovies(movieSaveMatcher).thenDoNothing()
         }
 
         /*WHEN*/
@@ -248,10 +243,6 @@ class TMDBRepositoryTests: XCTestCase {
 
         stub(requestBuilder) { stub in
             when(stub).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
-        }
-        
-        stub(localDataSource) { stub in
-            when(stub).saveTVShows(any()).thenDoNothing()
         }
 
         /*WHEN*/
@@ -313,10 +304,6 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
-        
-        stub(localDataSource) { stub in
-            when(stub).savePeople(any()).thenDoNothing()
-        }
 
         /*WHEN*/
         repository.getPopularPeople(page: 1) { result in
@@ -372,10 +359,6 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.success(TrendingResult()))
             }
-        }
-        
-        stub(localDataSource) { stub in
-            when(stub).saveTrendings(any()).thenDoNothing()
         }
 
         stub(requestBuilder) { stub in
@@ -543,7 +526,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     // MARK: - similar movies
     
-    // success
+    // no movie in realm, service call, success
     func testSimilarMovieSuccess() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
@@ -559,6 +542,10 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(nil)
+        }
 
         /*WHEN*/
         repository.getSimilarMovies(from: 3, page: 1) { result in
@@ -570,9 +557,10 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        verify(localDataSource).getMovie(id: 3)
     }
     
-    // fail
+    // no movie in realm, service call, fail
     func testSimilarMovieFailure() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
@@ -588,6 +576,10 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(nil)
+        }
 
         /*WHEN*/
         repository.getSimilarMovies(from: 3, page: 1) { result in
@@ -598,11 +590,157 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        verify(localDataSource).getMovie(id: 3)
+    }
+    
+    func testSimilarMovieInRealmOldPage() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        let movieInRealm = Movie()
+
+        let result = MovieResult()
+        let newMovie = Movie()
+        
+        newMovie.id = 2
+        result.movies.append(newMovie)
+        
+        movieInRealm.similar = MovieResult()
+        movieInRealm.similar?.totalResults = 2
+        movieInRealm.similar?.page = 1
+        movieInRealm.similar?.totalPages = 2
+        movieInRealm.similar?.movies.append(Movie())
+        
+        let newListMovieMatcher = ParameterMatcher<List<Movie>>(matchesFunction: { $0 == result.movies })
+        let movieInRealmMatcher = ParameterMatcher<Movie>(matchesFunction: { $0 == movieInRealm })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(result))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+               
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movieInRealm)
+            when(stub).saveSimilarMovie(newListMovieMatcher, to: movieInRealmMatcher).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.getSimilarMovies(from: 3, page: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testSimilarMovieInRealmNewPageSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        let movieInRealm = Movie()
+
+        let result = MovieResult()
+        let newMovie = Movie()
+        
+        newMovie.id = 2
+        result.movies.append(newMovie)
+        
+        movieInRealm.similar = MovieResult()
+        movieInRealm.similar?.totalResults = 2
+        movieInRealm.similar?.page = 1
+        movieInRealm.similar?.totalPages = 2
+        movieInRealm.similar?.movies.append(Movie())
+        
+        let newListMovieMatcher = ParameterMatcher<List<Movie>>(matchesFunction: { $0 == result.movies })
+        let movieInRealmMatcher = ParameterMatcher<Movie>(matchesFunction: { $0 == movieInRealm })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(result))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+               
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movieInRealm)
+            when(stub).saveSimilarMovie(newListMovieMatcher, to: movieInRealmMatcher).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.getSimilarMovies(from: 3, page: 2) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(localDataSource).saveSimilarMovie(newListMovieMatcher, to: movieInRealmMatcher)
+    }
+    
+    func testSimilarMovieInRealmNewPageFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        let movieInRealm = Movie()
+
+        let result = MovieResult()
+        let newMovie = Movie()
+        
+        newMovie.id = 2
+        result.movies.append(newMovie)
+        
+        movieInRealm.similar = MovieResult()
+        movieInRealm.similar?.totalResults = 2
+        movieInRealm.similar?.page = 1
+        movieInRealm.similar?.totalPages = 2
+        movieInRealm.similar?.movies.append(Movie())
+        
+        let newListMovieMatcher = ParameterMatcher<List<Movie>>(matchesFunction: { $0 == result.movies })
+        let movieInRealmMatcher = ParameterMatcher<Movie>(matchesFunction: { $0 == movieInRealm })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 400, userInfo: nil)))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+               
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movieInRealm)
+            when(stub).saveSimilarMovie(newListMovieMatcher, to: movieInRealmMatcher).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.getSimilarMovies(from: 3, page: 2) { result in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
     }
     
     // MARK: - recommend movies
     
-    // success
+    // no movie in realm, service call, success
     func testRecommendMovieSuccess() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
@@ -618,6 +756,10 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(nil)
+        }
 
         /*WHEN*/
         repository.getRecommendMovies(from: 3, page: 1) { result in
@@ -631,7 +773,7 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
     }
     
-    // failure
+    // no movie in realm, service call, failure
     func testRecommendMovieFailure() {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
@@ -647,6 +789,10 @@ class TMDBRepositoryTests: XCTestCase {
         stub(requestBuilder) { stub in
             when(stub).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
+        
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(nil)
+        }
 
         /*WHEN*/
         repository.getRecommendMovies(from: 3, page: 1) { result in
@@ -659,97 +805,138 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
     }
     
-    // MARK: - movie credit
-
-    // success
-    func testGetMovieCredit() {
+    func testRecommendMovieNewPageSuccess() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieCreditURLRequest(from: 3)
+        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+            
+        let movieInRealm = Movie()
+
+        let result = MovieResult()
+        let newMovie = Movie()
+            
+        newMovie.id = 2
+        result.movies.append(newMovie)
+            
+        movieInRealm.recommendations = MovieResult()
+        movieInRealm.recommendations?.totalResults = 2
+        movieInRealm.recommendations?.page = 1
+        movieInRealm.recommendations?.totalPages = 2
+        movieInRealm.recommendations?.movies.append(Movie())
+            
+        let newListMovieMatcher = ParameterMatcher<List<Movie>>(matchesFunction: { $0 == result.movies })
+        let movieInRealmMatcher = ParameterMatcher<Movie>(matchesFunction: { $0 == movieInRealm })
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(CreditResult()))
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(result))
             }
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getMovieCreditURLRequest(from: 3).thenReturn(request)
+            when(stub).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
-
+            
         stub(localDataSource) { stub in
-            when(stub).getMovieCredit(id: 3).thenReturn(nil)
-            when(stub).saveMovieCredit(any()).thenDoNothing()
+            when(stub).getMovie(id: 3).thenReturn(movieInRealm)
+            when(stub).saveRecommendMovie(newListMovieMatcher, to: movieInRealmMatcher).thenDoNothing()
         }
 
         /*WHEN*/
-        repository.getMovieCredit(from: 3) { result in
-            XCTAssertNoThrow(try! result.get())
+        repository.getRecommendMovies(from: 3, page: 2) { result in
             expectation.fulfill()
         }
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieCreditURLRequest(from: 3)
-        verify(localDataSource).getMovieCredit(id: 3)
-        verify(localDataSource).saveMovieCredit(any())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(localDataSource).saveRecommendMovie(newListMovieMatcher, to: movieInRealmMatcher)
     }
-
-    // fail
-    func testGetMovieCreditFail() {
+    
+    func testRecommendMovieNewPageFail() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieCreditURLRequest(from: 3)
+        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+            
+        let movieInRealm = Movie()
+
+        let result = MovieResult()
+        let newMovie = Movie()
+            
+        newMovie.id = 2
+        result.movies.append(newMovie)
+            
+        movieInRealm.recommendations = MovieResult()
+        movieInRealm.recommendations?.totalResults = 2
+        movieInRealm.recommendations?.page = 1
+        movieInRealm.recommendations?.totalPages = 2
+        movieInRealm.recommendations?.movies.append(Movie())
+            
+        let newListMovieMatcher = ParameterMatcher<List<Movie>>(matchesFunction: { $0 == result.movies })
+        let movieInRealmMatcher = ParameterMatcher<Movie>(matchesFunction: { $0 == movieInRealm })
 
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure()).then { implementation in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
                 implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
             }
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getMovieCreditURLRequest(from: 3).thenReturn(request)
+            when(stub).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
         }
-
+            
         stub(localDataSource) { stub in
-            when(stub).getMovieCredit(id: 3).thenReturn(nil)
+            when(stub).getMovie(id: 3).thenReturn(movieInRealm)
+            when(stub).saveRecommendMovie(newListMovieMatcher, to: movieInRealmMatcher).thenDoNothing()
         }
 
         /*WHEN*/
-        repository.getMovieCredit(from: 3) { result in
+        repository.getRecommendMovies(from: 3, page: 2) { result in
             expectation.fulfill()
         }
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(CreditResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieCreditURLRequest(from: 3)
-        verify(localDataSource).getMovieCredit(id: 3)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
     }
-
-    // get movie credit already in realm
-    func testGetMovieCreditInRealm() {
+    
+    func testRecommendMovieOldPage() {
         let expectation = self.expectation(description: "")
-        let creditResult = CreditResult()
-        creditResult.id = 3
+        
+        let movieInRealm = Movie()
+
+        let result = MovieResult()
+        let newMovie = Movie()
+        
+        newMovie.id = 2
+        result.movies.append(newMovie)
+        
+        movieInRealm.recommendations = MovieResult()
+        movieInRealm.recommendations?.totalResults = 2
+        movieInRealm.recommendations?.page = 1
+        movieInRealm.recommendations?.totalPages = 2
+        movieInRealm.recommendations?.movies.append(Movie())
+        
+        let newListMovieMatcher = ParameterMatcher<List<Movie>>(matchesFunction: { $0 == result.movies })
+        let movieInRealmMatcher = ParameterMatcher<Movie>(matchesFunction: { $0 == movieInRealm })
 
         /*GIVEN*/
         stub(localDataSource) { stub in
-            when(stub).getMovieCredit(id: 3).thenReturn(creditResult)
+            when(stub).getMovie(id: 3).thenReturn(movieInRealm)
+            when(stub).saveRecommendMovie(newListMovieMatcher, to: movieInRealmMatcher).thenDoNothing()
         }
 
         /*WHEN*/
-        repository.getMovieCredit(from: 3) { result in
-            XCTAssertNoThrow(try! result.get())
+        repository.getRecommendMovies(from: 3, page: 1) { result in
             expectation.fulfill()
         }
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
-        verify(localDataSource).getMovieCredit(id: 3)
     }
 
     // MARK - movie review
@@ -808,5 +995,68 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getMovieReviewURLRequest(from: 3, page: 1)
+    }
+    
+    // MARK: - movie credit
+    
+    func testGetNonEmptyMovieCastFromRealm() {
+        let movie = Movie()
+        movie.id = 3
+        movie.credits = CreditResult()
+        movie.credits?.cast.append(Cast())
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+        
+        /*WHEN*/
+        let _ = repository.getMovieCast(from: 3)
+        
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
+    
+    func testGetNilMovieCastFromRealm() {
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(nil)
+        }
+
+        /*WHEN*/
+        let _ = repository.getMovieCast(from: 3)
+
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
+    
+    func testGetNonEmptyMovieCrewFromRealm() {
+        let movie = Movie()
+        movie.id = 3
+        movie.credits = CreditResult()
+        movie.credits?.crew.append(Crew())
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+
+        /*WHEN*/
+        let _ = repository.getMovieCrew(from: 3)
+
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
+
+    func testGetNilMovieCrewFromRealm() {
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 4).thenReturn(nil)
+        }
+
+        /*WHEN*/
+        let _ = repository.getMovieCrew(from: 4)
+
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 4)
     }
 }

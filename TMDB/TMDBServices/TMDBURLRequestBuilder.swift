@@ -44,20 +44,8 @@ extension TMDBURLRequestBuilderProtocol {
     }
     
     // MARK: - movies
-    func getMovieDetailURLRequest(id: Int, language: String? = "en-US") -> URLRequest {
-        return getMovieDetailURLRequest(id: id, language: language)
-    }
-
     func getPopularMovieURLRequest(page: Int, language: String? = "en-US", region: String? = nil) -> URLRequest {
         return getPopularMovieURLRequest(page: page, language: language, region: region)
-    }
-
-    func getSimilarMoviesURLRequest(from movieId: Int, page: Int, language: String? = "en-US") -> URLRequest {
-        return getSimilarMoviesURLRequest(from: movieId, page: page, language: language)
-    }
-
-    func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String? = "en-US") -> URLRequest {
-        return getRecommendMoviesURLRequest(from: movieId, page: page, language: language)
     }
 }
 
@@ -136,26 +124,26 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         return buildURLRequest(path: "/3/movie/popular", queryItems: queryItems)
     }
 
-    func getMovieDetailURLRequest(id: Int, language: String? = "en-US") -> URLRequest {
+    func getMovieDetailURLRequest(id: Int, language: String?) -> URLRequest {
         let queryItems = [
-            URLQueryItem(name: "language", value: language),
-            URLQueryItem(name: "append_to_response", value: "videos")
+            URLQueryItem(name: "language", value: language ?? "en-US"),
+            URLQueryItem(name: "append_to_response", value: "keywords,videos,similar,recommendations,credits")
         ]
         return buildURLRequest(path: "/3/movie/\(id)", queryItems: queryItems)
     }
 
-    func getSimilarMoviesURLRequest(from movieId: Int, page: Int, language: String? = "en-US") -> URLRequest {
+    func getSimilarMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "page", value: String(page)),
-            URLQueryItem(name: "language", value: language)
+            URLQueryItem(name: "language", value: language ?? "en-US")
         ]
         return buildURLRequest(path: "/3/movie/\(movieId)/similar", queryItems: queryItems)
     }
 
-    func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String? = "en-US") -> URLRequest {
+    func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "page", value: String(page)),
-            URLQueryItem(name: "language", value: language)
+            URLQueryItem(name: "language", value: language ?? "en-US")
         ]
         return buildURLRequest(path: "/3/movie/\(movieId)/recommendations", queryItems: queryItems)
     }

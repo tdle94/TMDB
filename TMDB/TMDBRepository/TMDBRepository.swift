@@ -13,8 +13,9 @@ protocol TMDBRepositoryProtocol {
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
-    func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void)
     func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void)
+    func getMovieCast(from movieId: Int) -> [Cast]
+    func getMovieCrew(from movieId: Int) -> [Crew]
 
     // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
@@ -41,23 +42,18 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
     // MAKR: - movies
     
-    func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void) {
-        if let creditResult = localDataSource.getMovieCredit(id: movieId) {
-            completion(.success(creditResult))
-            return
+    func getMovieCast(from movieId: Int) -> [Cast] {
+        guard let cast = localDataSource.getMovie(id: movieId)?.credits?.cast else {
+            return []
         }
+        return Array(cast)
+    }
 
-        services.getMovieCredit(from: movieId) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let credit):
-                    self.localDataSource.saveMovieCredit(credit)
-                    completion(.success(credit))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
+    func getMovieCrew(from movieId: Int) -> [Crew] {
+        guard let crew = localDataSource.getMovie(id: movieId)?.credits?.crew else {
+            return []
         }
+        return Array(crew)
     }
 
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
@@ -84,11 +80,36 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        guard let movie =  localDataSource.getMovie(id: movieId), let similarMovie = movie.similar else {
+            services.getSimilarMovies(from: movieId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let popularMovieResult):
+                        completion(.success(popularMovieResult))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            }
+            return
+        }
+
+        // get from cache
+        if page <= similarMovie.page {
+            let toMovie = (page * similarMovie.movies.count) / similarMovie.page - 1
+            let result = MovieResult()
+            result.movies.append(objectsIn: similarMovie.movies[0...toMovie])
+            completion(.success(result))
+            return
+        }
+
+        // new page
         services.getSimilarMovies(from: movieId, page: page) { result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let popularMovieResult):
-                    completion(.success(popularMovieResult))
+                case .success(let similarMovieResult):
+                    self.localDataSource.saveSimilarMovie(similarMovieResult.movies, to: movie)
+                    completion(.success(similarMovieResult))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -97,11 +118,35 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        guard let movie =  localDataSource.getMovie(id: movieId), let recommendMovie = movie.recommendations else {
+            services.getRecommendMovies(from: movieId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let popularMovieResult):
+                        completion(.success(popularMovieResult))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            }
+            return
+        }
+
+        // get from cache
+        if page <= recommendMovie.page {
+            let toMovie = (page * recommendMovie.movies.count) / recommendMovie.page - 1
+            let result = MovieResult()
+            result.movies.append(objectsIn: recommendMovie.movies[0...toMovie])
+            completion(.success(result))
+            return
+        }
+
         services.getRecommendMovies(from: movieId, page: page) { result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let popularMovieResult):
-                    completion(.success(popularMovieResult))
+                case .success(let recommendMovieResult):
+                    self.localDataSource.saveRecommendMovie(recommendMovieResult.movies, to: movie)
+                    completion(.success(recommendMovieResult))
                 case .failure(let error):
                     completion(.failure(error))
                 }

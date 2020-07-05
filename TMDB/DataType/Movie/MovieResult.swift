@@ -29,8 +29,7 @@ class MovieResult: Object, Decodable {
         page = try container.decode(Int.self, forKey: .page)
         totalPages = try container.decode(Int.self, forKey: .totalPages)
         totalResults = try container.decode(Int.self, forKey: .totalResults)
-        let movies = try container.decode(List<Movie>.self, forKey: .movies)
-        self.movies.append(objectsIn: movies)
+        self.movies.append(objectsIn: try container.decode(List<Movie>.self, forKey: .movies))
         super.init()
     }
 

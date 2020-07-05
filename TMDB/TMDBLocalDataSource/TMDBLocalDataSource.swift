@@ -12,20 +12,15 @@ import RealmSwift
 protocol TMDBLocalDataSourceProtocol {
     // movie
     func getMovie(id: Int) -> Movie?
-    func getMovieCredit(id: Int) -> CreditResult?
     func saveMovie(_ movie: Movie)
-    func saveMovies(_ movies: List<Movie>)
-    func saveMovieCredit(_ creditResult: CreditResult)
+    func saveSimilarMovie(_ similarMovie: List<Movie>, to movie: Movie)
+    func saveRecommendMovie(_ recommendMovie: List<Movie>, to movie: Movie)
     // tv show
     func getTVShow(id: Int) -> TVShow?
-    func saveTVShows(_ tvShows: List<TVShow>)
     func saveTVShow(_ tvShow: TVShow)
     // people
     func getPerson(id: Int) -> People?
-    func savePeople(_ people: List<People>)
     func savePerson(_ person: People)
-    // trending
-    func saveTrendings(_ trending: List<Trending>)
 }
 
 class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
@@ -54,20 +49,18 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         try? realm.commitWrite()
     }
 
-    func saveMovies(_ movies: List<Movie>) {
+    func saveSimilarMovie(_ similarMovie: List<Movie>, to movie: Movie) {
         realm.beginWrite()
-        realm.add(movies, update: .modified)
+        movie.similar?.movies.append(objectsIn: similarMovie)
+        movie.similar?.page += 1
         try? realm.commitWrite()
     }
 
-    func saveMovieCredit(_ creditResult: CreditResult) {
+    func saveRecommendMovie(_ recommendMovie: List<Movie>, to movie: Movie) {
         realm.beginWrite()
-        realm.add(creditResult, update: .modified)
+        movie.recommendations?.movies.append(objectsIn: recommendMovie)
+        movie.recommendations?.page += 1
         try? realm.commitWrite()
-    }
-    
-    func getMovieCredit(id: Int) -> CreditResult? {
-        return realm.object(ofType: CreditResult.self, forPrimaryKey: id)
     }
 
     // MARK: - tv show
@@ -81,11 +74,6 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         try? realm.commitWrite()
     }
 
-    func saveTVShows(_ tvShows: List<TVShow>) {
-        realm.beginWrite()
-        realm.add(tvShows, update: .modified)
-        try? realm.commitWrite()
-    }
 
     // MARK: - people
     func getPerson(id: Int) -> People? {
@@ -96,25 +84,5 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         realm.beginWrite()
         realm.add(person, update: .modified)
         try? realm.commitWrite()
-    }
-
-    func savePeople(_ people: List<People>) {
-        realm.beginWrite()
-        realm.add(people, update: .modified)
-        try? realm.commitWrite()
-    }
-    
-
-    // MARK: - trending
-    func saveTrendings(_ trendings: List<Trending>) {
-        for trend in trendings {
-            if let movie = trend.movie {
-                saveMovie(movie)
-            } else if let tv = trend.tv {
-                saveTVShow(tv)
-            } else if let person = trend.people {
-                savePerson(person)
-            }
-        }
     }
 }

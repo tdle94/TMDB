@@ -87,4 +87,8 @@ class TMDBDataTypeTests: XCTestCase {
     func testMovieVideo() {
         XCTAssertNoThrow(try JSONDecoder().decode(VideoResult.self, from: movieVideoFixture))
     }
+
+    func testMovieDetailWithKeywordVideoSimilarRecommendationCredit() {
+        XCTAssertNoThrow(try JSONDecoder().decode(Movie.self, from: movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit))
+    }
 }

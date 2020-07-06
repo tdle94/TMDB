@@ -242,6 +242,33 @@
                                                     <outlet property="delegate" destination="9DE-In-8rM" id="WGV-xF-yJJ"/>
                                                 </connections>
                                             </collectionView>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="95j-52-mRe">
+                                                <rect key="frame" x="0.0" y="537.33333333333337" width="414" height="0.0"/>
+                                                <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" id="nDk-Il-Ecx"/>
+                                                </constraints>
+                                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="yXU-ZS-aPG">
+                                                    <size key="itemSize" width="128" height="90"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                                <cells>
+                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Szl-ag-mPa">
+                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="90"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="QzI-Nx-MpI">
+                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="90"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                        </collectionViewCellContentView>
+                                                    </collectionViewCell>
+                                                </cells>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="9DE-In-8rM" id="6Ig-ME-3U7"/>
+                                                    <outlet property="delegate" destination="9DE-In-8rM" id="Ewx-S7-fX9"/>
+                                                </connections>
+                                            </collectionView>
                                         </subviews>
                                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -251,20 +278,22 @@
                                             <constraint firstItem="O9B-cz-kRE" firstAttribute="leading" secondItem="yEe-Ut-ac7" secondAttribute="leading" constant="18" id="9GK-zl-u5R"/>
                                             <constraint firstItem="mpK-9C-Zub" firstAttribute="leading" secondItem="yEe-Ut-ac7" secondAttribute="leading" id="9Y1-jz-xxG"/>
                                             <constraint firstItem="O9B-cz-kRE" firstAttribute="top" secondItem="wGh-Ep-VQ7" secondAttribute="bottom" constant="5" id="B2c-mg-oSD"/>
-                                            <constraint firstItem="Kfr-M6-KlO" firstAttribute="top" secondItem="O9B-cz-kRE" secondAttribute="bottom" constant="8" id="B3c-ga-ueN"/>
                                             <constraint firstItem="3Tf-wJ-qKA" firstAttribute="top" secondItem="R7C-ED-NVl" secondAttribute="bottom" constant="15" id="Bzv-tr-Pwj"/>
                                             <constraint firstItem="wGh-Ep-VQ7" firstAttribute="top" secondItem="7QS-yN-25f" secondAttribute="bottom" constant="15" id="DCk-9g-ujb"/>
                                             <constraint firstItem="8b7-kG-abd" firstAttribute="top" secondItem="Ilv-qd-jvq" secondAttribute="bottom" constant="13" id="DPR-eM-yf1"/>
                                             <constraint firstItem="R7C-ED-NVl" firstAttribute="leading" secondItem="Ilv-qd-jvq" secondAttribute="trailing" constant="10" id="Eio-qU-des"/>
                                             <constraint firstAttribute="trailing" secondItem="t70-qs-8dp" secondAttribute="trailing" constant="20" id="EkX-AW-O8i"/>
                                             <constraint firstItem="t70-qs-8dp" firstAttribute="top" secondItem="3Tf-wJ-qKA" secondAttribute="bottom" constant="15" id="Fwf-rD-DZV"/>
+                                            <constraint firstItem="95j-52-mRe" firstAttribute="top" secondItem="O9B-cz-kRE" secondAttribute="bottom" constant="8" id="Gu7-C7-sCy"/>
                                             <constraint firstItem="QAP-PK-dZh" firstAttribute="top" secondItem="Kfr-M6-KlO" secondAttribute="bottom" id="HBY-TK-24R"/>
                                             <constraint firstItem="8b7-kG-abd" firstAttribute="leading" secondItem="Ilv-qd-jvq" secondAttribute="leading" id="Imq-yd-cKZ"/>
+                                            <constraint firstAttribute="trailing" secondItem="95j-52-mRe" secondAttribute="trailing" id="JcU-uN-d82"/>
                                             <constraint firstItem="zFV-uz-zgQ" firstAttribute="top" secondItem="t70-qs-8dp" secondAttribute="bottom" constant="15" id="LdF-Nf-S6R"/>
                                             <constraint firstAttribute="trailing" secondItem="wrj-Bv-m36" secondAttribute="trailing" constant="20" id="LuU-IP-3UN"/>
                                             <constraint firstItem="r88-4U-zXN" firstAttribute="top" secondItem="tSv-Mr-Dkr" secondAttribute="bottom" id="MrG-2d-DPj"/>
                                             <constraint firstAttribute="trailing" secondItem="O9B-cz-kRE" secondAttribute="trailing" constant="20" id="OfM-jX-5tB"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="wGh-Ep-VQ7" secondAttribute="trailing" constant="20" symbolic="YES" id="PPp-cy-xpJ"/>
+                                            <constraint firstItem="Kfr-M6-KlO" firstAttribute="top" secondItem="95j-52-mRe" secondAttribute="bottom" id="Q4B-p9-wGr"/>
                                             <constraint firstItem="QAP-PK-dZh" firstAttribute="leading" secondItem="yEe-Ut-ac7" secondAttribute="leading" id="Qcf-aH-BQV"/>
                                             <constraint firstItem="wrj-Bv-m36" firstAttribute="top" secondItem="zFV-uz-zgQ" secondAttribute="bottom" constant="15" id="Sdd-8l-Y9b"/>
                                             <constraint firstItem="zFV-uz-zgQ" firstAttribute="leading" secondItem="Ilv-qd-jvq" secondAttribute="trailing" constant="10" id="ShJ-pd-4EW"/>
@@ -290,10 +319,11 @@
                                             <constraint firstItem="7QS-yN-25f" firstAttribute="top" secondItem="YHO-Z0-urX" secondAttribute="bottom" constant="15" id="wAr-rJ-h25"/>
                                             <constraint firstItem="YHO-Z0-urX" firstAttribute="top" secondItem="8b7-kG-abd" secondAttribute="bottom" constant="5" id="x9s-15-eXy"/>
                                             <constraint firstItem="mpK-9C-Zub" firstAttribute="width" secondItem="yEe-Ut-ac7" secondAttribute="width" id="xfq-W1-azB"/>
+                                            <constraint firstItem="95j-52-mRe" firstAttribute="leading" secondItem="yEe-Ut-ac7" secondAttribute="leading" id="yHw-Tl-dI6"/>
                                             <constraint firstItem="r88-4U-zXN" firstAttribute="leading" secondItem="yEe-Ut-ac7" secondAttribute="leading" id="yZe-bU-Ug7"/>
                                             <constraint firstItem="3Tf-wJ-qKA" firstAttribute="leading" secondItem="Ilv-qd-jvq" secondAttribute="trailing" constant="10" id="ymN-Yz-Lwo"/>
                                             <constraint firstItem="R7C-ED-NVl" firstAttribute="top" secondItem="mpK-9C-Zub" secondAttribute="bottom" constant="8" id="zaH-nv-Oxf"/>
-                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="8b7-kG-abd" secondAttribute="trailing" constant="20" symbolic="YES" id="zbV-In-M3N"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="8b7-kG-abd" secondAttribute="trailing" constant="20" symbolic="YES" id="zkq-ag-GgS"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -327,6 +357,8 @@
                         <outlet property="creditCollectionView" destination="tSv-Mr-Dkr" id="iw1-8V-Pac"/>
                         <outlet property="creditCollectionViewHeightContraint" destination="BZX-oe-WKd" id="uky-ZB-hgo"/>
                         <outlet property="generes" destination="wrj-Bv-m36" id="aAN-Cy-HI7"/>
+                        <outlet property="keywordCollectionView" destination="95j-52-mRe" id="kmL-lx-dLy"/>
+                        <outlet property="keywordCollectionViewHeightConstraint" destination="nDk-Il-Ecx" id="6x2-ay-SB5"/>
                         <outlet property="matchingMovieCollectionViewHeightContraint" destination="ZsW-Uk-YPA" id="aj7-bZ-rTj"/>
                         <outlet property="matchingMoviesCollectionView" destination="r88-4U-zXN" id="JEC-bt-7sH"/>
                         <outlet property="moviePosterImageView" destination="Ilv-qd-jvq" id="wTS-eD-guB"/>
@@ -347,7 +379,7 @@
                         <outlet property="titleLabel" destination="8b7-kG-abd" id="BiH-vw-f3l"/>
                         <outlet property="videoCollectionView" destination="Kfr-M6-KlO" id="77A-Vq-fHb"/>
                         <outlet property="videoCollectionViewHeightConstraint" destination="0Fo-ed-dEb" id="P8p-ae-qHz"/>
-                        <outlet property="videoCollectionViewTopConstraint" destination="B3c-ga-ueN" id="Cla-pY-F25"/>
+                        <outlet property="videoCollectionViewTopConstraint" destination="Q4B-p9-wGr" id="Jzb-gR-ags"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jgc-VQ-a7v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

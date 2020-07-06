@@ -16,7 +16,7 @@ protocol TMDBRepositoryProtocol {
     func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void)
     func getMovieCast(from movieId: Int) -> [Cast]
     func getMovieCrew(from movieId: Int) -> [Crew]
-
+    func getMovieKeywords(from movieId: Int) -> [Keyword]
     // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 
@@ -41,6 +41,13 @@ class TMDBRepository: TMDBRepositoryProtocol {
         self.userSetting = userSetting
     }
     // MAKR: - movies
+
+    func getMovieKeywords(from movieId: Int) -> [Keyword] {
+        guard let keywords = localDataSource.getMovie(id: movieId)?.keywords?.keywords else {
+            return []
+        }
+        return Array(keywords)
+    }
     
     func getMovieCast(from movieId: Int) -> [Cast] {
         guard let cast = localDataSource.getMovie(id: movieId)?.credits?.cast else {

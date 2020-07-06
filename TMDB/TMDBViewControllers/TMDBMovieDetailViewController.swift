@@ -32,6 +32,10 @@ class TMDBMovieDetailViewController: UIViewController {
     enum VideoMovieSection: String, CaseIterable {
         case Video = "Videos"
     }
+    
+    enum KeywordMovieSection: String, CaseIterable {
+        case Keyword = "Keyword"
+    }
 
     var movieId: Int?
     
@@ -42,6 +46,8 @@ class TMDBMovieDetailViewController: UIViewController {
     var productionCompanyDataSource: UICollectionViewDiffableDataSource<ProdcutionCompanySection, ProductionCompany>!
 
     var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Object>!
+    
+    var keywordMovieDataSource: UICollectionViewDiffableDataSource<KeywordMovieSection, Keyword>!
 
     var movieDetail: TMDBMovieDetailDisplayProtocol = TMDBMovieDetailDisplay()
 
@@ -81,6 +87,14 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
     @IBOutlet weak var generes: UILabel!
+    @IBOutlet weak var keywordCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var keywordCollectionView: UICollectionView! {
+        didSet {
+            keywordCollectionView.collectionViewLayout = TMDBMovieKeywordLayout(delegate: self)
+            keywordCollectionView.register(TMDBMovieKeywordCell.self, forCellWithReuseIdentifier: "Keyword")
+            keywordCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+        }
+    }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
             videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
@@ -264,6 +278,9 @@ class TMDBMovieDetailViewController: UIViewController {
                 self.displayVideo(movie.videos)
                 self.displayCredit(movie)
                 self.displayMatchingMovie(movie)
+                self.keywordCollectionView.reloadData()
+                self.keywordCollectionView.layoutIfNeeded()
+                self.keywordCollectionViewHeightConstraint.constant = self.keywordCollectionView.contentSize.height
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
@@ -291,7 +308,14 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     // MARK: - display
-    
+
+    func displayKeyword(_ movie: Movie) {
+        guard let keywords = movie.keywords?.keywords else { return }
+        var snapshot = keywordMovieDataSource.snapshot()
+        snapshot.appendItems(Array(keywords))
+        keywordMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
     func displayMatchingMovie(_ movie: Movie) {
         guard let similar = movie.similar, let recommend = movie.recommendations else { return }
 
@@ -463,5 +487,37 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
                 }
             }
         }
+    }
+}
+
+extension TMDBMovieDetailViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Keyword", for: indexPath) as? TMDBMovieKeywordCell
+        if let id = movieId {
+            let keyword = repository.getMovieKeywords(from: id)[indexPath.row]
+            cell?.configure(keyword: keyword)
+        }
+        return cell ?? UICollectionViewCell()
+    }
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let id = movieId else { return 0 }
+        return repository.getMovieKeywords(from: id).count
+    }
+}
+
+extension TMDBMovieDetailViewController: KeywordLayoutDelegate {
+    func tagCellLayoutSize(layout: TMDBMovieKeywordLayout, at index: Int) -> CGSize {
+        if let id = movieId {
+            let keyword = repository.getMovieKeywords(from: id)[index]
+            let label = UILabel()
+            label.text = keyword.name
+            return label.intrinsicContentSize
+        }
+        return .zero
     }
 }

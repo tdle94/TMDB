@@ -28,6 +28,32 @@ class TMDBHomeViewController: UIViewController {
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
+            
+            dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+
+            dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath -> UICollectionReusableView? in
+                if indexPath.section == 0 {
+                    let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                                 withReuseIdentifier: Constant.Identifier.popularHeader,
+                                                                                 for: indexPath) as? TMDBPopularHeaderView
+                    header?.delegate = self
+                    return header
+                }
+
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.trendHeader,
+                                                                             for: indexPath) as? TMDBTrendHeaderView
+                header?.delegate = self
+                return header
+            }
+
+            var snapshot = dataSource.snapshot()
+            snapshot.appendSections([.popular, .trending])
+            dataSource.apply(snapshot)
         }
     }
 
@@ -57,7 +83,6 @@ class TMDBHomeViewController: UIViewController {
                                     localDataSource: TMDBLocalDataSource(),
                                     userSetting: userSetting)
         repository.updateImageConfig()
-        configureDataSource()
         configureLanguageAndRegion()
         getPopularMovie()
         getTrendingToday()
@@ -85,7 +110,7 @@ extension TMDBHomeViewController: UICollectionViewDelegate {
 }
 
 extension TMDBHomeViewController {
-    // MARK: - collection view make request base on user interaction
+    // MARK: - service request
     func getPopularMovie() {
         repository.getPopularMovie(page: 1) { result in
             switch result {
@@ -140,6 +165,7 @@ extension TMDBHomeViewController {
     }
 }
 
+// MARK: - segment control user interaction
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
     func segmentControlSelected(at index: Int, text selected: String) {
         if selected == NSLocalizedString("Today", comment: "") {
@@ -156,8 +182,9 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
     }
 }
 
+// MARK: - language and region
 extension TMDBHomeViewController {
-    // MARK: - configure navigation item
+    // MARK: - configure language and region
     @objc func configureLanguageAndRegion() {
         navigationItem.rightBarButtonItems = nil
 
@@ -193,33 +220,4 @@ extension TMDBHomeViewController {
         UIApplication.shared.open(url)
     }
 
-    // MARK: - collection view configuration
-    func configureDataSource() {
-
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-            cell?.configure(item: item)
-            return cell
-        }
-
-        dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath -> UICollectionReusableView? in
-            if indexPath.section == 0 {
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.popularHeader,
-                                                                             for: indexPath) as? TMDBPopularHeaderView
-                header?.delegate = self
-                return header
-            }
-
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                         withReuseIdentifier: Constant.Identifier.trendHeader,
-                                                                         for: indexPath) as? TMDBTrendHeaderView
-            header?.delegate = self
-            return header
-        }
-
-        var snapshot = dataSource.snapshot()
-        snapshot.appendSections([.popular, .trending])
-        dataSource.apply(snapshot)
-    }
 }

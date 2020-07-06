@@ -1059,4 +1059,41 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         verify(localDataSource).getMovie(id: 4)
     }
+    
+    // MARK: - movie keyword
+    func testGetKeywordFromMovieNotEmpty() {
+        let movie = Movie()
+        let keywordResult = KeywordResult()
+        keywordResult.keywords.append(Keyword())
+        movie.id = 3
+        movie.keywords = keywordResult
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+        
+        /*WHEN*/
+        let keywords = repository.getMovieKeywords(from: 3)
+        XCTAssertEqual(keywords.count, 1)
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
+    
+    func testGetKeywordFromMovieEmpty() {
+        let movie = Movie()
+        movie.id = 3
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+        
+        /*WHEN*/
+        let keywords = repository.getMovieKeywords(from: 3)
+        XCTAssertEqual(keywords.count, 0)
+
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
 }

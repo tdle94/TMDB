@@ -23,7 +23,7 @@ class TMDBMovieKeywordLayout: UICollectionViewLayout {
     
     override var collectionViewContentSize: CGSize {
         return CGSize(width: UIScreen.main.bounds.width - 18,
-                      height: (CGFloat(numberOfLine) * ((layouts.first?.frame.height ?? 0)) + CGFloat(numberOfLine * 5) + CGFloat(layouts.first?.frame.height ?? 0) + 1 ))
+                      height: (CGFloat(numberOfLine) * (layouts.first?.frame.height ?? 0) + CGFloat(numberOfLine * 5) + CGFloat(layouts.first?.frame.height ?? 0) + 1 ))
     }
     
     init(delegate: KeywordLayoutDelegate) {

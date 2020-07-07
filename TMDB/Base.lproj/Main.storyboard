@@ -36,6 +36,9 @@
                                         <size key="customSize" width="124" height="123"/>
                                     </collectionViewCell>
                                 </cells>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="HomeCollectionView"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Rkw-T5-VLf"/>
                                 </connections>
@@ -119,6 +122,9 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="MovieDetailTitle"/>
+                                                </userDefinedRuntimeAttributes>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="runtime" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YHO-Z0-urX">
                                                 <rect key="frame" x="17.999999999999996" y="418" width="58.666666666666657" height="20.333333333333314"/>
@@ -243,7 +249,7 @@
                                                 </connections>
                                             </collectionView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="95j-52-mRe">
-                                                <rect key="frame" x="0.0" y="537.33333333333337" width="396" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="537.33333333333337" width="414" height="0.0"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" priority="999" id="nDk-Il-Ecx"/>
@@ -287,7 +293,7 @@
                                             <constraint firstItem="95j-52-mRe" firstAttribute="top" secondItem="O9B-cz-kRE" secondAttribute="bottom" constant="8" id="Gu7-C7-sCy"/>
                                             <constraint firstItem="QAP-PK-dZh" firstAttribute="top" secondItem="Kfr-M6-KlO" secondAttribute="bottom" id="HBY-TK-24R"/>
                                             <constraint firstItem="8b7-kG-abd" firstAttribute="leading" secondItem="Ilv-qd-jvq" secondAttribute="leading" id="Imq-yd-cKZ"/>
-                                            <constraint firstAttribute="trailing" secondItem="95j-52-mRe" secondAttribute="trailing" constant="18" id="JcU-uN-d82"/>
+                                            <constraint firstAttribute="trailing" secondItem="95j-52-mRe" secondAttribute="trailing" id="JcU-uN-d82"/>
                                             <constraint firstItem="zFV-uz-zgQ" firstAttribute="top" secondItem="t70-qs-8dp" secondAttribute="bottom" constant="15" id="LdF-Nf-S6R"/>
                                             <constraint firstAttribute="trailing" secondItem="wrj-Bv-m36" secondAttribute="trailing" constant="20" id="LuU-IP-3UN"/>
                                             <constraint firstItem="r88-4U-zXN" firstAttribute="top" secondItem="tSv-Mr-Dkr" secondAttribute="bottom" id="MrG-2d-DPj"/>

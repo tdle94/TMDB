@@ -53,6 +53,16 @@
                ReferencedContainer = "container:TMDB.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "34A0D0B524B3E60F00386945"
+               BuildableName = "TMDBUITests.xctest"
+               BlueprintName = "TMDBUITests"
+               ReferencedContainer = "container:TMDB.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -72,6 +82,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "342E66352489BB33003B5CB8"
+            BuildableName = "TMDBTests.xctest"
+            BlueprintName = "TMDBTests"
+            ReferencedContainer = "container:TMDB.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

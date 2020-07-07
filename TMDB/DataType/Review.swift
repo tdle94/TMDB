@@ -11,14 +11,13 @@ import RealmSwift
 
 @objcMembers
 class ReviewResult: Object, Decodable {
-    dynamic var id: Int = 0
     dynamic var page: Int = 0
     dynamic var totalPages: Int = 0
     dynamic var totalResults: Int = 0
     let reviews: List<Review> = List()
 
     enum CodingKeys: String, CodingKey {
-        case id, page
+        case page
         case reviews = "results"
         case totalPages = "total_pages"
         case totalResults = "total_results"
@@ -26,7 +25,6 @@ class ReviewResult: Object, Decodable {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(Int.self, forKey: .id)
         page = try container.decode(Int.self, forKey: .page)
         totalPages = try container.decode(Int.self, forKey: .totalPages)
         totalResults = try container.decode(Int.self, forKey: .totalResults)

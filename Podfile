@@ -6,6 +6,7 @@ def testing_pods
   pod 'Nimble'
   pod "Cuckoo"
   pod 'RealmSwift'
+  pod 'SDWebImage'
 end
 
 target 'TMDB' do
@@ -21,7 +22,6 @@ target 'TMDB' do
   target 'TMDBUITests' do
       inherit! :search_paths
       testing_pods
-      pod 'SDWebImage'
   end
 
 end

@@ -18,6 +18,7 @@ struct Constant {
         static let videoMovieHeader = "VideoMovieHeader"
         static let movieProduceByHeader = "ProduceByHeader"
         static let preview = "Preview"
+        static let keywordCell = "KeywordCell"
         static let countryCell = "CountryCell"
         static let languageCell = "LanguageCell"
         static let countrySearch = "CountrySearch"

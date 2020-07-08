@@ -91,7 +91,7 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
         didSet {
             keywordCollectionView.collectionViewLayout = TMDBMovieKeywordLayout(delegate: self)
-            keywordCollectionView.register(TMDBMovieKeywordCell.self, forCellWithReuseIdentifier: "Keyword")
+            keywordCollectionView.register(TMDBMovieKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
             keywordCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
         }
     }
@@ -483,7 +483,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
 // MARK: -  keyword collectionview datasource
 extension TMDBMovieDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Keyword", for: indexPath) as? TMDBMovieKeywordCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBMovieKeywordCell
         if let id = movieId {
             let keyword = repository.getMovieKeywords(from: id)[indexPath.row]
             cell?.configure(keyword: keyword)

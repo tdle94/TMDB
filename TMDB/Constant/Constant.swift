@@ -18,6 +18,7 @@ struct Constant {
         static let videoMovieHeader = "VideoMovieHeader"
         static let movieProduceByHeader = "ProduceByHeader"
         static let preview = "Preview"
+        static let reviewCell = "ReviewCell"
         static let keywordCell = "KeywordCell"
         static let countryCell = "CountryCell"
         static let languageCell = "LanguageCell"
@@ -31,6 +32,7 @@ struct Constant {
         static let tmdbLanguageNavigation = "TMDBLanguageSettingNavigation"
         static let tmdbMovieDetail = "TMDBMovieDetailViewController"
         static let tmdbVideoPlayer = "TMDBVideoPlayerViewController"
+        static let tmdbReviewVC = "TMDBReivewTableViewController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

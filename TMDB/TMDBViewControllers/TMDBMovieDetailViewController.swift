@@ -57,12 +57,13 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
+    @IBOutlet weak var reviewButton: UIButton!
     weak var creditHeader: TMDBCreditHeaderView?
     weak var moreMovieHeader: TMDBMoreMovieHeaderView?
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var videoCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var matchingMovieCollectionViewHeightContraint: NSLayoutConstraint!
-    @IBOutlet weak var creditCollectionViewHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var overviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -216,6 +217,12 @@ class TMDBMovieDetailViewController: UIViewController {
         SDImageCache.shared.clearDisk()
     }
 
+    @IBAction func reviewButtonTap() {
+        guard let id = movieId else { return }
+        let reivew = repository.getMovieReview(from: id)
+        coordinator?.navigateToReview(reivew: reivew)
+    }
+
     // MARK: - service call
     
     func getMovieCast() {
@@ -324,6 +331,8 @@ class TMDBMovieDetailViewController: UIViewController {
             matchingMovieCollectionViewHeightContraint.constant = 0
             matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
         }
+
+        matchingMovieCollectionViewHeightContraint.constant = matchingMoviesCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
 
     func displayCredit(_ movie: Movie) {
@@ -345,6 +354,8 @@ class TMDBMovieDetailViewController: UIViewController {
             snapshot.deleteSections([.Credit])
             creditMovieDataSource.apply(snapshot, animatingDifferences: true)
         }
+
+        creditCollectionViewHeightConstraint.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
 
     func displayVideo(_ videoResult: VideoResult?) {
@@ -359,6 +370,7 @@ class TMDBMovieDetailViewController: UIViewController {
         let videos = Array(videoResult.videos)
         snapshot.appendItems(videos)
         videoMovieDataSource.apply(snapshot, animatingDifferences: true)
+        videoCollectionViewHeightConstraint.constant = videoCollectionView.collectionViewLayout.collectionViewContentSize.height/2.5
     }
 
     func displayCast(_ casts: [Cast]) {
@@ -422,11 +434,8 @@ class TMDBMovieDetailViewController: UIViewController {
 
         title = movie.originalTitle
         taglineLabel.text = movie.tagline
-        
-        if movie.tagline == "" {
-            taglineTopConstraint.constant = 0
-        }
 
+        movieDetail.displayReviewButton(button: reviewButton, movie: movie)
         movieDetail.displayTitle(label: titleLabel, movie: movie)
         movieDetail.displayBudget(label: budgetLabel, movie: movie)
         movieDetail.displayGenere(label: generes, movie: movie)

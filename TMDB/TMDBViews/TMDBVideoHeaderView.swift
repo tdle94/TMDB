@@ -12,7 +12,7 @@ import UIKit
 class TMDBVideoHeaderView: TMDBPreviewHeaderView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        label.text = "Videos"
+        label.text = NSLocalizedString("Video", comment: "")
     }
     
     required init?(coder: NSCoder) {

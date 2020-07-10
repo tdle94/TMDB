@@ -942,59 +942,36 @@ class TMDBRepositoryTests: XCTestCase {
     // MARK - movie review
 
     // sucess
-    func testGetMovieReviewSuccess() {
-        let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieReviewURLRequest(from: 3, page: 1)
-        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+    func testGetMovieReviewInRealm() {
+        let movieInRealm = Movie()
+        let reviewResult = ReviewResult()
+        reviewResult.reviews.append(Review())
+        movieInRealm.id = 3
+        movieInRealm.reviews = reviewResult
 
         /*GIVEN*/
-        stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(ReviewResult()))
-            }
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movieInRealm)
         }
-
-        stub(requestBuilder) { stub in
-            when(stub).getMovieReviewURLRequest(from: 3, page: 1).thenReturn(request)
-        }
-
+        
         /*WHEN*/
-        repository.getMovieReview(page: 1, from: 3) { result in
-            XCTAssertNoThrow(try! result.get())
-            expectation.fulfill()
-        }
-
-        /*THEN*/
-        waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieReviewURLRequest(from: 3, page: 1)
+        let reviews = repository.getMovieReview(from: 3)
+        XCTAssertTrue(reviews.count > 0)
+        verify(localDataSource).getMovie(id: 3)
     }
-
-    func testGetMovieReviewFail() {
-        let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieReviewURLRequest(from: 3, page: 1)
-        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
-
+    
+    func testGetMovieNilReview() {
+        let movieInRealm = Movie()
+        
         /*GIVEN*/
-        stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
-            }
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 0).thenReturn(movieInRealm)
         }
-
-        stub(requestBuilder) { stub in
-            when(stub).getMovieReviewURLRequest(from: 3, page: 1).thenReturn(request)
-        }
-
+        
         /*WHEN*/
-        repository.getMovieReview(page: 1, from: 3) { result in
-            expectation.fulfill()
-        }
-
-        /*THEN*/
-        waitForExpectations(timeout: 1, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(ReviewResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieReviewURLRequest(from: 3, page: 1)
+        let reviews = repository.getMovieReview(from: 0)
+        XCTAssertTrue(reviews.count == 0)
+        verify(localDataSource).getMovie(id: 0)
     }
     
     // MARK: - movie credit

@@ -36,7 +36,9 @@ class TMDBMovieKeywordLayout: UICollectionViewLayout {
     }
     
     override func prepare() {
-        layoutSetup()
+        if layouts.isEmpty {
+            layoutSetup()
+        }
     }
     
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {

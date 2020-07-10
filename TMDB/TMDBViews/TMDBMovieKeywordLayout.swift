@@ -96,6 +96,6 @@ extension TMDBMovieKeywordLayout {
     func shouldMoveItemToNextRow(itemWidth: CGFloat, at index: Int) -> Bool {
         let lastLayout = index == 0 ? layouts[0] : layouts[index - 1]
         let currentItemFrame = lastLayout.frame
-        return currentItemFrame.maxX + itemWidth > collectionView?.frame.maxX ?? 0
+        return (currentItemFrame.maxX + itemWidth) + 18 > collectionView?.frame.maxX ?? 0
     }
 }

@@ -29,4 +29,10 @@ struct MainCoordinator: Coordinator {
         videoPlayerVC.url = videoURL
         navigationController.present(videoPlayerVC, animated: true, completion: nil)
     }
+
+    func navigateToReview(reivew: [Review]) {
+        let reviewTableViewVC = storyboard.instantiateViewController(identifier:  Constant.ViewControllerIdentifier.tmdbReviewVC) as! TMDBReivewTableViewController
+        reviewTableViewVC.review = reivew
+        navigationController.pushViewController(reviewTableViewVC, animated: true)
+    }
 }

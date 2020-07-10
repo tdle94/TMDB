@@ -13,7 +13,7 @@ protocol TMDBRepositoryProtocol {
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
-    func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void)
+    func getMovieReview(from movieId: Int) -> [Review]
     func getMovieCast(from movieId: Int) -> [Cast]
     func getMovieCrew(from movieId: Int) -> [Crew]
     func getMovieKeywords(from movieId: Int) -> [Keyword]
@@ -174,17 +174,9 @@ class TMDBRepository: TMDBRepositoryProtocol {
         }
     }
 
-    func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void) {
-        services.getMovieReview(page: page, from: movieId) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let movieReviewResult):
-                    completion(.success(movieReviewResult))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
+    func getMovieReview(from movieId: Int) -> [Review] {
+        guard let review = localDataSource.getMovie(id: movieId)?.reviews?.reviews else { return [] }
+        return Array(review)
     }
 
     // MARK: - tv show

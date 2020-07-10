@@ -57,12 +57,14 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
+    @IBOutlet weak var reviewButton: UIButton!
+    @IBOutlet weak var additionalInformationTableView: UITableView!
     weak var creditHeader: TMDBCreditHeaderView?
     weak var moreMovieHeader: TMDBMoreMovieHeaderView?
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var videoCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var matchingMovieCollectionViewHeightContraint: NSLayoutConstraint!
-    @IBOutlet weak var creditCollectionViewHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var overviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var productionCompanyCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -91,7 +93,7 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
         didSet {
             keywordCollectionView.collectionViewLayout = TMDBMovieKeywordLayout(delegate: self)
-            keywordCollectionView.register(TMDBMovieKeywordCell.self, forCellWithReuseIdentifier: "Keyword")
+            keywordCollectionView.register(TMDBMovieKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
             keywordCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
         }
     }
@@ -216,6 +218,12 @@ class TMDBMovieDetailViewController: UIViewController {
         SDImageCache.shared.clearDisk()
     }
 
+    @IBAction func reviewButtonTap() {
+        guard let id = movieId else { return }
+        let reivew = repository.getMovieReview(from: id)
+        coordinator?.navigateToReview(reivew: reivew)
+    }
+
     // MARK: - service call
     
     func getMovieCast() {
@@ -266,6 +274,7 @@ class TMDBMovieDetailViewController: UIViewController {
                 self.displayVideo(movie.videos)
                 self.displayCredit(movie)
                 self.displayMatchingMovie(movie)
+                self.additionalInformationTableView.reloadData()
                 self.keywordCollectionView.reloadData()
                 self.keywordCollectionView.layoutIfNeeded()
                 self.keywordCollectionViewHeightConstraint.constant = self.keywordCollectionView.contentSize.height
@@ -324,6 +333,8 @@ class TMDBMovieDetailViewController: UIViewController {
             matchingMovieCollectionViewHeightContraint.constant = 0
             matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
         }
+
+        matchingMovieCollectionViewHeightContraint.constant = matchingMoviesCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
 
     func displayCredit(_ movie: Movie) {
@@ -345,6 +356,8 @@ class TMDBMovieDetailViewController: UIViewController {
             snapshot.deleteSections([.Credit])
             creditMovieDataSource.apply(snapshot, animatingDifferences: true)
         }
+
+        creditCollectionViewHeightConstraint.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
 
     func displayVideo(_ videoResult: VideoResult?) {
@@ -359,6 +372,7 @@ class TMDBMovieDetailViewController: UIViewController {
         let videos = Array(videoResult.videos)
         snapshot.appendItems(videos)
         videoMovieDataSource.apply(snapshot, animatingDifferences: true)
+        videoCollectionViewHeightConstraint.constant = videoCollectionView.collectionViewLayout.collectionViewContentSize.height/2.5
     }
 
     func displayCast(_ casts: [Cast]) {
@@ -422,10 +436,6 @@ class TMDBMovieDetailViewController: UIViewController {
 
         title = movie.originalTitle
         taglineLabel.text = movie.tagline
-        
-        if movie.tagline == "" {
-            taglineTopConstraint.constant = 0
-        }
 
         movieDetail.displayTitle(label: titleLabel, movie: movie)
         movieDetail.displayBudget(label: budgetLabel, movie: movie)
@@ -483,7 +493,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
 // MARK: -  keyword collectionview datasource
 extension TMDBMovieDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Keyword", for: indexPath) as? TMDBMovieKeywordCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBMovieKeywordCell
         if let id = movieId {
             let keyword = repository.getMovieKeywords(from: id)[indexPath.row]
             cell?.configure(keyword: keyword)
@@ -512,5 +522,32 @@ extension TMDBMovieDetailViewController: KeywordLayoutDelegate {
             return label.intrinsicContentSize
         }
         return .zero
+    }
+}
+
+// MARK: - uitableview datasource & delegate for additionalTableView (Release date and Review)
+extension TMDBMovieDetailViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DetailInfoCell", for: indexPath)
+        if indexPath.row == 0, let id = movieId {
+            let reviewCount = repository.getMovieReview(from: id).count
+            cell.textLabel?.text = NSLocalizedString("Review", comment: "") + " (\(reviewCount))"
+        } else {
+            cell.textLabel?.text = NSLocalizedString("Release Date", comment: "")
+        }
+        return cell
+    }
+}
+
+extension TMDBMovieDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let id = movieId else { return }
+        if indexPath.row == 0 {
+            coordinator?.navigateToReview(reivew: repository.getMovieReview(from: id))
+        }
     }
 }

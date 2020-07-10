@@ -58,6 +58,7 @@ class TMDBMovieDetailViewController: UIViewController {
     
     // MARK: - ui views
     @IBOutlet weak var reviewButton: UIButton!
+    @IBOutlet weak var additionalInformationTableView: UITableView!
     weak var creditHeader: TMDBCreditHeaderView?
     weak var moreMovieHeader: TMDBMoreMovieHeaderView?
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -273,6 +274,7 @@ class TMDBMovieDetailViewController: UIViewController {
                 self.displayVideo(movie.videos)
                 self.displayCredit(movie)
                 self.displayMatchingMovie(movie)
+                self.additionalInformationTableView.reloadData()
                 self.keywordCollectionView.reloadData()
                 self.keywordCollectionView.layoutIfNeeded()
                 self.keywordCollectionViewHeightConstraint.constant = self.keywordCollectionView.contentSize.height
@@ -435,7 +437,6 @@ class TMDBMovieDetailViewController: UIViewController {
         title = movie.originalTitle
         taglineLabel.text = movie.tagline
 
-        movieDetail.displayReviewButton(button: reviewButton, movie: movie)
         movieDetail.displayTitle(label: titleLabel, movie: movie)
         movieDetail.displayBudget(label: budgetLabel, movie: movie)
         movieDetail.displayGenere(label: generes, movie: movie)
@@ -521,5 +522,32 @@ extension TMDBMovieDetailViewController: KeywordLayoutDelegate {
             return label.intrinsicContentSize
         }
         return .zero
+    }
+}
+
+// MARK: - uitableview datasource & delegate for additionalTableView (Release date and Review)
+extension TMDBMovieDetailViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DetailInfoCell", for: indexPath)
+        if indexPath.row == 0, let id = movieId {
+            let reviewCount = repository.getMovieReview(from: id).count
+            cell.textLabel?.text = NSLocalizedString("Review", comment: "") + " (\(reviewCount))"
+        } else {
+            cell.textLabel?.text = NSLocalizedString("Release Date", comment: "")
+        }
+        return cell
+    }
+}
+
+extension TMDBMovieDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let id = movieId else { return }
+        if indexPath.row == 0 {
+            coordinator?.navigateToReview(reivew: repository.getMovieReview(from: id))
+        }
     }
 }

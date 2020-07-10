@@ -28,11 +28,11 @@ class TMDBReivewTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.reviewCell, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.reviewCell, for: indexPath) as! TMDBReivewCell
         cell.textLabel?.text = review[indexPath.row].author
-        
+
         if selectedIndexPahths.contains(indexPath) {
-            cell.detailTextLabel?.numberOfLines = 0
+            cell.isSelected = true
         }
         
         cell.detailTextLabel?.text = review[indexPath.row].content

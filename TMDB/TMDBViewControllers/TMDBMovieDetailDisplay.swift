@@ -19,7 +19,6 @@ protocol TMDBMovieDetailDisplayProtocol {
     func displayOverviewDetail(label: UILabel, movie: Movie)
     func displayRuntime(label: UILabel, movie: Movie)
     func displayGenere(label: UILabel, movie: Movie)
-    func displayReviewButton(button: UIButton, movie: Movie)
 }
 
 class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
@@ -47,16 +46,6 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
     
     func displayTitle(label: UILabel, movie: Movie) {
         label.attributedText = NSAttributedString(string: movie.originalTitle, attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!])
-    }
-    
-    func displayReviewButton(button: UIButton, movie: Movie) {
-        guard let reviews = movie.reviews?.reviews, !reviews.isEmpty else {
-            button.isHidden = true
-            return
-        }
-        let attributedString = NSAttributedString(string: NSLocalizedString("Review", comment: "") + " (\(reviews.count))",
-                                                  attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
-        button.setAttributedTitle(attributedString, for: .normal)
     }
     
     func displayOverview(label: UILabel) {

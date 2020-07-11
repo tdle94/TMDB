@@ -36,7 +36,7 @@ class TMDBMovieDetailDisplay {
         displayOverviewDetail(movie: movie)
         displayRuntime(movie: movie)
         displayGenere(movie: movie)
-        displayKeyword(movie)
+        displayKeyword()
         displayCredit(movie)
         displayMatchingMovie(movie)
         displayVideo(movie.videos)
@@ -170,7 +170,7 @@ class TMDBMovieDetailDisplay {
     }
     
     
-    func displayKeyword(_ movie: Movie) {
+    func displayKeyword() {
         movieDetailVC?.keywordCollectionView.reloadData()
         movieDetailVC?.keywordCollectionView.layoutIfNeeded()
         movieDetailVC?.keywordCollectionViewHeightConstraint.constant = movieDetailVC?.keywordCollectionView.contentSize.height ?? 0

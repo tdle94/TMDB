@@ -9,57 +9,107 @@
 import Foundation
 import UIKit
 
-protocol TMDBMovieDetailDisplayProtocol {
-    func displayStatus(label: UILabel, movie: Movie)
-    func displayOriginalLanguage(label: UILabel, movie: Movie)
-    func displayBudget(label: UILabel, movie: Movie)
-    func displayRevenue(label: UILabel, movie: Movie)
-    func displayTitle(label: UILabel, movie: Movie)
-    func displayOverview(label: UILabel)
-    func displayOverviewDetail(label: UILabel, movie: Movie)
-    func displayRuntime(label: UILabel, movie: Movie)
-    func displayGenere(label: UILabel, movie: Movie)
-}
+class TMDBMovieDetailDisplay {
+    let userSetting: TMDBUserSetting = TMDBUserSetting()
 
-class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
+    weak var movieDetailVC: TMDBMovieDetailViewController?
+    
+    init(movieDetailVC: TMDBMovieDetailViewController) {
+        self.movieDetailVC = movieDetailVC
+    }
+
     var numberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter
     }
+    
+    func displayMovieDetail(movie: Movie) {
+        getPosterImage(movie: movie)
+        getBackdropImage(movie: movie)
+        displayStatus(movie: movie)
+        displayOriginalLanguage(movie: movie)
+        displayBudget(movie: movie)
+        displayRevenue(movie: movie)
+        displayTitle(movie: movie)
+        displayOverview()
+        displayOverviewDetail(movie: movie)
+        displayRuntime(movie: movie)
+        displayGenere(movie: movie)
+        displayKeyword(movie)
+        displayCredit(movie)
+        displayMatchingMovie(movie)
+        displayVideo(movie.videos)
+        displayProductionCompanies(movie: movie)
+        
+        movieDetailVC?.title = movie.title
+        movieDetailVC?.taglineLabel.text = movie.tagline
+        movieDetailVC?.additionalInformationTableView.reloadData()
+    }
+    
+    func getPosterImage(movie: Movie) {
+        if let posterPath = movie.posterPath, let url = userSetting.getImageURL(from: posterPath) {
+            movieDetailVC?.moviePosterImageView.sd_setImage(with: url) { image, _, _, _ in
+                image?.getColors { colors in
+                    self.movieDetailVC?.moviePosterImageView.layer.borderColor = colors?.secondary.cgColor
+                }
+            }
+        }
+    }
+    
+    func getBackdropImage(movie: Movie) {
+        if let backdropPath = movie.backdropPath, let url = userSetting.getImageURL(from: backdropPath) {
+            movieDetailVC?.backdropImageView.sd_setImage(with: url) { image, _, _, _ in
+                image?.getColors() { colors in
+                    self.movieDetailVC?.backdropImageView.layer.borderColor = colors?.secondary.cgColor
+                }
+            }
+        }
+    }
 
-    func displayStatus(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: NSLocalizedString("Status", comment: "") + ": ", subTitle: movie.status ?? "unknown")
+    func displayStatus(movie: Movie) {
+        movieDetailVC?.statusLabel.attributedText = constructAttrsString(title: NSLocalizedString("Status", comment: "") + ": ",
+                                                                         subTitle: movie.status ?? "unknown")
     }
-    
-    func displayOriginalLanguage(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: NSLocalizedString("Original Language", comment: "") + ": ", subTitle: Constant.languageCode[movie.originalLanguage] ?? "None")
+
+    func displayOriginalLanguage(movie: Movie) {
+        movieDetailVC?.originalLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Original Language", comment: "") + ": ",
+                                                                                   subTitle: Constant.languageCode[movie.originalLanguage] ?? "None")
     }
-    
-    func displayBudget(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: NSLocalizedString("Budget", comment: "") + ": ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.budget)) ?? "0.0")")
+
+    func displayBudget(movie: Movie) {
+        movieDetailVC?.budgetLabel.attributedText = constructAttrsString(title: NSLocalizedString("Budget", comment: "") + ": ",
+                                                                         subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.budget)) ?? "0.0")")
     }
-    
-    func displayRevenue(label: UILabel, movie: Movie) {
-        label.attributedText = constructAttrsString(title: NSLocalizedString("Revenue", comment: "") + ": ", subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.revenue)) ?? "0.0")")
+
+    func displayRevenue(movie: Movie) {
+        movieDetailVC?.revenueLabel.attributedText = constructAttrsString(title: NSLocalizedString("Revenue", comment: "") + ": ",
+                                                                          subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.revenue)) ?? "0.0")")
     }
-    
-    func displayTitle(label: UILabel, movie: Movie) {
-        label.attributedText = NSAttributedString(string: movie.originalTitle, attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!])
+
+    func displayTitle( movie: Movie) {
+        movieDetailVC?.titleLabel.attributedText = NSAttributedString(string: movie.originalTitle,
+                                                                      attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!])
     }
-    
-    func displayOverview(label: UILabel) {
-        label.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ", attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
+
+    func displayOverview() {
+        movieDetailVC?.overviewLabel.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ",
+                                                                         attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
+                                                                                                                          size: UIFont.smallSystemFontSize)!])
     }
-    
-    func displayOverviewDetail(label: UILabel, movie: Movie) {
+
+    func displayOverviewDetail(movie: Movie) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
-
-        label.attributedText = NSAttributedString(string: movie.overview ?? "", attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!, NSAttributedString.Key.foregroundColor: UIColor.darkGray, NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        
+        movieDetailVC?.overviewDetail.attributedText = NSAttributedString(string: movie.overview ?? "",
+                                                                          attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
+                                                                                                   size: UIFont.smallSystemFontSize)!,
+                                                                                       NSAttributedString.Key.foregroundColor: UIColor.darkGray,
+                                                                                       NSAttributedString.Key.paragraphStyle: paragraphStyle])
     }
-    
-    func displayRuntime(label: UILabel, movie: Movie) {
+
+    func displayRuntime(movie: Movie) {
         var productionCountries = ""
         var releaseDate = ""
 
@@ -78,19 +128,19 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
         if productionCountries != "" {
             productionCountries = "(\(productionCountries))"
         }
-        
+
         if let date = movie.releaseDate, date != "" {
             releaseDate = "\u{2022} \(date)"
         }
-        
-        label.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \(releaseDate) \(productionCountries)",
-                                                         attributes: [
-                                                            NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
-                                                            NSAttributedString.Key.foregroundColor: UIColor.darkGray
-                                                         ])
+
+        movieDetailVC?.runtimeLabel.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \(releaseDate) \(productionCountries)",
+                                                                        attributes: [
+                                                                           NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
+                                                                           NSAttributedString.Key.foregroundColor: UIColor.darkGray
+                                                                        ])
     }
     
-    func displayGenere(label: UILabel, movie: Movie) {
+    func displayGenere(movie: Movie) {
         var genres = ""
         if movie.genres.count == 1 {
             genres = movie.genres.first!.name
@@ -103,7 +153,9 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
                 }
             }
         }
-        label.attributedText = NSAttributedString(string: genres, attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
+
+        movieDetailVC?.generes.attributedText = NSAttributedString(string: genres,
+                                                                   attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
     }
 
     func constructAttrsString(title: String, subTitle: String) -> NSAttributedString {
@@ -115,5 +167,123 @@ class TMDBMovieDetailDisplay: TMDBMovieDetailDisplayProtocol {
         ])
         firstString.append(secondString)
         return firstString
+    }
+    
+    
+    func displayKeyword(_ movie: Movie) {
+        movieDetailVC?.keywordCollectionView.reloadData()
+        movieDetailVC?.keywordCollectionView.layoutIfNeeded()
+        movieDetailVC?.keywordCollectionViewHeightConstraint.constant = movieDetailVC?.keywordCollectionView.contentSize.height ?? 0
+    }
+
+    func displayMatchingMovie(_ movie: Movie) {
+        guard
+            let similar = movie.similar,
+            let recommend = movie.recommendations,
+            var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
+
+        if similar.movies.isEmpty, !recommend.movies.isEmpty {
+            movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
+            movieDetailVC?.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
+            movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+            displayRecommendMovies(Array(recommend.movies))
+        } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
+            movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
+            movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
+            displaySimilarMovies(Array(similar.movies))
+        } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
+            displaySimilarMovies(Array(similar.movies))
+        } else {
+            snapshot.deleteSections([.More])
+            movieDetailVC?.matchingMovieCollectionViewHeightContraint.constant = 0
+            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+        }
+
+        movieDetailVC?.matchingMovieCollectionViewHeightContraint.constant = movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
+    }
+
+    func displayCredit(_ movie: Movie) {
+        guard
+            let credit = movie.credits,
+            var snapshot = movieDetailVC?.creditMovieDataSource.snapshot()
+            else { return }
+
+        if credit.cast.isEmpty, !credit.crew.isEmpty {
+            movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
+            movieDetailVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
+            movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
+            displayCrew(Array(credit.crew))
+        } else if credit.crew.isEmpty, !credit.cast.isEmpty {
+            movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
+            movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
+            displayCast(Array(credit.cast))
+        } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
+            displayCast(Array(credit.cast))
+        } else {
+            snapshot.deleteSections([.Credit])
+            movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+        }
+
+        movieDetailVC?.creditCollectionViewHeightConstraint.constant = movieDetailVC?.creditCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
+    }
+
+    func displayVideo(_ videoResult: VideoResult?) {
+        guard var snapshot = movieDetailVC?.videoMovieDataSource.snapshot() else { return }
+        guard let videoResult = videoResult, !videoResult.videos.isEmpty else {
+            snapshot.deleteSections([.Video])
+            movieDetailVC?.videoCollectionViewTopConstraint.constant = 0
+            movieDetailVC?.videoCollectionViewHeightConstraint.constant = 0
+            movieDetailVC?.videoMovieDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
+        let videos = Array(videoResult.videos)
+        snapshot.appendItems(videos)
+        movieDetailVC?.videoMovieDataSource.apply(snapshot, animatingDifferences: true)
+        movieDetailVC?.videoCollectionViewHeightConstraint.constant = (movieDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2.5
+    }
+
+    func displayCast(_ casts: [Cast]) {
+        guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.appendItems(casts, toSection: .Credit)
+        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    func displayCrew(_ crews: [Crew]) {
+        guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.appendItems(crews, toSection: .Credit)
+        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    func displayRecommendMovies(_ recommendMovies: [Movie]) {
+        guard var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
+        snapshot.appendItems(recommendMovies, toSection: .More)
+        movieDetailVC?.matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    func displaySimilarMovies(_ similarMovies: [Movie]) {
+        guard var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
+        snapshot.appendItems(similarMovies, toSection: .More)
+        movieDetailVC?.matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    func displayProductionCompanies(movie: Movie) {
+        guard var snapshot = movieDetailVC?.productionCompanyDataSource.snapshot() else { return }
+        if movie.productionCompanies.isEmpty {
+            movieDetailVC?.productionCompanyCollectionViewTopConstraint.constant = 0
+            movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = 0
+            return
+        }
+        let productionCompanies = Array(movie.productionCompanies)
+        snapshot.appendSections([.ProductionCompanies])
+        snapshot.appendItems(productionCompanies)
+        movieDetailVC?.productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
     }
 }

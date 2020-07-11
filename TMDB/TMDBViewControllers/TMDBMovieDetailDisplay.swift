@@ -95,7 +95,7 @@ class TMDBMovieDetailDisplay {
     func displayOverview() {
         movieDetailVC?.overviewLabel.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ",
                                                                          attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
-                                                                                                                          size: UIFont.smallSystemFontSize)!])
+                                                                                                                          size: UIFont.labelFontSize)!])
     }
 
     func displayOverviewDetail(movie: Movie) {
@@ -104,7 +104,7 @@ class TMDBMovieDetailDisplay {
         
         movieDetailVC?.overviewDetail.attributedText = NSAttributedString(string: movie.overview ?? "",
                                                                           attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
-                                                                                                   size: UIFont.smallSystemFontSize)!,
+                                                                                                   size: 14)!,
                                                                                        NSAttributedString.Key.foregroundColor: UIColor.darkGray,
                                                                                        NSAttributedString.Key.paragraphStyle: paragraphStyle])
     }
@@ -135,7 +135,7 @@ class TMDBMovieDetailDisplay {
 
         movieDetailVC?.runtimeLabel.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \(releaseDate) \(productionCountries)",
                                                                         attributes: [
-                                                                           NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
+                                                                           NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: 14)!,
                                                                            NSAttributedString.Key.foregroundColor: UIColor.darkGray
                                                                         ])
     }

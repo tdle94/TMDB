@@ -49,10 +49,9 @@ class TMDBMovieDetailViewController: UIViewController {
     
     var keywordMovieDataSource: UICollectionViewDiffableDataSource<KeywordMovieSection, Keyword>!
 
-    var movieDetail: TMDBMovieDetailDisplayProtocol = TMDBMovieDetailDisplay()
+    var movieDetail: TMDBMovieDetailDisplay!
 
     // MARK: - repository
-    let userSetting: TMDBUserSetting = TMDBUserSetting()
 
     var repository: TMDBRepositoryProtocol!
     
@@ -201,10 +200,11 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
+        movieDetail = TMDBMovieDetailDisplay(movieDetailVC: self)
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
                                     localDataSource: TMDBLocalDataSource(),
-                                    userSetting: userSetting)
+                                    userSetting: TMDBUserSetting())
 
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
@@ -218,24 +218,18 @@ class TMDBMovieDetailViewController: UIViewController {
         SDImageCache.shared.clearDisk()
     }
 
-    @IBAction func reviewButtonTap() {
-        guard let id = movieId else { return }
-        let reivew = repository.getMovieReview(from: id)
-        coordinator?.navigateToReview(reivew: reivew)
-    }
-
     // MARK: - service call
     
     func getMovieCast() {
         guard let id = movieId else { return }
         let casts = repository.getMovieCast(from: id)
-        displayCast(casts)
+        movieDetail.displayCast(casts)
     }
     
     func getMovieCrew() {
         guard let id = movieId else { return }
         let crews = repository.getMovieCrew(from: id)
-        displayCrew(crews)
+        movieDetail.displayCrew(crews)
     }
     
     func getSimilarMovies() {
@@ -245,7 +239,7 @@ class TMDBMovieDetailViewController: UIViewController {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             case .success(let similar):
-                self.displaySimilarMovies(Array(similar.movies))
+                self.movieDetail.displaySimilarMovies(Array(similar.movies))
             }
         }
     }
@@ -257,7 +251,7 @@ class TMDBMovieDetailViewController: UIViewController {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             case .success(let recommend):
-                self.displayRecommendMovies(Array(recommend.movies))
+                self.movieDetail.displayRecommendMovies(Array(recommend.movies))
             }
         }
     }
@@ -267,186 +261,11 @@ class TMDBMovieDetailViewController: UIViewController {
         repository.getMovieDetail(id: id) { result in
             switch result {
             case .success(let movie):
-                self.displayMovieDetail(movie)
-                self.displayProductionCompanies(movie: movie)
-                self.getPosterImage(movie: movie)
-                self.getBackdropImage(movie: movie)
-                self.displayVideo(movie.videos)
-                self.displayCredit(movie)
-                self.displayMatchingMovie(movie)
-                self.additionalInformationTableView.reloadData()
-                self.keywordCollectionView.reloadData()
-                self.keywordCollectionView.layoutIfNeeded()
-                self.keywordCollectionViewHeightConstraint.constant = self.keywordCollectionView.contentSize.height
+                self.movieDetail.displayMovieDetail(movie: movie)
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
         }
-    }
-
-    func getPosterImage(movie: Movie) {
-        if let posterPath = movie.posterPath, let url = userSetting.getImageURL(from: posterPath) {
-            self.moviePosterImageView.sd_setImage(with: url) { image, _, _, _ in
-                image?.getColors { colors in
-                    self.moviePosterImageView.layer.borderColor = colors?.secondary.cgColor
-                }
-            }
-        }
-    }
-    
-    func getBackdropImage(movie: Movie) {
-        if let backdropPath = movie.backdropPath, let url = userSetting.getImageURL(from: backdropPath) {
-            self.backdropImageView.sd_setImage(with: url) { image, _, _, _ in
-                image?.getColors() { colors in
-                    self.backdropImageView.layer.borderColor = colors?.secondary.cgColor
-                }
-            }
-        }
-    }
-
-    // MARK: - display movie detail
-
-    func displayKeyword(_ movie: Movie) {
-        guard let keywords = movie.keywords?.keywords else { return }
-        var snapshot = keywordMovieDataSource.snapshot()
-        snapshot.appendItems(Array(keywords))
-        keywordMovieDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displayMatchingMovie(_ movie: Movie) {
-        guard let similar = movie.similar, let recommend = movie.recommendations else { return }
-
-        if similar.movies.isEmpty, !recommend.movies.isEmpty {
-            self.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
-            self.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
-            matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            displayRecommendMovies(Array(recommend.movies))
-        } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
-            moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
-            matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            displaySimilarMovies(Array(similar.movies))
-        } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
-            displaySimilarMovies(Array(similar.movies))
-        } else {
-            var snapshot = self.matchingMoviesDataSource.snapshot()
-            snapshot.deleteSections([.More])
-            matchingMovieCollectionViewHeightContraint.constant = 0
-            matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-        }
-
-        matchingMovieCollectionViewHeightContraint.constant = matchingMoviesCollectionView.collectionViewLayout.collectionViewContentSize.height
-    }
-
-    func displayCredit(_ movie: Movie) {
-        guard let credit = movie.credits else { return }
-
-        if credit.cast.isEmpty, !credit.crew.isEmpty {
-            creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
-            creditHeader?.segmentControl.selectedSegmentIndex = 0
-            creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCrew(Array(credit.crew))
-        } else if credit.crew.isEmpty, !credit.cast.isEmpty {
-            creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
-            creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCast(Array(credit.cast))
-        } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
-            displayCast(Array(credit.cast))
-        } else {
-            var snapshot = self.creditMovieDataSource.snapshot()
-            snapshot.deleteSections([.Credit])
-            creditMovieDataSource.apply(snapshot, animatingDifferences: true)
-        }
-
-        creditCollectionViewHeightConstraint.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
-    }
-
-    func displayVideo(_ videoResult: VideoResult?) {
-        var snapshot = videoMovieDataSource.snapshot()
-        guard let videoResult = videoResult, !videoResult.videos.isEmpty else {
-            snapshot.deleteSections([.Video])
-            videoCollectionViewTopConstraint.constant = 0
-            videoCollectionViewHeightConstraint.constant = 0
-            videoMovieDataSource.apply(snapshot, animatingDifferences: true)
-            return
-        }
-        let videos = Array(videoResult.videos)
-        snapshot.appendItems(videos)
-        videoMovieDataSource.apply(snapshot, animatingDifferences: true)
-        videoCollectionViewHeightConstraint.constant = videoCollectionView.collectionViewLayout.collectionViewContentSize.height/2.5
-    }
-
-    func displayCast(_ casts: [Cast]) {
-        var snapshot = creditMovieDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
-        snapshot.appendItems(casts, toSection: .Credit)
-        creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        creditMovieDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displayCrew(_ crews: [Crew]) {
-        var snapshot = creditMovieDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
-        snapshot.appendItems(crews, toSection: .Credit)
-        creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        creditMovieDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displayRecommendMovies(_ recommendMovies: [Movie]) {
-        var snapshot = matchingMoviesDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
-        snapshot.appendItems(recommendMovies, toSection: .More)
-        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displaySimilarMovies(_ similarMovies: [Movie]) {
-        var snapshot = matchingMoviesDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
-        snapshot.appendItems(similarMovies, toSection: .More)
-        matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displayProductionCompanies(movie: Movie) {
-        var snapshot = productionCompanyDataSource.snapshot()
-        if movie.productionCompanies.isEmpty {
-            productionCompanyCollectionViewTopConstraint.constant = 0
-            productionCompanyCollectionViewHeightConstraint.constant = 0
-            return
-        }
-        let productionCompanies = Array(movie.productionCompanies)
-        snapshot.appendSections([.ProductionCompanies])
-        snapshot.appendItems(productionCompanies)
-        productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displayMovieDetail(_ movie: Movie) {
-        if movie.overview == nil || movie.overview == "" {
-            overviewDetailTopConstraint.constant = 0
-            productionCompanyCollectionViewTopConstraint.constant = 0
-            overviewTopConstraint.constant = 0
-            overviewLabel.isHidden = true
-            overviewDetail.isHidden = true
-        }
-        
-        if movie.tagline == nil || movie.tagline == "" {
-            taglineTopConstraint.constant = 0
-            taglineLabel.isHidden = true
-        }
-
-        title = movie.originalTitle
-        taglineLabel.text = movie.tagline
-
-        movieDetail.displayTitle(label: titleLabel, movie: movie)
-        movieDetail.displayBudget(label: budgetLabel, movie: movie)
-        movieDetail.displayGenere(label: generes, movie: movie)
-        movieDetail.displayOriginalLanguage(label: originalLanguageLabel, movie: movie)
-        movieDetail.displayOverview(label: overviewLabel)
-        movieDetail.displayOverviewDetail(label: overviewDetail, movie: movie)
-        movieDetail.displayRevenue(label: revenueLabel, movie: movie)
-        movieDetail.displayRuntime(label: runtimeLabel, movie: movie)
-        movieDetail.displayStatus(label: statusLabel, movie: movie)
-        movieDetail.displayTitle(label: titleLabel, movie: movie)
     }
 }
 

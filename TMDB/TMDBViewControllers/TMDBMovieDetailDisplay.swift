@@ -41,10 +41,20 @@ class TMDBMovieDetailDisplay {
         displayMatchingMovie(movie)
         displayVideo(movie.videos)
         displayProductionCompanies(movie: movie)
+        displayTagLine(movie: movie)
         
         movieDetailVC?.title = movie.title
-        movieDetailVC?.taglineLabel.text = movie.tagline
         movieDetailVC?.additionalInformationTableView.reloadData()
+    }
+    
+    func displayTagLine(movie: Movie) {
+        if movie.tagline == "" || movie.tagline == nil {
+            movieDetailVC?.taglineLabel.isHidden = true
+            movieDetailVC?.taglineTopConstraint.constant = 0
+            movieDetailVC?.overviewTopConstraint.constant = -15
+        } else {
+            movieDetailVC?.taglineLabel.text = movie.tagline
+        }
     }
     
     func getPosterImage(movie: Movie) {
@@ -101,6 +111,13 @@ class TMDBMovieDetailDisplay {
     func displayOverviewDetail(movie: Movie) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
+        
+        if movie.overview == "" {
+            movieDetailVC?.overviewLabel.isHidden = true
+            movieDetailVC?.overviewTopConstraint.constant = 0
+            movieDetailVC?.overviewDetailTopConstraint.constant = 0
+            movieDetailVC?.keywordCollectionViewTopConstraint.constant = 0
+        }
         
         movieDetailVC?.overviewDetail.attributedText = NSAttributedString(string: movie.overview ?? "",
                                                                           attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
@@ -186,17 +203,20 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
             movieDetailVC?.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
             movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            displayRecommendMovies(Array(recommend.movies))
+            snapshot.appendItems(Array(recommend.movies))
+            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
         } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
             movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
             movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            displaySimilarMovies(Array(similar.movies))
+            snapshot.appendItems(Array(similar.movies))
+            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
         } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
             displaySimilarMovies(Array(similar.movies))
         } else {
+            snapshot.deleteAllItems()
             snapshot.deleteSections([.More])
             movieDetailVC?.matchingMovieCollectionViewHeightContraint.constant = 0
-            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: false)
         }
 
         movieDetailVC?.matchingMovieCollectionViewHeightContraint.constant = movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
@@ -212,11 +232,13 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
             movieDetailVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
             movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCrew(Array(credit.crew))
+            snapshot.appendItems(Array(credit.crew))
+            movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
         } else if credit.crew.isEmpty, !credit.cast.isEmpty {
             movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
             movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCast(Array(credit.cast))
+            snapshot.appendItems(Array(credit.cast))
+            movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
         } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
             displayCast(Array(credit.cast))
         } else {
@@ -246,7 +268,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
-        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        snapshot.reloadSections([.Credit])
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -254,7 +276,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)
-        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        snapshot.reloadSections([.Credit])
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 

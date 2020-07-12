@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol TMDBMultiSearch {
-    <#requirements#>
+protocol TMDBSearchService {
+    func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void)
 }

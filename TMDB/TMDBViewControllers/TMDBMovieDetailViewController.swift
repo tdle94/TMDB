@@ -56,11 +56,11 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
-    @IBOutlet weak var reviewButton: UIButton!
     @IBOutlet weak var additionalInformationTableView: UITableView!
     weak var creditHeader: TMDBCreditHeaderView?
     weak var moreMovieHeader: TMDBMoreMovieHeaderView?
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var keywordCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var videoCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var matchingMovieCollectionViewHeightContraint: NSLayoutConstraint!
@@ -352,6 +352,7 @@ extension TMDBMovieDetailViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailInfoCell", for: indexPath)
+        cell.indentationLevel = 1
         if indexPath.row == 0, let id = movieId {
             let reviewCount = repository.getMovieReview(from: id).count
             cell.textLabel?.text = NSLocalizedString("Review", comment: "") + " (\(reviewCount))"

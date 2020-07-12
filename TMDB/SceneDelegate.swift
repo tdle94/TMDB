@@ -31,6 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let movieVC = TMDBMovieViewController()
         let tvVC = TMDBTelevisionViewController()
         let peopleVC = TMDBPeopleViewController()
+        let searchVC = TMDBSearchViewController()
         
         let tmdbLogo = UIImage(named: Constant.imageLogo)?.withRenderingMode(.alwaysOriginal)
         let imageBarButtonItem = UIBarButtonItem(image: tmdbLogo, landscapeImagePhone: tmdbLogo, style: .plain, target: nil, action: nil)
@@ -64,6 +65,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         peopleNavController.tabBarItem.title = NSLocalizedString("People", comment: "")
         peopleNavController.tabBarItem.image = UIImage(systemName: "person.2.fill")
 
+        let searchNavController = UINavigationController(rootViewController: searchVC)
+        searchNavController.navigationBar.barTintColor = Constant.Color.primaryColor
+        searchNavController.navigationBar.tintColor = Constant.Color.backgroundColor
+        searchNavController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+        searchNavController.tabBarItem.title = NSLocalizedString("Search", comment: "")
+        
         // set coordinators
         homeCoordinator = MainCoordinator(navigationController: homeNavController)
         movieCoordinator = MainCoordinator(navigationController: movieNavController)
@@ -76,7 +83,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
         tabBarController.tabBar.unselectedItemTintColor = Constant.Color.secondaryColor
         tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
-        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController, peopleNavController], animated: true)
+        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController, peopleNavController, searchNavController], animated: true)
 
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController

@@ -13,6 +13,7 @@ class TMDBSearchResultCell: UITableViewCell {
     var id: Int?
     var mediaType: String?
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+    private lazy var noImage: UIImage? = UIImage(named: "NoImage")?.resize(newWidth: imageView?.frame.size.width ?? 0)
 
     func configure(item: MultiSearch) {
         textLabel?.text = item.originalTitle ?? item.originalName ?? item.name
@@ -25,7 +26,7 @@ class TMDBSearchResultCell: UITableViewCell {
                                     self.layoutSubviews()
             }
         } else {
-            imageView?.image = UIImage(named: "NoImage")?.resize(newWidth: imageView!.frame.width)
+            imageView?.image = noImage
         }
     }
     
@@ -33,14 +34,14 @@ class TMDBSearchResultCell: UITableViewCell {
         textLabel?.text = ""
         detailTextLabel?.text = ""
         mediaType = ""
-        imageView?.image = UIImage(named: "NoImage")
+        imageView?.image = noImage
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        imageView?.frame = CGRect(x: imageView!.frame.origin.x,
+        imageView?.frame = CGRect(x: imageView?.frame.origin.x ?? 0,
                                   y: 5,
-                                  width: imageView!.frame.size.width,
+                                  width: imageView?.frame.size.width ?? 0,
                                   height: frame.height - 10)
     }
     

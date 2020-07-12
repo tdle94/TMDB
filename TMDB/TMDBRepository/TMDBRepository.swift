@@ -28,6 +28,9 @@ protocol TMDBRepositoryProtocol {
 
     // MARK: - image configuration
     func updateImageConfig()
+
+    // MARK: - search
+    func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void)
 }
 
 class TMDBRepository: TMDBRepositoryProtocol {
@@ -237,6 +240,20 @@ class TMDBRepository: TMDBRepositoryProtocol {
                     debugPrint(error)
                 case .success(let imageConfigResult):
                     self.userSetting.imageConfig = imageConfigResult
+                }
+            }
+        }
+    }
+
+    // MARK: - search
+    func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void) {
+        services.multiSearch(query: query, page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .success(let multiSearchResult):
+                    completion(.success(multiSearchResult))
                 }
             }
         }

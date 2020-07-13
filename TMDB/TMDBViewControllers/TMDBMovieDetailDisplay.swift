@@ -51,7 +51,7 @@ class TMDBMovieDetailDisplay {
         if movie.tagline == "" || movie.tagline == nil {
             movieDetailVC?.taglineLabel.isHidden = true
             movieDetailVC?.taglineTopConstraint.constant = 0
-            movieDetailVC?.overviewTopConstraint.constant = -15
+            movieDetailVC?.overviewTopConstraint.constant = 0
         } else {
             movieDetailVC?.taglineLabel.text = movie.tagline
         }

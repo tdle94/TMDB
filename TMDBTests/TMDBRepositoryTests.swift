@@ -1073,4 +1073,32 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         verify(localDataSource).getMovie(id: 3)
     }
+    
+    // MARK: - multisearch
+    func testGetMultiSearch() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMultiSearchURLRequest(query: "T", language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MultiSearchResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MultiSearchResult(page: 1, results: [], totalResults: 1, totalPages: 1)))
+            }
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getMultiSearchURLRequest(query: "T", language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode, page: 1).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        repository.multiSearch(query: "T", page: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(MultiSearchResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getMultiSearchURLRequest(query: "T", language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode, page: 1)
+    }
 }

@@ -53,7 +53,7 @@ class TMDBURLSessionTests: XCTestCase {
     }
 
     func testSuccessCall() {
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: nil, region: nil)
 
         /*GIVEN*/
         stub(session) { stub in
@@ -68,7 +68,7 @@ class TMDBURLSessionTests: XCTestCase {
     }
     
     func testErrorCall() {
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1,  language: nil, region: nil)
 
         /*GIVEN*/
         stub(session) { stub in
@@ -82,7 +82,7 @@ class TMDBURLSessionTests: XCTestCase {
     }
     
     func test500HTTPStatus() {
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: nil, region: nil)
 
         /*GIVEN*/
         stub(session) { stub in
@@ -97,7 +97,7 @@ class TMDBURLSessionTests: XCTestCase {
     }
     
     func testNoDataReturn() {
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1)
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: nil, region: nil)
 
         /*GIVEN*/
         stub(session) { stub in

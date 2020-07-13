@@ -98,6 +98,7 @@ extension TMDBSearchViewController: TMDBSearchProtocol {
 
 extension TMDBSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        page = 1
         multiSearch(query: searchBar.text, newSearch: true)
     }
 }

@@ -25,13 +25,11 @@ class People: Object, Decodable {
     dynamic var placeOfBirth: String?
     dynamic var imdbId: String = ""
     dynamic var homepage: String?
-    dynamic var movieCredits: CreditResult?
-    dynamic var tvCredits: CreditResult?
     dynamic var images: Images?
     let knownFor: List<KnownFor> = List<KnownFor>()
     
     enum CodingKeys: String, CodingKey {
-        case birthday, deathday, id, name, gender, biography, popularity, adult, homepage
+        case birthday, deathday, id, name, gender, biography, popularity, adult, homepage, images
         case knownForDepartment = "known_for_department"
         case alsoKnownAs = "also_known_as"
         case placeOfBirth = "place_of_birth"
@@ -51,12 +49,10 @@ class People: Object, Decodable {
         popularity = try container.decode(Double.self, forKey: .popularity)
         deathday = try container.decodeIfPresent(String.self, forKey: .deathday)
         homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
-        tvCredits = try container.decodeIfPresent(CreditResult.self, forKey: .tvCredits)
-        movieCredits = try container.decodeIfPresent(CreditResult.self, forKey: .movieCredits)
-
+        images = try container.decodeIfPresent(Images.self, forKey: .images)
 
         if container.contains(.birthday) {
-            birthday = try container.decode(String.self, forKey: .birthday)
+            birthday = try container.decodeIfPresent(String.self, forKey: .birthday)
         }
 
         if container.contains(.knownForDepartment) {
@@ -76,7 +72,7 @@ class People: Object, Decodable {
         }
 
         if container.contains(.placeOfBirth) {
-            placeOfBirth = try container.decode(String.self, forKey: .placeOfBirth)
+            placeOfBirth = try container.decodeIfPresent(String.self, forKey: .placeOfBirth)
         }
 
         if container.contains(.imdbId) {
@@ -112,9 +108,9 @@ class Images: Object, Decodable {
     required init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        voteCount = try container.decode(Int.self, forKey: .voteCount)
-        voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+        aspectRatio = try container.decodeIfPresent(Double.self, forKey: .aspectRatio) ?? 0.0
+        voteCount = try container.decodeIfPresent(Int.self, forKey: .voteCount) ?? 0
+        voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage) ?? 0.0
     }
 
     required init() {

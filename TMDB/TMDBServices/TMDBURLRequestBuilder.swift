@@ -14,6 +14,7 @@ protocol TMDBURLRequestBuilderProtocol {
     
     // MARK: - people
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest
+    func getPersonDetailURLRequest(id: Int, language: String?) -> URLRequest
 
     // MARK: - trending
     func getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest
@@ -47,12 +48,21 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         return buildURLRequest(path: "/3/tv/popular", queryItems: queryItems)
     }
 
-    // MARK: - peopel
+    // MARK: - peopele
 
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language ?? "en-US")
+        ]
+        return buildURLRequest(path: "/3/person/popular", queryItems: queryItems)
+    }
+    
+    func getPersonDetailURLRequest(id: Int, language: String?) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "id", value: String(id)),
+            URLQueryItem(name: "language", value: language ?? "en-US"),
+            URLQueryItem(name: "append_to_response", value: "movie_credits,tv_credits,images")
         ]
         return buildURLRequest(path: "/3/person/popular", queryItems: queryItems)
     }

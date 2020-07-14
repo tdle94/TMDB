@@ -25,6 +25,9 @@ class People: Object, Decodable {
     dynamic var placeOfBirth: String?
     dynamic var imdbId: String = ""
     dynamic var homepage: String?
+    dynamic var movieCredits: CreditResult?
+    dynamic var tvCredits: CreditResult?
+    dynamic var images: Images?
     let knownFor: List<KnownFor> = List<KnownFor>()
     
     enum CodingKeys: String, CodingKey {
@@ -35,6 +38,8 @@ class People: Object, Decodable {
         case profilePath = "profile_path"
         case imdbId = "imdb_id"
         case knownFor = "known_for"
+        case tvCredits = "tv_credits"
+        case movieCredits = "movie_credits"
     }
     
     required init(from decoder: Decoder) throws {
@@ -46,6 +51,8 @@ class People: Object, Decodable {
         popularity = try container.decode(Double.self, forKey: .popularity)
         deathday = try container.decodeIfPresent(String.self, forKey: .deathday)
         homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+        tvCredits = try container.decodeIfPresent(CreditResult.self, forKey: .tvCredits)
+        movieCredits = try container.decodeIfPresent(CreditResult.self, forKey: .movieCredits)
 
 
         if container.contains(.birthday) {
@@ -85,6 +92,31 @@ class People: Object, Decodable {
         return "id"
     }
     
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
+class Images: Object, Decodable {
+    dynamic var aspectRatio: Double = 0.0
+    dynamic var voteCount: Int = 0
+    dynamic var voteAverage: Double = 0.0
+    
+    enum CodingKeys: String, CodingKey {
+        case aspectRatio = "aspect_ratio"
+        case voteCount = "vote_count"
+        case voteAverage = "vote_average"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        super.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        voteCount = try container.decode(Int.self, forKey: .voteCount)
+        voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+    }
+
     required init() {
         super.init()
     }

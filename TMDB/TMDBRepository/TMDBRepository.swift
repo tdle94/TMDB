@@ -22,6 +22,7 @@ protocol TMDBRepositoryProtocol {
 
     // MARK: - people
     func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void)
+    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void)
 
     // MARK: - tv shows
     func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
@@ -219,6 +220,25 @@ class TMDBRepository: TMDBRepositoryProtocol {
                 switch result {
                 case .success(let popularPeopleResult):
                     completion(.success(popularPeopleResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void) {
+        if let person = localDataSource.getPerson(id: id) {
+            completion(.success(person))
+            return
+        }
+
+        services.getPersonDetail(id: id) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let person):
+                    self.localDataSource.savePerson(person)
+                    completion(.success(person))
                 case .failure(let error):
                     completion(.failure(error))
                 }

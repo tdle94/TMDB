@@ -10,4 +10,5 @@ import Foundation
 
 protocol TMDBPeopleService {
     func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void)
+    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void)
 }

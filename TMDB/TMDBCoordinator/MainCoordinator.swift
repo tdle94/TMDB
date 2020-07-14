@@ -31,8 +31,14 @@ struct MainCoordinator: Coordinator {
     }
 
     func navigateToReview(reivew: [Review]) {
-        let reviewTableViewVC = storyboard.instantiateViewController(identifier:  Constant.ViewControllerIdentifier.tmdbReviewVC) as! TMDBReivewTableViewController
+        let reviewTableViewVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbReviewVC) as! TMDBReivewTableViewController
         reviewTableViewVC.review = reivew
         navigationController.pushViewController(reviewTableViewVC, animated: true)
+    }
+    
+    func navigateToPersonDetail(id: Int) {
+        let personDetailVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbPersonDetailVC) as! TMDBPersonDetailViewController
+        personDetailVC.personId = id
+        navigationController.pushViewController(personDetailVC, animated: true)
     }
 }

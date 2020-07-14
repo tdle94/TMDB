@@ -35,6 +35,7 @@ struct Constant {
         static let tmdbMovieDetail = "TMDBMovieDetailViewController"
         static let tmdbVideoPlayer = "TMDBVideoPlayerViewController"
         static let tmdbReviewVC = "TMDBReivewTableViewController"
+        static let tmdbPersonDetailVC = "TMDBPersonDetailViewController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

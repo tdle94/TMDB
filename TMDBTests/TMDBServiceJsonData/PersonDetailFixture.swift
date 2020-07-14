@@ -1,6 +1,6 @@
 //
-//  TMDBPeopleViewController.swift
-//  TMDB
+//  PersonDetailFixture.swift
+//  TMDBTests
 //
 //  Created by Tuyen Le on 7/14/20.
 //  Copyright © 2020 Tuyen Le. All rights reserved.

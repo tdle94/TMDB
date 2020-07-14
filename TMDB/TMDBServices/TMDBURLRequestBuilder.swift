@@ -60,11 +60,10 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     
     func getPersonDetailURLRequest(id: Int, language: String?) -> URLRequest {
         let queryItems = [
-            URLQueryItem(name: "id", value: String(id)),
             URLQueryItem(name: "language", value: language ?? "en-US"),
             URLQueryItem(name: "append_to_response", value: "movie_credits,tv_credits,images")
         ]
-        return buildURLRequest(path: "/3/person/popular", queryItems: queryItems)
+        return buildURLRequest(path: "/3/person/\(id)", queryItems: queryItems)
     }
 
     // MARK: - trending

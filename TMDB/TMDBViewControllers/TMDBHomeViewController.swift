@@ -105,6 +105,8 @@ extension TMDBHomeViewController: UICollectionViewDelegate {
 
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             coordinator?.navigateToMovieDetail(id: item.id)
+        } else if let item = item as? People ?? (item as? Trending)?.people {
+            coordinator?.navigateToPersonDetail(id: item.id)
         }
     }
 }

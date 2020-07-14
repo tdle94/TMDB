@@ -13,4 +13,9 @@ extension TMDBServices: TMDBPeopleService {
         let request = urlRequestBuilder.getPopularPeopleURLRequest(page: page, language: NSLocale.preferredLanguages.first)
         session.send(request: request, responseType: PeopleResult.self, completion: completion)
     }
+
+    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void) {
+        let request = urlRequestBuilder.getPersonDetailURLRequest(id: id, language: NSLocale.preferredLanguages.first)
+        session.send(request: request, responseType: People.self, completion: completion)
+    }
 }

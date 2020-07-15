@@ -32,6 +32,7 @@ class TMDBPersonDetailDisplay {
 
         snapshot.deleteItems(snapshot.itemIdentifiers)
         snapshot.appendItems(Array(cast))
+        personDetailVC?.appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
         personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -41,6 +42,7 @@ class TMDBPersonDetailDisplay {
             var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers)
         snapshot.appendItems(Array(cast))
+        personDetailVC?.appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
         personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
     
@@ -65,8 +67,7 @@ class TMDBPersonDetailDisplay {
             personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
             displayMovieAppearIn(movieCredit: movieCredit)
         } else {
-            displayTVShowAppearIn(tvCredit: tvCredit)
-            //displayMovieAppearIn(movieCredit: movieCredit)
+            displayMovieAppearIn(movieCredit: movieCredit)
         }
     }
 

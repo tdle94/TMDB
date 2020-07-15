@@ -26,6 +26,7 @@ class People: Object, Decodable {
     dynamic var imdbId: String = ""
     dynamic var homepage: String?
     dynamic var movieCredits: MovieCredit?
+    dynamic var tvCredits: TVCredit?
     dynamic var images: ImageProfile?
     dynamic var region: String?
     dynamic var language: String?
@@ -54,6 +55,7 @@ class People: Object, Decodable {
         homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
         images = try container.decodeIfPresent(ImageProfile.self, forKey: .images)
         movieCredits = try container.decodeIfPresent(MovieCredit.self, forKey: .movieCredits)
+        tvCredits = try container.decodeIfPresent(TVCredit.self, forKey: .tvCredits)
 
         if container.contains(.birthday) {
             birthday = try container.decodeIfPresent(String.self, forKey: .birthday)
@@ -110,6 +112,26 @@ class MovieCredit: Object, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         cast.append(objectsIn: try container.decode(List<Movie>.self, forKey: .cast))
         crew.append(objectsIn: try container.decode(List<Movie>.self, forKey: .crew))
+    }
+
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
+class TVCredit: Object, Decodable {
+    let cast: List<TVShow> = List()
+    let crew: List<TVShow> = List()
+    
+    enum CodingKeys: String, CodingKey {
+        case cast, crew
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        cast.append(objectsIn: try container.decode(List<TVShow>.self, forKey: .cast))
+        crew.append(objectsIn: try container.decode(List<TVShow>.self, forKey: .crew))
     }
 
     required init() {

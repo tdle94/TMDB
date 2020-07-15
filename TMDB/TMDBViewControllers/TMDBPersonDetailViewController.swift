@@ -17,32 +17,32 @@ class TMDBPersonDetailViewController: UIViewController {
 
     var personId: Int?
     
-    enum AppearInSection: String, CaseIterable {
-        case Movie = "Movie"
-    }
-    
-    var appearInDataSource: UICollectionViewDiffableDataSource<AppearInSection, Object>!
+    var appearInDataSource: UICollectionViewDiffableDataSource<UUID, Object>!
 
     // MARK: - ui
+    weak var appearInHeaderView: TMDBAppearInHeaderView?
     @IBOutlet weak var appearInCollectionView: UICollectionView! {
         didSet {
             appearInCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             appearInCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            appearInCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            appearInCollectionView.register(TMDBAppearInHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
             appearInDataSource = UICollectionViewDiffableDataSource(collectionView: appearInCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
                 cell?.configure(item: item)
                 return cell
             }
             appearInDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                self.appearInHeaderView =
+                    (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) ??
+                    collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                             withReuseIdentifier: Constant.Identifier.creditMovieHeader,
-                                                                            for: indexPath) as? TMDBCreditHeaderView
-                return header
+                                                                            for: indexPath)) as? TMDBAppearInHeaderView
+                self.appearInHeaderView?.delegate = self
+                return self.appearInHeaderView
             }
             
             var snapshot = appearInDataSource.snapshot()
-            snapshot.appendSections([.Movie])
+            snapshot.appendSections([UUID()])
             appearInDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -85,6 +85,18 @@ class TMDBPersonDetailViewController: UIViewController {
             case .success(let person):
                 self.personDetail.displayPersonDetail(person)
             }
+        }
+    }
+}
+
+extension TMDBPersonDetailViewController: TMDBPreviewSegmentControl {
+    func segmentControlSelected(at index: Int, text selected: String) {
+        guard let id = personId else { return }
+
+        if selected == NSLocalizedString("Movies", comment: "") {
+            personDetail.displayMovieAppearIn(movieCredit: repository.getMovieCredits(from: id))
+        } else if selected == NSLocalizedString("TV Shows", comment: "") {
+            personDetail.displayTVShowAppearIn(tvCredit: repository.getTVCredits(from: id))
         }
     }
 }

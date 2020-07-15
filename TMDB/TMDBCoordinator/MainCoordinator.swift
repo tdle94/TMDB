@@ -39,6 +39,7 @@ struct MainCoordinator: Coordinator {
     func navigateToPersonDetail(id: Int) {
         let personDetailVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbPersonDetailVC) as! TMDBPersonDetailViewController
         personDetailVC.personId = id
+        personDetailVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(personDetailVC, animated: true)
     }
 }

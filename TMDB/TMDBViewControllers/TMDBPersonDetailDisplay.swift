@@ -25,17 +25,52 @@ class TMDBPersonDetailDisplay {
         personDetailVC?.title = person.name
     }
     
-    func displayCredit(person: People) {
+    func displayMovieAppearIn(movieCredit: MovieCredit?) {
         guard
-            let movieCredit = person.movieCredits,
-            var snapshot = personDetailVC?.appearInDataSource.snapshot()
-            else { return }
+            let cast = movieCredit?.cast,
+            var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
+
         snapshot.deleteItems(snapshot.itemIdentifiers)
-        snapshot.appendItems(Array(movieCredit.cast))
+        snapshot.appendItems(Array(cast))
+        personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    func displayTVShowAppearIn(tvCredit: TVCredit?) {
+        guard
+            let cast = tvCredit?.cast,
+            var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers)
+        snapshot.appendItems(Array(cast))
         personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    func displayBiographyDetail(person: People) {
+    private func displayCredit(person: People) {
+        guard var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
+        guard
+            let movieCredit = person.movieCredits,
+            let tvCredit = person.tvCredits
+            else {
+                snapshot.deleteSections(snapshot.sectionIdentifiers)
+                personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
+                return
+        }
+
+        if movieCredit.cast.isEmpty {
+            personDetailVC?.appearInHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
+            personDetailVC?.appearInHeaderView?.segmentControl.selectedSegmentIndex = 0
+            personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
+            displayTVShowAppearIn(tvCredit: tvCredit)
+        } else if tvCredit.cast.isEmpty {
+            personDetailVC?.appearInHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
+            personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
+            displayMovieAppearIn(movieCredit: movieCredit)
+        } else {
+            displayTVShowAppearIn(tvCredit: tvCredit)
+            //displayMovieAppearIn(movieCredit: movieCredit)
+        }
+    }
+
+    private func displayBiographyDetail(person: People) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
         
@@ -51,7 +86,7 @@ class TMDBPersonDetailDisplay {
                                                                                              NSAttributedString.Key.paragraphStyle: paragraphStyle])
     }
     
-    func displayBirthLabel(person: People) {
+    private func displayBirthLabel(person: People) {
         var birth: String?
 
         if person.birthday == nil || person.birthday == "" {

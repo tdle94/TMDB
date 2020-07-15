@@ -102,16 +102,23 @@ class People: Object, Decodable {
 @objcMembers
 class MovieCredit: Object, Decodable {
     let cast: List<Movie> = List()
-    let crew: List<Movie> = List()
     
     enum CodingKeys: String, CodingKey {
-        case cast, crew
+        case cast
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        cast.append(objectsIn: try container.decode(List<Movie>.self, forKey: .cast))
-        crew.append(objectsIn: try container.decode(List<Movie>.self, forKey: .crew))
+        let casts = try container.decode(List<Movie>.self, forKey: .cast)
+        let uniqueCasts: List<Movie> = List()
+
+        for cast in casts {
+            if !uniqueCasts.contains(where: { $0.id == cast.id }) {
+                uniqueCasts.append(cast)
+            }
+        }
+
+        cast.append(objectsIn: uniqueCasts)
     }
 
     required init() {
@@ -122,16 +129,22 @@ class MovieCredit: Object, Decodable {
 @objcMembers
 class TVCredit: Object, Decodable {
     let cast: List<TVShow> = List()
-    let crew: List<TVShow> = List()
     
     enum CodingKeys: String, CodingKey {
-        case cast, crew
+        case cast
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        cast.append(objectsIn: try container.decode(List<TVShow>.self, forKey: .cast))
-        crew.append(objectsIn: try container.decode(List<TVShow>.self, forKey: .crew))
+        let casts = try container.decode(List<TVShow>.self, forKey: .cast)
+        let uniqueCasts: List<TVShow> = List()
+
+        for cast in casts {
+            if !uniqueCasts.contains(where: { $0.id == cast.id }) {
+                uniqueCasts.append(cast)
+            }
+        }
+        cast.append(objectsIn: uniqueCasts)
     }
 
     required init() {

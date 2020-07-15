@@ -25,7 +25,10 @@ class People: Object, Decodable {
     dynamic var placeOfBirth: String?
     dynamic var imdbId: String = ""
     dynamic var homepage: String?
-    dynamic var images: Images?
+    dynamic var movieCredits: MovieCredit?
+    dynamic var images: ImageProfile?
+    dynamic var region: String?
+    dynamic var language: String?
     let knownFor: List<KnownFor> = List<KnownFor>()
     
     enum CodingKeys: String, CodingKey {
@@ -49,7 +52,8 @@ class People: Object, Decodable {
         popularity = try container.decode(Double.self, forKey: .popularity)
         deathday = try container.decodeIfPresent(String.self, forKey: .deathday)
         homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
-        images = try container.decodeIfPresent(Images.self, forKey: .images)
+        images = try container.decodeIfPresent(ImageProfile.self, forKey: .images)
+        movieCredits = try container.decodeIfPresent(MovieCredit.self, forKey: .movieCredits)
 
         if container.contains(.birthday) {
             birthday = try container.decodeIfPresent(String.self, forKey: .birthday)
@@ -94,23 +98,70 @@ class People: Object, Decodable {
 }
 
 @objcMembers
-class Images: Object, Decodable {
-    dynamic var aspectRatio: Double = 0.0
-    dynamic var voteCount: Int = 0
-    dynamic var voteAverage: Double = 0.0
+class MovieCredit: Object, Decodable {
+    let cast: List<Movie> = List()
+    let crew: List<Movie> = List()
     
     enum CodingKeys: String, CodingKey {
-        case aspectRatio = "aspect_ratio"
-        case voteCount = "vote_count"
-        case voteAverage = "vote_average"
+        case cast, crew
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        cast.append(objectsIn: try container.decode(List<Movie>.self, forKey: .cast))
+        crew.append(objectsIn: try container.decode(List<Movie>.self, forKey: .crew))
+    }
+
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
+class ImageProfile: Object, Decodable {
+    let profiles: List<Images> = List()
+    
+    enum CodingKeys: String, CodingKey {
+        case profiles
     }
     
     required init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        aspectRatio = try container.decodeIfPresent(Double.self, forKey: .aspectRatio) ?? 0.0
-        voteCount = try container.decodeIfPresent(Int.self, forKey: .voteCount) ?? 0
-        voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage) ?? 0.0
+        profiles.append(objectsIn: try container.decode(List<Images>.self, forKey: .profiles))
+    }
+
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
+class Images: Object, Decodable {
+    dynamic var aspectRatio: Double = 0.0
+    dynamic var voteCount: Int = 0
+    dynamic var voteAverage: Double = 0.0
+    dynamic var filePath: String = ""
+    dynamic var width: Int = 0
+    dynamic var height: Int = 0
+    
+    enum CodingKeys: String, CodingKey {
+        case width, height
+        case aspectRatio = "aspect_ratio"
+        case voteCount = "vote_count"
+        case voteAverage = "vote_average"
+        case filePath = "file_path"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        super.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        voteCount = try container.decode(Int.self, forKey: .voteCount)
+        voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+        filePath = try container.decode(String.self, forKey: .filePath)
+        width = try container.decode(Int.self, forKey: .width)
+        height = try container.decode(Int.self, forKey: .height)
     }
 
     required init() {

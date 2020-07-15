@@ -11,6 +11,8 @@ import UIKit
 import RealmSwift
 
 class TMDBPersonDetailViewController: UIViewController {
+    var coordinate: MainCoordinator?
+
     var personDetail: TMDBPersonDetailDisplay = TMDBPersonDetailDisplay()
 
     var repository: TMDBRepositoryProtocol!
@@ -97,6 +99,14 @@ extension TMDBPersonDetailViewController: TMDBPreviewSegmentControl {
             personDetail.displayMovieAppearIn(movieCredit: repository.getMovieCredits(from: id))
         } else if selected == NSLocalizedString("TV Shows", comment: "") {
             personDetail.displayTVShowAppearIn(tvCredit: repository.getTVCredits(from: id))
+        }
+    }
+}
+
+extension TMDBPersonDetailViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let item = appearInDataSource.itemIdentifier(for: indexPath) as? Movie {
+            coordinate?.navigateToMovieDetail(id: item.id)
         }
     }
 }

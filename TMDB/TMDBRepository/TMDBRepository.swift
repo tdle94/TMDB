@@ -228,7 +228,11 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void) {
-        if let person = localDataSource.getPerson(id: id) {
+        if
+            let person = localDataSource.getPerson(id: id),
+            person.region == NSLocale.current.regionCode,
+            person.language == NSLocale.preferredLanguages.first {
+
             completion(.success(person))
             return
         }

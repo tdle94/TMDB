@@ -82,6 +82,8 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func savePerson(_ person: People) {
         realm.beginWrite()
+        person.region = NSLocale.current.regionCode
+        person.language = NSLocale.preferredLanguages.first
         realm.add(person, update: .modified)
         try? realm.commitWrite()
     }

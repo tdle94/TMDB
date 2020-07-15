@@ -56,6 +56,7 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
+    @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalInformationTableView: UITableView!
     weak var creditHeader: TMDBCreditHeaderView?
     weak var moreMovieHeader: TMDBMoreMovieHeaderView?

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RealmSwift
 
 class TMDBPersonDetailViewController: UIViewController {
     var personDetail: TMDBPersonDetailDisplay = TMDBPersonDetailDisplay()
@@ -15,10 +16,37 @@ class TMDBPersonDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
 
     var personId: Int?
+    
+    enum AppearInSection: String, CaseIterable {
+        case Movie = "Movie"
+    }
+    
+    var appearInDataSource: UICollectionViewDiffableDataSource<AppearInSection, Object>!
 
     // MARK: - ui
+    @IBOutlet weak var appearInCollectionView: UICollectionView! {
+        didSet {
+            appearInCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            appearInCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            appearInCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            appearInDataSource = UICollectionViewDiffableDataSource(collectionView: appearInCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+            appearInDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                            withReuseIdentifier: Constant.Identifier.creditMovieHeader,
+                                                                            for: indexPath) as? TMDBCreditHeaderView
+                return header
+            }
+            
+            var snapshot = appearInDataSource.snapshot()
+            snapshot.appendSections([.Movie])
+            appearInDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
     @IBOutlet weak var biographyDetailLabel: UILabel!
-    @IBOutlet weak var appearInCollectionView: UICollectionView!
     @IBOutlet weak var biographyLabel: UILabel! {
         didSet {
             biographyLabel.attributedText = NSAttributedString(string: NSLocalizedString("Biography", comment: "") + ": ",
@@ -58,94 +86,5 @@ class TMDBPersonDetailViewController: UIViewController {
                 self.personDetail.displayPersonDetail(person)
             }
         }
-    }
-}
-
-class TMDBPersonDetailDisplay {
-    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
-
-    weak var personDetailVC: TMDBPersonDetailViewController?
-
-    func displayPersonDetail(_ person: People) {
-        displayBirthLabel(person: person)
-        displayGenderLabel(person: person)
-        displayOcuupationLabel(person: person)
-        displayAliasLabel(person: person)
-        displayProfileImage(person: person)
-        displayBiographyDetail(person: person)
-        personDetailVC?.title = person.name
-    }
-    
-    func displayBiographyDetail(person: People) {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 3
-        
-        if person.biography == "" {
-            personDetailVC?.biographyDetailLabel.isHidden = true
-            personDetailVC?.biographyLabel.isHidden = true
-        }
-
-        personDetailVC?.biographyDetailLabel.attributedText = NSAttributedString(string: person.biography,
-                                                                                attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
-                                                                                                         size: 14)!,
-                                                                                             NSAttributedString.Key.foregroundColor: UIColor.darkGray,
-                                                                                             NSAttributedString.Key.paragraphStyle: paragraphStyle])
-    }
-    
-    func displayBirthLabel(person: People) {
-        var birth: String?
-
-        if person.birthday == nil || person.birthday == "" {
-            birth = person.placeOfBirth
-        } else if person.placeOfBirth == nil || person.placeOfBirth == "" {
-            birth = person.birthday
-        } else {
-            birth = "\(person.birthday!) in \(person.placeOfBirth!)"
-        }
-
-        if let birth = birth {
-            personDetailVC?.birthLabel.attributedText = constructAttrsString(title: "Born: ", subTitle: birth)
-        }
-    }
-
-    private func displayGenderLabel(person: People) {
-        if person.gender == 2 {
-            personDetailVC?.genderLabel.attributedText = constructAttrsString(title: "Gender: ", subTitle: "Male")
-        } else {
-            personDetailVC?.genderLabel.attributedText = constructAttrsString(title: "Gender: ", subTitle: "Female")
-        }
-    }
-
-    private func displayOcuupationLabel(person: People) {
-        personDetailVC?.occupationLabel.attributedText = constructAttrsString(title: "Occupation: ", subTitle: person.knownForDepartment)
-    }
-
-    private func displayAliasLabel(person: People) {
-        let alias = person.alsoKnownAs.joined(separator: ",")
-        if alias != "" {
-            personDetailVC?.aliasLabel.attributedText = constructAttrsString(title: "Alias: ", subTitle: alias)
-        } else {
-            personDetailVC?.aliasLabel.isHidden = true
-        }
-    }
-    
-    private func displayProfileImage(person: People) {
-        guard
-            let path = person.profilePath,
-            let url = userSetting.getImageURL(from: path) else {
-            return
-        }
-        personDetailVC?.profileImageView.sd_setImage(with: url)
-    }
-    
-    func constructAttrsString(title: String, subTitle: String) -> NSAttributedString {
-        let firstString = NSMutableAttributedString(string: title, attributes: [
-            NSAttributedString.Key.font: UIFont(name: "Circular-Black", size: UIFont.smallSystemFontSize)!,
-        ])
-        let secondString = NSMutableAttributedString(string: subTitle, attributes: [
-            NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!,
-        ])
-        firstString.append(secondString)
-        return firstString
     }
 }

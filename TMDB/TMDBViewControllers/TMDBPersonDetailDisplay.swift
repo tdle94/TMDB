@@ -78,6 +78,7 @@ class TMDBPersonDetailDisplay {
         if person.biography == "" {
             personDetailVC?.biographyDetailLabel.isHidden = true
             personDetailVC?.biographyLabel.isHidden = true
+            personDetailVC?.appearInCollectionViewTopConstraint.constant = -10
         }
 
         personDetailVC?.biographyDetailLabel.attributedText = NSAttributedString(string: person.biography,

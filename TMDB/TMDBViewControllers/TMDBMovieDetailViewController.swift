@@ -51,6 +51,8 @@ class TMDBMovieDetailViewController: UIViewController {
 
     var movieDetail: TMDBMovieDetailDisplay!
 
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+
     // MARK: - repository
 
     var repository: TMDBRepositoryProtocol!
@@ -299,7 +301,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
         if
             collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBVideoHeaderView,
             let video = videoMovieDataSource.itemIdentifier(for: indexPath) as? Video,
-            let url = URL(string: "https://www.youtube.com/watch?v=\(video.key)")
+            let url = userSetting.getYoutubeURL(key: video.key)
         {
             coordinator?.navigateToVideoPlayer(with: url)
         }

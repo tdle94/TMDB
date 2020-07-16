@@ -112,9 +112,9 @@ class MovieCredit: Object, Decodable {
         let casts = try container.decode(List<Movie>.self, forKey: .cast)
         let uniqueCasts: List<Movie> = List()
 
-        for cast in casts {
-            if !uniqueCasts.contains(where: { $0.id == cast.id }) {
-                uniqueCasts.append(cast)
+        for uniqueCast in casts {
+            if !uniqueCasts.contains(where: { $0.id == uniqueCast.id }) {
+                uniqueCasts.append(uniqueCast)
             }
         }
 
@@ -139,9 +139,9 @@ class TVCredit: Object, Decodable {
         let casts = try container.decode(List<TVShow>.self, forKey: .cast)
         let uniqueCasts: List<TVShow> = List()
 
-        for cast in casts {
-            if !uniqueCasts.contains(where: { $0.id == cast.id }) {
-                uniqueCasts.append(cast)
+        for uniqueCast in casts {
+            if !uniqueCasts.contains(where: { $0.id == uniqueCast.id }) {
+                uniqueCasts.append(uniqueCast)
             }
         }
         cast.append(objectsIn: uniqueCasts)

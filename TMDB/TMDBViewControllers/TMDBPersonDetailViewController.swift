@@ -19,7 +19,11 @@ class TMDBPersonDetailViewController: UIViewController {
 
     var personId: Int?
     
-    var appearInDataSource: UICollectionViewDiffableDataSource<UUID, Object>!
+    enum AppearInSection: String, CaseIterable {
+        case appearIn = "Appear In"
+    }
+
+    var appearInDataSource: UICollectionViewDiffableDataSource<AppearInSection, Object>!
 
     // MARK: - ui
     weak var appearInHeaderView: TMDBAppearInHeaderView?
@@ -45,7 +49,7 @@ class TMDBPersonDetailViewController: UIViewController {
             }
             
             var snapshot = appearInDataSource.snapshot()
-            snapshot.appendSections([UUID()])
+            snapshot.appendSections([.appearIn])
             appearInDataSource.apply(snapshot, animatingDifferences: true)
         }
     }

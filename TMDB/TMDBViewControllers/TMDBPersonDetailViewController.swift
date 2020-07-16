@@ -23,6 +23,7 @@ class TMDBPersonDetailViewController: UIViewController {
 
     // MARK: - ui
     weak var appearInHeaderView: TMDBAppearInHeaderView?
+    @IBOutlet weak var appearInCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var appearInCollectionView: UICollectionView! {
         didSet {
             appearInCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
@@ -74,6 +75,9 @@ class TMDBPersonDetailViewController: UIViewController {
                                     localDataSource: TMDBLocalDataSource(),
                                     userSetting: TMDBUserSetting())
         personDetail.personDetailVC = self
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         getPersonDetail()
     }
 

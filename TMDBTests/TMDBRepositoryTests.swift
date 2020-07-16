@@ -1101,4 +1101,137 @@ class TMDBRepositoryTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(MultiSearchResult.Type.self), completion: anyClosure())
         verify(requestBuilder).getMultiSearchURLRequest(query: "T", language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode, page: 1)
     }
+    
+    // MARK: - tv credits
+    func testGetTVCredit() {
+        let person = People()
+        person.id = 1
+        let tvCredits = TVCredit()
+        tvCredits.cast.append(TVShow())
+        person.tvCredits = tvCredits
+
+        stub(localDataSource) { stub in
+            when(stub).getPerson(id: 1).thenReturn(person)
+        }
+
+        XCTAssertEqual(repository.getTVCredits(from: 1), tvCredits)
+    }
+
+    // MARK: - movie credits
+    func testGetMovieCredit() {
+        let person = People()
+        person.id = 1
+        let movieCredits = MovieCredit()
+        movieCredits.cast.append(Movie())
+        person.movieCredits = movieCredits
+
+        stub(localDataSource) { stub in
+            when(stub).getPerson(id: 1).thenReturn(person)
+        }
+
+        XCTAssertEqual(repository.getMovieCredits(from: 1), movieCredits)
+    }
+    
+    // MARK: - person detail
+    
+    // not in realm, service call, success
+    func testGetPersonDetailNotInRealm() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPersonDetailURLRequest(id: 3, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let optionalLanguage: ParameterMatcher<String?> = ParameterMatcher(matchesFunction: { $0 == "en" })
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getPerson(id: 3).thenReturn(nil)
+            when(stub).savePerson(any()).thenDoNothing()
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getPersonDetailURLRequest(id: 3, language: optionalLanguage).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(People.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(People()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getPersonDetail(id: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getPerson(id: 3)
+        verify(localDataSource).savePerson(any())
+        verify(requestBuilder).getPersonDetailURLRequest(id: 3, language: optionalLanguage)
+        verify(session).send(request: requestMatcher, responseType: any(People.Type.self), completion: anyClosure())
+    }
+    
+    // in realm, region and language are the same with user setting, no service call
+    func testGetPersonDetailInRealm() {
+        let expectation = self.expectation(description: "")
+        let person = People()
+        person.id = 3
+        person.region = NSLocale.current.regionCode
+        person.language = NSLocale.preferredLanguages.first
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getPerson(id: 3).thenReturn(person)
+        }
+        
+        /*WHEN*/
+        repository.getPersonDetail(id: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getPerson(id: 3)
+    }
+    
+    // in realm, region and language are different, service call
+    func testGetPersonDetailInRealmServiceCall() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPersonDetailURLRequest(id: 3, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let optionalLanguage: ParameterMatcher<String?> = ParameterMatcher(matchesFunction: { $0 == "en" })
+        let person = People()
+        person.id = 3
+        person.region = "GB"
+        person.language = "de"
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getPerson(id: 3).thenReturn(person)
+            when(stub).savePerson(any()).thenDoNothing()
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getPersonDetailURLRequest(id: 3, language: optionalLanguage).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(People.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(People()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getPersonDetail(id: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getPerson(id: 3)
+        verify(localDataSource).savePerson(any())
+        verify(requestBuilder).getPersonDetailURLRequest(id: 3, language: optionalLanguage)
+        verify(session).send(request: requestMatcher, responseType: any(People.Type.self), completion: anyClosure())
+    }
 }

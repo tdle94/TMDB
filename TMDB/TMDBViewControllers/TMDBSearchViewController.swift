@@ -11,13 +11,14 @@ import UIKit
 
 protocol TMDBSearchProtocol: AnyObject {
     func navigateToMovieDetail(id: Int)
+    func navigateToPersonDetail(id: Int)
     func multiSearch(query: String?, newSearch: Bool)
 }
 
 class TMDBSearchViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
-    
-    var coordinate: MainCoordinator!
+
+    var coordinate: MainCoordinator?
     
     var page: Int = 1
     
@@ -40,7 +41,6 @@ class TMDBSearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchResultViewController.tmdbSearchProtocol = self
-        coordinate = MainCoordinator(navigationController: navigationController!, childCoordinators: [])
         view.backgroundColor = Constant.Color.backgroundColor
         definesPresentationContext = true
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
@@ -90,9 +90,13 @@ extension TMDBSearchViewController: TMDBSearchProtocol {
             }
         }
     }
-    
+
     func navigateToMovieDetail(id: Int) {
-        coordinate.navigateToMovieDetail(id: id)
+        coordinate?.navigateToMovieDetail(id: id)
+    }
+
+    func navigateToPersonDetail(id: Int) {
+        coordinate?.navigateToPersonDetail(id: id)
     }
 }
 

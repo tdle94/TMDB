@@ -22,6 +22,9 @@ protocol TMDBRepositoryProtocol {
 
     // MARK: - people
     func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void)
+    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void)
+    func getTVCredits(from personId: Int) -> TVCredit?
+    func getMovieCredits(from personId: Int) -> MovieCredit?
 
     // MARK: - tv shows
     func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
@@ -224,6 +227,37 @@ class TMDBRepository: TMDBRepositoryProtocol {
                 }
             }
         }
+    }
+
+    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void) {
+        if
+            let person = localDataSource.getPerson(id: id),
+            person.region == NSLocale.current.regionCode,
+            person.language == NSLocale.preferredLanguages.first {
+
+            completion(.success(person))
+            return
+        }
+
+        services.getPersonDetail(id: id) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let person):
+                    self.localDataSource.savePerson(person)
+                    completion(.success(person))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getTVCredits(from personId: Int) -> TVCredit? {
+        return localDataSource.getPerson(id: personId)?.tvCredits
+    }
+
+    func getMovieCredits(from personId: Int) -> MovieCredit? {
+        return localDataSource.getPerson(id: personId)?.movieCredits
     }
 
     // MARK: - images

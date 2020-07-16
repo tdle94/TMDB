@@ -45,6 +45,10 @@ class TMDBMovieDetailDisplay {
         
         movieDetailVC?.title = movie.title
         movieDetailVC?.additionalInformationTableView.reloadData()
+        
+        if movie.keywords?.keywords.isEmpty ?? false {
+            movieDetailVC?.additionalInformationTableViewHeightConstraint.constant = -10
+        }
     }
     
     func displayTagLine(movie: Movie) {

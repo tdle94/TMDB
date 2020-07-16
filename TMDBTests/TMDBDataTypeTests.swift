@@ -99,4 +99,8 @@ class TMDBDataTypeTests: XCTestCase {
     func testMultiSearchFixture() {
         XCTAssertNoThrow(try JSONDecoder().decode(MultiSearchResult.self, from: multiSearchFixture))
     }
+    
+    func testPersonDetailFixture() {
+        XCTAssertNoThrow(try JSONDecoder().decode(People.self, from: personDetailFixture))
+    }
 }

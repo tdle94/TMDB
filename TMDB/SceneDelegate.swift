@@ -72,12 +72,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         searchNavController.tabBarItem.title = NSLocalizedString("Search", comment: "")
         
         // set coordinators
-        homeCoordinator = MainCoordinator(navigationController: homeNavController)
-        movieCoordinator = MainCoordinator(navigationController: movieNavController)
-        tvCoordinator = MainCoordinator(navigationController: tvNavController)
-        peopleCoordinator = MainCoordinator(navigationController: peopleNavController)
-
-        homeVC.coordinator = homeCoordinator
+        searchVC.coordinate = MainCoordinator(navigationController: searchNavController)
+        homeVC.coordinator = MainCoordinator(navigationController: homeNavController)
         
         // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor

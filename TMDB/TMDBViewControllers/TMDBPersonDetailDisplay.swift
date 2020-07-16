@@ -50,7 +50,9 @@ class TMDBPersonDetailDisplay {
         guard var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
         guard
             let movieCredit = person.movieCredits,
-            let tvCredit = person.tvCredits
+            let tvCredit = person.tvCredits,
+            !movieCredit.cast.isEmpty,
+            !tvCredit.cast.isEmpty
             else {
                 snapshot.deleteSections(snapshot.sectionIdentifiers)
                 personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)

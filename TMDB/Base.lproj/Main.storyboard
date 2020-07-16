@@ -73,7 +73,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="1500"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yEe-Ut-ac7" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1739.6666666666667"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1723.6666666666667"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="Ilv-qd-jvq">
                                                 <rect key="frame" x="18" y="175" width="166" height="207"/>
@@ -358,7 +358,7 @@
                                             <constraint firstAttribute="trailing" secondItem="tSv-Mr-Dkr" secondAttribute="trailing" id="uUD-yk-6bE"/>
                                             <constraint firstItem="Ilv-qd-jvq" firstAttribute="leading" secondItem="yEe-Ut-ac7" secondAttribute="leading" constant="18" id="ulZ-dR-Vdx"/>
                                             <constraint firstItem="Ilv-qd-jvq" firstAttribute="top" secondItem="mpK-9C-Zub" secondAttribute="bottom" constant="-37" id="uvs-GG-ROl"/>
-                                            <constraint firstAttribute="bottom" secondItem="r88-4U-zXN" secondAttribute="bottom" constant="31" id="uzR-TH-FSQ"/>
+                                            <constraint firstAttribute="bottom" secondItem="r88-4U-zXN" secondAttribute="bottom" constant="15" id="uzR-TH-FSQ"/>
                                             <constraint firstAttribute="trailing" secondItem="gF4-2N-ZVe" secondAttribute="trailing" id="va1-Le-Jdc"/>
                                             <constraint firstItem="7QS-yN-25f" firstAttribute="top" secondItem="YHO-Z0-urX" secondAttribute="bottom" constant="15" id="wAr-rJ-h25"/>
                                             <constraint firstItem="YHO-Z0-urX" firstAttribute="top" secondItem="8b7-kG-abd" secondAttribute="bottom" constant="5" id="x9s-15-eXy"/>
@@ -487,14 +487,14 @@
             <objects>
                 <viewController storyboardIdentifier="TMDBPersonDetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="DRt-gN-sTE" customClass="TMDBPersonDetailViewController" customModule="TMDB" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PHX-XY-BR7">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="700"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8eC-yE-TrV">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="700"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iYk-KP-fJD">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1114.3333333333333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="819.33333333333337"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="5Qk-2f-vPf">
                                                 <rect key="frame" x="18" y="31" width="216" height="317"/>
@@ -575,7 +575,7 @@
                                             <constraint firstItem="5aM-3t-vUC" firstAttribute="leading" secondItem="iYk-KP-fJD" secondAttribute="leading" constant="18" id="DqL-pF-eGh"/>
                                             <constraint firstAttribute="trailing" secondItem="MSb-J1-LL9" secondAttribute="trailing" constant="20" id="Kan-Z8-bra"/>
                                             <constraint firstItem="5aM-3t-vUC" firstAttribute="top" secondItem="h1M-hP-0VO" secondAttribute="bottom" constant="5" id="Muq-eo-Veo"/>
-                                            <constraint firstAttribute="bottom" secondItem="IJD-oi-wFQ" secondAttribute="bottom" constant="310" id="P4c-mP-6Rh"/>
+                                            <constraint firstAttribute="bottom" secondItem="IJD-oi-wFQ" secondAttribute="bottom" constant="15" id="P4c-mP-6Rh"/>
                                             <constraint firstItem="h1M-hP-0VO" firstAttribute="leading" secondItem="iYk-KP-fJD" secondAttribute="leading" constant="18" id="PyB-cs-tFN"/>
                                             <constraint firstItem="IJD-oi-wFQ" firstAttribute="top" secondItem="5aM-3t-vUC" secondAttribute="bottom" id="RJr-J0-J1H"/>
                                             <constraint firstAttribute="trailing" secondItem="5Qk-2f-vPf" secondAttribute="trailing" constant="180" id="SdC-KC-q72"/>
@@ -617,10 +617,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6ZR-2y-Np9"/>
                     </view>
-                    <size key="freeformSize" width="414" height="1000"/>
+                    <size key="freeformSize" width="414" height="700"/>
                     <connections>
                         <outlet property="aliasLabel" destination="oen-Li-hhu" id="VXc-dO-dKH"/>
                         <outlet property="appearInCollectionView" destination="IJD-oi-wFQ" id="uvV-Eg-fhi"/>
+                        <outlet property="appearInCollectionViewTopConstraint" destination="RJr-J0-J1H" id="XTJ-FJ-2Cn"/>
                         <outlet property="biographyDetailLabel" destination="5aM-3t-vUC" id="XGa-bF-MCu"/>
                         <outlet property="biographyLabel" destination="h1M-hP-0VO" id="ggz-jq-gON"/>
                         <outlet property="birthLabel" destination="MSb-J1-LL9" id="2O5-hu-KO1"/>

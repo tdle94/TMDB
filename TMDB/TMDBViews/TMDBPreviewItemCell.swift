@@ -75,7 +75,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             if let path = item.logoPath {
                 getImage(from: path)
             } else {
-                stackViewTopConstraint.constant = -25
+                stackViewTopConstraint.constant = -40
                 title.text = item.name
                 imageView.isHidden = true
             }
@@ -88,7 +88,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             subTitle.text = item.job
             
             getImage(from: item.profilePath)
-        } else if let item = item as? Video, let url = URL(string: "https://img.youtube.com/vi/\(item.key)/hqdefault.jpg") {
+        } else if let item = item as? Video, let url = userSetting.getYoutubeURL(key: item.key) {
             imageView.sd_setImage(with: url)
         }
     }

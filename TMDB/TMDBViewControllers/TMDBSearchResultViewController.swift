@@ -60,10 +60,14 @@ extension TMDBSearchResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard
             let cell = tableView.cellForRow(at: indexPath) as? TMDBSearchResultCell,
-            let id = cell.id,
-            cell.mediaType == "movie"
+            let id = cell.id
             else { return }
-        tmdbSearchProtocol?.navigateToMovieDetail(id: id)
+
+        if cell.mediaType == "movie" {
+            tmdbSearchProtocol?.navigateToMovieDetail(id: id)
+        } else if cell.mediaType == "person" {
+            tmdbSearchProtocol?.navigateToPersonDetail(id: id)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

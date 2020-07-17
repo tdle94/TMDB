@@ -50,24 +50,22 @@ class TMDBPersonDetailDisplay {
         guard var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
         guard
             let movieCredit = person.movieCredits,
-            let tvCredit = person.tvCredits,
-            !movieCredit.cast.isEmpty,
-            !tvCredit.cast.isEmpty
-            else {
-                snapshot.deleteSections(snapshot.sectionIdentifiers)
-                personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
-                return
-        }
+            let tvCredit = person.tvCredits else { return }
 
-        if movieCredit.cast.isEmpty {
+        if movieCredit.cast.isEmpty, tvCredit.cast.isEmpty {
+            snapshot.deleteSections(snapshot.sectionIdentifiers)
+            personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
+        } else if movieCredit.cast.isEmpty {
             personDetailVC?.appearInHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
             personDetailVC?.appearInHeaderView?.segmentControl.selectedSegmentIndex = 0
             personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
-            displayTVShowAppearIn(tvCredit: tvCredit)
+            snapshot.appendItems(Array(tvCredit.cast))
+            personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
         } else if tvCredit.cast.isEmpty {
             personDetailVC?.appearInHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
             personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
-            displayMovieAppearIn(movieCredit: movieCredit)
+            snapshot.appendItems(Array(movieCredit.cast))
+            personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
         } else {
             displayMovieAppearIn(movieCredit: movieCredit)
         }

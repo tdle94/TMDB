@@ -301,7 +301,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
         if
             collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBVideoHeaderView,
             let video = videoMovieDataSource.itemIdentifier(for: indexPath) as? Video,
-            let url = userSetting.getYoutubeURL(key: video.key)
+            let url = userSetting.getYoutubeVideoURL(key: video.key)
         {
             coordinator?.navigateToVideoPlayer(with: url)
         }

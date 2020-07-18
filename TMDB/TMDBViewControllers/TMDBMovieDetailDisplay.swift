@@ -272,7 +272,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
-        snapshot.reloadSections([.Credit])
+        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -280,7 +280,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)
-        snapshot.reloadSections([.Credit])
+        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 

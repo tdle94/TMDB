@@ -12,7 +12,8 @@ protocol TMDBUserSettingProtocol {
     var imageConfig: ImageConfigResult { get set }
     var userDefault: UserDefaults { get set }
     func getImageURL(from path: String) -> URL?
-    func getYoutubeURL(key: String) -> URL?
+    func getYoutubeImageURL(key: String) -> URL?
+    func getYoutubeVideoURL(key: String) -> URL?
 }
 
 struct TMDBUserSetting: TMDBUserSettingProtocol {
@@ -39,7 +40,11 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
         return url
     }
 
-    func getYoutubeURL(key: String) -> URL? {
+    func getYoutubeImageURL(key: String) -> URL? {
         return URL(string: "https://img.youtube.com/vi/\(key)/hqdefault.jpg")
+    }
+    
+    func getYoutubeVideoURL(key: String) -> URL? {
+        return URL(string: "https://www.youtube.com/watch?v=\(key)")
     }
 }

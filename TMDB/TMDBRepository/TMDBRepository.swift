@@ -25,6 +25,7 @@ protocol TMDBRepositoryProtocol {
     func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void)
     func getTVCredits(from personId: Int) -> TVCredit?
     func getMovieCredits(from personId: Int) -> MovieCredit?
+    func getPersonImageProfile(from personId: Int) -> ImageProfile?
 
     // MARK: - tv shows
     func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
@@ -131,7 +132,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        guard let movie =  localDataSource.getMovie(id: movieId), let recommendMovie = movie.recommendations else {
+        guard let movie = localDataSource.getMovie(id: movieId), let recommendMovie = movie.recommendations else {
             services.getRecommendMovies(from: movieId, page: page) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -154,6 +155,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
             return
         }
 
+        // new page
         services.getRecommendMovies(from: movieId, page: page) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -258,6 +260,10 @@ class TMDBRepository: TMDBRepositoryProtocol {
 
     func getMovieCredits(from personId: Int) -> MovieCredit? {
         return localDataSource.getPerson(id: personId)?.movieCredits
+    }
+
+    func getPersonImageProfile(from personId: Int) -> ImageProfile? {
+        return localDataSource.getPerson(id: personId)?.images
     }
 
     // MARK: - images

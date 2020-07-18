@@ -88,8 +88,10 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             subTitle.text = item.job
             
             getImage(from: item.profilePath)
-        } else if let item = item as? Video, let url = userSetting.getYoutubeURL(key: item.key) {
+        } else if let item = item as? Video, let url = userSetting.getYoutubeImageURL(key: item.key) {
             imageView.sd_setImage(with: url)
+        } else if let item = item as? Images {
+            getImage(from: item.filePath)
         }
     }
 }

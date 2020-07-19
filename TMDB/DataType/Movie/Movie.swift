@@ -40,6 +40,7 @@ class Movie: Object, Decodable {
     dynamic var credits: CreditResult?
     dynamic var keywords: KeywordResult?
     dynamic var reviews: ReviewResult?
+    dynamic var movieImages: MovieImages?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()
@@ -59,6 +60,7 @@ class Movie: Object, Decodable {
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
         case belongToCollection = "belongs_to_collection"
+        case movieImages = "images"
     }
 
     required init(from decoder: Decoder) throws {
@@ -115,6 +117,26 @@ class Movie: Object, Decodable {
     
     override class func primaryKey() -> String? {
         return "id"
+    }
+}
+
+@objcMembers
+class MovieImages: Object, Decodable {
+    let backdrops: List<Images> = List()
+    let posters: List<Images> = List()
+    
+    enum CodingKeys: String, CodingKey {
+        case backdrops, posters
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        backdrops.append(objectsIn: try container.decode(List<Images>.self, forKey: .backdrops))
+        posters.append(objectsIn: try container.decode(List<Images>.self, forKey: .posters))
+    }
+
+    override required init() {
+        super.init()
     }
 }
 

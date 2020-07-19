@@ -26,7 +26,6 @@ class TMDBMovieDetailDisplay {
     
     func displayMovieDetail(movie: Movie) {
         getPosterImage(movie: movie)
-        getBackdropImage(movie: movie)
         displayStatus(movie: movie)
         displayOriginalLanguage(movie: movie)
         displayBudget(movie: movie)
@@ -44,11 +43,21 @@ class TMDBMovieDetailDisplay {
         displayTagLine(movie: movie)
         
         movieDetailVC?.title = movie.title
-        movieDetailVC?.additionalInformationTableView.reloadData()
-        
+
         if movie.keywords?.keywords.isEmpty ?? false {
             movieDetailVC?.additionalInformationTableViewHeightConstraint.constant = -10
         }
+    }
+
+    func displayMovieBackdropImages(_ movieImages: MovieImages) {
+        guard var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
+        let images = movieImages.backdrops
+        if images.isEmpty {
+            movieDetailVC?.backdropImageCollectionView.leftIndicator?.isHidden = true
+            movieDetailVC?.backdropImageCollectionView.rightIndicator?.isHidden = true
+        }
+        snapshot.appendItems(Array(images))
+        movieDetailVC?.movieImageDataSource.apply(snapshot, animatingDifferences: true)
     }
     
     func displayTagLine(movie: Movie) {
@@ -66,16 +75,6 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.moviePosterImageView.sd_setImage(with: url) { image, _, _, _ in
                 image?.getColors { colors in
                     self.movieDetailVC?.moviePosterImageView.layer.borderColor = colors?.secondary.cgColor
-                }
-            }
-        }
-    }
-    
-    func getBackdropImage(movie: Movie) {
-        if let backdropPath = movie.backdropPath, let url = userSetting.getImageURL(from: backdropPath) {
-            movieDetailVC?.backdropImageView.sd_setImage(with: url) { image, _, _, _ in
-                image?.getColors() { colors in
-                    self.movieDetailVC?.backdropImageView.layer.borderColor = colors?.secondary.cgColor
                 }
             }
         }
@@ -272,7 +271,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
-        snapshot.reloadSections([.Credit])
+        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -280,7 +279,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)
-        snapshot.reloadSections([.Credit])
+        movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 

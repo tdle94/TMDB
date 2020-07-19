@@ -22,9 +22,25 @@ class TMDBPersonDetailDisplay {
         displayProfileImage(person: person)
         displayBiographyDetail(person: person)
         displayCredit(person: person)
+        displayPersonImageCollectionView(person: person)
         personDetailVC?.title = person.name
     }
-    
+
+    func displayPersonImageCollectionView(person: People) {
+        guard
+            var snapshot = personDetailVC?.personImageDataSource.snapshot(),
+            let images = person.images?.profiles
+            else { return }
+        
+        if images.isEmpty {
+            snapshot.deleteSections([.image])
+            personDetailVC?.personImageCollectionViewHeightConstraint.constant = 0
+        } else {
+            snapshot.appendItems(Array(images))
+        }
+        personDetailVC?.personImageDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
     func displayMovieAppearIn(movieCredit: MovieCredit?) {
         guard
             let cast = movieCredit?.cast,
@@ -32,7 +48,7 @@ class TMDBPersonDetailDisplay {
 
         snapshot.deleteItems(snapshot.itemIdentifiers)
         snapshot.appendItems(Array(cast))
-        snapshot.reloadSections([.appearIn])
+        personDetailVC?.appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -42,7 +58,7 @@ class TMDBPersonDetailDisplay {
             var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers)
         snapshot.appendItems(Array(cast))
-        snapshot.reloadSections([.appearIn])
+        personDetailVC?.appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
     
@@ -50,11 +66,13 @@ class TMDBPersonDetailDisplay {
         guard var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
         guard
             let movieCredit = person.movieCredits,
-            let tvCredit = person.tvCredits else { return }
+            let tvCredit = person.tvCredits
+            else { return }
 
         if movieCredit.cast.isEmpty, tvCredit.cast.isEmpty {
             snapshot.deleteSections(snapshot.sectionIdentifiers)
             personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
+            personDetailVC?.appearInCollectionViewHeightConstraint.constant = 0
         } else if movieCredit.cast.isEmpty {
             personDetailVC?.appearInHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
             personDetailVC?.appearInHeaderView?.segmentControl.selectedSegmentIndex = 0
@@ -78,7 +96,7 @@ class TMDBPersonDetailDisplay {
         if person.biography == "" {
             personDetailVC?.biographyDetailLabel.isHidden = true
             personDetailVC?.biographyLabel.isHidden = true
-            personDetailVC?.appearInCollectionViewTopConstraint.constant = -10
+            personDetailVC?.personImageCollectionViewTopConstraint.constant = -30
         }
 
         personDetailVC?.biographyDetailLabel.attributedText = NSAttributedString(string: person.biography,

@@ -109,6 +109,33 @@ class TMDBServiceTests: XCTestCase {
     
     // MARK: - movie
     
+    func testGetMovieImages() {
+        let expectation = self.expectation(description: "")
+        let urlRequest = TMDBURLRequestBuilder().getMovieImages(from: 3)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == urlRequest })
+        
+        /*GIVEN*/
+        stub(urlRequestBuilder) { stub in
+            when(stub).getMovieImages(from: 3).thenReturn(urlRequest)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieImages.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieImages()))
+            }
+        }
+        
+        /*WHEN*/
+        services.getMovieImages(from: 3) { result in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(urlRequestBuilder).getMovieImages(from: 3)
+        verify(session).send(request: requestMatcher, responseType: any(MovieImages.Type.self), completion: anyClosure())
+    }
+    
     func testGetSimilarMovies() {
         let expectation = self.expectation(description: "")
         let urlRequest = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)

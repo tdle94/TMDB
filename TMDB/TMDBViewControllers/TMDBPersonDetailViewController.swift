@@ -23,9 +23,44 @@ class TMDBPersonDetailViewController: UIViewController {
         case appearIn = "Appear In"
     }
 
+    enum PersonImageSection: String, CaseIterable {
+        case image = "Image"
+    }
+
     var appearInDataSource: UICollectionViewDiffableDataSource<AppearInSection, Object>!
 
+    var personImageDataSource: UICollectionViewDiffableDataSource<PersonImageSection, Object>!
+
     // MARK: - ui
+    @IBOutlet weak var appearInCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var personImageCollectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var personImageCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var personImageCollectionView: UICollectionView! {
+        didSet {
+            personImageCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            personImageCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            personImageCollectionView.register(TMDBPersonImageHeaderView.self,
+                                               forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                               withReuseIdentifier: Constant.Identifier.personImageHeader)
+
+            personImageDataSource = UICollectionViewDiffableDataSource(collectionView: personImageCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+
+            personImageDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.personImageHeader,
+                                                                             for: indexPath) as? TMDBPersonImageHeaderView
+                return header
+            }
+
+            var snapshot = personImageDataSource.snapshot()
+            snapshot.appendSections([.image])
+            personImageDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
     weak var appearInHeaderView: TMDBAppearInHeaderView?
     @IBOutlet weak var appearInCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var appearInCollectionView: UICollectionView! {

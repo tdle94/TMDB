@@ -15,6 +15,7 @@ protocol TMDBLocalDataSourceProtocol {
     func saveMovie(_ movie: Movie)
     func saveSimilarMovie(_ similarMovie: List<Movie>, to movie: Movie)
     func saveRecommendMovie(_ recommendMovie: List<Movie>, to movie: Movie)
+    func saveMovieImages(_ movieImages: MovieImages, to movieId: Int)
     // tv show
     func getTVShow(id: Int) -> TVShow?
     func saveTVShow(_ tvShow: TVShow)
@@ -37,12 +38,28 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     // MARK: - movie detail
 
+    func saveMovieImages(_ movieImages: MovieImages, to movieId: Int) {
+        realm.beginWrite()
+        getMovie(id: movieId)?.movieImages = movieImages
+        try? realm.commitWrite()
+    }
+
     func getMovie(id: Int) -> Movie? {
         return realm.object(ofType: Movie.self, forPrimaryKey: id)
     }
 
     func saveMovie(_ movie: Movie) {
         realm.beginWrite()
+        for (index, similarMovie) in (movie.similar?.movies ?? List<Movie>()).enumerated() {
+            if let existedMovie = getMovie(id: similarMovie.id) {
+                movie.similar?.movies[index] = existedMovie
+            }
+        }
+        for (index, recommendMovie) in (movie.recommendations?.movies ?? List<Movie>()).enumerated() {
+            if let existedMovie = getMovie(id: recommendMovie.id) {
+                movie.recommendations?.movies[index] = existedMovie
+            }
+        }
         movie.region = NSLocale.current.regionCode
         movie.language = NSLocale.preferredLanguages.first
         realm.add(movie, update: .modified)
@@ -82,6 +99,16 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func savePerson(_ person: People) {
         realm.beginWrite()
+        for (index, movie) in (person.movieCredits?.cast ?? List<Movie>()).enumerated() {
+            if let existedMovie = getMovie(id: movie.id) {
+                person.movieCredits?.cast[index] = existedMovie
+            }
+        }
+        for (index, tvShow) in (person.tvCredits?.cast ?? List<TVShow>()).enumerated() {
+            if let existedTVShow = getTVShow(id: tvShow.id) {
+                person.tvCredits?.cast[index] = existedTVShow
+            }
+        }
         person.region = NSLocale.current.regionCode
         person.language = NSLocale.preferredLanguages.first
         realm.add(person, update: .modified)

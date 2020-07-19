@@ -36,6 +36,10 @@ class TMDBMovieDetailViewController: UIViewController {
     enum KeywordMovieSection: String, CaseIterable {
         case Keyword = "Keyword"
     }
+    
+    enum MovieImageSection: String, CaseIterable {
+        case Image = "Image"
+    }
 
     var movieId: Int?
     
@@ -48,6 +52,8 @@ class TMDBMovieDetailViewController: UIViewController {
     var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Object>!
     
     var keywordMovieDataSource: UICollectionViewDiffableDataSource<KeywordMovieSection, Keyword>!
+    
+    var movieImageDataSource: UICollectionViewDiffableDataSource<MovieImageSection, Images>!
 
     var movieDetail: TMDBMovieDetailDisplay!
 
@@ -84,10 +90,19 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var budgetLabel: UILabel!
     @IBOutlet weak var revenueLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var backdropImageView: UIImageView! {
+    @IBOutlet weak var backdropImageCollectionView: TMDBImageCollectionView! {
         didSet {
-            backdropImageView.layer.borderWidth = 1
-            backdropImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+            backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
+            backdropImageCollectionView.register(UINib(nibName: "TMDBImageCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+
+            movieImageDataSource = UICollectionViewDiffableDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBImageCell
+                cell?.configure(image: item)
+                return cell
+            }
+            var snapshot = movieImageDataSource.snapshot()
+            snapshot.appendSections([.Image])
+            movieImageDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     @IBOutlet weak var generes: UILabel!
@@ -265,6 +280,17 @@ class TMDBMovieDetailViewController: UIViewController {
             switch result {
             case .success(let movie):
                 self.movieDetail.displayMovieDetail(movie: movie)
+                
+                // get movie images. Since movie image with country code does not return all images
+                self.repository.getMovieImages(from: id) { result in
+                    switch result {
+                    case .success(let images):
+                        self.movieDetail.displayMovieBackdropImages(images)
+                    case .failure(let error):
+                        debugPrint(error.localizedDescription)
+                    }
+                }
+
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
@@ -301,7 +327,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
         if
             collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBVideoHeaderView,
             let video = videoMovieDataSource.itemIdentifier(for: indexPath) as? Video,
-            let url = userSetting.getYoutubeURL(key: video.key)
+            let url = userSetting.getYoutubeVideoURL(key: video.key)
         {
             coordinator?.navigateToVideoPlayer(with: url)
         }
@@ -313,17 +339,39 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
             coordinator?.navigateToPersonDetail(id: cast.id)
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if collectionView == backdropImageCollectionView {
+            if let id = movieId, indexPath.row + 1 == repository.getMovieImages(from: id)?.backdrops.count {
+                backdropImageCollectionView.rightIndicator?.isHidden = true
+                backdropImageCollectionView.leftIndicator?.isHidden = false
+            } else if indexPath.row == 0 {
+                backdropImageCollectionView.rightIndicator?.isHidden = false
+                backdropImageCollectionView.leftIndicator?.isHidden = true
+            } else {
+                backdropImageCollectionView.rightIndicator?.isHidden = false
+                backdropImageCollectionView.leftIndicator?.isHidden = false
+            }
+        }
+    }
 }
 
 // MARK: -  keyword collectionview datasource
 extension TMDBMovieDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBMovieKeywordCell
-        if let id = movieId {
-            let keyword = repository.getMovieKeywords(from: id)[indexPath.row]
-            cell?.configure(keyword: keyword)
+        guard let id = movieId else {
+            return UICollectionViewCell()
         }
-        return cell ?? UICollectionViewCell()
+
+        if
+            collectionView == keywordCollectionView,
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBMovieKeywordCell
+        {
+            let keyword = repository.getMovieKeywords(from: id)[indexPath.row]
+            cell.configure(keyword: keyword)
+            return cell
+        }
+        return UICollectionViewCell()
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {

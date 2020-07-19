@@ -17,11 +17,13 @@ class TMDBUserSettingTests: XCTestCase {
 
     let userSetting: MockTMDBUserSettingProtocol = MockTMDBUserSettingProtocol()
     let userDefault: UserDefaults = UserDefaults(suiteName: #file)!
+    var setting: TMDBUserSettingProtocol!
 
     override func setUp() {
         userDefault.dictionaryRepresentation().keys.forEach { key in
             userDefault.removeObject(forKey: key)
         }
+        setting = TMDBUserSetting(userDefault: userDefault)
     }
 
     override func tearDown() {
@@ -31,9 +33,8 @@ class TMDBUserSettingTests: XCTestCase {
     }
 
     // MARK: - test image config
-    func testImageConfig() {
+    func testGetImageURL() {
         let imageConfigResult = ImageConfigResult()
-        var setting = TMDBUserSetting(userDefault: userDefault)
         // return default one
         XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)
         // return new image config
@@ -41,5 +42,13 @@ class TMDBUserSettingTests: XCTestCase {
         XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)
         XCTAssertNotNil(setting.getImageURL(from: "/owefijoweifj.png"))
         XCTAssertNil(setting.getImageURL(from: "\\\\\\"))
+    }
+
+    func testGetYoutubeImageURL() {
+        XCTAssertNotNil(setting.getYoutubeImageURL(key: "key"))
+    }
+
+    func testGetYoutubeVideoURL() {
+        XCTAssertNotNil(setting.getYoutubeVideoURL(key: "key"))
     }
 }

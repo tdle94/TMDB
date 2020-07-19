@@ -49,12 +49,29 @@ class LocalDataSourceTests: QuickSpec {
                 expect(testRealm.objects(Movie.self).count).to(equal(1))
             }
             
-            it("add pmovie") {
-                // add
+            it("add movie") {
+                // add movie
                 expect(testRealm.objects(Movie.self).count).to(equal(0))
                 let movie = Movie()
+                movie.id = 3
                 localDataSource.saveMovie(movie)
                 expect(testRealm.objects(Movie.self).count).to(equal(1))
+                
+                // add movie with recommendation and similar
+                let movie1 = Movie()
+                let recommendResult = MovieResult()
+                let similarResult = MovieResult()
+                similarResult.movies.append(movie)
+                recommendResult.movies.append(movie)
+                movie1.id = 2
+                movie1.recommendations = recommendResult
+                movie1.similar = similarResult
+                localDataSource.saveMovie(movie1)
+                expect(testRealm.objects(Movie.self).count).to(equal(2))
+                
+                // add movie image
+                let movieImage = MovieImages()
+                localDataSource.saveMovieImages(movieImage, to: 3)
             }
 
             it("add tv shows") {
@@ -75,11 +92,29 @@ class LocalDataSourceTests: QuickSpec {
             }
             
             it("add people") {
-                // add
+                // add movie
+                expect(testRealm.objects(Movie.self).count).to(equal(0))
+                let movie = Movie()
+                movie.id = 3
+                localDataSource.saveMovie(movie)
+                expect(testRealm.objects(Movie.self).count).to(equal(1))
+                
+                // add tv
+                expect(testRealm.objects(TVShow.self).count).to(equal(0))
+                let tvShow = TVShow()
+                tvShow.id = 3
+                localDataSource.saveTVShow(tvShow)
+                expect(testRealm.objects(TVShow.self).count).to(equal(1))
+
+                // add person with movie and tv credits
                 expect(testRealm.objects(People.self).count).to(equal(0))
                 let person1 = People()
                 let person2 = People()
                 person2.id = 1
+                person1.tvCredits = TVCredit()
+                person1.movieCredits = MovieCredit()
+                person1.tvCredits?.cast.append(tvShow)
+                person1.movieCredits?.cast.append(movie)
 
                 localDataSource.savePerson(person1)
                 localDataSource.savePerson(person2)

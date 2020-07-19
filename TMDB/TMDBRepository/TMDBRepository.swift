@@ -17,6 +17,9 @@ protocol TMDBRepositoryProtocol {
     func getMovieCast(from movieId: Int) -> [Cast]
     func getMovieCrew(from movieId: Int) -> [Crew]
     func getMovieKeywords(from movieId: Int) -> [Keyword]
+    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void)
+    func getMovieImages(from movieId: Int) -> MovieImages?
+
     // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 
@@ -25,6 +28,7 @@ protocol TMDBRepositoryProtocol {
     func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void)
     func getTVCredits(from personId: Int) -> TVCredit?
     func getMovieCredits(from personId: Int) -> MovieCredit?
+    func getPersonImageProfile(from personId: Int) -> ImageProfile?
 
     // MARK: - tv shows
     func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
@@ -47,6 +51,29 @@ class TMDBRepository: TMDBRepositoryProtocol {
         self.userSetting = userSetting
     }
     // MAKR: - movies
+
+    func getMovieImages(from movieId: Int) -> MovieImages? {
+        return localDataSource.getMovie(id: movieId)?.movieImages
+    }
+
+    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void) {
+        if let movieImages = localDataSource.getMovie(id: movieId)?.movieImages {
+            completion(.success(movieImages))
+            return
+        }
+        
+        services.getMovieImages(from: movieId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movieImages):
+                    self.localDataSource.saveMovieImages(movieImages, to: movieId)
+                    completion(.success(movieImages))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
 
     func getMovieKeywords(from movieId: Int) -> [Keyword] {
         guard let keywords = localDataSource.getMovie(id: movieId)?.keywords?.keywords else {
@@ -131,7 +158,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        guard let movie =  localDataSource.getMovie(id: movieId), let recommendMovie = movie.recommendations else {
+        guard let movie = localDataSource.getMovie(id: movieId), let recommendMovie = movie.recommendations else {
             services.getRecommendMovies(from: movieId, page: page) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -154,6 +181,7 @@ class TMDBRepository: TMDBRepositoryProtocol {
             return
         }
 
+        // new page
         services.getRecommendMovies(from: movieId, page: page) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -258,6 +286,10 @@ class TMDBRepository: TMDBRepositoryProtocol {
 
     func getMovieCredits(from personId: Int) -> MovieCredit? {
         return localDataSource.getPerson(id: personId)?.movieCredits
+    }
+
+    func getPersonImageProfile(from personId: Int) -> ImageProfile? {
+        return localDataSource.getPerson(id: personId)?.images
     }
 
     // MARK: - images

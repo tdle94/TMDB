@@ -17,6 +17,9 @@ protocol TMDBRepositoryProtocol {
     func getMovieCast(from movieId: Int) -> [Cast]
     func getMovieCrew(from movieId: Int) -> [Crew]
     func getMovieKeywords(from movieId: Int) -> [Keyword]
+    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void)
+    func getMovieImages(from movieId: Int) -> MovieImages?
+
     // MARK: - trending
     func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 
@@ -48,6 +51,29 @@ class TMDBRepository: TMDBRepositoryProtocol {
         self.userSetting = userSetting
     }
     // MAKR: - movies
+
+    func getMovieImages(from movieId: Int) -> MovieImages? {
+        return localDataSource.getMovie(id: movieId)?.movieImages
+    }
+
+    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void) {
+        if let movieImages = localDataSource.getMovie(id: movieId)?.movieImages {
+            completion(.success(movieImages))
+            return
+        }
+        
+        services.getMovieImages(from: movieId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movieImages):
+                    self.localDataSource.saveMovieImages(movieImages, to: movieId)
+                    completion(.success(movieImages))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
 
     func getMovieKeywords(from movieId: Int) -> [Keyword] {
         guard let keywords = localDataSource.getMovie(id: movieId)?.keywords?.keywords else {

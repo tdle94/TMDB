@@ -29,6 +29,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getRecommendMoviesURLRequest(from movieId: Int, page: Int, language: String?) -> URLRequest
     func getMovieCreditURLRequest(from movieId: Int) -> URLRequest
     func getMovieReviewURLRequest(from movieId: Int, page: Int) -> URLRequest
+    func getMovieImages(from movieId: Int) -> URLRequest
 
     // MARK: - search
     func getMultiSearchURLRequest(query: String, language: String?, region: String?, page: Int) -> URLRequest
@@ -105,6 +106,10 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     }
 
     // MARK: - movies
+
+    func getMovieImages(from movieId: Int) -> URLRequest {
+        return buildURLRequest(path: "/3/movie/\(movieId)/images", queryItems: nil)
+    }
 
     func getPopularMovieURLRequest(page: Int, language: String?, region: String?) -> URLRequest {
         let queryItems = [

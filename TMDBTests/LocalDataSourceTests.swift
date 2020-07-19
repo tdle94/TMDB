@@ -68,6 +68,10 @@ class LocalDataSourceTests: QuickSpec {
                 movie1.similar = similarResult
                 localDataSource.saveMovie(movie1)
                 expect(testRealm.objects(Movie.self).count).to(equal(2))
+                
+                // add movie image
+                let movieImage = MovieImages()
+                localDataSource.saveMovieImages(movieImage, to: 3)
             }
 
             it("add tv shows") {

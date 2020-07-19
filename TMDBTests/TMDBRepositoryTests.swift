@@ -1234,4 +1234,68 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getPersonDetailURLRequest(id: 3, language: optionalLanguage)
         verify(session).send(request: requestMatcher, responseType: any(People.Type.self), completion: anyClosure())
     }
+    
+    // MARK: - movie images
+    
+    func testGetMovieImageNotInRealm() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieImages(from: 3)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let movieImageMatch: ParameterMatcher<MovieImages> = ParameterMatcher()
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(nil)
+            when(stub).saveMovieImages(movieImageMatch, to: 3).thenDoNothing()
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getMovieImages(from: 3).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieImages.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieImages()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getMovieImages(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+    
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getMovie(id: 3)
+        verify(localDataSource).saveMovieImages(movieImageMatch, to: 3)
+        verify(requestBuilder).getMovieImages(from: 3)
+        verify(session).send(request: requestMatcher, responseType: any(MovieImages.Type.self), completion: anyClosure())
+    }
+    
+    func testGetMovieImageInRealm() {
+        let expectation = self.expectation(description: "")
+        let movie = Movie()
+        movie.id = 3
+        movie.movieImages = MovieImages()
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+        
+        
+        /*WHEN*/
+        repository.getMovieImages(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        let movieImages = repository.getMovieImages(from: 3)
+        XCTAssertNotNil(movieImages)
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource, times(2)).getMovie(id: 3)
+    }
 }

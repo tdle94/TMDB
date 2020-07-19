@@ -9,41 +9,59 @@
 import Foundation
 import UIKit
 
-class TMDBImageFooterView: UICollectionReusableView {
+class TMDBHalfCircleIndicator: UICollectionReusableView {
     lazy var halfCircleLayer: CAShapeLayer = {
         let shape = CAShapeLayer()
-        shape.path = UIBezierPath(arcCenter: CGPoint(x: bounds.midX, y: bounds.midY),
-                                  radius: bounds.size.width/2,
-                                  startAngle: 0,
-                                  endAngle: .pi,
-                                  clockwise: true).cgPath
         shape.lineWidth = 1
-        shape.strokeColor = Constant.Color.primaryColor.cgColor
+        shape.strokeColor = Constant.Color.backgroundColor.cgColor
+        shape.fillColor = UIColor.clear.cgColor
         return shape
     }()
     
     lazy var textLayer: CATextLayer = {
         let textLayer = CATextLayer()
         textLayer.frame = CGRect(x: 0,
-                                 y: bounds.midY - bounds.size.height/4,
-                                 width: bounds.size.width,
-                                 height: bounds.size.height/2)
+                                 y: bounds.midY - 7.5,
+                                 width: 50,
+                                 height: 20)
         textLayer.fontSize = 15
-        textLayer.foregroundColor = Constant.Color.tertiaryColor.cgColor
+        textLayer.foregroundColor = Constant.Color.backgroundColor.cgColor
         textLayer.contentsScale = UIScreen.main.scale
-        textLayer.string = "More"
+        textLayer.string = NSLocalizedString("More", comment: "")
+        textLayer.alignmentMode = .center
         return textLayer
     }()
+
+    enum Orientation {
+        case clockwise
+        case counterclockwise
+    }
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, orientation: Orientation) {
         super.init(frame: frame)
-        backgroundColor = .black
-//        layer.addSublayer(halfCircleLayer)
-//        layer.addSublayer(textLayer)
+
+        switch orientation {
+        case .clockwise:
+            halfCircleLayer.frame.origin.x += 10
+            halfCircleLayer.path = UIBezierPath(arcCenter: CGPoint(x: bounds.midX, y: bounds.midY),
+                                                radius: bounds.size.width/2,
+                                                startAngle: .pi/2,
+                                                endAngle: .pi * 3/2,
+                                                clockwise: true).cgPath
+        case .counterclockwise:
+            halfCircleLayer.path = UIBezierPath(arcCenter: CGPoint(x: 0, y: bounds.midY),
+                                                radius: bounds.size.width/2,
+                                                startAngle: .pi/2,
+                                                endAngle: .pi * 3/2,
+                                                clockwise: false).cgPath
+        }
+
+        backgroundColor = .clear
+        halfCircleLayer.addSublayer(textLayer)
+        layer.addSublayer(halfCircleLayer)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
 }
-

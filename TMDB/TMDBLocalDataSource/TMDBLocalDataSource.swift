@@ -15,6 +15,7 @@ protocol TMDBLocalDataSourceProtocol {
     func saveMovie(_ movie: Movie)
     func saveSimilarMovie(_ similarMovie: List<Movie>, to movie: Movie)
     func saveRecommendMovie(_ recommendMovie: List<Movie>, to movie: Movie)
+    func saveMovieImages(_ movieImages: MovieImages, to movieId: Int)
     // tv show
     func getTVShow(id: Int) -> TVShow?
     func saveTVShow(_ tvShow: TVShow)
@@ -36,6 +37,12 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
     }
 
     // MARK: - movie detail
+
+    func saveMovieImages(_ movieImages: MovieImages, to movieId: Int) {
+        realm.beginWrite()
+        getMovie(id: movieId)?.movieImages = movieImages
+        try? realm.commitWrite()
+    }
 
     func getMovie(id: Int) -> Movie? {
         return realm.object(ofType: Movie.self, forPrimaryKey: id)

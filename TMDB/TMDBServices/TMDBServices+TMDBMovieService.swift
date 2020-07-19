@@ -38,4 +38,9 @@ extension TMDBServices: TMDBMovieService {
         let request = urlRequestBuilder.getMovieReviewURLRequest(from: movieId, page: page)
         session.send(request: request, responseType: ReviewResult.self, completion: completion)
     }
+
+    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void) {
+        let request = urlRequestBuilder.getMovieImages(from: movieId)
+        session.send(request: request, responseType: MovieImages.self, completion: completion)
+    }
 }

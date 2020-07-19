@@ -1298,4 +1298,21 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource, times(2)).getMovie(id: 3)
     }
+
+    // MARK: - person profile iamges
+    func testGetPersonProfileImages() {
+        let person = People()
+        person.images = ImageProfile()
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getPerson(id: 3).thenReturn(person)
+        }
+        
+        /*WHEN*/
+        let images = repository.getPersonImageProfile(from: 3)
+        XCTAssertNotNil(images)
+        
+        /*THEN*/
+        verify(localDataSource).getPerson(id: 3)
+    }
 }

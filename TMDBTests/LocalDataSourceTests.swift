@@ -111,6 +111,8 @@ class LocalDataSourceTests: QuickSpec {
                 let person1 = People()
                 let person2 = People()
                 person2.id = 1
+                person1.tvCredits = TVCredit()
+                person1.movieCredits = MovieCredit()
                 person1.tvCredits?.cast.append(tvShow)
                 person1.movieCredits?.cast.append(movie)
 

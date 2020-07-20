@@ -43,7 +43,7 @@ class TMDBMovieDetailDisplay {
         displayTagLine(movie: movie)
         
         movieDetailVC?.title = movie.title
-
+        movieDetailVC?.additionalInformationTableView.reloadData()
         if movie.keywords?.keywords.isEmpty ?? false {
             movieDetailVC?.additionalInformationTableViewHeightConstraint.constant = -10
         }
@@ -119,7 +119,7 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.overviewLabel.isHidden = true
             movieDetailVC?.overviewTopConstraint.constant = 0
             movieDetailVC?.overviewDetailTopConstraint.constant = 0
-            movieDetailVC?.keywordCollectionViewTopConstraint.constant = 0
+            movieDetailVC?.keywordCollectionViewTopConstraint.constant = -20
         }
         
         movieDetailVC?.overviewDetail.attributedText = NSAttributedString(string: movie.overview ?? "",

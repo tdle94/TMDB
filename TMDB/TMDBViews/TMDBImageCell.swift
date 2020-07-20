@@ -24,7 +24,7 @@ class TMDBImageCell: UICollectionViewCell {
             if newImage == nil {
                 self.imageView.image = UIImage(named: "NoImage")
             } else {
-                self.imageView.image = newImage?.sd_resizedImage(with: CGSize(width: self.bounds.size.width, height: 212), scaleMode: .aspectFill)
+                self.imageView.image = newImage?.sd_resizedImage(with: CGSize(width: self.bounds.size.width, height: 212), scaleMode: .aspectFit)
             }
         }
     }

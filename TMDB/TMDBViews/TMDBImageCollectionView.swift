@@ -26,6 +26,7 @@ class TMDBImageCollectionView: UICollectionView {
                                                               height: 100),
                                                 orientation: .counterclockwise)
         leftIndicator?.isHidden = true
+        rightIndicator?.isHidden = true
         superview?.addSubview(rightIndicator!)
         superview?.addSubview(leftIndicator!)
     }

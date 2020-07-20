@@ -103,4 +103,8 @@ class TMDBDataTypeTests: XCTestCase {
     func testPersonDetailFixture() {
         XCTAssertNoThrow(try JSONDecoder().decode(People.self, from: personDetailFixture))
     }
+    
+    func testMovieDetailWithCompleteReleaseDate() {
+        XCTAssertNoThrow(try JSONDecoder().decode(Movie.self, from: movieDetailFixtureWithReleaseDates))
+    }
 }

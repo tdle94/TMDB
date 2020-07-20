@@ -1315,4 +1315,22 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         verify(localDataSource).getPerson(id: 3)
     }
+    
+    // MARK: - complete release date
+    func testGetCompleteMovieReleaseDates() {
+        let movie = Movie()
+        movie.releaseDates = ReleaseDateResults()
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+        
+        /*WHEN*/
+        let releaseDates = repository.getMovieReleaseDates(from: 3)
+        XCTAssertNotNil(releaseDates)
+        
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
 }

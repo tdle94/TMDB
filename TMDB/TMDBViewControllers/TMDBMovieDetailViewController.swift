@@ -342,10 +342,14 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if collectionView == backdropImageCollectionView {
-            if let id = movieId, indexPath.row + 1 == repository.getMovieImages(from: id)?.backdrops.count {
+            if indexPath.row != 0, let id = movieId, indexPath.row + 1 == repository.getMovieImages(from: id)?.backdrops.count {
                 backdropImageCollectionView.rightIndicator?.isHidden = true
                 backdropImageCollectionView.leftIndicator?.isHidden = false
-            } else if indexPath.row == 0 {
+            } else if let id = movieId, repository.getMovieImages(from: id)?.backdrops.count == 1 {
+                backdropImageCollectionView.rightIndicator?.isHidden = true
+                backdropImageCollectionView.leftIndicator?.isHidden = true
+            }
+            else if indexPath.row == 0 {
                 backdropImageCollectionView.rightIndicator?.isHidden = false
                 backdropImageCollectionView.leftIndicator?.isHidden = true
             } else {

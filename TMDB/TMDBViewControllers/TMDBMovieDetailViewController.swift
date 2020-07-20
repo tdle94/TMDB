@@ -405,13 +405,16 @@ extension TMDBMovieDetailViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let id = movieId else { return UITableViewCell() }
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailInfoCell", for: indexPath)
         cell.indentationLevel = 1
-        if indexPath.row == 0, let id = movieId {
+        if indexPath.row == 0 {
             let reviewCount = repository.getMovieReview(from: id).count
             cell.textLabel?.text = NSLocalizedString("Review", comment: "") + " (\(reviewCount))"
         } else {
-            cell.textLabel?.text = NSLocalizedString("Release Date", comment: "")
+            let releaseDateCount = repository.getMovieReleaseDates(from: id)?.results.count ?? 0
+            cell.textLabel?.text = NSLocalizedString("Release Date", comment: "") + " (\(releaseDateCount))"
         }
         return cell
     }
@@ -422,6 +425,8 @@ extension TMDBMovieDetailViewController: UITableViewDelegate {
         guard let id = movieId else { return }
         if indexPath.row == 0 {
             coordinator?.navigateToReview(reivew: repository.getMovieReview(from: id))
+        } else {
+            coordinator?.navigateToCompleteReleaseDates(movieId: id)
         }
     }
 }

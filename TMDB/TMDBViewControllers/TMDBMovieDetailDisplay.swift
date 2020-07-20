@@ -52,10 +52,6 @@ class TMDBMovieDetailDisplay {
     func displayMovieBackdropImages(_ movieImages: MovieImages) {
         guard var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
         let images = movieImages.backdrops
-        if images.isEmpty {
-            movieDetailVC?.backdropImageCollectionView.leftIndicator?.isHidden = true
-            movieDetailVC?.backdropImageCollectionView.rightIndicator?.isHidden = true
-        }
         snapshot.appendItems(Array(images))
         movieDetailVC?.movieImageDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -272,6 +268,9 @@ class TMDBMovieDetailDisplay {
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        if casts.count == 1 {
+            snapshot.reloadItems([casts.first!])
+        }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -280,6 +279,9 @@ class TMDBMovieDetailDisplay {
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        if crews.count == 1 {
+            snapshot.reloadItems([crews.first!])
+        }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 

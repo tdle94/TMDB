@@ -41,6 +41,7 @@ class Movie: Object, Decodable {
     dynamic var keywords: KeywordResult?
     dynamic var reviews: ReviewResult?
     dynamic var movieImages: MovieImages?
+    dynamic var releaseDates: ReleaseDateResults?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
     let productionCompanies: List<ProductionCompany> = List<ProductionCompany>()
@@ -61,6 +62,7 @@ class Movie: Object, Decodable {
         case voteCount = "vote_count"
         case belongToCollection = "belongs_to_collection"
         case movieImages = "images"
+        case releaseDates = "release_dates"
     }
 
     required init(from decoder: Decoder) throws {
@@ -93,6 +95,7 @@ class Movie: Object, Decodable {
         credits = try container.decodeIfPresent(CreditResult.self, forKey: .credits)
         keywords = try container.decodeIfPresent(KeywordResult.self, forKey: .keywords)
         reviews = try container.decodeIfPresent(ReviewResult.self, forKey: .reviews)
+        releaseDates = try container.decodeIfPresent(ReleaseDateResults.self, forKey: .releaseDates)
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genres)
@@ -121,6 +124,66 @@ class Movie: Object, Decodable {
 }
 
 @objcMembers
+class ReleaseDateResults: Object, Decodable {
+    let results: List<ReleaseDateResult> = List()
+    
+    enum CodingKeys: String, CodingKey {
+        case results
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        results.append(objectsIn: try container.decode(List<ReleaseDateResult>.self, forKey: .results))
+    }
+    
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
+class ReleaseDateResult: Object, Decodable {
+    dynamic var iso31661: String = ""
+    let releaseDates: List<ReleaseDates> = List()
+    
+    enum CodingKeys: String, CodingKey {
+        case iso31661 = "iso_3166_1"
+        case releaseDates = "release_dates"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        iso31661 = try container.decode(String.self, forKey: .iso31661)
+        releaseDates.append(objectsIn: try container.decode(List<ReleaseDates>.self, forKey: .releaseDates))
+    }
+    
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
+class ReleaseDates: Object, Decodable {
+    dynamic var certification: String = ""
+    dynamic var releaseDate: String = ""
+    
+    enum CodingKeys: String, CodingKey {
+        case certification
+        case releaseDate = "release_date"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        certification = try container.decode(String.self, forKey: .certification)
+        releaseDate = try container.decode(String.self, forKey: .releaseDate)
+    }
+    
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
 class MovieImages: Object, Decodable {
     let backdrops: List<Images> = List()
     let posters: List<Images> = List()
@@ -135,7 +198,7 @@ class MovieImages: Object, Decodable {
         posters.append(objectsIn: try container.decode(List<Images>.self, forKey: .posters))
     }
 
-    override required init() {
+    required init() {
         super.init()
     }
 }

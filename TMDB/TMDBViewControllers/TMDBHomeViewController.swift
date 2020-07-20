@@ -202,7 +202,7 @@ extension TMDBHomeViewController {
 
         // region
         if let region = NSLocale.current.regionCode {
-            let regionFlag = UIImage(named: "CountryFlags/\(Constant.countryName[region] ?? "")")?.resize(newWidth: 30)?.withRenderingMode(.alwaysOriginal)
+            let regionFlag = UIImage(named: "CountryFlags/\(Constant.countryName[region] ?? "")")?.sd_resizedImage(with: CGSize(width: 30, height: 30), scaleMode: .aspectFill)?.withRenderingMode(.alwaysOriginal)
             let regionSetting = UIBarButtonItem(image: regionFlag, style: .plain, target: self, action: #selector(changeRegion))
             navigationItem.setRightBarButtonItems([
                 languageSetting,

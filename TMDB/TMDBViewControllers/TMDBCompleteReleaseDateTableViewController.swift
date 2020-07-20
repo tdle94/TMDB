@@ -21,6 +21,7 @@ class TMDBCompleteReleaseDateTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = NSLocalizedString("Release Date", comment: "")
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
                                     localDataSource: TMDBLocalDataSource(),
@@ -37,7 +38,7 @@ class TMDBCompleteReleaseDateTableViewController: UITableViewController {
         let countryCode = releaseDate?.results[indexPath.row].iso31661 ?? ""
         let countryName = Constant.countryName[countryCode] ?? ""
         cell.imageView?.image = UIImage(named: "CountryFlags/\(countryName)")?.sd_roundedCornerImage(withRadius: 5, corners: .allCorners, borderWidth: 0, borderColor: nil)?.sd_resizedImage(with: CGSize(width: 30, height: 30), scaleMode: .aspectFill)
-        cell.textLabel?.text = releaseDate?.results[indexPath.row].releaseDates.first?.releaseDate
+        cell.textLabel?.text = String(releaseDate?.results[indexPath.row].releaseDates.first?.releaseDate.split(separator: "T").first ?? "")
         cell.detailTextLabel?.text = releaseDate?.results[indexPath.row].releaseDates.first?.certification
         return cell
     }

@@ -13,7 +13,7 @@ class TMDBSearchResultCell: UITableViewCell {
     var id: Int?
     var mediaType: String?
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
-    private lazy var noImage: UIImage? = UIImage(named: "NoImage")?.resize(newWidth: imageView?.frame.size.width ?? 0)
+    private lazy var noImage: UIImage? = UIImage(named: "NoImage")?.sd_resizedImage(with: CGSize(width: imageView?.frame.size.width ?? 0, height: imageView?.frame.size.height ?? 0), scaleMode: .aspectFit)
 
     func configure(item: MultiSearch) {
         textLabel?.text = item.originalTitle ?? item.originalName ?? item.name

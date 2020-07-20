@@ -42,4 +42,10 @@ struct MainCoordinator: Coordinator {
         personDetailVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(personDetailVC, animated: true)
     }
+    
+    func navigateToCompleteReleaseDates(movieId: Int) {
+        let releaseDateTableVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbCompleteReleaseDateTableVC) as! TMDBCompleteReleaseDateTableViewController
+        releaseDateTableVC.movieId = movieId
+        navigationController.pushViewController(releaseDateTableVC, animated: true)
+    }
 }

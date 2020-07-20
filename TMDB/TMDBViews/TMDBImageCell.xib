@@ -16,7 +16,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="380" height="174"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JWP-oF-nYx">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JWP-oF-nYx">
                         <rect key="frame" x="0.0" y="0.0" width="380" height="174"/>
                     </imageView>
                 </subviews>

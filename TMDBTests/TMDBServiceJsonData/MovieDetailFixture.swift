@@ -8,6 +8,110 @@
 
 import Foundation
 
+let movieDetailFixtureWithReleaseDates = Data("""
+    {
+      "adult": false,
+      "backdrop_path": "/jMmHFm0TcjiN9QDICXY2tJcQsDl.jpg",
+      "belongs_to_collection": null,
+      "budget": 0,
+      "genres": [
+        {
+          "id": 18,
+          "name": "Drama"
+        },
+        {
+          "id": 35,
+          "name": "Comedy"
+        }
+      ],
+      "homepage": "",
+      "id": 3,
+      "imdb_id": "tt0092149",
+      "original_language": "fi",
+      "original_title": "Varjoja paratiisissa",
+      "overview": "An episode in the life of Nikander, a garbage man, involving the death of a co-worker, an affair and much more.",
+      "popularity": 10.195,
+      "poster_path": "/nj01hspawPof0mJmlgfjuLyJuRN.jpg",
+      "production_companies": [
+        {
+          "id": 2303,
+          "logo_path": null,
+          "name": "Villealfa Filmproductions",
+          "origin_country": "FI"
+        }
+      ],
+      "production_countries": [
+        {
+          "iso_3166_1": "FI",
+          "name": "Finland"
+        }
+      ],
+      "release_date": "1986-10-17",
+      "revenue": 0,
+      "runtime": 72,
+      "spoken_languages": [
+        {
+          "iso_639_1": "en",
+          "name": "English"
+        },
+        {
+          "iso_639_1": "fi",
+          "name": "suomi"
+        },
+        {
+          "iso_639_1": "sv",
+          "name": "svenska"
+        }
+      ],
+      "status": "Released",
+      "tagline": "",
+      "title": "Shadows in Paradise",
+      "video": false,
+      "vote_average": 7.3,
+      "vote_count": 113,
+      "release_dates": {
+        "results": [
+          {
+            "iso_3166_1": "NL",
+            "release_dates": [
+              {
+                "certification": "",
+                "iso_639_1": "",
+                "note": "",
+                "release_date": "1993-07-29T00:00:00.000Z",
+                "type": 3
+              }
+            ]
+          },
+          {
+            "iso_3166_1": "FI",
+            "release_dates": [
+              {
+                "certification": "S",
+                "iso_639_1": "",
+                "note": "",
+                "release_date": "1986-10-17T00:00:00.000Z",
+                "type": 3
+              }
+            ]
+          },
+          {
+            "iso_3166_1": "US",
+            "release_dates": [
+              {
+                "certification": "",
+                "iso_639_1": "",
+                "note": "",
+                "release_date": "1990-08-22T00:00:00.000Z",
+                "type": 3
+              }
+            ]
+          }
+        ]
+      }
+    }
+    """.utf8)
+
 let movieDetailFixtureWithReview = Data("""
     {"adult":false,"backdrop_path":"/jMmHFm0TcjiN9QDICXY2tJcQsDl.jpg","belongs_to_collection":null,"budget":0,"genres":[{"id":18,"name":"Drama"},{"id":35,"name":"Comedy"}],"homepage":"","id":3,"imdb_id":"tt0092149","original_language":"fi","original_title":"Varjoja paratiisissa","overview":"An episode in the life of Nikander, a garbage man, involving the death of a co-worker, an affair and much more.","popularity":10.669,"poster_path":"/nj01hspawPof0mJmlgfjuLyJuRN.jpg","production_companies":[{"id":2303,"logo_path":null,"name":"Villealfa Filmproductions","origin_country":"FI"}],"production_countries":[{"iso_3166_1":"FI","name":"Finland"}],"release_date":"1986-10-17","revenue":0,"runtime":72,"spoken_languages":[{"iso_639_1":"en","name":"English"},{"iso_639_1":"fi","name":"suomi"},{"iso_639_1":"sv","name":"svenska"}],"status":"Released","tagline":"","title":"Shadows in Paradise","video":false,"vote_average":7.3,"vote_count":113,"reviews":{"page":1,"results":[{"author":"CRCulver","content":"it suck","id":"5b9180a7c3a3687adc005547","url":"https://www.themoviedb.org/review/5b9180a7c3a3687adc005547"}],"total_pages":1,"total_results":1}}
     """.utf8)

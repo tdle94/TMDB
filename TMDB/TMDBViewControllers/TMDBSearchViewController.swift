@@ -12,6 +12,7 @@ import UIKit
 protocol TMDBSearchProtocol: AnyObject {
     func navigateToMovieDetail(id: Int)
     func navigateToPersonDetail(id: Int)
+    func navigateToTVShowDetail(id: Int)
     func multiSearch(query: String?, newSearch: Bool)
 }
 
@@ -97,6 +98,10 @@ extension TMDBSearchViewController: TMDBSearchProtocol {
 
     func navigateToPersonDetail(id: Int) {
         coordinate?.navigateToPersonDetail(id: id)
+    }
+
+    func navigateToTVShowDetail(id: Int) {
+        coordinate?.navigateToTVShowDetail(tvId: id)
     }
 }
 

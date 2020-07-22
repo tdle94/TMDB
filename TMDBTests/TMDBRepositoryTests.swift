@@ -1333,4 +1333,84 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         verify(localDataSource).getMovie(id: 3)
     }
+    
+    // MARK: - tv show detail
+    func testGetTVShowNotInRealm() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let tvshow = TVShow()
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(nil)
+            when(stub).saveTVShow(any()).thenDoNothing()
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(tvshow))
+            }
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+        /*WHEN*/
+        repository.getTVShowDetail(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShow(id: 3)
+        verify(session).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure())
+        verify(requestBuilder).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+    }
+    
+    func testGetTVShowInRealm() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let tvshow = TVShow()
+        tvshow.id = 3
+        tvshow.region = "US"
+        tvshow.language = "en"
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvshow)
+        }
+        
+        /*WHEN*/
+        repository.getTVShowDetail(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShow(id: 3)
+        verify(session, never()).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure())
+        verify(requestBuilder, never()).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+    }
+    
+    // MARK: - tv show keywords
+    func getExistingTVShowKeywords() {
+        let tvShow = TVShow()
+        let keywords = TVKeywordResult()
+        keywords.results.append(Keyword())
+        tvShow.keywords = keywords
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+        
+        /*WHEN*/
+        XCTAssertNotEqual(repository.getTVShowKeywords(from: 3).count, 0)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
 }

@@ -67,6 +67,8 @@ extension TMDBSearchResultViewController: UITableViewDelegate {
             tmdbSearchProtocol?.navigateToMovieDetail(id: id)
         } else if cell.mediaType == "person" {
             tmdbSearchProtocol?.navigateToPersonDetail(id: id)
+        } else if cell.mediaType == "tv" {
+            tmdbSearchProtocol?.navigateToTVShowDetail(id: id)
         }
     }
     

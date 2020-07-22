@@ -26,19 +26,22 @@ extension UICollectionViewLayout {
             section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18)
             section.boundarySupplementaryItems = [sectionHeader]
             section.orthogonalScrollingBehavior = .continuous
-
             return section
         }
     }
 
-    static func imageLayout() -> UICollectionViewLayout {
+    static func imageLayout(fractionWidth: CGFloat = 1,
+                            fractionHeight: CGFloat = 1,
+                            scrollBehavior:  UICollectionLayoutSectionOrthogonalScrollingBehavior = .groupPagingCentered) -> UICollectionViewLayout
+    {
         return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(fractionWidth), heightDimension: .fractionalHeight(fractionHeight))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(1))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(fractionWidth), heightDimension: .fractionalHeight(fractionHeight))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
             let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .groupPagingCentered
+            section.orthogonalScrollingBehavior = scrollBehavior
+
             return section
         }
     }

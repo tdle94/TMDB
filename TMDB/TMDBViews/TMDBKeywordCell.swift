@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class TMDBMovieKeywordCell: UICollectionViewCell {
+class TMDBKeywordCell: UICollectionViewCell {
     let label = UILabel()
 
     override init(frame: CGRect) {

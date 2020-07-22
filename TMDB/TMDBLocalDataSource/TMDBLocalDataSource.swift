@@ -87,6 +87,8 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveTVShow(_ tvShow: TVShow) {
         realm.beginWrite()
+        tvShow.region = NSLocale.current.regionCode
+        tvShow.language = NSLocale.preferredLanguages.first
         realm.add(tvShow, update: .modified)
         try? realm.commitWrite()
     }

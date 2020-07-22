@@ -25,7 +25,7 @@ class TMDBTVDetailDisplay {
         displayTitleLabel(tvShow: tvShow)
         displayRuntimeLabel(tvShow: tvShow)
         displayOverview(tvShow: tvShow)
-        displayKeywords(tvShow: tvShow)
+        displayKeywords()
         displayNetworks(tvShow: tvShow)
         displaySeason(tvShow: tvShow)
         tvDetailVC?.title = tvShow.originalName
@@ -45,7 +45,7 @@ class TMDBTVDetailDisplay {
         tvDetailVC?.movieNetworkImageDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    private func displayKeywords(tvShow: TVShow) {
+    private func displayKeywords() {
         tvDetailVC?.keywordCollectionView.reloadData()
         tvDetailVC?.keywordCollectionView.layoutIfNeeded()
         tvDetailVC?.keywordCollectionViewHeightConstraint.constant = tvDetailVC?.keywordCollectionView.contentSize.height ?? 0

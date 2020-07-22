@@ -51,8 +51,7 @@ class TMDBBackdropImageCell: TMDBImageCell {
         }
 
         imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"),
-                              options: [SDWebImageOptions.continueInBackground, SDWebImageOptions.avoidAutoSetImage])
-        { newImage, _, _, _ in
+                              options: [SDWebImageOptions.continueInBackground, SDWebImageOptions.avoidAutoSetImage]) { newImage, _, _, _ in
             self.imageView.image = newImage?.sd_resizedImage(with: self.bounds.size, scaleMode: .aspectFit)
         }
     }

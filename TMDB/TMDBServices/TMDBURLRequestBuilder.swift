@@ -11,6 +11,7 @@ import Foundation
 protocol TMDBURLRequestBuilderProtocol {
     // MARK: - tv shows
     func getPopularTVURLRequest(page: Int, language: String?) -> URLRequest
+    func getTVShowDetailURLRequest(id: Int, language: String?) -> URLRequest
     
     // MARK: - people
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest
@@ -47,6 +48,15 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "language", value: language ?? "en-US")
         ]
         return buildURLRequest(path: "/3/tv/popular", queryItems: queryItems)
+    }
+
+    func getTVShowDetailURLRequest(id: Int, language: String?) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "language", value: language ?? "en-US"),
+            URLQueryItem(name: "append_to_response", value: "keywords")
+            
+        ]
+        return buildURLRequest(path: "/3/tv/\(id)", queryItems: queryItems)
     }
 
     // MARK: - peopele

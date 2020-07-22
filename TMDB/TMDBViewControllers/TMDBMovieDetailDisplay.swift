@@ -31,7 +31,6 @@ class TMDBMovieDetailDisplay {
         displayBudget(movie: movie)
         displayRevenue(movie: movie)
         displayTitle(movie: movie)
-        displayOverview()
         displayOverviewDetail(movie: movie)
         displayRuntime(movie: movie)
         displayGenere(movie: movie)
@@ -101,12 +100,6 @@ class TMDBMovieDetailDisplay {
                                                                       attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!])
     }
 
-    func displayOverview() {
-        movieDetailVC?.overviewLabel.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ",
-                                                                         attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
-                                                                                                                          size: UIFont.labelFontSize)!])
-    }
-
     func displayOverviewDetail(movie: Movie) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
@@ -118,6 +111,9 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.keywordCollectionViewTopConstraint.constant = -20
         }
         
+        movieDetailVC?.overviewLabel.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ",
+                                                                         attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
+                                                                                                                          size: UIFont.labelFontSize)!])
         movieDetailVC?.overviewDetail.attributedText = NSAttributedString(string: movie.overview ?? "",
                                                                           attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
                                                                                                    size: 14)!,
@@ -126,27 +122,15 @@ class TMDBMovieDetailDisplay {
     }
 
     func displayRuntime(movie: Movie) {
-        var productionCountries = ""
         var releaseDate = ""
-
-        if movie.productionCountries.count == 1 {
-            productionCountries = movie.productionCountries.first!.ios31661
-        } else {
-            for country in movie.productionCountries {
-                if country == movie.productionCountries.last {
-                    productionCountries += " \(country.ios31661)"
-                } else {
-                    productionCountries += "\(country.ios31661), "
-                }
-            }
-        }
-
-        if productionCountries != "" {
-            productionCountries = "(\(productionCountries))"
-        }
+        var productionCountries = Array(movie.productionCountries).map { $0 == movie.productionCountries.last || movie.productionCountries.count == 1 ? "\($0.ios31661)" : "\($0.ios31661), " }.joined()
 
         if let date = movie.releaseDate, date != "" {
             releaseDate = "\u{2022} \(date)"
+        }
+        
+        if productionCountries != "" {
+            productionCountries = "(\(productionCountries))"
         }
 
         movieDetailVC?.runtimeLabel.attributedText = NSAttributedString(string: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \(releaseDate) \(productionCountries)",
@@ -157,19 +141,7 @@ class TMDBMovieDetailDisplay {
     }
     
     func displayGenere(movie: Movie) {
-        var genres = ""
-        if movie.genres.count == 1 {
-            genres = movie.genres.first!.name
-        } else {
-            for genre in movie.genres {
-                if genre == movie.genres.last {
-                    genres += " \(genre.name)"
-                } else {
-                    genres += "\(genre.name), "
-                }
-            }
-        }
-
+        let genres = Array(movie.genres).map { $0 == movie.genres.last || movie.genres.count == 1 ? " \($0.name)" : "\($0.name), " }.joined()
         movieDetailVC?.generes.attributedText = NSAttributedString(string: genres,
                                                                    attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
     }
@@ -269,7 +241,7 @@ class TMDBMovieDetailDisplay {
         snapshot.appendItems(casts, toSection: .Credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         if casts.count == 1 {
-            snapshot.reloadItems([casts.first!])
+            snapshot.reloadSections([.Credit])
         }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -280,7 +252,7 @@ class TMDBMovieDetailDisplay {
         snapshot.appendItems(crews, toSection: .Credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         if crews.count == 1 {
-            snapshot.reloadItems([crews.first!])
+            snapshot.reloadSections([.Credit])
         }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }

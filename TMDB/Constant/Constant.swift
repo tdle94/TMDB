@@ -27,6 +27,7 @@ struct Constant {
         static let searchResultCell = "SearchResultCell"
         static let imageCell = "ImageCell"
         static let releaseDateCell = "ReleaseDateCell"
+        static let tvShowSeasonCell = "TVShowSeasonCell"
     }
     struct ViewControllerIdentifier {
         static let tmdbSearchResultViewController = "TMDBSearchResultViewController"
@@ -40,6 +41,7 @@ struct Constant {
         static let tmdbReviewVC = "TMDBReivewTableViewController"
         static let tmdbPersonDetailVC = "TMDBPersonDetailViewController"
         static let tmdbCompleteReleaseDateTableVC = "TMDBCompleteReleaseDateTableViewController"
+        static let tmdbTVDetailVC = "TMDBTVDetailViewController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

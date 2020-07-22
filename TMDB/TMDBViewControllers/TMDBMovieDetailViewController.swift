@@ -28,31 +28,31 @@ class TMDBMovieDetailViewController: UIViewController {
     enum CreditMovieSection: String, CaseIterable {
         case Credit = "Credit"
     }
-    
+
     enum VideoMovieSection: String, CaseIterable {
         case Video = "Videos"
     }
-    
+
     enum KeywordMovieSection: String, CaseIterable {
         case Keyword = "Keyword"
     }
-    
+
     enum MovieImageSection: String, CaseIterable {
         case Image = "Image"
     }
 
     var movieId: Int?
-    
-    var videoMovieDataSource: UICollectionViewDiffableDataSource<VideoMovieSection, Object>!
-    
+
+    var videoMovieDataSource: UICollectionViewDiffableDataSource<VideoMovieSection, Video>!
+
     var creditMovieDataSource: UICollectionViewDiffableDataSource<CreditMovieSection, Object>!
 
     var productionCompanyDataSource: UICollectionViewDiffableDataSource<ProdcutionCompanySection, ProductionCompany>!
 
-    var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Object>!
-    
+    var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Movie>!
+
     var keywordMovieDataSource: UICollectionViewDiffableDataSource<KeywordMovieSection, Keyword>!
-    
+
     var movieImageDataSource: UICollectionViewDiffableDataSource<MovieImageSection, Images>!
 
     var movieDetail: TMDBMovieDetailDisplay!
@@ -93,10 +93,10 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var backdropImageCollectionView: TMDBImageCollectionView! {
         didSet {
             backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
-            backdropImageCollectionView.register(UINib(nibName: "TMDBImageCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
 
             movieImageDataSource = UICollectionViewDiffableDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBImageCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
                 cell?.configure(image: item)
                 return cell
             }
@@ -109,9 +109,8 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var keywordCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
         didSet {
-            keywordCollectionView.collectionViewLayout = TMDBMovieKeywordLayout(delegate: self)
-            keywordCollectionView.register(TMDBMovieKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
-            keywordCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+            keywordCollectionView.collectionViewLayout = TMDBKeywordLayout(delegate: self)
+            keywordCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
         }
     }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
@@ -175,10 +174,10 @@ class TMDBMovieDetailViewController: UIViewController {
             }
 
             matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBMoreMovieHeaderView) ??
-                                 (collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                  withReuseIdentifier: Constant.Identifier.moreMovieHeader,
-                                                                                  for: indexPath) as? TMDBMoreMovieHeaderView)
+                self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) ??
+                                        collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                                        withReuseIdentifier: Constant.Identifier.moreMovieHeader,
+                                                                                        for: indexPath)) as? TMDBMoreMovieHeaderView
                 self.moreMovieHeader?.delegate = self
 
                 return self.moreMovieHeader
@@ -237,19 +236,19 @@ class TMDBMovieDetailViewController: UIViewController {
     }
 
     // MARK: - service call
-    
+
     func getMovieCast() {
         guard let id = movieId else { return }
         let casts = repository.getMovieCast(from: id)
         movieDetail.displayCast(casts)
     }
-    
+
     func getMovieCrew() {
         guard let id = movieId else { return }
         let crews = repository.getMovieCrew(from: id)
         movieDetail.displayCrew(crews)
     }
-    
+
     func getSimilarMovies() {
         guard let id = movieId else { return }
         repository.getSimilarMovies(from: id, page: 1) { result in
@@ -261,7 +260,7 @@ class TMDBMovieDetailViewController: UIViewController {
             }
         }
     }
-    
+
     func getRecommendMovies() {
         guard let id = movieId else { return }
         repository.getRecommendMovies(from: id, page: 1) { result in
@@ -318,22 +317,22 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         if
-            collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBMoreMovieHeaderView,
-            let movie = matchingMoviesDataSource.itemIdentifier(for: indexPath) as? Movie
+            collectionView == matchingMoviesCollectionView,
+            let movie = matchingMoviesDataSource.itemIdentifier(for: indexPath)
         {
             coordinator?.navigateToMovieDetail(id: movie.id)
         }
 
         if
-            collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBVideoHeaderView,
-            let video = videoMovieDataSource.itemIdentifier(for: indexPath) as? Video,
+            collectionView == videoCollectionView,
+            let video = videoMovieDataSource.itemIdentifier(for: indexPath),
             let url = userSetting.getYoutubeVideoURL(key: video.key)
         {
             coordinator?.navigateToVideoPlayer(with: url)
         }
-        
+
         if
-            collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) is TMDBCreditHeaderView,
+            collectionView == creditCollectionView,
             let cast = creditMovieDataSource.itemIdentifier(for: indexPath) as? Cast
         {
             coordinator?.navigateToPersonDetail(id: cast.id)
@@ -369,7 +368,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDataSource {
 
         if
             collectionView == keywordCollectionView,
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBMovieKeywordCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBKeywordCell
         {
             let keyword = repository.getMovieKeywords(from: id)[indexPath.row]
             cell.configure(keyword: keyword)
@@ -389,9 +388,9 @@ extension TMDBMovieDetailViewController: UICollectionViewDataSource {
 }
 
 // MARK: - keyword collectionview delegate
-extension TMDBMovieDetailViewController: KeywordLayoutDelegate {
+extension TMDBMovieDetailViewController: TMDBKeywordLayoutDelegate {
     // dynamic width base on text
-    func tagCellLayoutSize(layout: TMDBMovieKeywordLayout, at index: Int) -> CGSize {
+    func tagCellLayoutSize(layout: TMDBKeywordLayout, at index: Int) -> CGSize {
         if let id = movieId {
             let keyword = repository.getMovieKeywords(from: id)[index]
             let label = UILabel()

@@ -12,36 +12,39 @@ import RealmSwift
 @objcMembers
 class TVShow: Object, Decodable {
     dynamic var backdropPath: String?
-    let createdBy: List<CreatedBy> = List()
-    let episodeRunTime: List<Int> = List()
     dynamic var firstAirDate: String = ""
-    let genres: List<Genre> = List()
-    dynamic var homepage: String = ""
     dynamic var id: Int = 0
     dynamic var inProduction: Bool = false
-    let languages: List<String> = List()
     dynamic var lastAirDate: String = ""
     dynamic var lastEpisodeToAir: Episode?
     dynamic var name: String = ""
     dynamic var nextEpisodeToAir: Episode?
-    let networks: List<Networks> = List()
     dynamic var numberOfEpisodes: Int = 0
     dynamic var numberOfSeasons: Int = 0
-    dynamic var originCountry: List<String> = List()
     dynamic var originalLanguage: String = ""
     dynamic var originalName: String = ""
     dynamic var overview: String = ""
     dynamic var popularity: Double = 0.0
     dynamic var posterPath: String?
-    let productionCompanies: List<ProductionCompany> = List()
-    dynamic var seasons: List<Season> = List()
     dynamic var status: String = ""
     dynamic var type: String = ""
     dynamic var voteAverage: Double = 0.0
     dynamic var voteCount: Int = 0
+    dynamic var homepage: String = ""
+    dynamic var keywords: TVKeywordResult?
+    dynamic var language: String?
+    dynamic var region: String?
+    let genres: List<Genre> = List()
+    let createdBy: List<CreatedBy> = List()
+    let episodeRunTime: List<Int> = List()
+    let languages: List<String> = List()
+    let networks: List<Networks> = List()
+    let originCountry: List<String> = List()
+    let productionCompanies: List<ProductionCompany> = List()
+    let seasons: List<Season> = List()
 
     enum CodingKeys: String, CodingKey {
-        case genres, hompage, id, languages, name, networks, overview, popularity, seasons, status, type
+        case genres, hompage, id, languages, name, networks, overview, popularity, seasons, status, type, keywords
         case backdropPath = "backdrop_path"
         case createdBy = "created_by"
         case episodeRunTime = "episode_run_time"
@@ -87,8 +90,12 @@ class TVShow: Object, Decodable {
         voteCount = try container.decode(Int.self, forKey: .voteCount)
         name = try container.decode(String.self, forKey: .name)
         originalName = try container.decode(String.self, forKey: .originalName)
-
+        keywords = try container.decodeIfPresent(TVKeywordResult.self, forKey: .keywords)
         originCountry.append(objectsIn: try container.decode(List<String>.self, forKey: .originCountry))
+
+        if let seasons = try container.decodeIfPresent(List<Season>.self, forKey: .seasons) {
+            self.seasons.append(objectsIn: seasons)
+        }
 
         if let genre = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genre)
@@ -125,17 +132,36 @@ class TVShow: Object, Decodable {
 }
 
 @objcMembers
+class TVKeywordResult: Object, Decodable {
+    let results: List<Keyword> = List()
+    
+    enum CodingKeys: String, CodingKey {
+        case results
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        results.append(objectsIn: try container.decode(List<Keyword>.self, forKey: .results))
+    }
+
+    required init() {
+        super.init()
+    }
+}
+
+@objcMembers
 class Season: Object, Decodable {
-    dynamic var airDate: String = ""
+    dynamic var airDate: String?
     dynamic var episodeCount: Int = 0
     dynamic var id: Int = 0
     dynamic var name: String = ""
     dynamic var overview: String = ""
-    dynamic var posterPath: String = ""
+    dynamic var posterPath: String?
     dynamic var number: Int = 0
     
     enum CodingKeys: String, CodingKey {
-        case id, name, overview, number
+        case id, name, overview
+        case number = "season_number"
         case airDate = "air_date"
         case episodeCount = "episode_count"
         case posterPath = "poster_path"
@@ -166,7 +192,7 @@ class Episode: Object, Decodable {
     dynamic var productionCode: String = ""
     dynamic var seasonNumber: Int = 0
     dynamic var showId: Int = 0
-    dynamic var stillPath: String = ""
+    dynamic var stillPath: String?
     dynamic var voteAverage: Double = 0
     dynamic var voteCount: Int = 0
     
@@ -188,7 +214,7 @@ class CreatedBy: Object, Decodable {
     dynamic var creditId: String = ""
     dynamic var name: String = ""
     dynamic var gender: Int = 0
-    dynamic var profilePath: String = ""
+    dynamic var profilePath: String?
     
     enum CodingKeys: String, CodingKey {
         case id, name, gender

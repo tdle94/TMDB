@@ -9,24 +9,24 @@
 import Foundation
 import UIKit
 
-protocol KeywordLayoutDelegate: AnyObject {
-    func tagCellLayoutSize(layout: TMDBMovieKeywordLayout, at index: Int) -> CGSize
+protocol TMDBKeywordLayoutDelegate: AnyObject {
+    func tagCellLayoutSize(layout: TMDBKeywordLayout, at index: Int) -> CGSize
 }
 
-class TMDBMovieKeywordLayout: UICollectionViewLayout {
+class TMDBKeywordLayout: UICollectionViewLayout {
     
     var layouts: [UICollectionViewLayoutAttributes] = []
     
     var numberOfLine: Int = 0
     
-    weak var delegate: KeywordLayoutDelegate?
+    weak var delegate: TMDBKeywordLayoutDelegate?
     
     override var collectionViewContentSize: CGSize {
         return CGSize(width: UIScreen.main.bounds.width - 18,
                       height: (CGFloat(numberOfLine) * (layouts.first?.frame.height ?? 0) + CGFloat(numberOfLine * 5) + CGFloat(layouts.first?.frame.height ?? 0) + 1 ))
     }
     
-    init(delegate: KeywordLayoutDelegate) {
+    init(delegate: TMDBKeywordLayoutDelegate) {
         self.delegate = delegate
         super.init()
     }
@@ -51,7 +51,7 @@ class TMDBMovieKeywordLayout: UICollectionViewLayout {
     }
 }
 
-extension TMDBMovieKeywordLayout {
+extension TMDBKeywordLayout {
     var numberOfCell: Int {
         return collectionView?.numberOfItems(inSection: 0) ?? 0
     }

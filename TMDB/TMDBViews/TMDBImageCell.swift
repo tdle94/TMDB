@@ -11,8 +11,38 @@ import UIKit
 import SDWebImage
 
 class TMDBImageCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView!
+    var imageView: UIImageView = UIImageView()
     let userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        imageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        imageView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
+    override func prepareForReuse() {
+        imageView.image = nil
+    }
+}
+
+class TMDBBackdropImageCell: TMDBImageCell {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        imageView.contentMode = .top
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
     
     func configure(image: Images) {
         guard let url = userSetting.getImageURL(from: image.filePath) else {
@@ -20,16 +50,30 @@ class TMDBImageCell: UICollectionViewCell {
             return
         }
 
-        imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"), options: [SDWebImageOptions.continueInBackground, SDWebImageOptions.avoidAutoSetImage]) { newImage, _, _, _ in
-            if newImage == nil {
-                self.imageView.image = UIImage(named: "NoImage")
-            } else {
-                self.imageView.image = newImage?.sd_resizedImage(with: CGSize(width: self.bounds.size.width, height: 212), scaleMode: .aspectFit)
-            }
+        imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"),
+                              options: [SDWebImageOptions.continueInBackground, SDWebImageOptions.avoidAutoSetImage]) { newImage, _, _, _ in
+            self.imageView.image = newImage?.sd_resizedImage(with: self.bounds.size, scaleMode: .aspectFit)
         }
     }
-    
-    override func prepareForReuse() {
-        imageView.image = nil
+}
+
+class TMDBNetworkImageCell: TMDBImageCell {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        imageView.contentMode = .center
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
+    func configure(networks: Networks) {
+        guard let url = userSetting.getImageURL(from: networks.logoPath) else {
+            return
+        }
+
+        imageView.sd_setImage(with: url) { image, _, _, _ in
+            self.imageView.image = image?.sd_resizedImage(with: self.bounds.size, scaleMode: .aspectFit)
+        }
     }
 }

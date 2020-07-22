@@ -33,6 +33,8 @@ protocol TMDBRepositoryProtocol {
 
     // MARK: - tv shows
     func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
+    func getTVShowDetail(from tvShowId: Int, completion: @escaping (Result<TVShow, Error>) -> Void)
+    func getTVShowKeywords(from tvShowId: Int) -> [Keyword]
 
     // MARK: - image configuration
     func updateImageConfig()
@@ -220,6 +222,28 @@ class TMDBRepository: TMDBRepositoryProtocol {
 
     // MARK: - tv show
 
+    func getTVShowDetail(from tvShowId: Int, completion: @escaping (Result<TVShow, Error>) -> Void) {
+        if
+            let tvShow = localDataSource.getTVShow(id: tvShowId),
+            tvShow.region == NSLocale.current.regionCode,
+            tvShow.language == NSLocale.preferredLanguages.first {
+            completion(.success(tvShow))
+            return
+        }
+
+        services.getTVShowDetail(id: tvShowId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tvShow):
+                    self.localDataSource.saveTVShow(tvShow)
+                    completion(.success(tvShow))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
         services.getPopularOnTV(page: page) { result in
             DispatchQueue.main.async {
@@ -231,6 +255,13 @@ class TMDBRepository: TMDBRepositoryProtocol {
                 }
             }
         }
+    }
+
+    func getTVShowKeywords(from tvShowId: Int) -> [Keyword] {
+        guard let keywords = localDataSource.getTVShow(id: tvShowId)?.keywords?.results else {
+            return []
+        }
+        return Array(keywords)
     }
 
     // MARK: - trending

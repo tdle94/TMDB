@@ -393,4 +393,33 @@ class TMDBServiceTests: XCTestCase {
         verify(urlRequestBuilder).getImageConfigURLRequest()
         verify(session).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure())
     }
+    
+    // MARK: - tv show detail
+    func testGetTVShowDetail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShow()))
+            }
+        }
+
+        stub(urlRequestBuilder) { stub in
+            when(stub).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+
+        /*WHEN*/
+        services.getTVShowDetail(id: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+    }
 }

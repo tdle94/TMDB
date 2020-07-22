@@ -48,4 +48,10 @@ struct MainCoordinator: Coordinator {
         releaseDateTableVC.movieId = movieId
         navigationController.pushViewController(releaseDateTableVC, animated: true)
     }
+    
+    func navigateToTVShowDetail(tvId: Int) {
+        let tvShowDetailVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbTVDetailVC) as! TMDBTVDetailViewController
+        tvShowDetailVC.tvId = tvId
+        navigationController.pushViewController(tvShowDetailVC, animated: true)
+    }
 }

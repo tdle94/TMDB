@@ -193,6 +193,38 @@ let tvShowDetailFixture = Data("""
           "season_number": 7
         }
       ],
+    "keywords": {
+    "results": [
+      {
+        "name": "war",
+        "id": 6091
+      },
+      {
+        "name": "based on novel or book",
+        "id": 818
+      },
+      {
+        "name": "kingdom",
+        "id": 4152
+      },
+      {
+        "name": "dragon",
+        "id": 12554
+      },
+      {
+        "name": "king",
+        "id": 13084
+      },
+      {
+        "name": "intrigue",
+        "id": 34038
+      },
+      {
+        "name": "fantasy world",
+        "id": 170362
+      }
+    ]
+    },
       "status": "Returning Series",
       "type": "Scripted",
       "vote_average": 8.2,

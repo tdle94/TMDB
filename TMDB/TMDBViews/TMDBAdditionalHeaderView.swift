@@ -9,7 +9,10 @@
 import Foundation
 import UIKit
 
-class TMDBMoreMovieHeaderView: TMDBPreviewHeaderView {
+/*
+    Header View to display similar and recommend movie or tv show
+ */
+class TMDBAdditionalHeaderView: TMDBPreviewHeaderView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.text = NSLocalizedString("More", comment: "")

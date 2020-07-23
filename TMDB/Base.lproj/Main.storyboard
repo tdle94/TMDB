@@ -696,7 +696,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N8c-16-nJS">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="542.33333333333337"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="746"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="cRc-mH-MXA">
                                                 <rect key="frame" x="0.0" y="536.66666666666663" width="414" height="0.0"/>
@@ -849,11 +849,6 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" id="UWW-jf-hOD"/>
                                                 </constraints>
-                                                <view key="tableFooterView" contentMode="scaleToFill" id="x63-a8-MWL">
-                                                    <rect key="frame" x="0.0" y="112" width="396" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
-                                                </view>
                                                 <prototypes>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TVShowSeasonCell" textLabel="pNB-uS-HzR" detailTextLabel="FlY-c6-dfu" style="IBUITableViewCellStyleSubtitle" id="Ulz-zi-5YV">
                                                         <rect key="frame" x="0.0" y="28" width="396" height="56"/>
@@ -882,6 +877,32 @@
                                                     </tableViewCell>
                                                 </prototypes>
                                             </tableView>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UaR-Gg-evP">
+                                                <rect key="frame" x="0.0" y="551.66666666666663" width="414" height="179.33333333333337"/>
+                                                <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="179.33333333333337" id="Acx-Yj-rY0"/>
+                                                </constraints>
+                                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="a2M-Oz-F0H">
+                                                    <size key="itemSize" width="128" height="128"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                                <cells>
+                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="1t6-XH-a7R">
+                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="I6M-Bv-bUW">
+                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                        </collectionViewCellContentView>
+                                                    </collectionViewCell>
+                                                </cells>
+                                                <connections>
+                                                    <outlet property="delegate" destination="EsI-RD-jLx" id="h8x-Z5-CvA"/>
+                                                </connections>
+                                            </collectionView>
                                         </subviews>
                                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -905,6 +926,7 @@
                                             <constraint firstItem="E3b-o5-OaQ" firstAttribute="leading" secondItem="Zon-H4-Zoo" secondAttribute="leading" id="TSY-fX-dmG"/>
                                             <constraint firstItem="VaP-nR-fZ8" firstAttribute="leading" secondItem="N8c-16-nJS" secondAttribute="leading" constant="18" id="Unh-gw-Sa5"/>
                                             <constraint firstItem="u9K-GS-5bR" firstAttribute="top" secondItem="cRc-mH-MXA" secondAttribute="bottom" constant="5" id="VpL-Ww-Sqf"/>
+                                            <constraint firstItem="UaR-Gg-evP" firstAttribute="leading" secondItem="N8c-16-nJS" secondAttribute="leading" id="Vpo-Ll-7oZ"/>
                                             <constraint firstAttribute="trailing" secondItem="oeU-1K-jv4" secondAttribute="trailing" constant="20" id="YFn-Pp-x1q"/>
                                             <constraint firstItem="oeU-1K-jv4" firstAttribute="leading" secondItem="qpj-MJ-CdV" secondAttribute="trailing" constant="10" id="Z4W-hl-zY4"/>
                                             <constraint firstItem="qpj-MJ-CdV" firstAttribute="leading" secondItem="N8c-16-nJS" secondAttribute="leading" constant="18" id="ZLT-rw-62L"/>
@@ -917,7 +939,7 @@
                                             <constraint firstItem="bmg-H8-2Er" firstAttribute="leading" secondItem="qpj-MJ-CdV" secondAttribute="trailing" constant="10" id="d6I-Hk-JlI"/>
                                             <constraint firstAttribute="trailing" secondItem="VaP-nR-fZ8" secondAttribute="trailing" constant="18" id="d8U-MD-oDa"/>
                                             <constraint firstItem="oeU-1K-jv4" firstAttribute="top" secondItem="H4p-hh-uVr" secondAttribute="bottom" constant="15" id="dTZ-a7-Ebd"/>
-                                            <constraint firstAttribute="bottom" secondItem="u9K-GS-5bR" secondAttribute="bottom" constant="0.66666666666662877" id="fwX-0k-81y"/>
+                                            <constraint firstItem="UaR-Gg-evP" firstAttribute="top" secondItem="u9K-GS-5bR" secondAttribute="bottom" constant="10" id="dfa-qf-Mi4"/>
                                             <constraint firstAttribute="trailing" secondItem="cRc-mH-MXA" secondAttribute="trailing" id="gfS-C4-dsU"/>
                                             <constraint firstItem="u9K-GS-5bR" firstAttribute="leading" secondItem="N8c-16-nJS" secondAttribute="leading" id="iaN-CD-6y8"/>
                                             <constraint firstItem="gJb-Th-aUA" firstAttribute="leading" secondItem="qpj-MJ-CdV" secondAttribute="leading" id="jyb-PR-0Rq"/>
@@ -928,8 +950,10 @@
                                             <constraint firstItem="H4p-hh-uVr" firstAttribute="leading" secondItem="qpj-MJ-CdV" secondAttribute="trailing" constant="10" id="qUA-37-RhW"/>
                                             <constraint firstItem="bmg-H8-2Er" firstAttribute="top" secondItem="IR9-Vk-iHX" secondAttribute="bottom" constant="15" id="roW-3G-2vo"/>
                                             <constraint firstAttribute="trailing" secondItem="82w-1v-Pxz" secondAttribute="trailing" constant="20" id="v5P-Xr-Km8"/>
+                                            <constraint firstAttribute="trailing" secondItem="UaR-Gg-evP" secondAttribute="trailing" id="vsr-qU-Rd2"/>
                                             <constraint firstAttribute="trailing" secondItem="fOx-xb-e0c" secondAttribute="trailing" constant="20" id="wSP-H9-riL"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gJb-Th-aUA" secondAttribute="trailing" constant="20" symbolic="YES" id="x10-9R-m3q"/>
+                                            <constraint firstAttribute="bottom" secondItem="UaR-Gg-evP" secondAttribute="bottom" constant="15" id="zJf-b4-dKk"/>
                                             <constraint firstItem="cRc-mH-MXA" firstAttribute="top" secondItem="82w-1v-Pxz" secondAttribute="bottom" constant="8" id="zyU-63-o53"/>
                                         </constraints>
                                     </view>
@@ -961,6 +985,8 @@
                         <outlet property="genresLabel" destination="oeU-1K-jv4" id="lIQ-je-kkV"/>
                         <outlet property="keywordCollectionView" destination="cRc-mH-MXA" id="2Sx-vM-eIF"/>
                         <outlet property="keywordCollectionViewHeightConstraint" destination="5td-MD-slt" id="crB-fG-5i0"/>
+                        <outlet property="matchingTVShowCollectionView" destination="UaR-Gg-evP" id="urU-L2-rzs"/>
+                        <outlet property="matchingTVShowCollectionViewHeightConstraint" destination="Acx-Yj-rY0" id="w8q-8I-xk1"/>
                         <outlet property="networkCollectionView" destination="VaP-nR-fZ8" id="2P8-3L-gbs"/>
                         <outlet property="numberOfEpisodeLabel" destination="H4p-hh-uVr" id="ZMU-Ba-A0U"/>
                         <outlet property="numberOfSeasonLabel" destination="fOx-xb-e0c" id="wYy-BT-xx4"/>

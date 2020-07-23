@@ -13,7 +13,7 @@ struct Constant {
     struct Identifier {
         static let popularHeader = "PreviewHeader"
         static let trendHeader = "TrendHeader"
-        static let moreMovieHeader = "MoreMovieHeader"
+        static let additionalHeader = "AdditionalHeader"
         static let creditMovieHeader = "CreditMovieHeader"
         static let personImageHeader = "PersonImageHeader"
         static let videoMovieHeader = "VideoMovieHeader"

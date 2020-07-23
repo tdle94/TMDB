@@ -67,7 +67,7 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalInformationTableView: UITableView!
     weak var creditHeader: TMDBCreditHeaderView?
-    weak var moreMovieHeader: TMDBMoreMovieHeaderView?
+    weak var moreMovieHeader: TMDBAdditionalHeaderView?
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -165,7 +165,7 @@ class TMDBMovieDetailViewController: UIViewController {
         didSet {
             matchingMoviesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            matchingMoviesCollectionView.register(TMDBMoreMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moreMovieHeader)
+            matchingMoviesCollectionView.register(TMDBAdditionalHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.additionalHeader)
             
             matchingMoviesDataSource = UICollectionViewDiffableDataSource(collectionView: matchingMoviesCollectionView) { collectionView, indexPath, movie in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
@@ -176,8 +176,8 @@ class TMDBMovieDetailViewController: UIViewController {
             matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) ??
                                         collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                        withReuseIdentifier: Constant.Identifier.moreMovieHeader,
-                                                                                        for: indexPath)) as? TMDBMoreMovieHeaderView
+                                                                                        withReuseIdentifier: Constant.Identifier.additionalHeader,
+                                                                                        for: indexPath)) as? TMDBAdditionalHeaderView
                 self.moreMovieHeader?.delegate = self
 
                 return self.moreMovieHeader
@@ -256,7 +256,7 @@ class TMDBMovieDetailViewController: UIViewController {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             case .success(let similar):
-                self.movieDetail.displaySimilarMovies(Array(similar.movies))
+                self.movieDetail.displayMoreMovie(Array(similar.movies))
             }
         }
     }
@@ -268,7 +268,7 @@ class TMDBMovieDetailViewController: UIViewController {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             case .success(let recommend):
-                self.movieDetail.displayRecommendMovies(Array(recommend.movies))
+                self.movieDetail.displayMoreMovie(Array(recommend.movies))
             }
         }
     }

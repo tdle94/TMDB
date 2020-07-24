@@ -29,7 +29,7 @@ class TMDBPersonDetailViewController: UIViewController {
 
     var appearInDataSource: UICollectionViewDiffableDataSource<AppearInSection, Object>!
 
-    var personImageDataSource: UICollectionViewDiffableDataSource<PersonImageSection, Object>!
+    var personImageDataSource: UICollectionViewDiffableDataSource<PersonImageSection, Images>!
 
     // MARK: - ui
     @IBOutlet weak var appearInCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -150,6 +150,8 @@ extension TMDBPersonDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let item = appearInDataSource.itemIdentifier(for: indexPath) as? Movie {
             coordinate?.navigateToMovieDetail(id: item.id)
+        } else if let item = appearInDataSource.itemIdentifier(for: indexPath) as? TVShow {
+            coordinate?.navigateToTVShowDetail(tvId: item.id)
         }
     }
 }

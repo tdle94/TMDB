@@ -87,12 +87,21 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveTVShow(_ tvShow: TVShow) {
         realm.beginWrite()
+        for (index, similarTVShow) in (tvShow.similar?.onTV ?? List<TVShow>()).enumerated() {
+            if let existedTVShow = getTVShow(id: similarTVShow.id) {
+                tvShow.similar?.onTV[index] = existedTVShow
+            }
+        }
+        for (index, recommendTVSHow) in (tvShow.recommendations?.onTV ?? List<TVShow>()).enumerated() {
+            if let existedTVShow = getTVShow(id: recommendTVSHow.id) {
+                tvShow.recommendations?.onTV[index] = existedTVShow
+            }
+        }
         tvShow.region = NSLocale.current.regionCode
         tvShow.language = NSLocale.preferredLanguages.first
         realm.add(tvShow, update: .modified)
         try? realm.commitWrite()
     }
-
 
     // MARK: - people
     func getPerson(id: Int) -> People? {

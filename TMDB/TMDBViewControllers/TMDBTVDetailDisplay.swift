@@ -28,7 +28,45 @@ class TMDBTVDetailDisplay {
         displayKeywords()
         displayNetworks(tvShow: tvShow)
         displaySeason(tvShow: tvShow)
+        displayMoreTVShows(tvShow: tvShow)
         tvDetailVC?.title = tvShow.originalName
+    }
+    
+    func displayMoreTVShows(tvShow: TVShow) {
+        guard
+            let similar = tvShow.similar,
+            let recommend = tvShow.recommendations,
+            var snapshot = tvDetailVC?.matchingTVShowDataSource.snapshot() else {
+            return
+        }
+        
+        if similar.onTV.isEmpty, !recommend.onTV.isEmpty {
+            tvDetailVC?.addtionalHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
+            tvDetailVC?.addtionalHeaderView?.segmentControl.selectedSegmentIndex = 0
+            tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()
+            snapshot.appendItems(Array(recommend.onTV))
+            tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+        } else if !similar.onTV.isEmpty, recommend.onTV.isEmpty {
+            tvDetailVC?.addtionalHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
+            tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()
+            snapshot.appendItems(Array(similar.onTV))
+            tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+        } else if !similar.onTV.isEmpty, !recommend.onTV.isEmpty {
+            displayTVShow(Array(similar.onTV))
+        } else {
+            snapshot.deleteSections([.Matching])
+            tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+        }
+
+        tvDetailVC?.matchingTVShowCollectionViewHeightConstraint.constant = tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
+    }
+    
+    func displayTVShow(_ tvShows: [TVShow]) {
+        guard var snapshot = tvDetailVC?.matchingTVShowDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Matching))
+        snapshot.appendItems(tvShows, toSection: .Matching)
+        tvDetailVC?.matchingTVShowCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
+        tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
     }
     
     private func displaySeason(tvShow: TVShow) {
@@ -55,6 +93,9 @@ class TMDBTVDetailDisplay {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
 
+        if tvShow.overview == "" {
+            tvDetailVC?.overviewLabel.isHidden = true
+        }
         tvDetailVC?.overviewLabel.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ",
                                                                              attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
                                                                                                                               size: UIFont.labelFontSize)!])
@@ -71,12 +112,11 @@ class TMDBTVDetailDisplay {
     }
 
     private func displayRuntimeLabel(tvShow: TVShow) {
-        var runtime = Array(tvShow.episodeRunTime).map { $0 == tvShow.episodeRunTime.last || tvShow.episodeRunTime.count == 1 ? "\($0)" : "\($0), " }.joined()
-        
-        if runtime != "" {
-            runtime = "\(runtime) mins \u{2022} \(tvShow.firstAirDate)"
+        var runtimes = Array(tvShow.episodeRunTime).map { "\($0)" }.joined(separator: ", ")
+        if runtimes != "" {
+            runtimes = "\(runtimes) mins \u{2022} \(tvShow.firstAirDate)"
         }
-        tvDetailVC?.runtimeLabel.attributedText = NSAttributedString(string: runtime,
+        tvDetailVC?.runtimeLabel.attributedText = NSAttributedString(string: runtimes,
                                                                      attributes: [
                                                                         NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: 14)!,
                                                                         NSAttributedString.Key.foregroundColor: UIColor.darkGray
@@ -88,7 +128,7 @@ class TMDBTVDetailDisplay {
     }
 
     private func displayGenreLabel(tvShow: TVShow) {
-        let genres = Array(tvShow.genres).map { tvShow.genres.count == 1 || tvShow.genres.last == $0 ? "\($0.name)" : "\($0.name), " }.joined()
+        let genres = Array(tvShow.genres).map { "\($0.name)" }.joined(separator: ", ")
         tvDetailVC?.genresLabel.attributedText = NSAttributedString(string: genres,
                                                                     attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
                                                                                                                      size: UIFont.smallSystemFontSize)!])

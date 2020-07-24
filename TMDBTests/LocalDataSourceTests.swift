@@ -84,9 +84,20 @@ class LocalDataSourceTests: QuickSpec {
                 tvShow2.id = 2
                 tvShow3.id = 3
 
-                localDataSource.saveTVShow(tvShow1)
                 localDataSource.saveTVShow(tvShow2)
                 localDataSource.saveTVShow(tvShow3)
+                
+                // add similar tv show
+                let similarTVShow = TVShowResult()
+                similarTVShow.onTV.append(tvShow2)
+                tvShow1.similar = similarTVShow
+                
+                // add recommend tv show
+                let recommendTVShow = TVShowResult()
+                recommendTVShow.onTV.append(tvShow3)
+                tvShow1.recommendations = recommendTVShow
+                
+                localDataSource.saveTVShow(tvShow1)
                 expect(testRealm.objects(TVShow.self).count).to(equal(3))
                 expect(localDataSource.getTVShow(id: 1)).to(equal(tvShow1))
             }

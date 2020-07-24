@@ -52,6 +52,7 @@ struct MainCoordinator: Coordinator {
     func navigateToTVShowDetail(tvId: Int) {
         let tvShowDetailVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbTVDetailVC) as! TMDBTVDetailViewController
         tvShowDetailVC.tvId = tvId
+        tvShowDetailVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(tvShowDetailVC, animated: true)
     }
 }

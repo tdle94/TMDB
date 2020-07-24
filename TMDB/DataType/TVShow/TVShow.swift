@@ -34,6 +34,8 @@ class TVShow: Object, Decodable {
     dynamic var keywords: TVKeywordResult?
     dynamic var language: String?
     dynamic var region: String?
+    dynamic var recommendations: TVShowResult?
+    dynamic var similar: TVShowResult?
     let genres: List<Genre> = List()
     let createdBy: List<CreatedBy> = List()
     let episodeRunTime: List<Int> = List()
@@ -44,7 +46,7 @@ class TVShow: Object, Decodable {
     let seasons: List<Season> = List()
 
     enum CodingKeys: String, CodingKey {
-        case genres, hompage, id, languages, name, networks, overview, popularity, seasons, status, type, keywords
+        case genres, hompage, id, languages, name, networks, overview, popularity, seasons, status, type, keywords, recommendations, similar
         case backdropPath = "backdrop_path"
         case createdBy = "created_by"
         case episodeRunTime = "episode_run_time"
@@ -65,6 +67,7 @@ class TVShow: Object, Decodable {
     }
 
     required init(from decoder: Decoder) throws {
+        super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
@@ -91,6 +94,9 @@ class TVShow: Object, Decodable {
         name = try container.decode(String.self, forKey: .name)
         originalName = try container.decode(String.self, forKey: .originalName)
         keywords = try container.decodeIfPresent(TVKeywordResult.self, forKey: .keywords)
+        recommendations = try container.decodeIfPresent(TVShowResult.self, forKey: .recommendations)
+        similar = try container.decodeIfPresent(TVShowResult.self, forKey: .similar)
+
         originCountry.append(objectsIn: try container.decode(List<String>.self, forKey: .originCountry))
 
         if let seasons = try container.decodeIfPresent(List<Season>.self, forKey: .seasons) {
@@ -113,7 +119,10 @@ class TVShow: Object, Decodable {
             self.languages.append(objectsIn: languages)
         }
 
-        if let networks = try container.decodeIfPresent(List<Networks>.self, forKey: .networks) {
+        if
+            let networks = try container.decodeIfPresent(List<Networks>.self, forKey: .networks),
+            realm?.object(ofType: TVShow.self, forPrimaryKey: id)?.networks.isEmpty ?? true {
+            // because logo path JSON object for recommend tvshow is in a different format. Only decode if it is not in real
             self.networks.append(objectsIn: networks)
         }
 
@@ -180,6 +189,18 @@ class Networks: Object, Decodable {
         case logoPath = "logo_path"
         case originCountry = "origin_country"
     }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        id = try container.decode(Int.self, forKey: .id)
+        originCountry = try container.decode(String.self, forKey: .originCountry)
+        logoPath = try container.decodeIfPresent(String.self, forKey: .logoPath) ?? ""
+    }
+
+    required init() {
+        super.init()
+    }
 }
 
 @objcMembers
@@ -213,11 +234,10 @@ class CreatedBy: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var creditId: String = ""
     dynamic var name: String = ""
-    dynamic var gender: Int = 0
     dynamic var profilePath: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, name, gender
+        case id, name
         case creditId = "credit_id"
         case profilePath = "profile_path"
     }

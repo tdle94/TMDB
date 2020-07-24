@@ -35,6 +35,8 @@ protocol TMDBRepositoryProtocol {
     func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
     func getTVShowDetail(from tvShowId: Int, completion: @escaping (Result<TVShow, Error>) -> Void)
     func getTVShowKeywords(from tvShowId: Int) -> [Keyword]
+    func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
+    func getRecommendTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
 
     // MARK: - image configuration
     func updateImageConfig()
@@ -127,26 +129,27 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        guard let movie =  localDataSource.getMovie(id: movieId), let similarMovie = movie.similar else {
-            services.getSimilarMovies(from: movieId, page: page) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let popularMovieResult):
-                        completion(.success(popularMovieResult))
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-                }
-            }
+        guard let movie =  localDataSource.getMovie(id: movieId) else {
+            completion(.failure(NSError(domain: "Cannot find movie \(movieId)", code: 400, userInfo: nil)))
+            return
+        }
+        
+        guard let similarMovie = movie.similar else {
+            completion(.failure(NSError(domain: "movie \(movieId) does not have similar", code: 400, userInfo: nil)))
             return
         }
 
         // get from cache
         if page <= similarMovie.page {
-            let toMovie = (page * similarMovie.movies.count) / similarMovie.page - 1
+            let fromMovie = similarMovie.movies.count / similarMovie.totalPages * (page - 1)
+            let toMovie = similarMovie.totalResults / similarMovie.totalPages * page - 1
             let result = MovieResult()
-            result.movies.append(objectsIn: similarMovie.movies[0...toMovie])
+            result.movies.append(objectsIn: similarMovie.movies[fromMovie...toMovie])
             completion(.success(result))
+            return
+        } else if page != similarMovie.page + 1 {
+            // only consider next consecutive page
+            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
             return
         }
 
@@ -165,26 +168,26 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        guard let movie = localDataSource.getMovie(id: movieId), let recommendMovie = movie.recommendations else {
-            services.getRecommendMovies(from: movieId, page: page) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let popularMovieResult):
-                        completion(.success(popularMovieResult))
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-                }
-            }
+        guard let movie = localDataSource.getMovie(id: movieId) else {
+            completion(.failure(NSError(domain: "Cannot find movie \(movieId)", code: 400, userInfo: nil)))
             return
         }
 
+        guard let recommendMovie = movie.recommendations else {
+            completion(.failure(NSError(domain: "movie \(movieId) does not have recommendations", code: 400, userInfo: nil)))
+            return
+        }
         // get from cache
         if page <= recommendMovie.page {
-            let toMovie = (page * recommendMovie.movies.count) / recommendMovie.page - 1
+            let fromMovie = recommendMovie.movies.count / recommendMovie.totalPages * (page - 1)
+            let toMovie = recommendMovie.totalResults / recommendMovie.totalPages * page - 1
             let result = MovieResult()
-            result.movies.append(objectsIn: recommendMovie.movies[0...toMovie])
+            result.movies.append(objectsIn: recommendMovie.movies[fromMovie...toMovie])
             completion(.success(result))
+            return
+        } else if page != recommendMovie.page + 1 {
+            // only consider next consecutive page
+            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
             return
         }
 
@@ -221,6 +224,58 @@ class TMDBRepository: TMDBRepositoryProtocol {
     }
 
     // MARK: - tv show
+
+    func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
+            completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))
+            return
+        }
+        
+        guard let similarTVShow = tvShow.similar else {
+            completion(.failure(NSError(domain: "tv show \(tvShowId) does not have similar", code: 400, userInfo: nil)))
+            return
+        }
+
+        // get from cache
+        if page <= similarTVShow.page {
+            // get page less than or equal current page
+            let fromTVShow = similarTVShow.totalResults / similarTVShow.totalPages * (page - 1)
+            let toTVShow = similarTVShow.totalResults / similarTVShow.totalPages * page - 1
+            let result = TVShowResult()
+            result.onTV.append(objectsIn: similarTVShow.onTV[fromTVShow...toTVShow])
+            completion(.success(result))
+        } else if page != similarTVShow.page + 1 {
+            // only consider next consecutive page
+            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
+            return
+        }
+    }
+
+    func getRecommendTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
+            completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))
+            return
+        }
+        
+        guard let recommendTVShow = tvShow.recommendations else {
+            completion(.failure(NSError(domain: "tv show \(tvShowId) does not have recommendation", code: 400, userInfo: nil)))
+            return
+        }
+        
+        // get from cache
+        if page <= recommendTVShow.page {
+            // get page less than or equal current page
+            let fromTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * (page - 1)
+            let toTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * page - 1
+            let result = TVShowResult()
+            result.onTV.append(objectsIn: recommendTVShow.onTV[fromTVShow...toTVShow])
+            completion(.success(result))
+        } else if page != recommendTVShow.page + 1 {
+            // only consider next consecutive page
+            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
+            return
+        }
+    }
 
     func getTVShowDetail(from tvShowId: Int, completion: @escaping (Result<TVShow, Error>) -> Void) {
         if

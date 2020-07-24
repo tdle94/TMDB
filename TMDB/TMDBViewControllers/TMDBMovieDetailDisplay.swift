@@ -141,7 +141,7 @@ class TMDBMovieDetailDisplay {
     }
     
     func displayGenere(movie: Movie) {
-        let genres = Array(movie.genres).map { $0 == movie.genres.last || movie.genres.count == 1 ? " \($0.name)" : "\($0.name), " }.joined()
+        let genres = Array(movie.genres).map { "\($0.name)" }.joined(separator: ", ")
         movieDetailVC?.generes.attributedText = NSAttributedString(string: genres,
                                                                    attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!])
     }
@@ -182,7 +182,7 @@ class TMDBMovieDetailDisplay {
             snapshot.appendItems(Array(similar.movies))
             movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
         } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
-            displaySimilarMovies(Array(similar.movies))
+            displayMoreMovie(Array(similar.movies))
         } else {
             snapshot.deleteAllItems()
             snapshot.deleteSections([.More])
@@ -257,18 +257,10 @@ class TMDBMovieDetailDisplay {
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayRecommendMovies(_ recommendMovies: [Movie]) {
+    func displayMoreMovie(_ movie: [Movie]) {
         guard var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
-        snapshot.appendItems(recommendMovies, toSection: .More)
-        movieDetailVC?.matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displaySimilarMovies(_ similarMovies: [Movie]) {
-        guard var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
-        snapshot.appendItems(similarMovies, toSection: .More)
+        snapshot.appendItems(movie, toSection: .More)
         movieDetailVC?.matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }

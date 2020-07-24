@@ -16,6 +16,8 @@ class TMDBTVDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
+
+    var coordinate: MainCoordinator?
     
     // MARK: - data source
 
@@ -26,12 +28,19 @@ class TMDBTVDetailViewController: UIViewController {
     enum TVShowSeason: String, CaseIterable {
         case Season = "Season"
     }
+    
+    enum MatchingTVShow: String, CaseIterable {
+        case Matching = "Matching"
+    }
 
     var movieNetworkImageDataSource: UICollectionViewDiffableDataSource<NetworkMovieImage, Networks>!
 
     var tvShowSeasonDataSource: UITableViewDiffableDataSource<TVShowSeason, Season>!
 
+    var matchingTVShowDataSource: UICollectionViewDiffableDataSource<MatchingTVShow, TVShow>!
+
     // MARK: - ui
+    weak var addtionalHeaderView: TMDBAdditionalHeaderView?
     @IBOutlet weak var posterImageView: UIImageView! {
         didSet {
             posterImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
@@ -86,10 +95,34 @@ class TMDBTVDetailViewController: UIViewController {
             tvShowSeasonDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
+    @IBOutlet weak var matchingTVShowCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var matchingTVShowCollectionView: UICollectionView! {
+        didSet {
+            matchingTVShowCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            matchingTVShowCollectionView.register(TMDBAdditionalHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.additionalHeader)
+            matchingTVShowCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            matchingTVShowDataSource = UICollectionViewDiffableDataSource(collectionView: matchingTVShowCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+            matchingTVShowDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+                self.addtionalHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.additionalHeader, for: indexPath)) as? TMDBAdditionalHeaderView
+                self.addtionalHeaderView?.delegate = self
+                return self.addtionalHeaderView
+            }
+            
+            var snapshot = matchingTVShowDataSource.snapshot()
+            snapshot.appendSections([.Matching])
+            matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
     
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         tvDetailDisplay.tvDetailVC = self
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
@@ -109,6 +142,40 @@ class TMDBTVDetailViewController: UIViewController {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
+        }
+    }
+    
+    func getSimilarMovies() {
+        guard let id = tvId else { return }
+        repository.getSimilarTVShows(from: id, page: 1) { result in
+            switch result {
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+            case .success(let tvShowResult):
+                self.tvDetailDisplay.displayTVShow(Array(tvShowResult.onTV))
+            }
+        }
+    }
+    
+    func getRecommendMovies() {
+        guard let id = tvId else { return }
+        repository.getRecommendTVShows(from: id, page: 1) { result in
+            switch result {
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+            case .success(let tvShowResult):
+                self.tvDetailDisplay.displayTVShow(Array(tvShowResult.onTV))
+            }
+        }
+    }
+}
+
+extension TMDBTVDetailViewController: TMDBPreviewSegmentControl {
+    func segmentControlSelected(at index: Int, text selected: String) {
+        if selected == NSLocalizedString("Similar", comment: "") {
+            getSimilarMovies()
+        } else if selected == NSLocalizedString("Recommend", comment: "") {
+            getRecommendMovies()
         }
     }
 }
@@ -150,5 +217,14 @@ extension TMDBTVDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let id = tvId else { return 0 }
         return repository.getTVShowKeywords(from: id).count
+    }
+}
+
+extension TMDBTVDetailViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let id = matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row].id
+        if collectionView == matchingTVShowCollectionView {
+            coordinate?.navigateToTVShowDetail(tvId: id)
+        }
     }
 }

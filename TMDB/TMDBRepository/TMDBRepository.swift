@@ -146,22 +146,20 @@ class TMDBRepository: TMDBRepositoryProtocol {
             let result = MovieResult()
             result.movies.append(objectsIn: similarMovie.movies[fromMovie...toMovie])
             completion(.success(result))
-            return
         } else if page != similarMovie.page + 1 {
             // only consider next consecutive page
             completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-            return
-        }
-
-        // new page
-        services.getSimilarMovies(from: movieId, page: page) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let similarMovieResult):
-                    self.localDataSource.saveSimilarMovie(similarMovieResult.movies, to: movie)
-                    completion(.success(similarMovieResult))
-                case .failure(let error):
-                    completion(.failure(error))
+        } else {
+            // new page
+            services.getSimilarMovies(from: movieId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let similarMovieResult):
+                        self.localDataSource.saveSimilarMovie(similarMovieResult.movies, to: movieId)
+                        completion(.success(similarMovieResult))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
             }
         }
@@ -184,22 +182,20 @@ class TMDBRepository: TMDBRepositoryProtocol {
             let result = MovieResult()
             result.movies.append(objectsIn: recommendMovie.movies[fromMovie...toMovie])
             completion(.success(result))
-            return
         } else if page != recommendMovie.page + 1 {
             // only consider next consecutive page
             completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-            return
-        }
-
-        // new page
-        services.getRecommendMovies(from: movieId, page: page) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let recommendMovieResult):
-                    self.localDataSource.saveRecommendMovie(recommendMovieResult.movies, to: movie)
-                    completion(.success(recommendMovieResult))
-                case .failure(let error):
-                    completion(.failure(error))
+        } else {
+            // new page
+            services.getRecommendMovies(from: movieId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let recommendMovieResult):
+                        self.localDataSource.saveRecommendMovie(recommendMovieResult.movies, to: movieId)
+                        completion(.success(recommendMovieResult))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
             }
         }
@@ -247,7 +243,18 @@ class TMDBRepository: TMDBRepositoryProtocol {
         } else if page != similarTVShow.page + 1 {
             // only consider next consecutive page
             completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-            return
+        } else {
+            services.getSimilarTVShows(from: tvShowId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .failure(let error):
+                        debugPrint(error.localizedDescription)
+                    case .success(let tvShowResult):
+                        self.localDataSource.saveSimilarTVShow(tvShowResult.onTV, to: tvShowId)
+                        completion(.success(tvShowResult))
+                    }
+                }
+            }
         }
     }
 
@@ -273,7 +280,6 @@ class TMDBRepository: TMDBRepositoryProtocol {
         } else if page != recommendTVShow.page + 1 {
             // only consider next consecutive page
             completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-            return
         }
     }
 

@@ -422,4 +422,33 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
     }
+
+    // MARK: - similar tv show
+    func testGetSimilarTVShow() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarTVShowsURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getSimilarTVShowsURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        services.getSimilarTVShows(from: 3, page: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getSimilarTVShowsURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+    }
 }

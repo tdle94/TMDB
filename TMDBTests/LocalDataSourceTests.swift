@@ -150,7 +150,7 @@ class LocalDataSourceTests: QuickSpec {
                 localDataSource.saveMovie(movieInRealm)
                 expect(localDataSource.getMovie(id: 2)).to(equal(movieInRealm))
                 
-                localDataSource.saveSimilarMovie(result.movies, to: movieInRealm)
+                localDataSource.saveSimilarMovie(result.movies, to: 2)
                 expect(localDataSource.getMovie(id: 2)?.similar?.movies.count).to(equal(2))
                 expect(localDataSource.getMovie(id: 2)?.similar?.page).to(equal(2))
             }
@@ -172,9 +172,31 @@ class LocalDataSourceTests: QuickSpec {
                 localDataSource.saveMovie(movieInRealm)
                 expect(localDataSource.getMovie(id: 2)).to(equal(movieInRealm))
                 
-                localDataSource.saveRecommendMovie(result.movies, to: movieInRealm)
+                localDataSource.saveRecommendMovie(result.movies, to: 2)
                 expect(localDataSource.getMovie(id: 2)?.recommendations?.movies.count).to(equal(2))
                 expect(localDataSource.getMovie(id: 2)?.recommendations?.page).to(equal(2))
+            }
+
+            it("save similar tvshow") {
+                let result = TVShowResult()
+                let similarTVShow = TVShow()
+                similarTVShow.id = 3
+                result.onTV.append(similarTVShow)
+                
+                let tvShowInRealm = TVShow()
+                tvShowInRealm.id = 2
+                tvShowInRealm.similar = TVShowResult()
+                tvShowInRealm.similar?.onTV.append(TVShow())
+                tvShowInRealm.similar?.totalPages = 2
+                tvShowInRealm.similar?.totalResults = 2
+                tvShowInRealm.similar?.page = 1
+                
+                localDataSource.saveTVShow(tvShowInRealm)
+                expect(localDataSource.getTVShow(id: 2)).to(equal(tvShowInRealm))
+                
+                localDataSource.saveSimilarTVShow(result.onTV, to: 2)
+                expect(localDataSource.getTVShow(id: 2)?.similar?.onTV.count).to(equal(2))
+                expect(localDataSource.getTVShow(id: 2)?.similar?.page).to(equal(2))
             }
         }
     }

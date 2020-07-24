@@ -18,4 +18,9 @@ extension TMDBServices: TMDBTVService {
         let request = urlRequestBuilder.getTVShowDetailURLRequest(id: id, language: NSLocale.preferredLanguages.first)
         session.send(request: request, responseType: TVShow.self, completion: completion)
     }
+
+    func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getSimilarTVShowsURLRequest(from: tvShowId, page: page, language: NSLocale.preferredLanguages.first)
+        session.send(request: request, responseType: TVShowResult.self, completion: completion)
+    }
 }

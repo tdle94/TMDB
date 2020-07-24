@@ -636,6 +636,49 @@ class TMDBRepositoryTests: XCTestCase {
         verify(localDataSource).getMovie(id: 3)
     }
     
+    func testGetSimilarMovieNewPage() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
+        let movie = Movie()
+        let similarMovie = MovieResult()
+        similarMovie.movies.append(Movie())
+        similarMovie.totalResults = 2
+        similarMovie.page = 1
+        similarMovie.totalPages = 2
+        movie.id = 3
+        movie.similar = similarMovie
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+        
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+            when(stub).saveSimilarMovie(any(), to: any()).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.getSimilarMovies(from: 3, page: 2) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 1, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+        verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(localDataSource).getMovie(id: 3)
+        verify(localDataSource).saveSimilarMovie(any(), to: any())
+    }
+    
     // MARK: - recommend movies
     
     // no movie in realm, service call, success

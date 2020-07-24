@@ -789,7 +789,6 @@ class TMDBRepositoryTests: XCTestCase {
         movieInRealm.recommendations?.movies.append(Movie())
             
         let newListMovieMatcher = ParameterMatcher<List<Movie>>(matchesFunction: { $0 == newMovieResult.movies })
-        let movieInRealmMatcher = ParameterMatcher<Movie>(matchesFunction: { $0 == movieInRealm })
 
         /*GIVEN*/
         stub(session) { stub in
@@ -804,7 +803,7 @@ class TMDBRepositoryTests: XCTestCase {
             
         stub(localDataSource) { stub in
             when(stub).getMovie(id: 3).thenReturn(movieInRealm)
-            when(stub).saveRecommendMovie(newListMovieMatcher, to: movieInRealmMatcher).thenDoNothing()
+            when(stub).saveRecommendMovie(newListMovieMatcher, to: 3).thenDoNothing()
         }
 
         /*WHEN*/
@@ -1365,6 +1364,49 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getTVShow(id: 3)
+    }
+    
+    func testGetSimilarTVShowNewPage() {
+        let expectaion = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let similarTVShow = TVShowResult()
+        let tvShow = TVShow()
+        similarTVShow.onTV.append(TVShow())
+        similarTVShow.page = 1
+        similarTVShow.totalPages = 2
+        similarTVShow.totalResults = 2
+        tvShow.similar = similarTVShow
+        tvShow.id = 3
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+            when(stub).saveSimilarTVShow(any(), to: 3).thenDoNothing()
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+
+        /*WHEN*/
+        repository.getSimilarTVShows(from: 3, page: 2) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectaion.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShow(id: 3)
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+        verify(localDataSource).saveSimilarTVShow(any(), to: 3)
+        verify(requestBuilder).getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
     }
     
     // MARK: - get recommend tv show

@@ -13,6 +13,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getPopularTVURLRequest(page: Int, language: String?) -> URLRequest
     func getTVShowDetailURLRequest(id: Int, language: String?) -> URLRequest
     func getSimilarTVShowsURLRequest(from tvShowId: Int, page: Int, language: String?) -> URLRequest
+    func getRecommendTVShowURLRequest(from tvShowId: Int, page: Int, language: String?) -> URLRequest
     
     // MARK: - people
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest
@@ -48,7 +49,15 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language ?? "en-US")
         ]
-        return buildURLRequest(path: "/3/tv/\(tvShowId)", queryItems: queryItems)
+        return buildURLRequest(path: "/3/tv/\(tvShowId)/similar", queryItems: queryItems)
+    }
+
+    func getRecommendTVShowURLRequest(from tvShowId: Int, page: Int, language: String?) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "language", value: language ?? "en-US")
+        ]
+        return buildURLRequest(path: "/3/tv/\(tvShowId)/recommend", queryItems: queryItems)
     }
 
     func getPopularTVURLRequest(page: Int, language: String?) -> URLRequest {

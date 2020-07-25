@@ -119,7 +119,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         realm.beginWrite()
         let tvShow = getTVShow(id: tvShowId)
         tvShow?.recommendations?.onTV.append(objectsIn: recommendTVShow)
-        tvShow?.similar?.page += 1
+        tvShow?.recommendations?.page += 1
         try? realm.commitWrite()
     }
 

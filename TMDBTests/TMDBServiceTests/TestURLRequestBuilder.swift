@@ -162,7 +162,13 @@ class TestURLRequestBuilder: XCTestCase {
     
     func testSimilarTVShowURL() {
         let matchRequest = urlRequestBuilder.getSimilarTVShowsURLRequest(from: 3, page: 1, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/tv/3?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/tv/3/similar?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
+    
+    func testRecommendTVShowURL() {
+        let matchRequest = urlRequestBuilder.getRecommendTVShowURLRequest(from: 3, page: 1, language: nil)
+        let urlMatcher = "https://api.themoviedb.org/3/tv/3/recommendations?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
 }

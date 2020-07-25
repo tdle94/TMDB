@@ -198,6 +198,28 @@ class LocalDataSourceTests: QuickSpec {
                 expect(localDataSource.getTVShow(id: 2)?.similar?.onTV.count).to(equal(2))
                 expect(localDataSource.getTVShow(id: 2)?.similar?.page).to(equal(2))
             }
+            
+            it("save recommend tvshow") {
+                let result = TVShowResult()
+                let recomendTVShow = TVShow()
+                recomendTVShow.id = 3
+                result.onTV.append(recomendTVShow)
+                
+                let tvShowInRealm = TVShow()
+                tvShowInRealm.id = 2
+                tvShowInRealm.recommendations = TVShowResult()
+                tvShowInRealm.recommendations?.onTV.append(TVShow())
+                tvShowInRealm.recommendations?.totalPages = 2
+                tvShowInRealm.recommendations?.totalResults = 2
+                tvShowInRealm.recommendations?.page = 1
+                
+                localDataSource.saveTVShow(tvShowInRealm)
+                expect(localDataSource.getTVShow(id: 2)).to(equal(tvShowInRealm))
+                
+                localDataSource.saveRecommendTVShow(result.onTV, to: 2)
+                expect(localDataSource.getTVShow(id: 2)?.recommendations?.onTV.count).to(equal(2))
+                expect(localDataSource.getTVShow(id: 2)?.recommendations?.page).to(equal(2))
+            }
         }
     }
 }

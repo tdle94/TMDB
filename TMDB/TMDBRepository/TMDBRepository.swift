@@ -280,6 +280,18 @@ class TMDBRepository: TMDBRepositoryProtocol {
         } else if page != recommendTVShow.page + 1 {
             // only consider next consecutive page
             completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
+        } else {
+            services.getRecommendTVShows(from: tvShowId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .failure(let error):
+                        debugPrint(error.localizedDescription)
+                    case .success(let tvShowResult):
+                        self.localDataSource.saveRecommendTVShow(tvShowResult.onTV, to: tvShowId)
+                        completion(.success(tvShowResult))
+                    }
+                }
+            }
         }
     }
 

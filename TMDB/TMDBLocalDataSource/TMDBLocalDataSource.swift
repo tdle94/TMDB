@@ -20,6 +20,7 @@ protocol TMDBLocalDataSourceProtocol {
     func getTVShow(id: Int) -> TVShow?
     func saveTVShow(_ tvShow: TVShow)
     func saveSimilarTVShow(_ similarTVShow: List<TVShow>, to tvShowId: Int)
+    func saveRecommendTVShow(_ recommendTVShow: List<TVShow>,to tvShowId: Int)
     // people
     func getPerson(id: Int) -> People?
     func savePerson(_ person: People)
@@ -110,6 +111,14 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         realm.beginWrite()
         let tvShow = getTVShow(id: tvShowId)
         tvShow?.similar?.onTV.append(objectsIn: similarTVShow)
+        tvShow?.similar?.page += 1
+        try? realm.commitWrite()
+    }
+
+    func saveRecommendTVShow(_ recommendTVShow: List<TVShow>,to tvShowId: Int) {
+        realm.beginWrite()
+        let tvShow = getTVShow(id: tvShowId)
+        tvShow?.recommendations?.onTV.append(objectsIn: recommendTVShow)
         tvShow?.similar?.page += 1
         try? realm.commitWrite()
     }

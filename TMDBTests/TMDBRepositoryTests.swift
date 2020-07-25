@@ -1505,4 +1505,46 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getTVShow(id: 3)
     }
+    
+    func testGetRecommendTVShowNewPage() {
+        let expectaion = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let tvShow = TVShow()
+        let recommendTVShow = TVShowResult()
+        recommendTVShow.onTV.append(TVShow())
+        recommendTVShow.page = 1
+        recommendTVShow.totalResults = 2
+        recommendTVShow.totalPages = 2
+        tvShow.id = 3
+        tvShow.recommendations = recommendTVShow
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+            when(stub).saveRecommendTVShow(any(), to: 3).thenDoNothing()
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getRecommendTVShows(from: 3, page: 2) { result in
+            expectaion.fulfill()
+        }
+        
+        /*GIVEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShow(id: 3)
+        verify(localDataSource).saveRecommendTVShow(any(), to: 3)
+        verify(requestBuilder).getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
 }

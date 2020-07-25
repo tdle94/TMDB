@@ -57,7 +57,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language ?? "en-US")
         ]
-        return buildURLRequest(path: "/3/tv/\(tvShowId)/recommend", queryItems: queryItems)
+        return buildURLRequest(path: "/3/tv/\(tvShowId)/recommendations", queryItems: queryItems)
     }
 
     func getPopularTVURLRequest(page: Int, language: String?) -> URLRequest {

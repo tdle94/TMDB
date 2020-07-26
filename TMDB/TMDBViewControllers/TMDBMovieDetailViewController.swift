@@ -64,6 +64,7 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
+    @IBOutlet weak var backdropPageControl: UIPageControl!
     @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalInformationTableView: UITableView!
     weak var creditHeader: TMDBCreditHeaderView?
@@ -90,7 +91,7 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var budgetLabel: UILabel!
     @IBOutlet weak var revenueLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var backdropImageCollectionView: TMDBImageCollectionView! {
+    @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
         didSet {
             backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
@@ -225,7 +226,7 @@ class TMDBMovieDetailViewController: UIViewController {
 
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
-
+        contentView.bringSubviewToFront(backdropPageControl)
         // movie detail
         getMovieDetail()
     }
@@ -337,24 +338,18 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
         {
             coordinator?.navigateToPersonDetail(id: cast.id)
         }
+        
+        if
+            collectionView == creditCollectionView,
+            let crew = creditMovieDataSource.itemIdentifier(for: indexPath) as? Crew
+        {
+            coordinator?.navigateToPersonDetail(id: crew.id)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if collectionView == backdropImageCollectionView {
-            if indexPath.row != 0, let id = movieId, indexPath.row + 1 == repository.getMovieImages(from: id)?.backdrops.count {
-                backdropImageCollectionView.rightIndicator?.isHidden = true
-                backdropImageCollectionView.leftIndicator?.isHidden = false
-            } else if let id = movieId, repository.getMovieImages(from: id)?.backdrops.count == 1 {
-                backdropImageCollectionView.rightIndicator?.isHidden = true
-                backdropImageCollectionView.leftIndicator?.isHidden = true
-            }
-            else if indexPath.row == 0 {
-                backdropImageCollectionView.rightIndicator?.isHidden = false
-                backdropImageCollectionView.leftIndicator?.isHidden = true
-            } else {
-                backdropImageCollectionView.rightIndicator?.isHidden = false
-                backdropImageCollectionView.leftIndicator?.isHidden = false
-            }
+        if backdropImageCollectionView == collectionView {
+            backdropPageControl.currentPage = indexPath.row
         }
     }
 }

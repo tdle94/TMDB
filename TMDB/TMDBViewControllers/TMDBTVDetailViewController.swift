@@ -49,7 +49,7 @@ class TMDBTVDetailViewController: UIViewController {
     }
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var overviewDetailLabel: UILabel!
-    @IBOutlet weak var backdropImageCollectionView: TMDBImageCollectionView!
+    @IBOutlet weak var backdropImageCollectionView: UICollectionView!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var genresLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!

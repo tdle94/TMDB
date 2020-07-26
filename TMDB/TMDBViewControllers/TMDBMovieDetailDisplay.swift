@@ -52,7 +52,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
         let images = movieImages.backdrops
         movieDetailVC?.backdropPageControl.numberOfPages = images.count
-        movieDetailVC?.backdropPageControl.isHidden = !(images.count > 1)
+        movieDetailVC?.backdropPageControl.isHidden = images.count == 1
         snapshot.appendItems(Array(images))
         movieDetailVC?.movieImageDataSource.apply(snapshot, animatingDifferences: true)
     }

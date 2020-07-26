@@ -37,7 +37,7 @@ class TMDBBackdropImageCell: TMDBImageCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        imageView.contentMode = .top
+        imageView.contentMode = .scaleAspectFill
     }
     
     required init?(coder: NSCoder) {
@@ -52,7 +52,7 @@ class TMDBBackdropImageCell: TMDBImageCell {
 
         imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"),
                               options: [SDWebImageOptions.continueInBackground, SDWebImageOptions.avoidAutoSetImage]) { newImage, _, _, _ in
-            self.imageView.image = newImage?.sd_resizedImage(with: self.bounds.size, scaleMode: .aspectFit)
+            self.imageView.image = newImage?.sd_resizedImage(with: self.bounds.size, scaleMode: .aspectFill)
         }
     }
 }

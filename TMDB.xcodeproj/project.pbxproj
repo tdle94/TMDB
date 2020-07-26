@@ -24,7 +24,6 @@
 		3470E7E224A82A1E00579E7B /* Credit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470E7E124A82A1E00579E7B /* Credit.swift */; };
 		347456FE24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347456FD24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift */; };
 		347520B82490932B000ABA00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347520BA2490932B000ABA00 /* Localizable.strings */; };
-		3477A0A624C4DCD600137AED /* TMDBImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477A0A524C4DCD600137AED /* TMDBImageCollectionView.swift */; };
 		3477B3E92492ECB00067BC7E /* LocalDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477B3E82492ECB00067BC7E /* LocalDataSourceTests.swift */; };
 		3477B3EE24930EBA0067BC7E /* TMDBRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477B3ED24930EBA0067BC7E /* TMDBRepositoryTests.swift */; };
 		347B8E9B24B23A0700A5E9AB /* TMDBKeywordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347B8E9A24B23A0700A5E9AB /* TMDBKeywordCell.swift */; };
@@ -92,7 +91,6 @@
 		34B55C2824C4E57800784C69 /* TMDBImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B55C2724C4E57800784C69 /* TMDBImageCell.swift */; };
 		34B95AC124AD439A00F30684 /* TMDBCreditHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B95AC024AD439A00F30684 /* TMDBCreditHeaderView.swift */; };
 		34B95AC524AD447700F30684 /* TMDBAdditionalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B95AC424AD447700F30684 /* TMDBAdditionalHeaderView.swift */; };
-		34C4FEF524C3EB0900340B4C /* TMDBHalfCircleIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C4FEF424C3EB0900340B4C /* TMDBHalfCircleIndicator.swift */; };
 		34CB5006249037B400E9B5CF /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB5005249037B400E9B5CF /* Coordinator.swift */; };
 		34CB5008249037D800E9B5CF /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB5007249037D800E9B5CF /* MainCoordinator.swift */; };
 		34CB501324903EC800E9B5CF /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB501224903EC800E9B5CF /* Constant.swift */; };
@@ -164,7 +162,6 @@
 		347456FD24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBPersonDetailDisplay.swift; sourceTree = "<group>"; };
 		347520B92490932B000ABA00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		347520BC24909347000ABA00 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3477A0A524C4DCD600137AED /* TMDBImageCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBImageCollectionView.swift; sourceTree = "<group>"; };
 		3477B3E82492ECB00067BC7E /* LocalDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSourceTests.swift; sourceTree = "<group>"; };
 		3477B3ED24930EBA0067BC7E /* TMDBRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBRepositoryTests.swift; sourceTree = "<group>"; };
 		347B8E9A24B23A0700A5E9AB /* TMDBKeywordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBKeywordCell.swift; sourceTree = "<group>"; };
@@ -240,7 +237,6 @@
 		34B55C2724C4E57800784C69 /* TMDBImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBImageCell.swift; sourceTree = "<group>"; };
 		34B95AC024AD439A00F30684 /* TMDBCreditHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBCreditHeaderView.swift; sourceTree = "<group>"; };
 		34B95AC424AD447700F30684 /* TMDBAdditionalHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBAdditionalHeaderView.swift; sourceTree = "<group>"; };
-		34C4FEF424C3EB0900340B4C /* TMDBHalfCircleIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBHalfCircleIndicator.swift; sourceTree = "<group>"; };
 		34CB5005249037B400E9B5CF /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		34CB5007249037D800E9B5CF /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		34CB501224903EC800E9B5CF /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -578,8 +574,6 @@
 				34CBAC4224BF4E710056C5D4 /* TMDBAppearInHeaderView.swift */,
 				347F736624C285BA00BE5491 /* TMDBPersonImageHeaderView.swift */,
 				34B55C2724C4E57800784C69 /* TMDBImageCell.swift */,
-				34C4FEF424C3EB0900340B4C /* TMDBHalfCircleIndicator.swift */,
-				3477A0A524C4DCD600137AED /* TMDBImageCollectionView.swift */,
 			);
 			path = TMDBViews;
 			sourceTree = "<group>";
@@ -923,11 +917,9 @@
 				34D4C25B24BE3C6E0081DFA5 /* TMDBPeopleViewController.swift in Sources */,
 				3486E3B924AF834D002D0F60 /* TMDBPopularHeaderView.swift in Sources */,
 				3495838E249D8E2000B40174 /* People.swift in Sources */,
-				3477A0A624C4DCD600137AED /* TMDBImageCollectionView.swift in Sources */,
 				3494A6F524BA887400F098BF /* TMDBSearchResultViewController.swift in Sources */,
 				3486E3AB24AF778B002D0F60 /* TMDBProduceByHeaderView.swift in Sources */,
 				34B95AC124AD439A00F30684 /* TMDBCreditHeaderView.swift in Sources */,
-				34C4FEF524C3EB0900340B4C /* TMDBHalfCircleIndicator.swift in Sources */,
 				347B8E9D24B2675E00A5E9AB /* TMDBMovieKeywordLayout.swift in Sources */,
 				347F736724C285BA00BE5491 /* TMDBPersonImageHeaderView.swift in Sources */,
 				347456FE24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift in Sources */,
@@ -1226,7 +1218,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = TinTin.TMDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1245,7 +1237,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = TinTin.TMDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

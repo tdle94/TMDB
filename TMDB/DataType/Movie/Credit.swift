@@ -34,7 +34,6 @@ class Cast: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var character: String = ""
     dynamic var creditId: String = ""
-    dynamic var castId: Int = 0
     dynamic var name: String = ""
     dynamic var order: Int = 0
     dynamic var profilePath: String?
@@ -42,7 +41,6 @@ class Cast: Object, Decodable {
     enum CodingKeys: String, CodingKey {
         case id, character, name, order
         case creditId = "credit_id"
-        case castId = "cast_id"
         case profilePath = "profile_path"
     }
 }

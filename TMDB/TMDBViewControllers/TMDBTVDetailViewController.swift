@@ -273,9 +273,9 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
             let id = matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row].id
             coordinate?.navigateToTVShowDetail(tvId: id)
         } else if collectionView == tvShowCreditCollectionView {
-            if let id = (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id {
-                coordinate?.navigateToPersonDetail(id: id)
-            } else if let id = (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id {
+            if let id = (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ??
+                        (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
+            {
                 coordinate?.navigateToPersonDetail(id: id)
             }
         }

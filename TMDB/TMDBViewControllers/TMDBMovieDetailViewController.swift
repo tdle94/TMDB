@@ -64,6 +64,7 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepositoryProtocol!
     
     // MARK: - ui views
+    var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     @IBOutlet weak var backdropPageControl: UIPageControl!
     @IBOutlet weak var availableLanguageLabel: UILabel!
     @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
@@ -228,6 +229,8 @@ class TMDBMovieDetailViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
         contentView.bringSubviewToFront(backdropPageControl)
+
+        view.addSubview(loadingView)
         // movie detail
         getMovieDetail()
     }
@@ -280,6 +283,7 @@ class TMDBMovieDetailViewController: UIViewController {
         repository.getMovieDetail(id: id) { result in
             switch result {
             case .success(let movie):
+                self.loadingView.removeFromSuperview()
                 self.movieDetail.displayMovieDetail(movie: movie)
                 
                 // get movie images. Since movie image with country code does not return all images
@@ -293,6 +297,7 @@ class TMDBMovieDetailViewController: UIViewController {
                 }
 
             case .failure(let error):
+                self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
             }
         }

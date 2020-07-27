@@ -71,7 +71,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     func getTVShowDetailURLRequest(id: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "language", value: language ?? "en-US"),
-            URLQueryItem(name: "append_to_response", value: "keywords,similar,recommendations")
+            URLQueryItem(name: "append_to_response", value: "keywords,similar,recommendations,credits")
             
         ]
         return buildURLRequest(path: "/3/tv/\(id)", queryItems: queryItems)

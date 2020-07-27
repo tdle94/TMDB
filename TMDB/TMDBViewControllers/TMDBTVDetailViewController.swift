@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SDWebImage
+import RealmSwift
 
 class TMDBTVDetailViewController: UIViewController {
     var tvId: Int?
@@ -33,13 +34,20 @@ class TMDBTVDetailViewController: UIViewController {
         case Matching = "Matching"
     }
 
+    enum TVShowCredit: String, CaseIterable {
+        case Credit = "Credit"
+    }
+
     var movieNetworkImageDataSource: UICollectionViewDiffableDataSource<NetworkMovieImage, Networks>!
 
     var tvShowSeasonDataSource: UITableViewDiffableDataSource<TVShowSeason, Season>!
 
     var matchingTVShowDataSource: UICollectionViewDiffableDataSource<MatchingTVShow, TVShow>!
 
+    var tvShowCreditDataSource: UICollectionViewDiffableDataSource<TVShowCredit, Object>!
+
     // MARK: - ui
+    weak var creditHeaderView: TMDBCreditHeaderView?
     weak var addtionalHeaderView: TMDBAdditionalHeaderView?
     @IBOutlet weak var posterImageView: UIImageView! {
         didSet {
@@ -47,6 +55,8 @@ class TMDBTVDetailViewController: UIViewController {
             posterImageView.roundImage()
         }
     }
+    @IBOutlet weak var availableLanguageLabel: UILabel!
+    @IBOutlet weak var tvShowCreditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var overviewDetailLabel: UILabel!
     @IBOutlet weak var backdropImageCollectionView: UICollectionView!
@@ -117,7 +127,28 @@ class TMDBTVDetailViewController: UIViewController {
             matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
-    
+    @IBOutlet weak var tvShowCreditCollectionView: UICollectionView! {
+        didSet {
+            tvShowCreditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            tvShowCreditCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            tvShowCreditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            tvShowCreditDataSource = UICollectionViewDiffableDataSource(collectionView: tvShowCreditCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+            tvShowCreditDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                self.creditHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.creditMovieHeader, for: indexPath)) as? TMDBCreditHeaderView
+                self.creditHeaderView?.delegate = self
+                return self.creditHeaderView
+            }
+            
+            var snapshot = tvShowCreditDataSource.snapshot()
+            snapshot.appendSections([.Credit])
+            tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,11 +160,11 @@ class TMDBTVDetailViewController: UIViewController {
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
                                     localDataSource: TMDBLocalDataSource(),
                                     userSetting: TMDBUserSetting())
-        getMovieDetail()
+        getTVShowDetail()
     }
     
     // MARK: - service
-    func getMovieDetail() {
+    func getTVShowDetail() {
         guard let id = tvId else { return }
         repository.getTVShowDetail(from: id) { result in
             switch result {
@@ -168,6 +199,18 @@ class TMDBTVDetailViewController: UIViewController {
             }
         }
     }
+
+    func getTVShowCast() {
+        guard let id = tvId else { return }
+        let cast = repository.getTVShowCast(from: id)
+        tvDetailDisplay.displayCast(cast)
+    }
+
+    func getTVShowCrew() {
+        guard let id = tvId else { return }
+        let crew = repository.getTVShowCrew(from: id)
+        tvDetailDisplay.displayCrew(crew)
+    }
 }
 
 extension TMDBTVDetailViewController: TMDBPreviewSegmentControl {
@@ -176,6 +219,10 @@ extension TMDBTVDetailViewController: TMDBPreviewSegmentControl {
             getSimilarMovies()
         } else if selected == NSLocalizedString("Recommend", comment: "") {
             getRecommendMovies()
+        } else if selected == NSLocalizedString("Cast", comment: "") {
+            getTVShowCast()
+        } else if selected == NSLocalizedString("Crew", comment: "") {
+            getTVShowCrew()
         }
     }
 }
@@ -222,9 +269,13 @@ extension TMDBTVDetailViewController: UICollectionViewDataSource {
 
 extension TMDBTVDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let id = matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row].id
         if collectionView == matchingTVShowCollectionView {
+            let id = matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row].id
             coordinate?.navigateToTVShowDetail(tvId: id)
+        } else if collectionView == tvShowCreditCollectionView,
+                let id = (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
+        {
+            coordinate?.navigateToPersonDetail(id: id)
         }
     }
 }

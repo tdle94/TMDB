@@ -37,6 +37,8 @@ protocol TMDBRepositoryProtocol {
     func getTVShowKeywords(from tvShowId: Int) -> [Keyword]
     func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
     func getRecommendTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
+    func getTVShowCast(from tvShowId: Int) -> [Cast]
+    func getTVShowCrew(from tvShowId: Int) -> [Crew]
 
     // MARK: - image configuration
     func updateImageConfig()
@@ -335,6 +337,20 @@ class TMDBRepository: TMDBRepositoryProtocol {
             return []
         }
         return Array(keywords)
+    }
+
+    func getTVShowCast(from tvShowId: Int) -> [Cast] {
+        guard let cast = localDataSource.getTVShow(id: tvShowId)?.credits?.cast else {
+            return []
+        }
+        return Array(cast)
+    }
+
+    func getTVShowCrew(from tvShowId: Int) -> [Crew] {
+        guard let crew = localDataSource.getTVShow(id: tvShowId)?.credits?.crew else {
+            return []
+        }
+        return Array(crew)
     }
 
     // MARK: - trending

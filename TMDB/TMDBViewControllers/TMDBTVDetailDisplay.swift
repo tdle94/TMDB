@@ -29,7 +29,53 @@ class TMDBTVDetailDisplay {
         displayNetworks(tvShow: tvShow)
         displaySeason(tvShow: tvShow)
         displayMoreTVShows(tvShow: tvShow)
+        displayCredit(tvShow: tvShow)
+        displayAvailableLanguageLabel(tvShow: tvShow)
         tvDetailVC?.title = tvShow.originalName
+    }
+
+    func displayAvailableLanguageLabel(tvShow: TVShow) {
+        let languages = Array(tvShow.languages).map { "\(Constant.languageCode[$0] ?? "")" }.joined(separator: ", ")
+        tvDetailVC?.availableLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Available Languages", comment: "") + ": ", subTitle: languages)
+    }
+    
+    func displayCredit(tvShow: TVShow) {
+        guard
+            let crew = tvShow.credits?.crew,
+            let cast = tvShow.credits?.cast,
+            var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
+        
+        if cast.isEmpty, !crew.isEmpty {
+            tvDetailVC?.creditHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
+            tvDetailVC?.creditHeaderView?.segmentControl.selectedSegmentIndex = 0
+            tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
+            displayCrew(Array(crew))
+        } else if !cast.isEmpty, crew.isEmpty {
+            tvDetailVC?.creditHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
+            tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
+            displayCast(Array(cast))
+        } else if !cast.isEmpty, !crew.isEmpty {
+            displayCast(Array(cast))
+        } else {
+            snapshot.deleteSections([.Credit])
+            tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
+        }
+        
+        tvDetailVC?.tvShowCreditCollectionViewHeightConstraint.constant = tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
+    }
+    
+    func displayCast(_ casts: [Cast]) {
+        guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.appendItems(casts)
+        tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    func displayCrew(_ crews: [Crew]) {
+        guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.appendItems(crews)
+        tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
     
     func displayMoreTVShows(tvShow: TVShow) {

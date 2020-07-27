@@ -65,6 +65,7 @@ class TMDBMovieDetailViewController: UIViewController {
     
     // MARK: - ui views
     @IBOutlet weak var backdropPageControl: UIPageControl!
+    @IBOutlet weak var availableLanguageLabel: UILabel!
     @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalInformationTableView: UITableView!
     weak var creditHeader: TMDBCreditHeaderView?

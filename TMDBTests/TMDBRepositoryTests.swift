@@ -1547,4 +1547,66 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
     }
+
+    // MARK: - tv show cast
+    func testGetExistTVShowCast() {
+        let tvShow = TVShow()
+        tvShow.credits = CreditResult()
+        tvShow.credits?.cast.append(Cast())
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowCast(from: 3).count, 1)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
+
+    func testGetEmptyTVShowCast() {
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(nil)
+        }
+
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowCast(from: 3).count, 0)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
+
+    // MARK: - tv show crew
+    func testGetExistTVShowCrew() {
+        let tvShow = TVShow()
+        tvShow.credits = CreditResult()
+        tvShow.credits?.crew.append(Crew())
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowCrew(from: 3).count, 1)
+
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
+
+    func testGetEmptyTVShowCrew() {
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(nil)
+        }
+
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowCrew(from: 3).count, 0)
+
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
 }

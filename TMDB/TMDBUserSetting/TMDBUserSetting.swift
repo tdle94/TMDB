@@ -9,7 +9,7 @@
 import Foundation
 
 protocol TMDBUserSettingProtocol {
-    var imageConfig: ImageConfigResult { get set }
+    var imageConfig: ImageConfigResult { get }
     var userDefault: UserDefaults { get set }
     func getImageURL(from path: String) -> URL?
     func getYoutubeImageURL(key: String) -> URL?
@@ -20,16 +20,7 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
     var userDefault: UserDefaults = UserDefaults.standard
 
     var imageConfig: ImageConfigResult {
-        get {
-            guard let data = userDefault.value(forKey: Constant.UserSetting.imageConfig) as? Data else {
-                return ImageConfigResult() // return default
-            }
-            let imageConfig = try! PropertyListDecoder().decode(ImageConfigResult.self, from: data)
-            return imageConfig
-        }
-        set {
-            userDefault.set(try? PropertyListEncoder().encode(newValue), forKey: Constant.UserSetting.imageConfig)
-        }
+        return ImageConfigResult()
     }
 
     func getImageURL(from path: String) -> URL? {

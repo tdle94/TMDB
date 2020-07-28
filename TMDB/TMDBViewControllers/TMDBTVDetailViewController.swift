@@ -14,7 +14,7 @@ import RealmSwift
 class TMDBTVDetailViewController: UIViewController {
     var tvId: Int?
     
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
     
     var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
 
@@ -159,8 +159,7 @@ class TMDBTVDetailViewController: UIViewController {
         tvDetailDisplay.tvDetailVC = self
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
         view.addSubview(loadingView)
         getTVShowDetail()
     }

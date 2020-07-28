@@ -12,7 +12,7 @@ import UIKit
 class TMDBCompleteReleaseDateTableViewController: UITableViewController {
     var movieId: Int?
     
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
     
     lazy var releaseDate: ReleaseDateResults? = {
         guard let id = movieId else { return nil }
@@ -24,8 +24,7 @@ class TMDBCompleteReleaseDateTableViewController: UITableViewController {
         title = NSLocalizedString("Release Date", comment: "")
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

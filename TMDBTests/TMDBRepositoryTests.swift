@@ -13,7 +13,7 @@ import RealmSwift
 
 class TMDBRepositoryTests: XCTestCase {
 
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
     let session: MockTMDBSessionProtocol = MockTMDBSessionProtocol()
     let requestBuilder: MockTMDBURLRequestBuilderProtocol = MockTMDBURLRequestBuilderProtocol()
     let localDataSource: MockTMDBLocalDataSourceProtocol = MockTMDBLocalDataSourceProtocol()
@@ -22,7 +22,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     override func setUp() {
         let service = TMDBServices(session: session, urlRequestBuilder: requestBuilder)
-        repository = TMDBRepository(services: service, localDataSource: localDataSource, userSetting: userSetting)
+        repository = TMDBRepository(services: service, localDataSource: localDataSource)
         
         stub(userSetting) { stub in
             when(stub).userDefault.get.thenReturn(userDefault)
@@ -438,92 +438,6 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher)
     }
 
-    // MARK: - test update config
-    
-    // no image config in user setting yet, make service call, success
-    func testUpdateImageConfigCase0() {
-        let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
-        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-        let imageConfig = ImageConfigResult()
-        let matcher: ParameterMatcher<ImageConfigResult> = ParameterMatcher<ImageConfigResult>()
-
-        /*GIVEN*/
-        stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(imageConfig))
-            }
-        }
-
-        stub(requestBuilder) { stub in
-            when(stub).getImageConfigURLRequest().thenReturn(request)
-        }
-
-        stub(userSetting) { stub in
-            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
-            when(stub).imageConfig.set(matcher).thenDoNothing()
-        }
-
-        /*WHEN*/
-        repository.updateImageConfig()
-        expectation.fulfill()
-        
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(session).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure())
-        verify(userSetting).imageConfig.get()
-        verify(requestBuilder).getImageConfigURLRequest()
-    }
-    
-    // no image config in user setting yet, make service call, not success
-    func testUpdateImageConfigCase1() {
-        let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
-        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-
-        /*GIVEN*/
-        stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
-            }
-        }
-
-        stub(requestBuilder) { stub in
-            when(stub).getImageConfigURLRequest().thenReturn(request)
-        }
-
-        stub(userSetting) { stub in
-            when(stub).imageConfig.get.thenReturn(ImageConfigResult())
-        }
-
-        /*WHEN*/
-        repository.updateImageConfig()
-
-        /*THEN*/
-        verify(session).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure())
-        verify(userSetting).imageConfig.get()
-        verify(requestBuilder).getImageConfigURLRequest()
-    }
-    
-    // image config in user setting yet, don't make service call, less than 10 days
-    func testUpdateImageConfigCase2() {
-        /*GIVEN*/
-        stub(userSetting) { stub in
-            when(stub).imageConfig.get.then { implementation in
-                let todayDate = Date()
-                let fiveDaysAgo = Calendar.current.date(byAdding: .day, value: -5, to: todayDate)
-                var imageConfig = ImageConfigResult()
-                imageConfig.dateUpdate = fiveDaysAgo
-                return imageConfig
-            }
-        }
-
-        /*WHEN*/
-        repository.updateImageConfig()
-        
-        /*THEN*/
-        verify(userSetting).imageConfig.get()
-    }
-    
     // MARK: - similar movies
 
     func testGetSimilarMovieInRealm() {

@@ -35,11 +35,9 @@ class TMDBUserSettingTests: XCTestCase {
     // MARK: - test image config
     func testGetImageURL() {
         let imageConfigResult = ImageConfigResult()
-        // return default one
-        XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)
         // return new image config
-        setting.imageConfig = imageConfigResult
         XCTAssertEqual(setting.imageConfig.id, imageConfigResult.id)
+        // return image url
         XCTAssertNotNil(setting.getImageURL(from: "/owefijoweifj.png"))
         XCTAssertNil(setting.getImageURL(from: "\\\\\\"))
     }

@@ -7,58 +7,230 @@
 //
 import Foundation
 
-protocol TMDBRepositoryProtocol {
-    // MARK: - movie
-    func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
-    func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
-    func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
-    func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
-    func getMovieReview(from movieId: Int) -> [Review]
-    func getMovieCast(from movieId: Int) -> [Cast]
-    func getMovieCrew(from movieId: Int) -> [Crew]
-    func getMovieKeywords(from movieId: Int) -> [Keyword]
-    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void)
-    func getMovieImages(from movieId: Int) -> MovieImages?
-    func getMovieReleaseDates(from movieId: Int) -> ReleaseDateResults?
-
-    // MARK: - trending
-    func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
-
-    // MARK: - people
-    func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void)
-    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void)
-    func getTVCredits(from personId: Int) -> TVCredit?
-    func getMovieCredits(from personId: Int) -> MovieCredit?
-    func getPersonImageProfile(from personId: Int) -> ImageProfile?
-
-    // MARK: - tv shows
-    func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
-    func getTVShowDetail(from tvShowId: Int, completion: @escaping (Result<TVShow, Error>) -> Void)
-    func getTVShowKeywords(from tvShowId: Int) -> [Keyword]
-    func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
-    func getRecommendTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
-    func getTVShowCast(from tvShowId: Int) -> [Cast]
-    func getTVShowCrew(from tvShowId: Int) -> [Crew]
-
-    // MARK: - image configuration
-    func updateImageConfig()
-
-    // MARK: - search
-    func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void)
-}
-
-class TMDBRepository: TMDBRepositoryProtocol {
+class TMDBRepository {
     let services: TMDBServices
     let localDataSource: TMDBLocalDataSourceProtocol
-    var userSetting: TMDBUserSettingProtocol
 
-    init(services: TMDBServices, localDataSource: TMDBLocalDataSourceProtocol, userSetting: TMDBUserSettingProtocol) {
+    init(services: TMDBServices, localDataSource: TMDBLocalDataSourceProtocol) {
         self.services = services
         self.localDataSource = localDataSource
-        self.userSetting = userSetting
     }
-    // MAKR: - movies
+}
 
+extension TMDBRepository: TMDBPeopleRepository {
+    func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void) {
+        services.getPopularPeople(page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let popularPeopleResult):
+                    completion(.success(popularPeopleResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void) {
+        if
+            let person = localDataSource.getPerson(id: id),
+            person.region == NSLocale.current.regionCode,
+            person.language == NSLocale.preferredLanguages.first {
+
+            completion(.success(person))
+            return
+        }
+
+        services.getPersonDetail(id: id) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let person):
+                    self.localDataSource.savePerson(person)
+                    completion(.success(person))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getTVCredits(from personId: Int) -> TVCredit? {
+        return localDataSource.getPerson(id: personId)?.tvCredits
+    }
+
+    func getMovieCredits(from personId: Int) -> MovieCredit? {
+        return localDataSource.getPerson(id: personId)?.movieCredits
+    }
+
+    func getPersonImageProfile(from personId: Int) -> ImageProfile? {
+        return localDataSource.getPerson(id: personId)?.images
+    }
+}
+
+extension TMDBRepository: TMDBSearchRepository {
+    func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void) {
+        services.multiSearch(query: query, page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .success(let multiSearchResult):
+                    completion(.success(multiSearchResult))
+                }
+            }
+        }
+    }
+}
+
+extension TMDBRepository: TMDBTrendingRepository {
+    func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
+        services.getTrending(time: time, type: type) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let trendingResult):
+                    completion(.success(trendingResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+}
+
+extension TMDBRepository: TMDBTVShowRepository {
+    func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
+            completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))
+            return
+        }
+        
+        guard let similarTVShow = tvShow.similar else {
+            completion(.failure(NSError(domain: "tv show \(tvShowId) does not have similar", code: 400, userInfo: nil)))
+            return
+        }
+
+        // get from cache
+        if page <= similarTVShow.page {
+            // get page less than or equal current page
+            let fromTVShow = similarTVShow.totalResults / similarTVShow.totalPages * (page - 1)
+            let toTVShow = similarTVShow.totalResults / similarTVShow.totalPages * page - 1
+            let result = TVShowResult()
+            result.onTV.append(objectsIn: similarTVShow.onTV[fromTVShow...toTVShow])
+            completion(.success(result))
+        } else if page != similarTVShow.page + 1 {
+            // only consider next consecutive page
+            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
+        } else {
+            services.getSimilarTVShows(from: tvShowId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .failure(let error):
+                        debugPrint(error.localizedDescription)
+                    case .success(let tvShowResult):
+                        self.localDataSource.saveSimilarTVShow(tvShowResult.onTV, to: tvShowId)
+                        completion(.success(tvShowResult))
+                    }
+                }
+            }
+        }
+    }
+
+    func getRecommendTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
+            completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))
+            return
+        }
+        
+        guard let recommendTVShow = tvShow.recommendations else {
+            completion(.failure(NSError(domain: "tv show \(tvShowId) does not have recommendation", code: 400, userInfo: nil)))
+            return
+        }
+        
+        // get from cache
+        if page <= recommendTVShow.page {
+            // get page less than or equal current page
+            let fromTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * (page - 1)
+            let toTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * page - 1
+            let result = TVShowResult()
+            result.onTV.append(objectsIn: recommendTVShow.onTV[fromTVShow...toTVShow])
+            completion(.success(result))
+        } else if page != recommendTVShow.page + 1 {
+            // only consider next consecutive page
+            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
+        } else {
+            services.getRecommendTVShows(from: tvShowId, page: page) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .failure(let error):
+                        debugPrint(error.localizedDescription)
+                    case .success(let tvShowResult):
+                        self.localDataSource.saveRecommendTVShow(tvShowResult.onTV, to: tvShowId)
+                        completion(.success(tvShowResult))
+                    }
+                }
+            }
+        }
+    }
+
+    func getTVShowDetail(from tvShowId: Int, completion: @escaping (Result<TVShow, Error>) -> Void) {
+        if
+            let tvShow = localDataSource.getTVShow(id: tvShowId),
+            tvShow.region == NSLocale.current.regionCode,
+            tvShow.language == NSLocale.preferredLanguages.first {
+            completion(.success(tvShow))
+            return
+        }
+
+        services.getTVShowDetail(id: tvShowId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tvShow):
+                    self.localDataSource.saveTVShow(tvShow)
+                    completion(.success(tvShow))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        services.getPopularOnTV(page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let popularTVShowResult):
+                    completion(.success(popularTVShowResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getTVShowKeywords(from tvShowId: Int) -> [Keyword] {
+        guard let keywords = localDataSource.getTVShow(id: tvShowId)?.keywords?.results else {
+            return []
+        }
+        return Array(keywords)
+    }
+
+    func getTVShowCast(from tvShowId: Int) -> [Cast] {
+        guard let cast = localDataSource.getTVShow(id: tvShowId)?.credits?.cast else {
+            return []
+        }
+        return Array(cast)
+    }
+
+    func getTVShowCrew(from tvShowId: Int) -> [Crew] {
+        guard let crew = localDataSource.getTVShow(id: tvShowId)?.credits?.crew else {
+            return []
+        }
+        return Array(crew)
+    }
+
+}
+
+extension TMDBRepository: TMDBMovieRepository {
     func getMovieReleaseDates(from movieId: Int) -> ReleaseDateResults? {
         return localDataSource.getMovie(id: movieId)?.releaseDates
     }
@@ -221,232 +393,4 @@ class TMDBRepository: TMDBRepositoryProtocol {
         return Array(review)
     }
 
-    // MARK: - tv show
-
-    func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
-        guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
-            completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))
-            return
-        }
-        
-        guard let similarTVShow = tvShow.similar else {
-            completion(.failure(NSError(domain: "tv show \(tvShowId) does not have similar", code: 400, userInfo: nil)))
-            return
-        }
-
-        // get from cache
-        if page <= similarTVShow.page {
-            // get page less than or equal current page
-            let fromTVShow = similarTVShow.totalResults / similarTVShow.totalPages * (page - 1)
-            let toTVShow = similarTVShow.totalResults / similarTVShow.totalPages * page - 1
-            let result = TVShowResult()
-            result.onTV.append(objectsIn: similarTVShow.onTV[fromTVShow...toTVShow])
-            completion(.success(result))
-        } else if page != similarTVShow.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
-            services.getSimilarTVShows(from: tvShowId, page: page) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .failure(let error):
-                        debugPrint(error.localizedDescription)
-                    case .success(let tvShowResult):
-                        self.localDataSource.saveSimilarTVShow(tvShowResult.onTV, to: tvShowId)
-                        completion(.success(tvShowResult))
-                    }
-                }
-            }
-        }
-    }
-
-    func getRecommendTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
-        guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
-            completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))
-            return
-        }
-        
-        guard let recommendTVShow = tvShow.recommendations else {
-            completion(.failure(NSError(domain: "tv show \(tvShowId) does not have recommendation", code: 400, userInfo: nil)))
-            return
-        }
-        
-        // get from cache
-        if page <= recommendTVShow.page {
-            // get page less than or equal current page
-            let fromTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * (page - 1)
-            let toTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * page - 1
-            let result = TVShowResult()
-            result.onTV.append(objectsIn: recommendTVShow.onTV[fromTVShow...toTVShow])
-            completion(.success(result))
-        } else if page != recommendTVShow.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
-            services.getRecommendTVShows(from: tvShowId, page: page) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .failure(let error):
-                        debugPrint(error.localizedDescription)
-                    case .success(let tvShowResult):
-                        self.localDataSource.saveRecommendTVShow(tvShowResult.onTV, to: tvShowId)
-                        completion(.success(tvShowResult))
-                    }
-                }
-            }
-        }
-    }
-
-    func getTVShowDetail(from tvShowId: Int, completion: @escaping (Result<TVShow, Error>) -> Void) {
-        if
-            let tvShow = localDataSource.getTVShow(id: tvShowId),
-            tvShow.region == NSLocale.current.regionCode,
-            tvShow.language == NSLocale.preferredLanguages.first {
-            completion(.success(tvShow))
-            return
-        }
-
-        services.getTVShowDetail(id: tvShowId) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let tvShow):
-                    self.localDataSource.saveTVShow(tvShow)
-                    completion(.success(tvShow))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
-    func getPopularOnTV(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
-        services.getPopularOnTV(page: page) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let popularTVShowResult):
-                    completion(.success(popularTVShowResult))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
-    func getTVShowKeywords(from tvShowId: Int) -> [Keyword] {
-        guard let keywords = localDataSource.getTVShow(id: tvShowId)?.keywords?.results else {
-            return []
-        }
-        return Array(keywords)
-    }
-
-    func getTVShowCast(from tvShowId: Int) -> [Cast] {
-        guard let cast = localDataSource.getTVShow(id: tvShowId)?.credits?.cast else {
-            return []
-        }
-        return Array(cast)
-    }
-
-    func getTVShowCrew(from tvShowId: Int) -> [Crew] {
-        guard let crew = localDataSource.getTVShow(id: tvShowId)?.credits?.crew else {
-            return []
-        }
-        return Array(crew)
-    }
-
-    // MARK: - trending
-
-    func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
-        services.getTrending(time: time, type: type) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let trendingResult):
-                    completion(.success(trendingResult))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
-    // MARK: - people
-    func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void) {
-        services.getPopularPeople(page: page) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let popularPeopleResult):
-                    completion(.success(popularPeopleResult))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
-    func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void) {
-        if
-            let person = localDataSource.getPerson(id: id),
-            person.region == NSLocale.current.regionCode,
-            person.language == NSLocale.preferredLanguages.first {
-
-            completion(.success(person))
-            return
-        }
-
-        services.getPersonDetail(id: id) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let person):
-                    self.localDataSource.savePerson(person)
-                    completion(.success(person))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
-    func getTVCredits(from personId: Int) -> TVCredit? {
-        return localDataSource.getPerson(id: personId)?.tvCredits
-    }
-
-    func getMovieCredits(from personId: Int) -> MovieCredit? {
-        return localDataSource.getPerson(id: personId)?.movieCredits
-    }
-
-    func getPersonImageProfile(from personId: Int) -> ImageProfile? {
-        return localDataSource.getPerson(id: personId)?.images
-    }
-
-    // MARK: - images
-    func updateImageConfig() {
-        if
-            let lastUpdateDate = userSetting.imageConfig.dateUpdate,
-            let daysBetweenDates = Calendar.current.dateComponents([.day], from: lastUpdateDate, to: Date()).day,
-            daysBetweenDates < 10 { return }
-
-        services.updateImageConfig { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    debugPrint(error)
-                case .success(let imageConfigResult):
-                    self.userSetting.imageConfig = imageConfigResult
-                }
-            }
-        }
-    }
-
-    // MARK: - search
-    func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void) {
-        services.multiSearch(query: query, page: page) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    completion(.failure(error))
-                case .success(let multiSearchResult):
-                    completion(.success(multiSearchResult))
-                }
-            }
-        }
-    }
 }

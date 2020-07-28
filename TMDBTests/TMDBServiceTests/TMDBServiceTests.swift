@@ -365,34 +365,6 @@ class TMDBServiceTests: XCTestCase {
         verify(urlRequestBuilder).getTrendingURLRequest(time: trendingTime, type: trendingType)
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(TrendingResult.Type.self), completion: anyClosure())
     }
-
-    // MARK: - update image config
-    func testUpdateImageConfig() {
-        let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getImageConfigURLRequest()
-        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-
-        /**GIVEN*/
-        stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(ImageConfigResult()))
-            }
-        }
-
-        stub(urlRequestBuilder) { stub in
-            when(stub).getImageConfigURLRequest().thenReturn(request)
-        }
-
-        /**WHEN*/
-        services.updateImageConfig { _ in
-            expectation.fulfill()
-        }
-
-        /**THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(urlRequestBuilder).getImageConfigURLRequest()
-        verify(session).send(request: requestMatcher, responseType: any(ImageConfigResult.Type.self), completion: anyClosure())
-    }
     
     // MARK: - tv show detail
     func testGetTVShowDetail() {

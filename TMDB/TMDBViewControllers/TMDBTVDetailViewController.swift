@@ -13,7 +13,7 @@ import SDWebImage
 class TMDBTVDetailViewController: UIViewController {
     var tvId: Int?
     
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBTVShowRepository!
     
     var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
 
@@ -117,7 +117,7 @@ class TMDBTVDetailViewController: UIViewController {
             matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
-    
+
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,11 +127,10 @@ class TMDBTVDetailViewController: UIViewController {
         tvDetailDisplay.tvDetailVC = self
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
         getMovieDetail()
     }
-    
+
     // MARK: - service
     func getMovieDetail() {
         guard let id = tvId else { return }

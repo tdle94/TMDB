@@ -9,9 +9,9 @@
 import Foundation
 import SDWebImage
 
-extension TMDBServices: TMDBImageService {
-    func updateImageConfig(completion: @escaping (Result<ImageConfigResult, Error>) -> Void) {
-        let request = urlRequestBuilder.getImageConfigURLRequest()
-        session.send(request: request, responseType: ImageConfigResult.self, completion: completion)
-    }
-}
+//extension TMDBServices: TMDBImageService {
+//    func updateImageConfig(completion: @escaping (Result<ImageConfigResult, Error>) -> Void) {
+//        let request = urlRequestBuilder.getImageConfigURLRequest()
+//        session.send(request: request, responseType: ImageConfigResult.self, completion: completion)
+//    }
+//}

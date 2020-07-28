@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol TMDBImageService {
-    func updateImageConfig(completion: @escaping (Result<ImageConfigResult, Error>) -> Void)
-}
+//protocol TMDBImageService {
+//    func updateImageConfig(completion: @escaping (Result<ImageConfigResult, Error>) -> Void)
+//}

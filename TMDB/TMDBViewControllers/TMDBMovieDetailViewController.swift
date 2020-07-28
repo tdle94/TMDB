@@ -61,7 +61,7 @@ class TMDBMovieDetailViewController: UIViewController {
 
     // MARK: - repository
 
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
     
     // MARK: - ui views
     @IBOutlet weak var backdropPageControl: UIPageControl!
@@ -221,8 +221,7 @@ class TMDBMovieDetailViewController: UIViewController {
         movieDetail = TMDBMovieDetailDisplay(movieDetailVC: self)
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
 
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)

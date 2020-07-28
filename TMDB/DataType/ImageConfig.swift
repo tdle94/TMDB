@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-struct ImageConfigResult: Codable {
+struct ImageConfigResult {
     let id: Int = 0
     var images: ImageConfig = ImageConfig()
     var changeKeys: [String] = [
@@ -67,26 +67,9 @@ struct ImageConfigResult: Codable {
       "video",
       "videos"
     ]
-    var dateUpdate: Date?
-
-    enum CodingKeys: String, CodingKey {
-        case images
-        case changeKeys = "change_keys"
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        images = try container.decode(ImageConfig.self, forKey: .images)
-        changeKeys = try container.decode([String].self, forKey: .changeKeys)
-        dateUpdate = Date() // set the date when decode from remote service
-    }
-    
-    init() {
-        // empty for testing purpose
-    }
 }
 
-struct ImageConfig: Codable {
+struct ImageConfig {
     var baseURL: String = "http://image.tmdb.org/t/p/"
     var secureBaseURL: String = "https://image.tmdb.org/t/p/"
     var backdropSizes: [String] = [
@@ -125,14 +108,4 @@ struct ImageConfig: Codable {
       "w300",
       "original"
     ]
-
-    enum CodingKeys: String, CodingKey {
-        case baseURL = "base_url"
-        case secureBaseURL = "secure_base_url"
-        case backdropSizes = "backdrop_sizes"
-        case logoSizes = "logo_sizes"
-        case posterSizes = "poster_sizes"
-        case profileSizes = "profile_sizes"
-        case stillSizes = "still_sizes"
-    }
 }

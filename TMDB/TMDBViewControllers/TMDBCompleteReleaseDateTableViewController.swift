@@ -11,28 +11,27 @@ import UIKit
 
 class TMDBCompleteReleaseDateTableViewController: UITableViewController {
     var movieId: Int?
-    
-    var repository: TMDBRepositoryProtocol!
-    
+
+    var repository: TMDBMovieRepository!
+
     lazy var releaseDate: ReleaseDateResults? = {
         guard let id = movieId else { return nil }
         return repository.getMovieReleaseDates(from: id)
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("Release Date", comment: "")
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let id = movieId else { return 0 }
         return repository.getMovieReleaseDates(from: id)?.results.count ?? 0
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.releaseDateCell, for: indexPath)
         let countryCode = releaseDate?.results[indexPath.row].iso31661 ?? ""

@@ -17,7 +17,7 @@ protocol TMDBSearchProtocol: AnyObject {
 }
 
 class TMDBSearchViewController: UIViewController {
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
 
     var coordinate: MainCoordinator?
     
@@ -46,8 +46,7 @@ class TMDBSearchViewController: UIViewController {
         definesPresentationContext = true
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
         view.backgroundColor = Constant.Color.backgroundColor
         navigationItem.titleView = searchController.searchBar
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)

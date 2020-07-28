@@ -14,7 +14,7 @@ import RealmSwift
 class TMDBTVDetailViewController: UIViewController {
     var tvId: Int?
     
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
     
     var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
 
@@ -47,6 +47,7 @@ class TMDBTVDetailViewController: UIViewController {
     var tvShowCreditDataSource: UICollectionViewDiffableDataSource<TVShowCredit, Object>!
 
     // MARK: - ui
+    var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     weak var creditHeaderView: TMDBCreditHeaderView?
     weak var addtionalHeaderView: TMDBAdditionalHeaderView?
     @IBOutlet weak var posterImageView: UIImageView! {
@@ -158,8 +159,8 @@ class TMDBTVDetailViewController: UIViewController {
         tvDetailDisplay.tvDetailVC = self
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
+        view.addSubview(loadingView)
         getTVShowDetail()
     }
     
@@ -169,8 +170,10 @@ class TMDBTVDetailViewController: UIViewController {
         repository.getTVShowDetail(from: id) { result in
             switch result {
             case .success(let tvShow):
+                self.loadingView.removeFromSuperview()
                 self.tvDetailDisplay.displayTVShowDetail(tvShow)
             case .failure(let error):
+                self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
             }
         }

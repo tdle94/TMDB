@@ -15,7 +15,7 @@ class TMDBPersonDetailViewController: UIViewController {
 
     var personDetail: TMDBPersonDetailDisplay = TMDBPersonDetailDisplay()
 
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
 
     var personId: Int?
     
@@ -32,6 +32,7 @@ class TMDBPersonDetailViewController: UIViewController {
     var personImageDataSource: UICollectionViewDiffableDataSource<PersonImageSection, Images>!
 
     // MARK: - ui
+    var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     @IBOutlet weak var appearInCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var personImageCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var personImageCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -111,12 +112,14 @@ class TMDBPersonDetailViewController: UIViewController {
         super.viewDidLoad()
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: TMDBUserSetting())
+                                    localDataSource: TMDBLocalDataSource())
         personDetail.personDetailVC = self
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
+
+        view.addSubview(loadingView)
+        // get person detail
         getPersonDetail()
     }
 
@@ -126,8 +129,10 @@ class TMDBPersonDetailViewController: UIViewController {
         repository.getPersonDetail(id: id) { result in
             switch result {
             case .failure(let error):
+                self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
             case .success(let person):
+                self.loadingView.removeFromSuperview()
                 self.personDetail.displayPersonDetail(person)
             }
         }

@@ -14,7 +14,7 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - repository
     let userSetting: TMDBUserSetting = TMDBUserSetting()
 
-    var repository: TMDBRepositoryProtocol!
+    var repository: TMDBRepository!
 
     // MARK: - collectionview configuration
     enum Section: String, CaseIterable {
@@ -80,9 +80,8 @@ class TMDBHomeViewController: UIViewController {
         super.viewDidLoad()
         repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                            urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource(),
-                                    userSetting: userSetting)
-        repository.updateImageConfig()
+                                    localDataSource: TMDBLocalDataSource())
+
         configureLanguageAndRegion()
         getPopularMovie()
         getTrendingToday()

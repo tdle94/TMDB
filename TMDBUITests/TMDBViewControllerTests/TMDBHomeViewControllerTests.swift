@@ -25,22 +25,19 @@ class TMDBHomeViewControllerTests: XCTestCase {
     }
 
     func testTapPopularTVShow() {
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         app.segmentedControls.buttons["TV Shows"].tap()
         let expectations = expectation(description: "AsyncExpectations")
+        collectionView.cells.firstMatch.tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
     }
 
     func testTapPopularPeople() {
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         app.segmentedControls.buttons["People"].tap()
         let expectations = expectation(description: "AsyncExpectations")
-        expectations.fulfill()
-        waitForExpectations(timeout: 5, handler: nil)
-    }
-
-    func testTapTrendingThisWeek() {
-        app.segmentedControls.buttons["This Week"].tap()
-        let expectations = expectation(description: "AsyncExpectations")
+        collectionView.cells.firstMatch.tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
     }
@@ -48,16 +45,27 @@ class TMDBHomeViewControllerTests: XCTestCase {
     func testTapPopularMovie() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         let expectations = expectation(description: "AsyncExpectations")
+        app.segmentedControls.buttons["Movies"].tap()
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5)
     }
     
-//    func testTapPopularMoviePoster() {
-//        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
-//        let expectations = expectation(description: "AsyncExpectations")
-//        collectionView.cells.firstMatch.tap()
-//        expectations.fulfill()
-//        waitForExpectations(timeout: 5, handler: nil)
-//    }
+    func testTapTrendingThisWeek() {
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        app.segmentedControls.buttons["This Week"].tap()
+        let expectations = expectation(description: "AsyncExpectations")
+        collectionView.cells.firstMatch.tap()
+        expectations.fulfill()
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testTapTrendingToday() {
+         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        app.segmentedControls.buttons["Today"].tap()
+        let expectations = expectation(description: "AsyncExpectations")
+        collectionView.cells.firstMatch.tap()
+        expectations.fulfill()
+        waitForExpectations(timeout: 5, handler: nil)
+    }
 }

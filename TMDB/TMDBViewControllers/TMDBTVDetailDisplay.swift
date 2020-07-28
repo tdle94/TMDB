@@ -68,6 +68,10 @@ class TMDBTVDetailDisplay {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts)
+        tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
+        if casts.count == 1 {
+            snapshot.reloadSections([.Credit])
+        }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -75,6 +79,11 @@ class TMDBTVDetailDisplay {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews)
+        tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
+        if crews.count == 1 {
+            print("wtf")
+            snapshot.reloadSections([.Credit])
+        }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
     

@@ -62,8 +62,11 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - repository
 
     var repository: TMDBRepository!
-    
+
     // MARK: - ui views
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var scrollViewTopConstraint: NSLayoutConstraint!
+    lazy var loadingIndicatorView: TMDBLoadingIndicatorView = TMDBLoadingIndicatorView(frame: CGRect(x: UIScreen.main.bounds.midX - 50, y: navigationController?.navigationBar.frame.maxY ?? 0, width: 100, height: 100))
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     @IBOutlet weak var backdropPageControl: UIPageControl!
     @IBOutlet weak var availableLanguageLabel: UILabel!
@@ -82,7 +85,6 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var taglineTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewDetailTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var taglineLabel: UILabel!
     @IBOutlet weak var overviewDetail: UILabel!
@@ -208,6 +210,10 @@ class TMDBMovieDetailViewController: UIViewController {
                                                                              for: indexPath) as? TMDBProduceByHeaderView
                 return header
             }
+
+            var snapshot = productionCompanyDataSource.snapshot()
+            snapshot.appendSections([.ProductionCompanies])
+            productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     @IBOutlet weak var moviePosterImageView: UIImageView! {
@@ -227,9 +233,9 @@ class TMDBMovieDetailViewController: UIViewController {
 
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
-        contentView.bringSubviewToFront(backdropPageControl)
-
         view.addSubview(loadingView)
+        view.addSubview(loadingIndicatorView)
+        scrollView.contentSize = UIScreen.main.bounds.size
         // movie detail
         getMovieDetail()
     }
@@ -280,9 +286,11 @@ class TMDBMovieDetailViewController: UIViewController {
     func getMovieDetail() {
         guard let id = movieId else { return }
         repository.getMovieDetail(id: id) { result in
+            self.loadingIndicatorView.loadingLayer.strokeColor = UIColor.clear.cgColor
+            self.scrollViewTopConstraint.constant = 0
+            self.scrollView.isScrollEnabled = true
             switch result {
             case .success(let movie):
-                self.loadingView.removeFromSuperview()
                 self.movieDetail.displayMovieDetail(movie: movie)
                 
                 // get movie images. Since movie image with country code does not return all images
@@ -391,13 +399,13 @@ extension TMDBMovieDetailViewController: UICollectionViewDataSource {
 extension TMDBMovieDetailViewController: TMDBKeywordLayoutDelegate {
     // dynamic width base on text
     func tagCellLayoutSize(layout: TMDBKeywordLayout, at index: Int) -> CGSize {
-        if let id = movieId {
-            let keyword = repository.getMovieKeywords(from: id)[index]
-            let label = UILabel()
-            label.text = keyword.name
-            return label.intrinsicContentSize
+        guard let id = movieId else {
+            return .zero
         }
-        return .zero
+        let keyword = repository.getMovieKeywords(from: id)[index]
+        let label = UILabel()
+        label.text = keyword.name
+        return label.intrinsicContentSize
     }
 }
 
@@ -431,5 +439,32 @@ extension TMDBMovieDetailViewController: UITableViewDelegate {
         } else {
             coordinator?.navigateToCompleteReleaseDates(movieId: id)
         }
+    }
+}
+
+// MARK: - for loading indicator to pull down refresh
+extension TMDBMovieDetailViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y <= 0.0 {
+            loadingIndicatorView.animateLoading(scrollView: scrollView)
+        }
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y <= 0.0 {
+            loadingIndicatorView.loadingLayer.strokeColor = UIColor.black.cgColor
+        }
+    }
+    
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if loadingIndicatorView.previousAngle >= CGFloat.pi/6 {
+            scrollViewTopConstraint.constant = 50
+            scrollView.isScrollEnabled = false
+            getMovieDetail()
+        } else {
+            loadingIndicatorView.loadingLayer.strokeColor = UIColor.clear.cgColor
+        }
+        loadingIndicatorView.previousAngle = 0
     }
 }

@@ -64,9 +64,14 @@ class TMDBMovieDetailViewController: UIViewController {
     var repository: TMDBRepository!
 
     // MARK: - ui views
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var scrollViewTopConstraint: NSLayoutConstraint!
-    lazy var loadingIndicatorView: TMDBLoadingIndicatorView = TMDBLoadingIndicatorView(frame: CGRect(x: UIScreen.main.bounds.midX - 50, y: navigationController?.navigationBar.frame.maxY ?? 0, width: 100, height: 100))
+    @IBOutlet weak var scrollView: UIScrollView! {
+        didSet {
+            scrollView.refreshControl = UIRefreshControl()
+            scrollView.refreshControl?.tintColor = Constant.Color.primaryColor
+            scrollView.refreshControl?.attributedTitle = NSAttributedString(string: "Refresh")
+            scrollView.refreshControl?.addTarget(self, action: #selector(getMovieDetail), for: .valueChanged)
+        }
+    }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     @IBOutlet weak var backdropPageControl: UIPageControl!
     @IBOutlet weak var availableLanguageLabel: UILabel!
@@ -234,7 +239,6 @@ class TMDBMovieDetailViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
         view.addSubview(loadingView)
-        view.addSubview(loadingIndicatorView)
         scrollView.contentSize = UIScreen.main.bounds.size
         // movie detail
         getMovieDetail()
@@ -283,12 +287,10 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
 
-    func getMovieDetail() {
+    @objc func getMovieDetail() {
         guard let id = movieId else { return }
         repository.getMovieDetail(id: id) { result in
-            self.loadingIndicatorView.loadingLayer.strokeColor = UIColor.clear.cgColor
-            self.scrollViewTopConstraint.constant = 0
-            self.scrollView.isScrollEnabled = true
+            self.scrollView.refreshControl?.endRefreshing()
             switch result {
             case .success(let movie):
                 self.movieDetail.displayMovieDetail(movie: movie)
@@ -439,32 +441,5 @@ extension TMDBMovieDetailViewController: UITableViewDelegate {
         } else {
             coordinator?.navigateToCompleteReleaseDates(movieId: id)
         }
-    }
-}
-
-// MARK: - for loading indicator to pull down refresh
-extension TMDBMovieDetailViewController {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= 0.0 {
-            loadingIndicatorView.animateLoading(scrollView: scrollView)
-        }
-    }
-
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= 0.0 {
-            loadingIndicatorView.loadingLayer.strokeColor = UIColor.black.cgColor
-        }
-    }
-    
-
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if loadingIndicatorView.previousAngle >= CGFloat.pi/6 {
-            scrollViewTopConstraint.constant = 50
-            scrollView.isScrollEnabled = false
-            getMovieDetail()
-        } else {
-            loadingIndicatorView.loadingLayer.strokeColor = UIColor.clear.cgColor
-        }
-        loadingIndicatorView.previousAngle = 0
     }
 }

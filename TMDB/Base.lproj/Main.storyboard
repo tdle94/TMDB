@@ -464,7 +464,6 @@
                         <outlet property="revenueLabel" destination="zFV-uz-zgQ" id="bnI-hC-v3U"/>
                         <outlet property="runtimeLabel" destination="YHO-Z0-urX" id="G6w-pw-Ao3"/>
                         <outlet property="scrollView" destination="xZu-XV-mlQ" id="AvY-GG-gBF"/>
-                        <outlet property="scrollViewTopConstraint" destination="m9Y-6d-YFp" id="N8r-cM-BxT"/>
                         <outlet property="statusLabel" destination="R7C-ED-NVl" id="FgU-yA-tFY"/>
                         <outlet property="taglineLabel" destination="7QS-yN-25f" id="c1b-65-0HO"/>
                         <outlet property="taglineTopConstraint" destination="wAr-rJ-h25" id="HgG-9c-gvE"/>

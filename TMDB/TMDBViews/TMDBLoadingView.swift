@@ -14,7 +14,7 @@ class TMDBLoadingView: UIView {
 
     @IBOutlet weak var errorLabel: UILabel! {
         didSet {
-            errorLabel.text = "Something went wrong"
+            errorLabel.text = NSLocalizedString("Something went wrong", comment: "")
         }
     }
 

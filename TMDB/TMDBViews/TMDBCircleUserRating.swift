@@ -45,7 +45,7 @@ class TMDBCircleUserRating: UILabel {
     var rating: Double = 0.0 {
         didSet {
             let endAngle = CGFloat(rating * (2 * .pi) / 10)
-            textLayer.string = "\(rating)"
+            textLayer.string = rating == 10.0 ? "10" : "\(rating)"
 
             partialCircle = UIBezierPath(arcCenter: CGPoint(x: bounds.size.width/2, y: bounds.size.height/2),
                                          radius: 20,

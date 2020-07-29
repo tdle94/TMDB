@@ -14,7 +14,7 @@ import RealmSwift
 class TMDBTVDetailViewController: UIViewController {
     var tvId: Int?
     
-    var repository: TMDBRepository!
+    var repository: TMDBRepository = TMDBRepository.share
     
     var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
 
@@ -157,9 +157,6 @@ class TMDBTVDetailViewController: UIViewController {
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         tvDetailDisplay.tvDetailVC = self
-        repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource())
         view.addSubview(loadingView)
         getTVShowDetail()
     }

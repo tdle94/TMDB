@@ -36,9 +36,7 @@ class TMDBKeywordLayout: UICollectionViewLayout {
     }
     
     override func prepare() {
-        if layouts.isEmpty {
-            layoutSetup()
-        }
+        layoutSetup()
     }
     
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -46,7 +44,6 @@ class TMDBKeywordLayout: UICollectionViewLayout {
     }
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard !layouts.isEmpty else { return nil }
         return layouts
     }
 }
@@ -57,6 +54,8 @@ extension TMDBKeywordLayout {
     }
 
     func layoutSetup() {
+        numberOfLine = 0
+        layouts.removeAll()
         (0 ..< numberOfCell).forEach { index in
             // get size and instantiate inital layout
             creatLayoutAttribute(at: index)
@@ -66,7 +65,7 @@ extension TMDBKeywordLayout {
     }
     
     func creatLayoutAttribute(at index: Int) {
-        let size = delegate!.tagCellLayoutSize(layout: self, at: index)
+        guard let size = delegate?.tagCellLayoutSize(layout: self, at: index) else { return }
         let layout = UICollectionViewLayoutAttributes(forCellWith: IndexPath(row: index, section: 0))
         layout.size = size
         layouts.append(layout)

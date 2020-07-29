@@ -61,9 +61,17 @@ class TMDBMovieDetailViewController: UIViewController {
 
     // MARK: - repository
 
-    var repository: TMDBRepository!
-    
+    var repository: TMDBRepository = TMDBRepository.share
+
     // MARK: - ui views
+    @IBOutlet weak var scrollView: UIScrollView! {
+        didSet {
+            scrollView.refreshControl = UIRefreshControl()
+            scrollView.refreshControl?.tintColor = Constant.Color.primaryColor
+            scrollView.refreshControl?.attributedTitle = NSAttributedString(string: "Refresh")
+            scrollView.refreshControl?.addTarget(self, action: #selector(getMovieDetail), for: .valueChanged)
+        }
+    }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     @IBOutlet weak var backdropPageControl: UIPageControl!
     @IBOutlet weak var availableLanguageLabel: UILabel!
@@ -82,7 +90,6 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var taglineTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewDetailTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var taglineLabel: UILabel!
     @IBOutlet weak var overviewDetail: UILabel!
@@ -208,6 +215,10 @@ class TMDBMovieDetailViewController: UIViewController {
                                                                              for: indexPath) as? TMDBProduceByHeaderView
                 return header
             }
+
+            var snapshot = productionCompanyDataSource.snapshot()
+            snapshot.appendSections([.ProductionCompanies])
+            productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     @IBOutlet weak var moviePosterImageView: UIImageView! {
@@ -221,15 +232,11 @@ class TMDBMovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         movieDetail = TMDBMovieDetailDisplay(movieDetailVC: self)
-        repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource())
 
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
-        contentView.bringSubviewToFront(backdropPageControl)
-
         view.addSubview(loadingView)
+        scrollView.contentSize = UIScreen.main.bounds.size
         // movie detail
         getMovieDetail()
     }
@@ -277,12 +284,12 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
 
-    func getMovieDetail() {
+    @objc func getMovieDetail() {
         guard let id = movieId else { return }
         repository.getMovieDetail(id: id) { result in
+            self.scrollView.refreshControl?.endRefreshing()
             switch result {
             case .success(let movie):
-                self.loadingView.removeFromSuperview()
                 self.movieDetail.displayMovieDetail(movie: movie)
                 
                 // get movie images. Since movie image with country code does not return all images
@@ -391,13 +398,13 @@ extension TMDBMovieDetailViewController: UICollectionViewDataSource {
 extension TMDBMovieDetailViewController: TMDBKeywordLayoutDelegate {
     // dynamic width base on text
     func tagCellLayoutSize(layout: TMDBKeywordLayout, at index: Int) -> CGSize {
-        if let id = movieId {
-            let keyword = repository.getMovieKeywords(from: id)[index]
-            let label = UILabel()
-            label.text = keyword.name
-            return label.intrinsicContentSize
+        guard let id = movieId else {
+            return .zero
         }
-        return .zero
+        let keyword = repository.getMovieKeywords(from: id)[index]
+        let label = UILabel()
+        label.text = keyword.name
+        return label.intrinsicContentSize
     }
 }
 

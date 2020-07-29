@@ -61,7 +61,7 @@ class TMDBMovieDetailViewController: UIViewController {
 
     // MARK: - repository
 
-    var repository: TMDBRepository!
+    var repository: TMDBRepository = TMDBRepository.share
 
     // MARK: - ui views
     @IBOutlet weak var scrollView: UIScrollView! {
@@ -232,9 +232,6 @@ class TMDBMovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         movieDetail = TMDBMovieDetailDisplay(movieDetailVC: self)
-        repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource())
 
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)

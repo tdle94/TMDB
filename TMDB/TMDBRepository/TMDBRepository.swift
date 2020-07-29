@@ -7,10 +7,12 @@
 //
 import Foundation
 
-class TMDBRepository {
+struct TMDBRepository {
     let services: TMDBServices
     let localDataSource: TMDBLocalDataSourceProtocol
-
+    static let share: TMDBRepository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
+                                                                      urlRequestBuilder: TMDBURLRequestBuilder()),
+                                               localDataSource: TMDBLocalDataSource())
     init(services: TMDBServices, localDataSource: TMDBLocalDataSourceProtocol) {
         self.services = services
         self.localDataSource = localDataSource

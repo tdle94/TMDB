@@ -15,7 +15,7 @@ class TMDBPersonDetailViewController: UIViewController {
 
     var personDetail: TMDBPersonDetailDisplay = TMDBPersonDetailDisplay()
 
-    var repository: TMDBRepository!
+    var repository: TMDBRepository = TMDBRepository.share
 
     var personId: Int?
     
@@ -110,9 +110,6 @@ class TMDBPersonDetailViewController: UIViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
-        repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource())
         personDetail.personDetailVC = self
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor

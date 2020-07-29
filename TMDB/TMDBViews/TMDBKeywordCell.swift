@@ -30,5 +30,8 @@ class TMDBKeywordCell: UICollectionViewCell {
 
     func configure(keyword: Keyword) {
         label.text = keyword.name
+        label.sizeToFit()
+        label.frame.origin = CGPoint(x: bounds.midX - label.frame.size.width/2,
+                                     y: 0 + (bounds.maxY - label.bounds.maxY)/2)
     }
 }

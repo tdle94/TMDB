@@ -25,6 +25,7 @@ class TMDBMovieDetailDisplay {
     }
     
     func displayMovieDetail(movie: Movie) {
+        movieDetailVC?.loadingView.removeFromSuperview()
         getPosterImage(movie: movie)
         displayStatus(movie: movie)
         displayOriginalLanguage(movie: movie)
@@ -40,7 +41,6 @@ class TMDBMovieDetailDisplay {
         displayVideo(movie.videos)
         displayProductionCompanies(movie: movie)
         displayTagLine(movie: movie)
-        displayAvailableLanguageLabel(movie: movie)
         displayAvailableLanguageLabel(movie: movie)
 
         movieDetailVC?.title = movie.title
@@ -59,6 +59,7 @@ class TMDBMovieDetailDisplay {
         guard var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
         let images = movieImages.backdrops
         movieDetailVC?.backdropPageControl.numberOfPages = images.count
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Image))
         snapshot.appendItems(Array(images))
         movieDetailVC?.movieImageDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -182,13 +183,11 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
             movieDetailVC?.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
             movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(recommend.movies))
-            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+            displayMoreMovie(Array(recommend.movies))
         } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
             movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
             movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(similar.movies))
-            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
+            displayMoreMovie(Array(similar.movies))
         } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
             displayMoreMovie(Array(similar.movies))
         } else {
@@ -211,13 +210,11 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
             movieDetailVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
             movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(credit.crew))
-            movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+            displayCrew(Array(credit.crew))
         } else if credit.crew.isEmpty, !credit.cast.isEmpty {
             movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
             movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(credit.cast))
-            movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+            displayCast(Array(credit.cast))
         } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
             displayCast(Array(credit.cast))
         } else {
@@ -238,6 +235,7 @@ class TMDBMovieDetailDisplay {
             return
         }
         let videos = Array(videoResult.videos)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Video))
         snapshot.appendItems(videos)
         movieDetailVC?.videoMovieDataSource.apply(snapshot, animatingDifferences: true)
         movieDetailVC?.videoCollectionViewHeightConstraint.constant = (movieDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2.5
@@ -281,7 +279,7 @@ class TMDBMovieDetailDisplay {
             return
         }
         let productionCompanies = Array(movie.productionCompanies)
-        snapshot.appendSections([.ProductionCompanies])
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .ProductionCompanies))
         snapshot.appendItems(productionCompanies)
         movieDetailVC?.productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
         movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/4

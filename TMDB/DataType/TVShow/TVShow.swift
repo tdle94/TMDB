@@ -38,6 +38,7 @@ class TVShow: Object, Decodable {
     dynamic var similar: TVShowResult?
     dynamic var credits: CreditResult?
     dynamic var reviews: ReviewResult?
+    dynamic var videos: VideoResult?
     let genres: List<Genre> = List()
     let createdBy: List<CreatedBy> = List()
     let episodeRunTime: List<Int> = List()
@@ -48,7 +49,7 @@ class TVShow: Object, Decodable {
     let seasons: List<Season> = List()
 
     enum CodingKeys: String, CodingKey {
-        case genres, hompage, id, languages, name, networks, overview, popularity, seasons, status, type, keywords, recommendations, similar, credits, reviews
+        case genres, hompage, id, languages, name, networks, overview, popularity, seasons, status, type, keywords, recommendations, similar, credits, reviews, videos
         case backdropPath = "backdrop_path"
         case createdBy = "created_by"
         case episodeRunTime = "episode_run_time"
@@ -100,6 +101,7 @@ class TVShow: Object, Decodable {
         similar = try container.decodeIfPresent(TVShowResult.self, forKey: .similar)
         credits = try container.decodeIfPresent(CreditResult.self, forKey: .credits)
         reviews = try container.decodeIfPresent(ReviewResult.self, forKey: .reviews)
+        videos = try container.decodeIfPresent(VideoResult.self, forKey: .videos)
         originCountry.append(objectsIn: try container.decode(List<String>.self, forKey: .originCountry))
 
         if let seasons = try container.decodeIfPresent(List<Season>.self, forKey: .seasons) {

@@ -7,3 +7,15 @@
 //
 
 import Foundation
+import UIKit
+
+class TMDBCreatorHeaderView: TMDBPreviewHeaderView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.text = NSLocalizedString("Creator", comment: "")
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+}

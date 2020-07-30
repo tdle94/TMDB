@@ -238,7 +238,7 @@ class TMDBMovieDetailDisplay {
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Video))
         snapshot.appendItems(videos)
         movieDetailVC?.videoMovieDataSource.apply(snapshot, animatingDifferences: true)
-        movieDetailVC?.videoCollectionViewHeightConstraint.constant = (movieDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2.5
+        movieDetailVC?.videoCollectionViewHeightConstraint.constant = (movieDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2
     }
 
     func displayCast(_ casts: [Cast], reloadSection: Bool = true) {

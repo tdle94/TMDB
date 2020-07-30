@@ -89,6 +89,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             
             getImage(from: item.profilePath)
         } else if let item = item as? Video, let url = userSetting.getYoutubeImageURL(key: item.key) {
+            title.text = item.name
             imageView.sd_setImage(with: url)
         } else if let item = item as? Images {
             getImage(from: item.filePath)

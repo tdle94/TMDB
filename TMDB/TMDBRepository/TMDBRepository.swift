@@ -230,6 +230,12 @@ extension TMDBRepository: TMDBTVShowRepository {
         return Array(crew)
     }
 
+    func getTVShowReviews(from tvShowId: Int) -> [Review] {
+        guard let reviews = localDataSource.getTVShow(id: tvShowId)?.reviews?.reviews else {
+            return []
+        }
+        return Array(reviews)
+    }
 }
 
 extension TMDBRepository: TMDBMovieRepository {

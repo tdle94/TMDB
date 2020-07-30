@@ -31,12 +31,21 @@ class TMDBTVDetailDisplay {
         displayMoreTVShows(tvShow: tvShow)
         displayCredit(tvShow: tvShow)
         displayAvailableLanguageLabel(tvShow: tvShow)
+        displayReviewLabel(tvShow: tvShow)
         tvDetailVC?.title = tvShow.originalName
+    }
+
+    func displayReviewLabel(tvShow: TVShow) {
+        tvDetailVC?.reviewButton.setAttributedTitle(NSAttributedString(string: NSLocalizedString("Review", comment: "") + " (\(tvShow.reviews?.totalResults ?? 0))",
+                                                                       attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!]),
+                                                    for: .normal)
     }
 
     func displayAvailableLanguageLabel(tvShow: TVShow) {
         let languages = Array(tvShow.languages).map { "\(Constant.languageCode[$0] ?? "")" }.joined(separator: ", ")
-        tvDetailVC?.availableLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Available Languages", comment: "") + ": ", subTitle: languages)
+        if languages != "" {
+            tvDetailVC?.availableLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Available Languages", comment: "") + ": ", subTitle: languages)
+        }
     }
     
     func displayCredit(tvShow: TVShow) {
@@ -49,13 +58,13 @@ class TMDBTVDetailDisplay {
             tvDetailVC?.creditHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
             tvDetailVC?.creditHeaderView?.segmentControl.selectedSegmentIndex = 0
             tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCrew(Array(crew))
+            displayCrew(Array(crew), reloadSection: false)
         } else if !cast.isEmpty, crew.isEmpty {
             tvDetailVC?.creditHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
             tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCast(Array(cast))
+            displayCast(Array(cast), reloadSection: false)
         } else if !cast.isEmpty, !crew.isEmpty {
-            displayCast(Array(cast))
+            displayCast(Array(cast), reloadSection: false)
         } else {
             snapshot.deleteSections([.Credit])
             tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
@@ -64,24 +73,23 @@ class TMDBTVDetailDisplay {
         tvDetailVC?.tvShowCreditCollectionViewHeightConstraint.constant = tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
     }
     
-    func displayCast(_ casts: [Cast]) {
+    func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts)
         tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
-        if casts.count == 1 {
+        if casts.count == 1, reloadSection {
             snapshot.reloadSections([.Credit])
         }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayCrew(_ crews: [Crew]) {
+    func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews)
         tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
-        if crews.count == 1 {
-            print("wtf")
+        if crews.count == 1, reloadSection {
             snapshot.reloadSections([.Credit])
         }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)

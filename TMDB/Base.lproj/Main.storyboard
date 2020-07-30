@@ -720,10 +720,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N8c-16-nJS">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1111.6666666666667"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1111"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="cRc-mH-MXA">
-                                                <rect key="frame" x="0.0" y="681.66666666666663" width="414" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="681" width="414" height="0.0"/>
                                                 <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" id="5td-MD-slt"/>
@@ -833,13 +833,13 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Overview" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3b-o5-OaQ">
-                                                <rect key="frame" x="18" y="627.33333333333337" width="376" height="21"/>
+                                                <rect key="frame" x="18" y="627.33333333333337" width="71.666666666666671" height="20.333333333333371"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Overview Detail" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="82w-1v-Pxz">
-                                                <rect key="frame" x="18" y="653.33333333333337" width="376" height="20.333333333333371"/>
+                                                <rect key="frame" x="18" y="652.66666666666663" width="376" height="20.333333333333371"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -868,7 +868,7 @@
                                                 </cells>
                                             </collectionView>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="u9K-GS-5bR">
-                                                <rect key="frame" x="0.0" y="686.66666666666663" width="396" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="686" width="396" height="0.0"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" id="UWW-jf-hOD"/>
@@ -902,7 +902,7 @@
                                                 </prototypes>
                                             </tableView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UaR-Gg-evP">
-                                                <rect key="frame" x="0.0" y="696.66666666666663" width="414" height="200"/>
+                                                <rect key="frame" x="0.0" y="696" width="414" height="200"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="200" id="Acx-Yj-rY0"/>
@@ -928,7 +928,7 @@
                                                 </connections>
                                             </collectionView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fPS-st-s2B">
-                                                <rect key="frame" x="0.0" y="896.66666666666663" width="414" height="199.99999999999989"/>
+                                                <rect key="frame" x="0.0" y="896" width="414" height="200"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="200" id="ftJ-RE-N3A"/>
@@ -959,11 +959,22 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bwT-Nq-OtB">
+                                                <rect key="frame" x="239.66666666666663" y="620.66666666666663" width="154.33333333333337" height="34"/>
+                                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="reviewButtonTap" destination="EsI-RD-jLx" eventType="touchUpInside" id="dtY-wz-Qm9"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
+                                            <constraint firstItem="bwT-Nq-OtB" firstAttribute="centerY" secondItem="E3b-o5-OaQ" secondAttribute="centerY" id="0Z3-rk-v5o"/>
                                             <constraint firstAttribute="trailing" secondItem="Se9-vU-v2c" secondAttribute="trailing" id="0gH-Uz-JnN"/>
-                                            <constraint firstAttribute="trailing" secondItem="E3b-o5-OaQ" secondAttribute="trailing" constant="20" id="11R-oH-SOS"/>
+                                            <constraint firstItem="bwT-Nq-OtB" firstAttribute="leading" relation="lessThanOrEqual" secondItem="E3b-o5-OaQ" secondAttribute="trailing" constant="150" id="2aV-dw-ozW"/>
                                             <constraint firstItem="Se9-vU-v2c" firstAttribute="leading" secondItem="N8c-16-nJS" secondAttribute="leading" id="6Lm-3W-4vi"/>
                                             <constraint firstItem="VaP-nR-fZ8" firstAttribute="top" secondItem="Zon-H4-Zoo" secondAttribute="bottom" constant="5" id="7Pe-EU-mJs"/>
                                             <constraint firstItem="H4p-hh-uVr" firstAttribute="top" secondItem="fOx-xb-e0c" secondAttribute="bottom" constant="15" id="8Ko-1M-Oeo"/>
@@ -1012,6 +1023,7 @@
                                             <constraint firstItem="bmg-H8-2Er" firstAttribute="top" secondItem="IR9-Vk-iHX" secondAttribute="bottom" constant="15" id="roW-3G-2vo"/>
                                             <constraint firstAttribute="trailing" secondItem="82w-1v-Pxz" secondAttribute="trailing" constant="20" id="v5P-Xr-Km8"/>
                                             <constraint firstItem="fRh-CA-yCp" firstAttribute="top" secondItem="H4p-hh-uVr" secondAttribute="bottom" constant="15" id="vG4-De-4F1"/>
+                                            <constraint firstAttribute="trailing" secondItem="bwT-Nq-OtB" secondAttribute="trailing" constant="20" id="vkB-Ig-iQw"/>
                                             <constraint firstAttribute="trailing" secondItem="UaR-Gg-evP" secondAttribute="trailing" id="vsr-qU-Rd2"/>
                                             <constraint firstAttribute="trailing" secondItem="fOx-xb-e0c" secondAttribute="trailing" constant="20" id="wSP-H9-riL"/>
                                             <constraint firstAttribute="trailing" secondItem="fPS-st-s2B" secondAttribute="trailing" id="wiu-ak-hmP"/>
@@ -1057,6 +1069,7 @@
                         <outlet property="overviewDetailLabel" destination="82w-1v-Pxz" id="9Uw-sF-mZy"/>
                         <outlet property="overviewLabel" destination="E3b-o5-OaQ" id="L79-0D-NJu"/>
                         <outlet property="posterImageView" destination="qpj-MJ-CdV" id="5gB-wV-USx"/>
+                        <outlet property="reviewButton" destination="bwT-Nq-OtB" id="Sc6-KS-FE9"/>
                         <outlet property="runtimeLabel" destination="Zon-H4-Zoo" id="sO6-oJ-pMU"/>
                         <outlet property="statusLabel" destination="biu-bT-k3G" id="Es4-d4-PbN"/>
                         <outlet property="titleLabel" destination="gJb-Th-aUA" id="Ccs-2X-gFZ"/>

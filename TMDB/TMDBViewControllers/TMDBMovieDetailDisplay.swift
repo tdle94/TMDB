@@ -210,13 +210,13 @@ class TMDBMovieDetailDisplay {
             movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
             movieDetailVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
             movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCrew(Array(credit.crew))
+            displayCrew(Array(credit.crew), reloadSection: false)
         } else if credit.crew.isEmpty, !credit.cast.isEmpty {
             movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
             movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCast(Array(credit.cast))
+            displayCast(Array(credit.cast), reloadSection: false)
         } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
-            displayCast(Array(credit.cast))
+            displayCast(Array(credit.cast), reloadSection: false)
         } else {
             snapshot.deleteSections([.Credit])
             movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
@@ -241,7 +241,7 @@ class TMDBMovieDetailDisplay {
         movieDetailVC?.videoCollectionViewHeightConstraint.constant = (movieDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2.5
     }
 
-    func displayCast(_ casts: [Cast]) {
+    func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
@@ -252,7 +252,7 @@ class TMDBMovieDetailDisplay {
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayCrew(_ crews: [Crew]) {
+    func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)

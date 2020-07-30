@@ -15,6 +15,7 @@ struct Constant {
         static let trendHeader = "TrendHeader"
         static let additionalHeader = "AdditionalHeader"
         static let creditMovieHeader = "CreditMovieHeader"
+        static let creatorTVShowHeader = "CreatorTVShowHeader"
         static let personImageHeader = "PersonImageHeader"
         static let videoMovieHeader = "VideoMovieHeader"
         static let movieProduceByHeader = "ProduceByHeader"

@@ -246,7 +246,7 @@ class TMDBMovieDetailDisplay {
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(casts, toSection: .Credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        if casts.count == 1 {
+        if casts.count == 1, reloadSection {
             snapshot.reloadSections([.Credit])
         }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
@@ -257,7 +257,7 @@ class TMDBMovieDetailDisplay {
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(crews, toSection: .Credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        if crews.count == 1 {
+        if crews.count == 1, reloadSection {
             snapshot.reloadSections([.Credit])
         }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)

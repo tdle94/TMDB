@@ -1523,4 +1523,40 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         verify(localDataSource).getTVShow(id: 3)
     }
+
+    // MARK: - tv show reviews
+    func testGetExistTVShowReview() {
+        let tvShow = TVShow()
+        let reviewResult = ReviewResult()
+        reviewResult.reviews.append(Review())
+        tvShow.id = 3
+        tvShow.reviews = reviewResult
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+        
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowReviews(from: 3).count, 1)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
+    
+    func testGetEmptyTVShowReview() {
+        let tvShow = TVShow()
+        tvShow.id = 3
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+        
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowReviews(from: 3).count, 0)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
 }

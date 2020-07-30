@@ -33,7 +33,21 @@ class TMDBTVDetailDisplay {
         displayAvailableLanguageLabel(tvShow: tvShow)
         displayReviewLabel(tvShow: tvShow)
         displayVideos(tvShow: tvShow)
+        displayCreator(tvShow: tvShow)
         tvDetailVC?.title = tvShow.originalName
+    }
+
+    func displayCreator(tvShow: TVShow) {
+        guard var snapshot = tvDetailVC?.tvShowCreatorDataSrouce.snapshot() else { return }
+        guard !tvShow.createdBy.isEmpty else {
+            snapshot.deleteSections([.Creator])
+            tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
+            return
+        }
+
+        snapshot.appendItems(Array(tvShow.createdBy))
+        tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
+        tvDetailVC?.creatorCollectionViewHeightConstraint.constant = (tvDetailVC?.creatorCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/1.1
     }
 
     func displayVideos(tvShow: TVShow) {
@@ -41,6 +55,7 @@ class TMDBTVDetailDisplay {
         guard let videos = tvShow.videos?.videos, !videos.isEmpty else {
             snapshot.deleteSections([.Video])
             tvDetailVC?.tvShowVideoDataSource.apply(snapshot, animatingDifferences: true)
+            tvDetailVC?.videoCollectionViewHeightConstraint.constant = 0
             return
         }
 

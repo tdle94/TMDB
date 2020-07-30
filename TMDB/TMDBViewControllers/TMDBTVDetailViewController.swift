@@ -56,6 +56,7 @@ class TMDBTVDetailViewController: UIViewController {
             posterImageView.roundImage()
         }
     }
+    @IBOutlet weak var reviewButton: UIButton!
     @IBOutlet weak var availableLanguageLabel: UILabel!
     @IBOutlet weak var tvShowCreditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewLabel: UILabel!
@@ -210,6 +211,12 @@ class TMDBTVDetailViewController: UIViewController {
         guard let id = tvId else { return }
         let crew = repository.getTVShowCrew(from: id)
         tvDetailDisplay.displayCrew(crew)
+    }
+
+    @IBAction func reviewButtonTap() {
+        guard let id = tvId else { return }
+        let reviews = repository.getTVShowReviews(from: id)
+        coordinate?.navigateToReview(reivew: reviews)
     }
 }
 

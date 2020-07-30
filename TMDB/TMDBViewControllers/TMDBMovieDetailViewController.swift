@@ -346,16 +346,9 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
 
         if
             collectionView == creditCollectionView,
-            let cast = creditMovieDataSource.itemIdentifier(for: indexPath) as? Cast
+            let id = (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
         {
-            coordinator?.navigateToPersonDetail(id: cast.id)
-        }
-        
-        if
-            collectionView == creditCollectionView,
-            let crew = creditMovieDataSource.itemIdentifier(for: indexPath) as? Crew
-        {
-            coordinator?.navigateToPersonDetail(id: crew.id)
+            coordinator?.navigateToPersonDetail(id: id)
         }
     }
     

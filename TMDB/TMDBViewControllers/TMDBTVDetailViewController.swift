@@ -20,6 +20,8 @@ class TMDBTVDetailViewController: UIViewController {
 
     var coordinate: MainCoordinator?
     
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+    
     // MARK: - data source
 
     enum NetworkMovieImage: String, CaseIterable {
@@ -37,6 +39,10 @@ class TMDBTVDetailViewController: UIViewController {
     enum TVShowCredit: String, CaseIterable {
         case Credit = "Credit"
     }
+    
+    enum TVShowVideo: String, CaseIterable {
+        case Video = "Video"
+    }
 
     var movieNetworkImageDataSource: UICollectionViewDiffableDataSource<NetworkMovieImage, Networks>!
 
@@ -45,6 +51,8 @@ class TMDBTVDetailViewController: UIViewController {
     var matchingTVShowDataSource: UICollectionViewDiffableDataSource<MatchingTVShow, TVShow>!
 
     var tvShowCreditDataSource: UICollectionViewDiffableDataSource<TVShowCredit, Object>!
+    
+    var tvShowVideoDataSource: UICollectionViewDiffableDataSource<TVShowVideo, Video>!
 
     // MARK: - ui
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -71,6 +79,26 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var runtimeLabel: UILabel!
     @IBOutlet weak var keywordCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var videoCollectionView: UICollectionView! {
+        didSet {
+            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            videoCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+            tvShowVideoDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+            tvShowVideoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.videoMovieHeader, for: indexPath) as? TMDBVideoHeaderView
+                return header
+            }
+            var snapshot = tvShowVideoDataSource.snapshot()
+            snapshot.appendSections([.Video])
+            tvShowVideoDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
         didSet {
             keywordCollectionView.collectionViewLayout = TMDBKeywordLayout(delegate: self)
@@ -279,10 +307,21 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
         if collectionView == matchingTVShowCollectionView {
             let id = matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row].id
             coordinate?.navigateToTVShowDetail(tvId: id)
-        } else if collectionView == tvShowCreditCollectionView,
-                let id = (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
+        }
+
+        if
+            collectionView == tvShowCreditCollectionView,
+            let id = (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
         {
             coordinate?.navigateToPersonDetail(id: id)
+        }
+
+        if
+            collectionView == videoCollectionView,
+            let video = tvShowVideoDataSource.itemIdentifier(for: indexPath),
+            let url = userSetting.getYoutubeVideoURL(key: video.key) {
+
+                coordinate?.navigateToVideoPlayer(with: url)
         }
     }
 }

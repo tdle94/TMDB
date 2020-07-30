@@ -235,6 +235,7 @@ class Episode: Object, Decodable {
     }
 }
 
+@objcMembers
 class CreatedBy: Object, Decodable {
     dynamic var id: Int = 0
     dynamic var creditId: String = ""
@@ -245,5 +246,17 @@ class CreatedBy: Object, Decodable {
         case id, name
         case creditId = "credit_id"
         case profilePath = "profile_path"
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        id = try container.decode(Int.self, forKey: .id)
+        profilePath = try container.decodeIfPresent(String.self, forKey: .profilePath)
+        creditId = try container.decode(String.self, forKey: .creditId)
+    }
+
+    required init() {
+        super.init()
     }
 }

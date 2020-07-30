@@ -45,10 +45,55 @@ class TMDBHomeViewControllerTests: XCTestCase {
     func testTapPopularMovie() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         let expectations = expectation(description: "AsyncExpectations")
+        let movieDetailScrollView = app.scrollViews.matching(identifier: "MovieDetailScrollView")
+        let similarMovie = app.segmentedControls.buttons["Similar"]
+        let cast = app.segmentedControls.buttons["Cast"]
+        let crew = app.segmentedControls.buttons["Crew"]
+        let recommendMovie = app.segmentedControls.buttons["Recommend"]
         app.segmentedControls.buttons["Movies"].tap()
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5)
+        
+        // cast and/or crew tap
+        if cast.exists && crew.exists {
+            while !cast.isHittable && !crew.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            cast.tap()
+            crew.tap()
+        } else if cast.exists {
+            while !cast.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            cast.tap()
+        } else {
+            while !crew.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            crew.tap()
+        }
+        
+        // similar and/or recommend movie tap
+        if similarMovie.exists && recommendMovie.exists {
+            while !similarMovie.isHittable && !recommendMovie.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            
+            similarMovie.tap()
+            recommendMovie.tap()
+        } else if similarMovie.exists {
+            while !similarMovie.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+
+            similarMovie.tap()
+        } else {
+            while !recommendMovie.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            recommendMovie.tap()
+        }
     }
     
     func testTapTrendingThisWeek() {

@@ -13,25 +13,29 @@ import RealmSwift
 
 class TMDBTVDetailViewController: UIViewController {
     var tvId: Int?
-    
+
     var repository: TMDBRepository = TMDBRepository.share
-    
+
     var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
 
     var coordinate: MainCoordinator?
-    
+
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
-    
+
     // MARK: - data source
+
+    enum TVShowCreator: String, CaseIterable {
+        case Creator = "Creator"
+    }
 
     enum NetworkMovieImage: String, CaseIterable {
         case Network = "Network"
     }
-    
+
     enum TVShowSeason: String, CaseIterable {
         case Season = "Season"
     }
-    
+
     enum MatchingTVShow: String, CaseIterable {
         case Matching = "Matching"
     }
@@ -39,7 +43,7 @@ class TMDBTVDetailViewController: UIViewController {
     enum TVShowCredit: String, CaseIterable {
         case Credit = "Credit"
     }
-    
+
     enum TVShowVideo: String, CaseIterable {
         case Video = "Video"
     }
@@ -53,6 +57,8 @@ class TMDBTVDetailViewController: UIViewController {
     var tvShowCreditDataSource: UICollectionViewDiffableDataSource<TVShowCredit, Object>!
     
     var tvShowVideoDataSource: UICollectionViewDiffableDataSource<TVShowVideo, Video>!
+
+    var tvShowCreatorDataSrouce: UICollectionViewDiffableDataSource<TVShowCreator, CreatedBy>!
 
     // MARK: - ui
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -178,7 +184,28 @@ class TMDBTVDetailViewController: UIViewController {
             tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
+    @IBOutlet weak var creatorCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var creatorCollectionView: UICollectionView! {
+        didSet {
+            creatorCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            creatorCollectionView.register(TMDBCreatorHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creatorTVShowHeader)
+            creatorCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            tvShowCreatorDataSrouce = UICollectionViewDiffableDataSource(collectionView: creatorCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+            tvShowCreatorDataSrouce.supplementaryViewProvider = { collectionView, kind, indexPath in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.creatorTVShowHeader, for: indexPath) as? TMDBCreatorHeaderView
+                return header
+            }
 
+            var snapshot = tvShowCreatorDataSrouce.snapshot()
+            snapshot.appendSections([.Creator])
+            tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
+        }
+    }
+    
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -189,7 +216,7 @@ class TMDBTVDetailViewController: UIViewController {
         view.addSubview(loadingView)
         getTVShowDetail()
     }
-    
+
     // MARK: - service
     func getTVShowDetail() {
         guard let id = tvId else { return }
@@ -204,7 +231,7 @@ class TMDBTVDetailViewController: UIViewController {
             }
         }
     }
-    
+
     func getSimilarMovies() {
         guard let id = tvId else { return }
         repository.getSimilarTVShows(from: id, page: 1) { result in
@@ -216,7 +243,7 @@ class TMDBTVDetailViewController: UIViewController {
             }
         }
     }
-    
+
     func getRecommendMovies() {
         guard let id = tvId else { return }
         repository.getRecommendTVShows(from: id, page: 1) { result in
@@ -322,6 +349,13 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
             let url = userSetting.getYoutubeVideoURL(key: video.key) {
 
                 coordinate?.navigateToVideoPlayer(with: url)
+        }
+        
+        if
+            collectionView == creatorCollectionView,
+            let creator = tvShowCreatorDataSrouce.itemIdentifier(for: indexPath) {
+            
+            coordinate?.navigateToPersonDetail(id: creator.id)
         }
     }
 }

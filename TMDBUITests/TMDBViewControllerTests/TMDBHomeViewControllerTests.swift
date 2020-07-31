@@ -26,16 +26,61 @@ class TMDBHomeViewControllerTests: XCTestCase {
 
     func testTapPopularTVShow() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
-        app.segmentedControls.buttons["TV Shows"].tap()
         let expectations = expectation(description: "AsyncExpectations")
+        let tvShowDetailScrollView = app.scrollViews.matching(identifier: "TVShowDetailScrollView")
+        let cast = app.segmentedControls.buttons[NSLocalizedString("Cast", comment: "")]
+        let crew = app.segmentedControls.buttons[NSLocalizedString("Crew", comment: "")]
+        let similarTVShow = app.segmentedControls.buttons[NSLocalizedString("Similar", comment: "")]
+        let recommendTVShow = app.segmentedControls.buttons[NSLocalizedString("Recommend", comment: "")]
+        app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
+        
+        // similar and/or recommend movie tap
+        if similarTVShow.exists && recommendTVShow.exists {
+            while !similarTVShow.isHittable && !recommendTVShow.isHittable {
+                tvShowDetailScrollView.firstMatch.swipeUp()
+            }
+            
+            similarTVShow.tap()
+            recommendTVShow.tap()
+        } else if similarTVShow.exists {
+            while !similarTVShow.isHittable {
+                tvShowDetailScrollView.firstMatch.swipeUp()
+            }
+
+            similarTVShow.tap()
+        } else {
+            while !recommendTVShow.isHittable {
+                tvShowDetailScrollView.firstMatch.swipeUp()
+            }
+            recommendTVShow.tap()
+        }
+        
+        // cast and/or crew tap
+        if cast.exists && crew.exists {
+            while !cast.isHittable && !crew.isHittable {
+                tvShowDetailScrollView.firstMatch.swipeUp()
+            }
+            cast.tap()
+            crew.tap()
+        } else if cast.exists {
+            while !cast.isHittable {
+                tvShowDetailScrollView.firstMatch.swipeUp()
+            }
+            cast.tap()
+        } else {
+            while !crew.isHittable {
+                tvShowDetailScrollView.firstMatch.swipeUp()
+            }
+            crew.tap()
+        }
     }
 
     func testTapPopularPeople() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
-        app.segmentedControls.buttons["People"].tap()
+        app.segmentedControls.buttons[NSLocalizedString("People", comment: "")].tap()
         let expectations = expectation(description: "AsyncExpectations")
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()
@@ -46,11 +91,11 @@ class TMDBHomeViewControllerTests: XCTestCase {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         let expectations = expectation(description: "AsyncExpectations")
         let movieDetailScrollView = app.scrollViews.matching(identifier: "MovieDetailScrollView")
-        let similarMovie = app.segmentedControls.buttons["Similar"]
-        let cast = app.segmentedControls.buttons["Cast"]
-        let crew = app.segmentedControls.buttons["Crew"]
-        let recommendMovie = app.segmentedControls.buttons["Recommend"]
-        app.segmentedControls.buttons["Movies"].tap()
+        let cast = app.segmentedControls.buttons[NSLocalizedString("Cast", comment: "")]
+        let crew = app.segmentedControls.buttons[NSLocalizedString("Crew", comment: "")]
+        let similarMovie = app.segmentedControls.buttons[NSLocalizedString("Similar", comment: "")]
+        let recommendMovie = app.segmentedControls.buttons[NSLocalizedString("Recommend", comment: "")]
+        app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].tap()
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5)
@@ -98,7 +143,7 @@ class TMDBHomeViewControllerTests: XCTestCase {
     
     func testTapTrendingThisWeek() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
-        app.segmentedControls.buttons["This Week"].tap()
+        app.segmentedControls.buttons[NSLocalizedString("This Week", comment: "")].tap()
         let expectations = expectation(description: "AsyncExpectations")
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()
@@ -107,7 +152,7 @@ class TMDBHomeViewControllerTests: XCTestCase {
     
     func testTapTrendingToday() {
          let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
-        app.segmentedControls.buttons["Today"].tap()
+        app.segmentedControls.buttons[NSLocalizedString("Today", comment: "")].tap()
         let expectations = expectation(description: "AsyncExpectations")
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()

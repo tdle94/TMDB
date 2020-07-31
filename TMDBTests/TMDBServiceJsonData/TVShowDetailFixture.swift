@@ -1641,6 +1641,22 @@ let tvShowDetailFixture = Data("""
             "url": "https://www.themoviedb.org/review/5e4d1abf1e9225001dc8aab5"
           }
         ],
+        "created_by": [
+          {
+            "id": 9813,
+            "credit_id": "5256c8c219c2956ff604858a",
+            "name": "David Benioff",
+            "gender": 2,
+            "profile_path": "/xvNN5huL0X8yJ7h3IZfGG4O2zBD.jpg"
+          },
+          {
+            "id": 228068,
+            "credit_id": "552e611e9251413fea000901",
+            "name": "D. B. Weiss",
+            "gender": 2,
+            "profile_path": null
+          }
+        ],
         "total_pages": 1,
         "total_results": 6
       }

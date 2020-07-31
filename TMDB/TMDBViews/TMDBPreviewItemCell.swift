@@ -93,6 +93,9 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             imageView.sd_setImage(with: url)
         } else if let item = item as? Images {
             getImage(from: item.filePath)
+        } else if let item = item as? CreatedBy {
+            title.text = item.name
+            getImage(from: item.profilePath)
         }
     }
 }

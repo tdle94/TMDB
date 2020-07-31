@@ -10,12 +10,12 @@ import Foundation
 
 extension TMDBServices: TMDBPeopleService {
     func getPopularPeople(page: Int, completion: @escaping (Result<PeopleResult, Error>) -> Void) {
-        let request = urlRequestBuilder.getPopularPeopleURLRequest(page: page, language: NSLocale.preferredLanguages.first)
+        let request = urlRequestBuilder.getPopularPeopleURLRequest(page: page, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: PeopleResult.self, completion: completion)
     }
 
     func getPersonDetail(id: Int, completion: @escaping (Result<People, Error>) -> Void) {
-        let request = urlRequestBuilder.getPersonDetailURLRequest(id: id, language: NSLocale.preferredLanguages.first)
+        let request = urlRequestBuilder.getPersonDetailURLRequest(id: id, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: People.self, completion: completion)
     }
 }

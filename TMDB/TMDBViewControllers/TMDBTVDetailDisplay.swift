@@ -73,9 +73,17 @@ class TMDBTVDetailDisplay {
     }
 
     func displayAvailableLanguageLabel(tvShow: TVShow) {
-        let languages = Array(tvShow.languages).map { "\(Constant.languageCode[$0] ?? "")" }.joined(separator: ", ")
-        if languages != "" {
-            tvDetailVC?.availableLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Available Languages", comment: "") + ": ", subTitle: languages)
+        let languagesCode = userSetting.languagesCode
+        var languages: [String] = []
+
+        for languageCode in tvShow.languages {
+            if let language = languagesCode.first(where: { $0.iso6391 == languageCode })?.name {
+                languages.append(language)
+            }
+        }
+        
+        if languages.joined(separator: ", ") != "" {
+            tvDetailVC?.availableLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Available Languages", comment: "") + ": ", subTitle: languages.joined(separator: ", "))
         }
     }
     
@@ -233,7 +241,7 @@ class TMDBTVDetailDisplay {
     }
 
     private func displayOriginalLanguageLabel(tvShow: TVShow) {
-        tvDetailVC?.originalLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Original Language", comment: "") + ": ", subTitle: Constant.languageCode[tvShow.originalLanguage] ?? "")
+        tvDetailVC?.originalLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Original Language", comment: "") + ": ", subTitle: userSetting.languagesCode.first(where: { $0.iso6391 == tvShow.originalLanguage })?.name ?? "")
     }
 
     private func displayNumberOfSeason(tvShow: TVShow) {

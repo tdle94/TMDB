@@ -1137,6 +1137,7 @@
                         <outlet property="posterImageView" destination="qpj-MJ-CdV" id="5gB-wV-USx"/>
                         <outlet property="reviewButton" destination="bwT-Nq-OtB" id="Sc6-KS-FE9"/>
                         <outlet property="runtimeLabel" destination="Zon-H4-Zoo" id="sO6-oJ-pMU"/>
+                        <outlet property="scrollView" destination="Zzz-ez-fZ5" id="M36-XJ-3ye"/>
                         <outlet property="statusLabel" destination="biu-bT-k3G" id="Es4-d4-PbN"/>
                         <outlet property="titleLabel" destination="gJb-Th-aUA" id="Ccs-2X-gFZ"/>
                         <outlet property="tvShowCreditCollectionView" destination="fPS-st-s2B" id="Jwb-Uh-GAd"/>

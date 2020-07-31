@@ -17,55 +17,55 @@ class TestURLRequestBuilder: XCTestCase {
     // MARK: - people
     func testPopularPeopleURL() {
         let matchRequest = urlRequestBuilder.getPopularPeopleURLRequest(page: 1, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/person/popular?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/person/popular?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     // MARK: - tv show
     func testPopularOnTVURL() {
         let matchRequest = urlRequestBuilder.getPopularTVURLRequest(page: 1, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/tv/popular?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/tv/popular?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     // MARK: - movie
     func testPopularMovieURL() {
         var matchRequest = urlRequestBuilder.getPopularMovieURLRequest(page: 1, language: nil, region: nil)
-        var urlMatcher = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        var urlMatcher = "https://api.themoviedb.org/3/movie/popular?page=1&language=en&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
         
         matchRequest = urlRequestBuilder.getPopularMovieURLRequest(page: 1, language: nil, region: "US")
-        urlMatcher = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        urlMatcher = "https://api.themoviedb.org/3/movie/popular?page=1&language=en&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
 
     func testMovieDetailURLWithDefaultLanguage() {
         let matchRequest = urlRequestBuilder.getMovieDetailURLRequest(id: 3, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/movie/3?language=en-US&append_to_response=keywords,videos,similar,recommendations,credits,reviews,release_dates&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3?language=en&append_to_response=keywords,videos,similar,recommendations,credits,reviews,release_dates,images&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testMovieDetailURLWithGermanLanguage() {
         let matchRequest = urlRequestBuilder.getMovieDetailURLRequest(id: 3, language: "de-US")
-        let urlMatcher = "https://api.themoviedb.org/3/movie/3?language=de-US&append_to_response=keywords,videos,similar,recommendations,credits,reviews,release_dates&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3?language=de-US&append_to_response=keywords,videos,similar,recommendations,credits,reviews,release_dates,images&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testSimilarMovieURLWithNilLanguage() {
         let matchRequest = urlRequestBuilder.getSimilarMoviesURLRequest(from: 3, page: 1, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/movie/3/similar?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3/similar?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testSimilarMovieURLWithEnglishLanguage() {
-        let matchRequest = urlRequestBuilder.getSimilarMoviesURLRequest(from: 3, page: 1, language: "en-US")
-        let urlMatcher = "https://api.themoviedb.org/3/movie/3/similar?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let matchRequest = urlRequestBuilder.getSimilarMoviesURLRequest(from: 3, page: 1, language: "en")
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3/similar?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testRecommendMovieURLWithDefaultLanguage() {
         let matchRequest = urlRequestBuilder.getRecommendMoviesURLRequest(from: 3, page: 1, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/movie/3/recommendations?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/movie/3/recommendations?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
@@ -138,37 +138,31 @@ class TestURLRequestBuilder: XCTestCase {
     
     func testMultiSearchURL() {
         let matchRequest = urlRequestBuilder.getMultiSearchURLRequest(query: "T", language: nil, region: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/search/multi?page=1&language=en-US&query=T&region=US&include_adult=true&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/search/multi?page=1&language=en&query=T&region=US&include_adult=true&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testPersonDetailURL() {
         let matchRequest = urlRequestBuilder.getPersonDetailURLRequest(id: 3, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/person/3?language=en-US&append_to_response=movie_credits,tv_credits,images&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
-        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
-    }
-    
-    func testMovieImageURL() {
-        let matchRequest = urlRequestBuilder.getMovieImages(from: 3)
-        let urlMatcher = "https://api.themoviedb.org/3/movie/3/images?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/person/3?language=en&append_to_response=movie_credits,tv_credits,images&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testTVShowDetailURL() {
         let matchRequest = urlRequestBuilder.getTVShowDetailURLRequest(id: 3, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/tv/3?language=en-US&append_to_response=keywords,similar,recommendations,credits,reviews,videos&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/tv/3?language=en&append_to_response=keywords,similar,recommendations,credits,reviews,videos,images&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testSimilarTVShowURL() {
         let matchRequest = urlRequestBuilder.getSimilarTVShowsURLRequest(from: 3, page: 1, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/tv/3/similar?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/tv/3/similar?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     
     func testRecommendTVShowURL() {
         let matchRequest = urlRequestBuilder.getRecommendTVShowURLRequest(from: 3, page: 1, language: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/tv/3/recommendations?page=1&language=en-US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/tv/3/recommendations?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
 }

@@ -40,7 +40,7 @@ class TMDBRepositoryTests: XCTestCase {
     // no movie detail in realm, get from calling service
     func testGetMovieDetailCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -51,7 +51,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub.getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)).thenReturn(request)
+            when(stub.getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
@@ -68,7 +68,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
         verify(localDataSource).saveMovie(any())
     }
     
@@ -77,7 +77,7 @@ class TMDBRepositoryTests: XCTestCase {
         let expectation = self.expectation(description: "")
         let movie = Movie()
         movie.region = NSLocale.current.regionCode
-        movie.language = NSLocale.preferredLanguages.first
+        movie.language = NSLocale.current.languageCode
 
         /*GIVEN*/
         stub(localDataSource) { stub in
@@ -99,7 +99,7 @@ class TMDBRepositoryTests: XCTestCase {
     // movie detail in realm with different region and language. get from calling service
     func testGetMovieDetailCase3() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let movie = Movie()
         movie.region = ""
@@ -118,7 +118,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub.getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)).thenReturn(request)
+            when(stub.getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)).thenReturn(request)
         }
         
         /*WHEN*/
@@ -130,7 +130,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
         verify(localDataSource).getMovie(id: 3)
         verify(localDataSource).saveMovie(any())
     }
@@ -138,7 +138,7 @@ class TMDBRepositoryTests: XCTestCase {
     // no movie detail in realm, get from calling service with invalid id, service error
     func testGetMovieDetailCase4() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 1, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 1, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -149,7 +149,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub.getMovieDetailURLRequest(id: 1, language: NSLocale.preferredLanguages.first)).thenReturn(request)
+            when(stub.getMovieDetailURLRequest(id: 1, language: NSLocale.current.languageCode)).thenReturn(request)
         }
 
         stub(localDataSource) { stub in
@@ -164,7 +164,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMovieDetailURLRequest(id: 1, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getMovieDetailURLRequest(id: 1, language: NSLocale.current.languageCode)
     }
 
     // MARK: - popular movie
@@ -172,7 +172,7 @@ class TMDBRepositoryTests: XCTestCase {
     // sucess
     func testPopularMovieCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -195,13 +195,13 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
     }
     
     // failure
     func testPopularMovieCase2() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        let request = TMDBURLRequestBuilder().getPopularMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -223,7 +223,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        verify(requestBuilder).getPopularMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
     }
 
     // MARK: - popular TV Shows
@@ -231,7 +231,7 @@ class TMDBRepositoryTests: XCTestCase {
     // success
     func testPopularTVShowsCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -242,7 +242,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getPopularTVURLRequest(page: 1, language: NSLocale.current.languageCode).thenReturn(request)
         }
 
         /*WHEN*/
@@ -254,13 +254,13 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.current.languageCode)
     }
     
     // failure
     func testPopularTVShowsCase2() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getPopularTVURLRequest(page: 1, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -271,7 +271,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getPopularTVURLRequest(page: 1, language: NSLocale.current.languageCode).thenReturn(request)
         }
 
 
@@ -283,7 +283,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getPopularTVURLRequest(page: 1, language: NSLocale.current.languageCode)
     }
 
     // MARK: - popular people
@@ -291,7 +291,7 @@ class TMDBRepositoryTests: XCTestCase {
     // success
     func testPopularPeopleCase1() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -302,7 +302,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getPopularPeopleURLRequest(page: 1, language: NSLocale.current.languageCode).thenReturn(request)
         }
 
         /*WHEN*/
@@ -314,13 +314,13 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PeopleResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.current.languageCode)
     }
 
     // failure
     func testPopularPeopleCase2() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getPopularPeopleURLRequest(page: 1, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -331,7 +331,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getPopularPeopleURLRequest(page: 1, language: NSLocale.current.languageCode).thenReturn(request)
         }
 
 
@@ -343,7 +343,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(PeopleResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getPopularPeopleURLRequest(page: 1, language: NSLocale.current.languageCode)
     }
 
     // MARK: - trending
@@ -442,7 +442,7 @@ class TMDBRepositoryTests: XCTestCase {
 
     func testGetSimilarMovieInRealm() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let movie = Movie()
         let similarMovie = MovieResult()
@@ -461,7 +461,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.current.languageCode).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
@@ -477,7 +477,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session, never()).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
-        verify(requestBuilder, never()).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder, never()).getSimilarMoviesURLRequest(from: 3, page: 1, language: NSLocale.current.languageCode)
         verify(localDataSource).getMovie(id: 3)
     }
     
@@ -552,7 +552,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     func testGetSimilarMovieNewPage() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let movie = Movie()
         let similarMovie = MovieResult()
@@ -571,7 +571,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
@@ -588,7 +588,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getSimilarMoviesURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
         verify(localDataSource).getMovie(id: 3)
         verify(localDataSource).saveSimilarMovie(any(), to: any())
     }
@@ -598,7 +598,7 @@ class TMDBRepositoryTests: XCTestCase {
     // no movie in realm, service call, success
     func testGetRecommendMovieInRealm() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let movie = Movie()
         let recommendation = MovieResult()
@@ -617,7 +617,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.current.languageCode).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
@@ -633,7 +633,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session, never()).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
-        verify(requestBuilder, never()).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder, never()).getRecommendMoviesURLRequest(from: 3, page: 1, language: NSLocale.current.languageCode)
         verify(localDataSource).getMovie(id: 3)
     }
 
@@ -685,7 +685,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     func testRecommendMovieNewPage() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
             
         let movieInRealm = Movie()
@@ -712,7 +712,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode).thenReturn(request)
         }
             
         stub(localDataSource) { stub in
@@ -728,7 +728,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getRecommendMoviesURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
         verify(localDataSource).getMovie(id: 3)
         verify(localDataSource).saveRecommendMovie(any(), to: any())
     }
@@ -871,7 +871,7 @@ class TMDBRepositoryTests: XCTestCase {
     // MARK: - multisearch
     func testGetMultiSearch() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMultiSearchURLRequest(query: "T", language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        let request = TMDBURLRequestBuilder().getMultiSearchURLRequest(query: "T", language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         /*GIVEN*/
         stub(session) { stub in
@@ -881,7 +881,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(requestBuilder) { stub in
-            when(stub).getMultiSearchURLRequest(query: "T", language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode, page: 1).thenReturn(request)
+            when(stub).getMultiSearchURLRequest(query: "T", language: NSLocale.current.languageCode, region: NSLocale.current.regionCode, page: 1).thenReturn(request)
         }
         
         /*WHEN*/
@@ -893,7 +893,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MultiSearchResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getMultiSearchURLRequest(query: "T", language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode, page: 1)
+        verify(requestBuilder).getMultiSearchURLRequest(query: "T", language: NSLocale.current.languageCode, region: NSLocale.current.regionCode, page: 1)
     }
     
     // MARK: - tv credits
@@ -971,7 +971,7 @@ class TMDBRepositoryTests: XCTestCase {
         let person = People()
         person.id = 3
         person.region = NSLocale.current.regionCode
-        person.language = NSLocale.preferredLanguages.first
+        person.language = NSLocale.current.languageCode
 
         /*GIVEN*/
         stub(localDataSource) { stub in
@@ -1028,70 +1028,6 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getPersonDetailURLRequest(id: 3, language: optionalLanguage)
         verify(session).send(request: requestMatcher, responseType: any(People.Type.self), completion: anyClosure())
     }
-    
-    // MARK: - movie images
-    
-    func testGetMovieImageNotInRealm() {
-        let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getMovieImages(from: 3)
-        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-        let movieImageMatch: ParameterMatcher<MovieImages> = ParameterMatcher()
-
-        /*GIVEN*/
-        stub(localDataSource) { stub in
-            when(stub).getMovie(id: 3).thenReturn(nil)
-            when(stub).saveMovieImages(movieImageMatch, to: 3).thenDoNothing()
-        }
-        
-        stub(requestBuilder) { stub in
-            when(stub).getMovieImages(from: 3).thenReturn(request)
-        }
-        
-        stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(MovieImages.Type.self), completion: anyClosure()).then { implementation in
-                implementation.2(.success(MovieImages()))
-            }
-        }
-        
-        /*WHEN*/
-        repository.getMovieImages(from: 3) { result in
-            XCTAssertNoThrow(try! result.get())
-            expectation.fulfill()
-        }
-    
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getMovie(id: 3)
-        verify(localDataSource).saveMovieImages(movieImageMatch, to: 3)
-        verify(requestBuilder).getMovieImages(from: 3)
-        verify(session).send(request: requestMatcher, responseType: any(MovieImages.Type.self), completion: anyClosure())
-    }
-    
-    func testGetMovieImageInRealm() {
-        let expectation = self.expectation(description: "")
-        let movie = Movie()
-        movie.id = 3
-        movie.movieImages = MovieImages()
-
-        /*GIVEN*/
-        stub(localDataSource) { stub in
-            when(stub).getMovie(id: 3).thenReturn(movie)
-        }
-        
-        
-        /*WHEN*/
-        repository.getMovieImages(from: 3) { result in
-            XCTAssertNoThrow(try! result.get())
-            expectation.fulfill()
-        }
-        
-        let movieImages = repository.getMovieImages(from: 3)
-        XCTAssertNotNil(movieImages)
-        
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource, times(2)).getMovie(id: 3)
-    }
 
     // MARK: - person profile iamges
     func testGetPersonProfileImages() {
@@ -1131,7 +1067,7 @@ class TMDBRepositoryTests: XCTestCase {
     // MARK: - tv show detail
     func testGetTVShowNotInRealm() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let tvshow = TVShow()
 
@@ -1148,7 +1084,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(requestBuilder) { stub in
-            when(stub).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode).thenReturn(request)
         }
         /*WHEN*/
         repository.getTVShowDetail(from: 3) { result in
@@ -1160,12 +1096,12 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getTVShow(id: 3)
         verify(session).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure())
-        verify(requestBuilder).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
     }
     
     func testGetTVShowInRealm() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let tvshow = TVShow()
         tvshow.id = 3
@@ -1187,7 +1123,7 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getTVShow(id: 3)
         verify(session, never()).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure())
-        verify(requestBuilder, never()).getTVShowDetailURLRequest(id: 3, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder, never()).getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
     }
     
     // MARK: - tv show keywords
@@ -1282,7 +1218,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     func testGetSimilarTVShowNewPage() {
         let expectaion = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let similarTVShow = TVShowResult()
         let tvShow = TVShow()
@@ -1300,7 +1236,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode).thenReturn(request)
         }
 
         stub(session) { stub in
@@ -1320,7 +1256,7 @@ class TMDBRepositoryTests: XCTestCase {
         verify(localDataSource).getTVShow(id: 3)
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
         verify(localDataSource).saveSimilarTVShow(any(), to: 3)
-        verify(requestBuilder).getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getSimilarTVShowsURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
     }
     
     // MARK: - get recommend tv show
@@ -1422,7 +1358,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     func testGetRecommendTVShowNewPage() {
         let expectaion = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        let request = TMDBURLRequestBuilder().getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let tvShow = TVShow()
         let recommendTVShow = TVShowResult()
@@ -1440,7 +1376,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(requestBuilder) { stub in
-            when(stub).getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first).thenReturn(request)
+            when(stub).getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode).thenReturn(request)
         }
         
         stub(session) { stub in
@@ -1458,7 +1394,7 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getTVShow(id: 3)
         verify(localDataSource).saveRecommendTVShow(any(), to: 3)
-        verify(requestBuilder).getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.preferredLanguages.first)
+        verify(requestBuilder).getRecommendTVShowURLRequest(from: 3, page: 2, language: NSLocale.current.languageCode)
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
     }
 

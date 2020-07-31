@@ -291,17 +291,6 @@ class TMDBMovieDetailViewController: UIViewController {
             switch result {
             case .success(let movie):
                 self.movieDetail.displayMovieDetail(movie: movie)
-                
-                // get movie images. Since movie image with country code does not return all images
-                self.repository.getMovieImages(from: id) { result in
-                    switch result {
-                    case .success(let images):
-                        self.movieDetail.displayMovieBackdropImages(images)
-                    case .failure(let error):
-                        debugPrint(error.localizedDescription)
-                    }
-                }
-
             case .failure(let error):
                 self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)

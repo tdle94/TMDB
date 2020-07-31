@@ -37,7 +37,7 @@ extension TMDBRepository: TMDBPeopleRepository {
         if
             let person = localDataSource.getPerson(id: id),
             person.region == NSLocale.current.regionCode,
-            person.language == NSLocale.preferredLanguages.first {
+            person.language == NSLocale.current.languageCode {
 
             completion(.success(person))
             return
@@ -178,7 +178,7 @@ extension TMDBRepository: TMDBTVShowRepository {
         if
             let tvShow = localDataSource.getTVShow(id: tvShowId),
             tvShow.region == NSLocale.current.regionCode,
-            tvShow.language == NSLocale.preferredLanguages.first {
+            tvShow.language == NSLocale.current.languageCode {
             completion(.success(tvShow))
             return
         }
@@ -243,29 +243,6 @@ extension TMDBRepository: TMDBMovieRepository {
         return localDataSource.getMovie(id: movieId)?.releaseDates
     }
 
-    func getMovieImages(from movieId: Int) -> MovieImages? {
-        return localDataSource.getMovie(id: movieId)?.movieImages
-    }
-
-    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void) {
-        if let movieImages = localDataSource.getMovie(id: movieId)?.movieImages {
-            completion(.success(movieImages))
-            return
-        }
-        
-        services.getMovieImages(from: movieId) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let movieImages):
-                    self.localDataSource.saveMovieImages(movieImages, to: movieId)
-                    completion(.success(movieImages))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
     func getMovieKeywords(from movieId: Int) -> [Keyword] {
         guard let keywords = localDataSource.getMovie(id: movieId)?.keywords?.keywords else {
             return []
@@ -291,7 +268,7 @@ extension TMDBRepository: TMDBMovieRepository {
         if
             let movie = localDataSource.getMovie(id: id),
             movie.region == NSLocale.current.regionCode,
-            movie.language == NSLocale.preferredLanguages.first {
+            movie.language == NSLocale.current.languageCode {
 
             completion(.success(movie))
             return

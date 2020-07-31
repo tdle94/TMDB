@@ -42,6 +42,7 @@ class TMDBTVDetailDisplay {
         guard !tvShow.createdBy.isEmpty else {
             snapshot.deleteSections([.Creator])
             tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
+            tvDetailVC?.creatorCollectionViewHeightConstraint.constant = 0
             return
         }
 

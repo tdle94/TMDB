@@ -1102,6 +1102,9 @@
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="ncz-Me-Db0"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="Hlg-tl-bzb"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="TVShowDetailScrollView"/>
+                                </userDefinedRuntimeAttributes>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>

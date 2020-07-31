@@ -91,7 +91,7 @@ class TMDBMovieDetailDisplay {
 
     func displayOriginalLanguage(movie: Movie) {
         movieDetailVC?.originalLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Original Language", comment: "") + ": ",
-                                                                                   subTitle: Constant.languageCode[movie.originalLanguage] ?? "None")
+                                                                                   subTitle: userSetting.languagesCode.first(where: { $0.iso6391 == movie.originalLanguage })?.name ?? "None")
     }
 
     func displayBudget(movie: Movie) {

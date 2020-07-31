@@ -49,4 +49,12 @@ class TMDBUserSettingTests: XCTestCase {
     func testGetYoutubeVideoURL() {
         XCTAssertNotNil(setting.getYoutubeVideoURL(key: "key"))
     }
+    
+    func testGetLanguageCode() {
+        XCTAssertEqual(setting.languagesCode.count, 187)
+    }
+    
+    func testGetCountryCode() {
+        XCTAssertEqual(setting.countriesCode.count, 247)
+    }
 }

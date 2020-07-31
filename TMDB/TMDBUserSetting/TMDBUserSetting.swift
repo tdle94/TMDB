@@ -11,16 +11,31 @@ import Foundation
 protocol TMDBUserSettingProtocol {
     var imageConfig: ImageConfigResult { get }
     var userDefault: UserDefaults { get set }
+    var countriesCode: [CountryCode] { get }
+    var languagesCode: [LanguageCode] { get }
     func getImageURL(from path: String) -> URL?
     func getYoutubeImageURL(key: String) -> URL?
     func getYoutubeVideoURL(key: String) -> URL?
 }
 
 struct TMDBUserSetting: TMDBUserSettingProtocol {
+    
     var userDefault: UserDefaults = UserDefaults.standard
 
     var imageConfig: ImageConfigResult {
         return ImageConfigResult()
+    }
+
+    var countriesCode: [CountryCode] {
+        let path = Bundle.main.path(forResource: "CountryCode", ofType: "json")!
+        let jsonData = try! NSData(contentsOfFile: path, options: .dataReadingMapped)
+        return try! JSONDecoder().decode([CountryCode].self, from: jsonData as Data)
+    }
+
+    var languagesCode: [LanguageCode] {
+        let path = Bundle.main.path(forResource: "LanguageCode", ofType: "json")!
+        let jsonData = try! NSData(contentsOfFile: path, options: .dataReadingMapped)
+        return try! JSONDecoder().decode([LanguageCode].self, from: jsonData as Data)
     }
 
     func getImageURL(from path: String) -> URL? {

@@ -17,6 +17,7 @@ class TMDBImageCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
+        imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         imageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -50,7 +51,7 @@ class TMDBBackdropImageCell: TMDBImageCell {
             return
         }
 
-        imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"),
+        imageView.sd_setImage(with: url, placeholderImage: nil,
                               options: [SDWebImageOptions.continueInBackground, SDWebImageOptions.avoidAutoSetImage]) { newImage, _, _, _ in
             self.imageView.image = newImage?.sd_resizedImage(with: self.bounds.size, scaleMode: .aspectFill)
         }

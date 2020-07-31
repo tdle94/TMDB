@@ -12,6 +12,8 @@ import UIKit
 class TMDBCompleteReleaseDateTableViewController: UITableViewController {
     var movieId: Int?
     
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+
     var repository: TMDBRepository!
     
     lazy var releaseDate: ReleaseDateResults? = {
@@ -35,10 +37,17 @@ class TMDBCompleteReleaseDateTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.releaseDateCell, for: indexPath)
         let countryCode = releaseDate?.results[indexPath.row].iso31661 ?? ""
-        let countryName = Constant.countryName[countryCode] ?? ""
+        let countryName = userSetting.countriesCode.first(where: { $0.iso31661 == countryCode })?.name ?? ""
+        let certification = releaseDate?.results[indexPath.row].releaseDates.first?.certification ?? ""
+        let certificateLabel = UILabel()
+        certificateLabel.font = UIFont(name: certificateLabel.font.fontName, size: 12)
+        certificateLabel.text = certification != "" ? "Rated \(certification)" : ""
+        certificateLabel.sizeToFit()
+
         cell.imageView?.image = UIImage(named: "CountryFlags/\(countryName)")?.sd_roundedCornerImage(withRadius: 5, corners: .allCorners, borderWidth: 0, borderColor: nil)?.sd_resizedImage(with: CGSize(width: 30, height: 30), scaleMode: .aspectFill)
-        cell.textLabel?.text = String(releaseDate?.results[indexPath.row].releaseDates.first?.releaseDate.split(separator: "T").first ?? "")
-        cell.detailTextLabel?.text = releaseDate?.results[indexPath.row].releaseDates.first?.certification
+        cell.textLabel?.text = countryName
+        cell.detailTextLabel?.text = String(releaseDate?.results[indexPath.row].releaseDates.first?.releaseDate.split(separator: "T").first ?? "")
+        cell.accessoryView = certificateLabel
         return cell
     }
 }

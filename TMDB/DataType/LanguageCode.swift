@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+struct LanguageCode: Decodable {
+    var iso6391: String
+    var name: String
+
+    enum CodingKeys: String, CodingKey {
+        case iso6391 = "iso_639_1"
+        case name = "english_name"
+    }
+}

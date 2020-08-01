@@ -20,4 +20,5 @@ protocol TMDBMovieRepository {
     func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void)
     func getMovieImages(from movieId: Int) -> MovieImages?
     func getMovieReleaseDates(from movieId: Int) -> ReleaseDateResults?
+    func refreshMovie(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
 }

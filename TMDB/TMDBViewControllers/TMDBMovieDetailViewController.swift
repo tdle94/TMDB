@@ -69,7 +69,7 @@ class TMDBMovieDetailViewController: UIViewController {
             scrollView.refreshControl = UIRefreshControl()
             scrollView.refreshControl?.tintColor = Constant.Color.primaryColor
             scrollView.refreshControl?.attributedTitle = NSAttributedString(string: "Refresh")
-            scrollView.refreshControl?.addTarget(self, action: #selector(getMovieDetail), for: .valueChanged)
+            scrollView.refreshControl?.addTarget(self, action: #selector(refreshMovieDetail), for: .valueChanged)
         }
     }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -284,12 +284,12 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
 
-    @objc func getMovieDetail() {
+    func getMovieDetail() {
         guard let id = movieId else { return }
         repository.getMovieDetail(id: id) { result in
-            self.scrollView.refreshControl?.endRefreshing()
             switch result {
             case .success(let movie):
+                self.loadingView.removeFromSuperview()
                 self.movieDetail.displayMovieDetail(movie: movie)
                 
                 // get movie images. Since movie image with country code does not return all images
@@ -304,6 +304,19 @@ class TMDBMovieDetailViewController: UIViewController {
 
             case .failure(let error):
                 self.loadingView.showError(true)
+                debugPrint(error.localizedDescription)
+            }
+        }
+    }
+    
+    @objc func refreshMovieDetail() {
+        guard let id = movieId else { return }
+        repository.refreshMovie(id: id) { result in
+            self.scrollView.refreshControl?.endRefreshing()
+            switch result {
+            case .success(let movie):
+                self.movieDetail.displayMovieDetail(movie: movie)
+            case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
         }

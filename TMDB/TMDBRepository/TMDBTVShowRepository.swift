@@ -17,4 +17,5 @@ protocol TMDBTVShowRepository {
     func getTVShowCast(from tvShowId: Int) -> [Cast]
     func getTVShowCrew(from tvShowId: Int) -> [Crew]
     func getTVShowReviews(from tvShowId: Int) -> [Review]
+    func refreshTVShow(id: Int, completion: @escaping (Result<TVShow, Error>) -> Void)
 }

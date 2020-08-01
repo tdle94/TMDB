@@ -61,6 +61,15 @@ class TMDBTVDetailViewController: UIViewController {
     var tvShowCreatorDataSrouce: UICollectionViewDiffableDataSource<TVShowCreator, CreatedBy>!
 
     // MARK: - ui
+    @IBOutlet weak var scrollView: UIScrollView! {
+        didSet {
+            scrollView.refreshControl = UIRefreshControl()
+            scrollView.refreshControl?.tintColor = Constant.Color.primaryColor
+            scrollView.refreshControl?.attributedTitle = NSAttributedString(string: "Refresh")
+            scrollView.refreshControl?.addTarget(self, action: #selector(refreshTVShowDetail), for: .valueChanged)
+        }
+    }
+
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     weak var creditHeaderView: TMDBCreditHeaderView?
     weak var addtionalHeaderView: TMDBAdditionalHeaderView?
@@ -218,6 +227,20 @@ class TMDBTVDetailViewController: UIViewController {
     }
 
     // MARK: - service
+
+    @objc func refreshTVShowDetail() {
+        guard let id = tvId else { return }
+        repository.refreshTVShow(id: id) { result in
+            self.scrollView.refreshControl?.endRefreshing()
+            switch result {
+            case .success(let tvShow):
+                self.tvDetailDisplay.displayTVShowDetail(tvShow)
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+            }
+        }
+    }
+
     func getTVShowDetail() {
         guard let id = tvId else { return }
         repository.getTVShowDetail(from: id) { result in

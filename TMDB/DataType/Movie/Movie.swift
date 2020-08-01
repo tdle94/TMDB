@@ -97,6 +97,12 @@ class Movie: Object, Decodable {
         reviews = try container.decodeIfPresent(ReviewResult.self, forKey: .reviews)
         releaseDates = try container.decodeIfPresent(ReleaseDateResults.self, forKey: .releaseDates)
         movieImages = try container.decodeIfPresent(ImageResult.self, forKey: .movieImages)
+        
+        if movieImages != nil {
+            let additionalImage = Images()
+            additionalImage.filePath = backdropPath ?? ""
+            movieImages?.backdrops.append(additionalImage)
+        }
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genres)

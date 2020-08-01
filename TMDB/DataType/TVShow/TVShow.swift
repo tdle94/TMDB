@@ -105,6 +105,12 @@ class TVShow: Object, Decodable {
         videos = try container.decodeIfPresent(VideoResult.self, forKey: .videos)
         images = try container.decodeIfPresent(ImageResult.self, forKey: .images)
         originCountry.append(objectsIn: try container.decode(List<String>.self, forKey: .originCountry))
+        
+        if images != nil {
+            let additionalImage = Images()
+            additionalImage.filePath = backdropPath ?? ""
+            images?.backdrops.append(additionalImage)
+        }
 
         if let seasons = try container.decodeIfPresent(List<Season>.self, forKey: .seasons) {
             self.seasons.append(objectsIn: seasons)

@@ -100,6 +100,25 @@ extension TMDBRepository: TMDBTrendingRepository {
 }
 
 extension TMDBRepository: TMDBTVShowRepository {
+    func getTVShowSeasonDetail(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<Season, Error>) -> Void) {
+        if let season = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber) {
+            completion(.success(season))
+            return
+        }
+
+        services.getTVShowSeasonDetail(from: tvShowId, seasonNumber: seasonNumber) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let season):
+                    self.localDataSource.saveTVShowSeason(season, to: tvShowId)
+                    completion(.success(season))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
     func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
         guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
             completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))

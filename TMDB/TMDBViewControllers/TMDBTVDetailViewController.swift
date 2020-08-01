@@ -48,6 +48,10 @@ class TMDBTVDetailViewController: UIViewController {
         case Video = "Video"
     }
 
+    enum TVShowBackdropImage: String, CaseIterable {
+        case Backdrop = "Backdrop"
+    }
+
     var movieNetworkImageDataSource: UICollectionViewDiffableDataSource<NetworkMovieImage, Networks>!
 
     var tvShowSeasonDataSource: UITableViewDiffableDataSource<TVShowSeason, Season>!
@@ -60,16 +64,18 @@ class TMDBTVDetailViewController: UIViewController {
 
     var tvShowCreatorDataSrouce: UICollectionViewDiffableDataSource<TVShowCreator, CreatedBy>!
 
+    var tvShowBackdropImageDataSource: UICollectionViewDiffableDataSource<TVShowBackdropImage, Images>!
+
     // MARK: - ui
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.refreshControl = UIRefreshControl()
             scrollView.refreshControl?.tintColor = Constant.Color.primaryColor
             scrollView.refreshControl?.attributedTitle = NSAttributedString(string: "Refresh")
+
             scrollView.refreshControl?.addTarget(self, action: #selector(refreshTVShowDetail), for: .valueChanged)
         }
     }
-
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     weak var creditHeaderView: TMDBCreditHeaderView?
     weak var addtionalHeaderView: TMDBAdditionalHeaderView?
@@ -84,7 +90,6 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var tvShowCreditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var overviewDetailLabel: UILabel!
-    @IBOutlet weak var backdropImageCollectionView: UICollectionView!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var genresLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
@@ -95,6 +100,21 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var runtimeLabel: UILabel!
     @IBOutlet weak var keywordCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
+        didSet {
+            backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
+            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            tvShowBackdropImageDataSource = UICollectionViewDiffableDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
+                cell?.configure(image: item)
+                return cell
+            }
+
+            var snapshot = tvShowBackdropImageDataSource.snapshot()
+            snapshot.appendSections([.Backdrop])
+            tvShowBackdropImageDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
             videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
@@ -244,6 +264,7 @@ class TMDBTVDetailViewController: UIViewController {
     func getTVShowDetail() {
         guard let id = tvId else { return }
         repository.getTVShowDetail(from: id) { result in
+            self.scrollView.refreshControl?.endRefreshing()
             switch result {
             case .success(let tvShow):
                 self.loadingView.removeFromSuperview()

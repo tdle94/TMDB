@@ -15,7 +15,7 @@ protocol TMDBLocalDataSourceProtocol {
     func saveMovie(_ movie: Movie)
     func saveSimilarMovie(_ similarMovie: List<Movie>, to movieId: Int)
     func saveRecommendMovie(_ recommendMovie: List<Movie>, to movieId: Int)
-    func saveMovieImages(_ movieImages: MovieImages, to movieId: Int)
+    func saveMovieImages(_ movieImages: ImageResult, to movieId: Int)
     // tv show
     func getTVShow(id: Int) -> TVShow?
     func saveTVShow(_ tvShow: TVShow)
@@ -40,7 +40,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     // MARK: - movie detail
 
-    func saveMovieImages(_ movieImages: MovieImages, to movieId: Int) {
+    func saveMovieImages(_ movieImages: ImageResult, to movieId: Int) {
         realm.beginWrite()
         getMovie(id: movieId)?.movieImages = movieImages
         try? realm.commitWrite()
@@ -63,7 +63,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
             }
         }
         movie.region = NSLocale.current.regionCode
-        movie.language = NSLocale.preferredLanguages.first
+        movie.language = NSLocale.current.languageCode
         realm.add(movie, update: .modified)
         try? realm.commitWrite()
     }
@@ -102,7 +102,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
             }
         }
         tvShow.region = NSLocale.current.regionCode
-        tvShow.language = NSLocale.preferredLanguages.first
+        tvShow.language = NSLocale.current.languageCode
         realm.add(tvShow, update: .modified)
         try? realm.commitWrite()
     }
@@ -141,7 +141,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
             }
         }
         person.region = NSLocale.current.regionCode
-        person.language = NSLocale.preferredLanguages.first
+        person.language = NSLocale.current.languageCode
         realm.add(person, update: .modified)
         try? realm.commitWrite()
     }

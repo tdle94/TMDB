@@ -10,22 +10,22 @@ import Foundation
 
 extension TMDBServices: TMDBMovieService {
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
-        let request = urlRequestBuilder.getMovieDetailURLRequest(id: id, language: NSLocale.preferredLanguages.first)
+        let request = urlRequestBuilder.getMovieDetailURLRequest(id: id, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: Movie.self, completion: completion)
     }
 
     func getPopularMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        let request = urlRequestBuilder.getPopularMovieURLRequest(page: page, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode)
+        let request = urlRequestBuilder.getPopularMovieURLRequest(page: page, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
         session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
 
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        let request = urlRequestBuilder.getSimilarMoviesURLRequest(from: movieId, page: page, language: NSLocale.preferredLanguages.first)
+        let request = urlRequestBuilder.getSimilarMoviesURLRequest(from: movieId, page: page, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
 
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        let request = urlRequestBuilder.getRecommendMoviesURLRequest(from: movieId, page: page, language: NSLocale.preferredLanguages.first)
+        let request = urlRequestBuilder.getRecommendMoviesURLRequest(from: movieId, page: page, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
 
@@ -37,10 +37,5 @@ extension TMDBServices: TMDBMovieService {
     func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void) {
         let request = urlRequestBuilder.getMovieReviewURLRequest(from: movieId, page: page)
         session.send(request: request, responseType: ReviewResult.self, completion: completion)
-    }
-
-    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void) {
-        let request = urlRequestBuilder.getMovieImages(from: movieId)
-        session.send(request: request, responseType: MovieImages.self, completion: completion)
     }
 }

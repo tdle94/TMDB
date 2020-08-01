@@ -105,7 +105,7 @@ class TVShow: Object, Decodable {
         videos = try container.decodeIfPresent(VideoResult.self, forKey: .videos)
         images = try container.decodeIfPresent(ImageResult.self, forKey: .images)
         originCountry.append(objectsIn: try container.decode(List<String>.self, forKey: .originCountry))
-        
+    
         if images != nil {
             let additionalImage = Images()
             additionalImage.filePath = backdropPath ?? ""
@@ -180,13 +180,36 @@ class Season: Object, Decodable {
     dynamic var overview: String = ""
     dynamic var posterPath: String?
     dynamic var number: Int = 0
-    
+    let episodes: List<Episode> = List()
+
     enum CodingKeys: String, CodingKey {
-        case id, name, overview
+        case id, name, overview, episodes
         case number = "season_number"
         case airDate = "air_date"
         case episodeCount = "episode_count"
         case posterPath = "poster_path"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        super.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        airDate = try container.decodeIfPresent(String.self, forKey: .airDate)
+        overview = try container.decode(String.self, forKey: .overview)
+        posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
+        number = try container.decode(Int.self, forKey: .number)
+        id = try container.decodeIfPresent(Int.self, forKey: .id) ?? 0
+
+        
+        if container.contains(.episodes) {
+            episodes.append(objectsIn: try container.decode(List<Episode>.self, forKey: .episodes))
+        }
+
+        episodeCount = try container.decodeIfPresent(Int.self, forKey: .number) ?? episodes.count
+    }
+    
+    required init() {
+        super.init()
     }
 }
 
@@ -225,21 +248,41 @@ class Episode: Object, Decodable {
     dynamic var overview: String = ""
     dynamic var productionCode: String = ""
     dynamic var seasonNumber: Int = 0
-    dynamic var showId: Int = 0
     dynamic var stillPath: String?
     dynamic var voteAverage: Double = 0
     dynamic var voteCount: Int = 0
+    let crew: List<Crew> = List()
     
     enum CodingKeys: String, CodingKey {
-        case id, name, overview
+        case id, name, overview, crew
         case airDate = "air_date"
         case episodeNumber = "episode_number"
         case productionCode = "production_code"
         case seasonNumber = "season_number"
-        case showId = "show_id"
         case stillPath = "still_path"
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        airDate = try container.decode(String.self, forKey: .airDate)
+        episodeNumber = try container.decode(Int.self, forKey: .episodeNumber)
+        id = try container.decode(Int.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        overview = try container.decode(String.self, forKey: .overview)
+        productionCode = try container.decode(String.self, forKey: .productionCode)
+        seasonNumber = try container.decode(Int.self, forKey: .seasonNumber)
+        stillPath = try container.decodeIfPresent(String.self, forKey: .stillPath)
+        voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+        voteCount = try container.decode(Int.self, forKey: .voteCount)
+        if container.contains(.crew) {
+            crew.append(objectsIn: try container.decode(List<Crew>.self, forKey: .crew))
+        }
+    }
+
+    required init() {
+        super.init()
     }
 }
 

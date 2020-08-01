@@ -70,7 +70,7 @@ class LocalDataSourceTests: QuickSpec {
                 expect(testRealm.objects(Movie.self).count).to(equal(2))
                 
                 // add movie image
-                let movieImage = MovieImages()
+                let movieImage = ImageResult()
                 localDataSource.saveMovieImages(movieImage, to: 3)
             }
 

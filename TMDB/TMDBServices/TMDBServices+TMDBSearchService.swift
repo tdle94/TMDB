@@ -10,7 +10,7 @@ import Foundation
 
 extension TMDBServices: TMDBSearchService {
     func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void) {
-        let request = urlRequestBuilder.getMultiSearchURLRequest(query: query, language: NSLocale.preferredLanguages.first, region: NSLocale.current.regionCode, page: page)
+        let request = urlRequestBuilder.getMultiSearchURLRequest(query: query, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode, page: page)
         session.send(request: request, responseType: MultiSearchResult.self, completion: completion)
     }
 }

@@ -15,5 +15,4 @@ protocol TMDBMovieService {
     func getRecommendMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getMovieCredit(from movieId: Int, completion: @escaping (Result<CreditResult, Error>) -> Void)
     func getMovieReview(page: Int, from movieId: Int, completion: @escaping (Result<ReviewResult, Error>) -> Void)
-    func getMovieImages(from movieId: Int, completion: @escaping (Result<MovieImages, Error>) -> Void)
 }

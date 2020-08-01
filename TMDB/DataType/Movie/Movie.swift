@@ -40,7 +40,7 @@ class Movie: Object, Decodable {
     dynamic var credits: CreditResult?
     dynamic var keywords: KeywordResult?
     dynamic var reviews: ReviewResult?
-    dynamic var movieImages: MovieImages?
+    dynamic var movieImages: ImageResult?
     dynamic var releaseDates: ReleaseDateResults?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
@@ -96,6 +96,7 @@ class Movie: Object, Decodable {
         keywords = try container.decodeIfPresent(KeywordResult.self, forKey: .keywords)
         reviews = try container.decodeIfPresent(ReviewResult.self, forKey: .reviews)
         releaseDates = try container.decodeIfPresent(ReleaseDateResults.self, forKey: .releaseDates)
+        movieImages = try container.decodeIfPresent(ImageResult.self, forKey: .movieImages)
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genres)
@@ -184,7 +185,7 @@ class ReleaseDates: Object, Decodable {
 }
 
 @objcMembers
-class MovieImages: Object, Decodable {
+class ImageResult: Object, Decodable {
     let backdrops: List<Images> = List()
     let posters: List<Images> = List()
     

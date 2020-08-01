@@ -68,14 +68,13 @@ class TMDBPreviewItemCell: UICollectionViewCell {
         } else if let item = item as? ProductionCompany {
             title.textAlignment = .center
             title.text = ""
-            imageView.contentMode = .scaleAspectFit
             imageView.layer.borderColor = .none
             imageView.layer.borderWidth = 0
             stackViewTopConstraint.constant = 0
             if let path = item.logoPath {
                 getImage(from: path)
             } else {
-                stackViewTopConstraint.constant = -40
+                stackViewTopConstraint.constant = -60
                 title.text = item.name
                 imageView.isHidden = true
             }

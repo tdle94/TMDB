@@ -20,7 +20,9 @@ protocol TMDBLocalDataSourceProtocol {
     func getTVShow(id: Int) -> TVShow?
     func saveTVShow(_ tvShow: TVShow)
     func saveSimilarTVShow(_ similarTVShow: List<TVShow>, to tvShowId: Int)
-    func saveRecommendTVShow(_ recommendTVShow: List<TVShow>,to tvShowId: Int)
+    func saveRecommendTVShow(_ recommendTVShow: List<TVShow>, to tvShowId: Int)
+    func saveTVShowSeason(_ season: Season, to tvShowId: Int)
+    func getTVShowSeason(tvShowId: Int, seasonNumber: Int) -> Season?
     // people
     func getPerson(id: Int) -> People?
     func savePerson(_ person: People)
@@ -42,7 +44,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveMovieImages(_ movieImages: ImageResult, to movieId: Int) {
         realm.beginWrite()
-        getMovie(id: movieId)?.movieImages = movieImages
+        getMovie(id: movieId)?.images = movieImages
         try? realm.commitWrite()
     }
 
@@ -121,6 +123,21 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         tvShow?.recommendations?.onTV.append(objectsIn: recommendTVShow)
         tvShow?.recommendations?.page += 1
         try? realm.commitWrite()
+    }
+    
+    func saveTVShowSeason(_ season: Season, to tvShowId: Int) {
+        realm.beginWrite()
+        let tvShow = getTVShow(id: tvShowId)
+        if let seasonIndex = tvShow?.seasons.firstIndex(of: season) {
+            let seasonId = tvShow?.seasons[seasonIndex].id // api request for individual season does not contain id. That's why we save the old id to the new one
+            season.id = seasonId ?? 0
+            tvShow?.seasons[seasonIndex] = season
+        }
+        try? realm.commitWrite()
+    }
+
+    func getTVShowSeason(tvShowId: Int, seasonNumber: Int) -> Season? {
+        return getTVShow(id: tvShowId)?.seasons.first(where: { $0.number == seasonNumber })
     }
 
     // MARK: - people

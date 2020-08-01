@@ -69,7 +69,7 @@ class TMDBMovieDetailViewController: UIViewController {
             scrollView.refreshControl = UIRefreshControl()
             scrollView.refreshControl?.tintColor = Constant.Color.primaryColor
             scrollView.refreshControl?.attributedTitle = NSAttributedString(string: "Refresh")
-            scrollView.refreshControl?.addTarget(self, action: #selector(getMovieDetail), for: .valueChanged)
+            scrollView.refreshControl?.addTarget(self, action: #selector(refreshMovieDetail), for: .valueChanged)
         }
     }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -200,7 +200,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
-            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.3, fractionHeight: 0.3)
+            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.2, fractionHeight: 0.4)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             productionCompaniesCollectionView.register(TMDBProduceByHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieProduceByHeader)
             
@@ -284,15 +284,28 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
 
-    @objc func getMovieDetail() {
+    func getMovieDetail() {
         guard let id = movieId else { return }
         repository.getMovieDetail(id: id) { result in
+            switch result {
+            case .success(let movie):
+                self.loadingView.removeFromSuperview()
+                self.movieDetail.displayMovieDetail(movie: movie)
+            case .failure(let error):
+                self.loadingView.showError(true)
+                debugPrint(error.localizedDescription)
+            }
+        }
+    }
+    
+    @objc func refreshMovieDetail() {
+        guard let id = movieId else { return }
+        repository.refreshMovie(id: id) { result in
             self.scrollView.refreshControl?.endRefreshing()
             switch result {
             case .success(let movie):
                 self.movieDetail.displayMovieDetail(movie: movie)
             case .failure(let error):
-                self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
             }
         }

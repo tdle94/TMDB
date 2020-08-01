@@ -72,7 +72,8 @@ class TMDBTVDetailViewController: UIViewController {
             scrollView.refreshControl = UIRefreshControl()
             scrollView.refreshControl?.tintColor = Constant.Color.primaryColor
             scrollView.refreshControl?.attributedTitle = NSAttributedString(string: "Refresh")
-            scrollView.refreshControl?.addTarget(self, action: #selector(getTVShowDetail), for: .valueChanged)
+
+            scrollView.refreshControl?.addTarget(self, action: #selector(refreshTVShowDetail), for: .valueChanged)
         }
     }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -246,7 +247,21 @@ class TMDBTVDetailViewController: UIViewController {
     }
 
     // MARK: - service
-    @objc func getTVShowDetail() {
+
+    @objc func refreshTVShowDetail() {
+        guard let id = tvId else { return }
+        repository.refreshTVShow(id: id) { result in
+            self.scrollView.refreshControl?.endRefreshing()
+            switch result {
+            case .success(let tvShow):
+                self.tvDetailDisplay.displayTVShowDetail(tvShow)
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+            }
+        }
+    }
+
+    func getTVShowDetail() {
         guard let id = tvId else { return }
         repository.getTVShowDetail(from: id) { result in
             self.scrollView.refreshControl?.endRefreshing()

@@ -165,4 +165,10 @@ class TestURLRequestBuilder: XCTestCase {
         let urlMatcher = "https://api.themoviedb.org/3/tv/3/recommendations?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
+
+    func testTVShowSeasonURL() {
+        let matchRequest = urlRequestBuilder.getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 2, language: nil)
+        let urlMatcher = "https://api.themoviedb.org/3/tv/3/season/2?language=en&append_to_response=credits,images,videos&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
 }

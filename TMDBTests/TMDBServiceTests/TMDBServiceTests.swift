@@ -424,4 +424,33 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getSimilarTVShowsURLRequest(from: 3, page: 1, language: NSLocale.current.languageCode)
     }
+    
+    // MARK: - tv show season
+    func testGetTVShowSeason() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: NSLocale.current.languageCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(Season()))
+            }
+        }
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: NSLocale.current.languageCode).thenReturn(request)
+        }
+        /*WHEN*/
+        
+        services.getTVShowSeasonDetail(from: 3, seasonNumber: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: NSLocale.current.languageCode)
+    }
 }

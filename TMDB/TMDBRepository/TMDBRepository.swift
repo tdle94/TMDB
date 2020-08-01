@@ -100,6 +100,25 @@ extension TMDBRepository: TMDBTrendingRepository {
 }
 
 extension TMDBRepository: TMDBTVShowRepository {
+    func getTVShowSeasonDetail(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<Season, Error>) -> Void) {
+        if let season = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber) {
+            completion(.success(season))
+            return
+        }
+
+        services.getTVShowSeasonDetail(from: tvShowId, seasonNumber: seasonNumber) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let season):
+                    self.localDataSource.saveTVShowSeason(season, to: tvShowId)
+                    completion(.success(season))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
     func getSimilarTVShows(from tvShowId: Int, page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
         guard let tvShow = localDataSource.getTVShow(id: tvShowId) else {
             completion(.failure(NSError(domain: "Cannot find tv show \(tvShowId)", code: 400, userInfo: nil)))
@@ -235,6 +254,20 @@ extension TMDBRepository: TMDBTVShowRepository {
             return []
         }
         return Array(reviews)
+    }
+
+    func refreshTVShow(id: Int, completion: @escaping (Result<TVShow, Error>) -> Void) {
+        services.getTVShowDetail(id: id) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tvShow):
+                    self.localDataSource.saveTVShow(tvShow)
+                    completion(.success(tvShow))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 }
 
@@ -376,5 +409,19 @@ extension TMDBRepository: TMDBMovieRepository {
     func getMovieReview(from movieId: Int) -> [Review] {
         guard let review = localDataSource.getMovie(id: movieId)?.reviews?.reviews else { return [] }
         return Array(review)
+    }
+
+    func refreshMovie(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
+        services.getMovieDetail(id: id) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movie):
+                    self.localDataSource.saveMovie(movie)
+                    completion(.success(movie))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 }

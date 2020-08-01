@@ -1495,4 +1495,114 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         verify(localDataSource).getTVShow(id: 3)
     }
+    
+    // MARK: - tv show season
+    func testGetTVShowSeasonInRealm() {
+        let expectation = self.expectation(description: "")
+        let tvShow = TVShow()
+        let season = Season()
+        let request = TMDBURLRequestBuilder().getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let seasonMatcher: ParameterMatcher<Season> = ParameterMatcher<Season>(matchesFunction: { $0 == season })
+        season.number = 1
+        tvShow.id = 3
+        tvShow.seasons.append(season)
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowSeason(tvShowId: 3, seasonNumber: 1).thenReturn(season)
+            when(stub).saveTVShowSeason(seasonMatcher, to: 3).thenDoNothing()
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(season))
+            }
+        }
+        /*WHEN*/
+        
+        repository.getTVShowSeasonDetail(from: 3, seasonNumber: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShowSeason(tvShowId: 3, seasonNumber: 1)
+        verify(localDataSource, never()).saveTVShowSeason(seasonMatcher, to: 1)
+        verify(session, never()).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure())
+    }
+    
+    func testGetTVShowSeasonRemoteSuccess() {
+        let expectation = self.expectation(description: "")
+        let tvShow = TVShow()
+        let request = TMDBURLRequestBuilder().getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        tvShow.id = 3
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowSeason(tvShowId: 3, seasonNumber: 1).thenReturn(nil)
+            when(stub).saveTVShowSeason(any(), to: 3).thenDoNothing()
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(Season()))
+            }
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: any()).thenReturn(request)
+        }
+        /*WHEN*/
+        
+        repository.getTVShowSeasonDetail(from: 3, seasonNumber: 1) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShowSeason(tvShowId: 3, seasonNumber: 1)
+        verify(localDataSource).saveTVShowSeason(any(), to: 3)
+        verify(requestBuilder).getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: any())
+        verify(session).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure())
+    }
+    
+    func testGetTVShowSeasonRemoteFail() {
+        let expectation = self.expectation(description: "")
+        let tvShow = TVShow()
+        let request = TMDBURLRequestBuilder().getTVShowSeasonDetailURLRequest(tvShowId: 4, seasonNumber: 2, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        tvShow.id = 4
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowSeason(tvShowId: 4, seasonNumber: 2).thenReturn(nil)
+            when(stub).saveTVShowSeason(any(), to: 4).thenDoNothing()
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError()))
+            }
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowSeasonDetailURLRequest(tvShowId: 4, seasonNumber: 2, language: any()).thenReturn(request)
+        }
+        /*WHEN*/
+        
+        repository.getTVShowSeasonDetail(from: 4, seasonNumber: 2) { result in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShowSeason(tvShowId: 4, seasonNumber: 2)
+        verify(requestBuilder).getTVShowSeasonDetailURLRequest(tvShowId: 4, seasonNumber: 2, language: any())
+        verify(localDataSource, never()).saveTVShowSeason(any(), to: 4)
+        verify(session).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure())
+    }
 }

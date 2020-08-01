@@ -14,6 +14,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getTVShowDetailURLRequest(id: Int, language: String?) -> URLRequest
     func getSimilarTVShowsURLRequest(from tvShowId: Int, page: Int, language: String?) -> URLRequest
     func getRecommendTVShowURLRequest(from tvShowId: Int, page: Int, language: String?) -> URLRequest
+    func getTVShowSeasonDetailURLRequest(tvShowId: Int, seasonNumber: Int, language: String?) -> URLRequest
     
     // MARK: - people
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest
@@ -43,6 +44,14 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     // MARK: - tv shows
 
+    func getTVShowSeasonDetailURLRequest(tvShowId: Int, seasonNumber: Int, language: String?) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "language", value: language ?? "en"),
+            URLQueryItem(name: "append_to_response", value: "credits,images,videos")
+        ]
+        return buildURLRequest(path: "/3/tv/\(tvShowId)/season/\(seasonNumber)", queryItems: queryItems)
+    }
+
     func getSimilarTVShowsURLRequest(from tvShowId: Int, page: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "page", value: String(page)),
@@ -71,7 +80,6 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         let queryItems = [
             URLQueryItem(name: "language", value: language ?? "en"),
             URLQueryItem(name: "append_to_response", value: "keywords,similar,recommendations,credits,reviews,videos,images")
-            
         ]
         return buildURLRequest(path: "/3/tv/\(id)", queryItems: queryItems)
     }

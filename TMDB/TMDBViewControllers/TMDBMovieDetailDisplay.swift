@@ -57,7 +57,7 @@ class TMDBMovieDetailDisplay {
 
     func displayBackdropImages(movie: Movie) {
         guard
-            let images = movie.movieImages?.backdrops,
+            let images = movie.images?.backdrops,
             var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
         movieDetailVC?.backdropPageControl.numberOfPages = images.count
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Image))
@@ -283,6 +283,6 @@ class TMDBMovieDetailDisplay {
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .ProductionCompanies))
         snapshot.appendItems(productionCompanies)
         movieDetailVC?.productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
-        movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/4
+        movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/3
     }
 }

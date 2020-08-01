@@ -28,4 +28,9 @@ extension TMDBServices: TMDBTVService {
         let request = urlRequestBuilder.getRecommendTVShowURLRequest(from: tvShowId, page: page, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: TVShowResult.self, completion: completion)
     }
+    
+    func getTVShowSeasonDetail(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<Season, Error>) -> Void) {
+        let request = urlRequestBuilder.getTVShowSeasonDetailURLRequest(tvShowId: tvShowId, seasonNumber: seasonNumber, language: NSLocale.current.languageCode)
+        session.send(request: request, responseType: Season.self, completion: completion)
+    }
 }

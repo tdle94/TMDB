@@ -42,7 +42,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveMovieImages(_ movieImages: ImageResult, to movieId: Int) {
         realm.beginWrite()
-        getMovie(id: movieId)?.movieImages = movieImages
+        getMovie(id: movieId)?.images = movieImages
         try? realm.commitWrite()
     }
 

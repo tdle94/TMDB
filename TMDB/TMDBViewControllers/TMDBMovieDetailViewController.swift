@@ -200,7 +200,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
-            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.3, fractionHeight: 0.3)
+            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.2, fractionHeight: 0.4)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             productionCompaniesCollectionView.register(TMDBProduceByHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieProduceByHeader)
             

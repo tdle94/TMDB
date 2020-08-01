@@ -40,7 +40,7 @@ class Movie: Object, Decodable {
     dynamic var credits: CreditResult?
     dynamic var keywords: KeywordResult?
     dynamic var reviews: ReviewResult?
-    dynamic var movieImages: ImageResult?
+    dynamic var images: ImageResult?
     dynamic var releaseDates: ReleaseDateResults?
     let genres: List<Genre> = List<Genre>()
     let spokenLanguages: List<SpokenLanguage> = List<SpokenLanguage>()
@@ -48,7 +48,7 @@ class Movie: Object, Decodable {
     let productionCountries: List<ProductionCountry> = List<ProductionCountry>()
 
     enum CodingKeys: String, CodingKey {
-        case id, adult, budget, genres, homepage, overview, popularity, revenue, runtime, status, tagline, title, video, videos, similar, recommendations, credits, keywords, reviews
+        case id, adult, budget, genres, homepage, overview, popularity, revenue, runtime, status, tagline, title, video, videos, similar, recommendations, credits, keywords, reviews, images
         case backdropPath = "backdrop_path"
         case imdbId = "imdb_id"
         case originalLanguage = "original_language"
@@ -61,7 +61,6 @@ class Movie: Object, Decodable {
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
         case belongToCollection = "belongs_to_collection"
-        case movieImages = "images"
         case releaseDates = "release_dates"
     }
 
@@ -96,12 +95,12 @@ class Movie: Object, Decodable {
         keywords = try container.decodeIfPresent(KeywordResult.self, forKey: .keywords)
         reviews = try container.decodeIfPresent(ReviewResult.self, forKey: .reviews)
         releaseDates = try container.decodeIfPresent(ReleaseDateResults.self, forKey: .releaseDates)
-        movieImages = try container.decodeIfPresent(ImageResult.self, forKey: .movieImages)
+        images = try container.decodeIfPresent(ImageResult.self, forKey: .images)
         
-        if movieImages != nil {
+        if images != nil {
             let additionalImage = Images()
             additionalImage.filePath = backdropPath ?? ""
-            movieImages?.backdrops.append(additionalImage)
+            images?.backdrops.append(additionalImage)
         }
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {

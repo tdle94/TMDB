@@ -403,3 +403,13 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
         }
     }
 }
+
+extension TMDBTVDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let id = tvId else { return }
+        if tableView == tvShowSeasonTableView {
+            let seasonNumber = tvShowSeasonDataSource.snapshot().itemIdentifiers(inSection: .Season)[indexPath.row].number
+            coordinate?.navigateToTVShowSeasonDetail(tvId: id, seasonNumber: seasonNumber)
+        }
+    }
+}

@@ -289,6 +289,14 @@ class TMDBMovieDetailViewController: UIViewController {
         repository.getMovieDetail(id: id) { result in
             switch result {
             case .success(let movie):
+                self.repository.getMovieImages(from: id) { result in
+                    switch result {
+                    case .success(let imageResult):
+                        self.movieDetail.displayBackdropImages(imageResult)
+                    case .failure(let error):
+                        debugPrint(error.localizedDescription)
+                    }
+                }
                 self.loadingView.removeFromSuperview()
                 self.movieDetail.displayMovieDetail(movie: movie)
             case .failure(let error):

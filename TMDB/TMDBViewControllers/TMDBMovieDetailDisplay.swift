@@ -42,7 +42,6 @@ class TMDBMovieDetailDisplay {
         displayProductionCompanies(movie: movie)
         displayTagLine(movie: movie)
         displayAvailableLanguageLabel(movie: movie)
-        displayBackdropImages(movie: movie)
         movieDetailVC?.title = movie.title
         movieDetailVC?.additionalInformationTableView.reloadData()
         if movie.keywords?.keywords.isEmpty ?? false {
@@ -55,13 +54,11 @@ class TMDBMovieDetailDisplay {
         movieDetailVC?.availableLanguageLabel.attributedText = constructAttrsString(title: NSLocalizedString("Available Languages", comment: "") + ": ", subTitle: languages)
     }
 
-    func displayBackdropImages(movie: Movie) {
-        guard
-            let images = movie.images?.backdrops,
-            var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
-        movieDetailVC?.backdropPageControl.numberOfPages = images.count
+    func displayBackdropImages(_ imageResult: ImageResult) {
+        guard var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
+        movieDetailVC?.backdropPageControl.numberOfPages = imageResult.backdrops.count
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Image))
-        snapshot.appendItems(Array(images))
+        snapshot.appendItems(Array(imageResult.backdrops))
         movieDetailVC?.movieImageDataSource.apply(snapshot, animatingDifferences: true)
     }
     

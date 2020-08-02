@@ -280,6 +280,11 @@ class TMDBMovieDetailDisplay {
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .ProductionCompanies))
         snapshot.appendItems(productionCompanies)
         movieDetailVC?.productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
-        movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/3
+        
+        if movie.productionCompanies.contains(where: { $0.logoPath != nil }) {
+            movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/3
+        } else {
+            movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/4
+        }
     }
 }

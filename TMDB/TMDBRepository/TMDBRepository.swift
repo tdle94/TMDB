@@ -272,6 +272,25 @@ extension TMDBRepository: TMDBTVShowRepository {
 }
 
 extension TMDBRepository: TMDBMovieRepository {
+    func getMovieImages(from movieId: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
+        if let images = localDataSource.getMovie(id: movieId)?.images {
+            completion(.success(images))
+            return
+        }
+        
+        services.getMovieImages(from: movieId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let imageResult):
+                    self.localDataSource.saveMovieImages(imageResult, to: movieId)
+                    completion(.success(imageResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getMovieReleaseDates(from movieId: Int) -> ReleaseDateResults? {
         return localDataSource.getMovie(id: movieId)?.releaseDates
     }

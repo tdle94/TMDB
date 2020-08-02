@@ -453,4 +453,60 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(Season.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getTVShowSeasonDetailURLRequest(tvShowId: 3, seasonNumber: 1, language: NSLocale.current.languageCode)
     }
+    
+    // MARK: - tv show image
+    func testGetTVShowImage() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowImagesURLRequest(from: 3)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ImageResult()))
+            }
+        }
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getTVShowImagesURLRequest(from: 3).thenReturn(request)
+        }
+        /*WHEN*/
+        services.getTVShowImages(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getTVShowImagesURLRequest(from: 3)
+    }
+    
+    // MARK: - movie image
+    func testGetMovieImage() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieImagesURLRequest(from: 3)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ImageResult()))
+            }
+        }
+
+        stub(urlRequestBuilder) { stub in
+            when(stub).getMovieImagesURLRequest(from: 3).thenReturn(request)
+        }
+        /*WHEN*/
+        services.getMovieImages(from: 3) { result in
+            XCTAssertNoThrow(try! result.get())
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getMovieImagesURLRequest(from: 3)
+    }
 }

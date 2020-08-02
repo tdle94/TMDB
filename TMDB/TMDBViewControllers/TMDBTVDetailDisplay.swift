@@ -34,16 +34,13 @@ class TMDBTVDetailDisplay {
         displayReviewLabel(tvShow: tvShow)
         displayVideos(tvShow: tvShow)
         displayCreator(tvShow: tvShow)
-        displayBackdropImages(tvShow: tvShow)
         tvDetailVC?.title = tvShow.originalName
     }
 
-    func displayBackdropImages(tvShow: TVShow) {
-        guard
-            let images = tvShow.images?.backdrops,
-            var snapshot = tvDetailVC?.tvShowBackdropImageDataSource.snapshot() else { return }
+    func displayBackdropImages(_ imageResult: ImageResult) {
+        guard var snapshot = tvDetailVC?.tvShowBackdropImageDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Backdrop))
-        snapshot.appendItems(Array(images))
+        snapshot.appendItems(Array(imageResult.backdrops))
         tvDetailVC?.tvShowBackdropImageDataSource.apply(snapshot, animatingDifferences: true)
     }
 

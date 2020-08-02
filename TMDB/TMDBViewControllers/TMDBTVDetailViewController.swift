@@ -263,15 +263,30 @@ class TMDBTVDetailViewController: UIViewController {
 
     func getTVShowDetail() {
         guard let id = tvId else { return }
+        let group = DispatchGroup()
+        group.enter()
+
         repository.getTVShowDetail(from: id) { result in
             self.scrollView.refreshControl?.endRefreshing()
             switch result {
             case .success(let tvShow):
-                self.loadingView.removeFromSuperview()
+                group.leave()
                 self.tvDetailDisplay.displayTVShowDetail(tvShow)
             case .failure(let error):
-                self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
+            }
+        }
+    
+        group.notify(queue: .main) {
+            self.repository.getTVShowImages(from: id) { result in
+                switch result {
+                case .failure(let error):
+                    self.loadingView.showError(true)
+                    debugPrint(error.localizedDescription)
+                case .success(let imageResult):
+                    self.loadingView.removeFromSuperview()
+                    self.tvDetailDisplay.displayBackdropImages(imageResult)
+                }
             }
         }
     }

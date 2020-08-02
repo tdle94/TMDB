@@ -43,6 +43,7 @@ struct Constant {
         static let tmdbPersonDetailVC = "TMDBPersonDetailViewController"
         static let tmdbCompleteReleaseDateTableVC = "TMDBCompleteReleaseDateTableViewController"
         static let tmdbTVDetailVC = "TMDBTVDetailViewController"
+        static let tmdbTVShowSeasonVC = "TMDBTVShowSeasonViewController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

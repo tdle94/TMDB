@@ -96,12 +96,7 @@ class Movie: Object, Decodable {
         reviews = try container.decodeIfPresent(ReviewResult.self, forKey: .reviews)
         releaseDates = try container.decodeIfPresent(ReleaseDateResults.self, forKey: .releaseDates)
         images = try container.decodeIfPresent(ImageResult.self, forKey: .images)
-        
-        if images != nil {
-            let additionalImage = Images()
-            additionalImage.filePath = backdropPath ?? ""
-            images?.backdrops.append(additionalImage)
-        }
+
 
         if let genres = try container.decodeIfPresent(List<Genre>.self, forKey: .genres) {
             self.genres.append(objectsIn: genres)
@@ -184,26 +179,6 @@ class ReleaseDates: Object, Decodable {
         releaseDate = try container.decode(String.self, forKey: .releaseDate)
     }
     
-    required init() {
-        super.init()
-    }
-}
-
-@objcMembers
-class ImageResult: Object, Decodable {
-    let backdrops: List<Images> = List()
-    let posters: List<Images> = List()
-    
-    enum CodingKeys: String, CodingKey {
-        case backdrops, posters
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        backdrops.append(objectsIn: try container.decode(List<Images>.self, forKey: .backdrops))
-        posters.append(objectsIn: try container.decode(List<Images>.self, forKey: .posters))
-    }
-
     required init() {
         super.init()
     }

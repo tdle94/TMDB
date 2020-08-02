@@ -44,7 +44,9 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func saveMovieImages(_ movieImages: ImageResult, to movieId: Int) {
         realm.beginWrite()
-        getMovie(id: movieId)?.images = movieImages
+        let movie = getMovie(id: movieId)
+        movie?.images?.backdrops.append(objectsIn: movieImages.backdrops)
+        movie?.images?.posters.append(objectsIn: movieImages.posters)
         try? realm.commitWrite()
     }
 

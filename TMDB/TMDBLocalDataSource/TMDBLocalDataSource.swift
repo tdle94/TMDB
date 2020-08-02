@@ -23,6 +23,7 @@ protocol TMDBLocalDataSourceProtocol {
     func saveRecommendTVShow(_ recommendTVShow: List<TVShow>, to tvShowId: Int)
     func saveTVShowSeason(_ season: Season, to tvShowId: Int)
     func getTVShowSeason(tvShowId: Int, seasonNumber: Int) -> Season?
+    func saveTVShowImages(_ tvShowImages: ImageResult, to tvShowId: Int)
     // people
     func getPerson(id: Int) -> People?
     func savePerson(_ person: People)
@@ -140,6 +141,14 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
 
     func getTVShowSeason(tvShowId: Int, seasonNumber: Int) -> Season? {
         return getTVShow(id: tvShowId)?.seasons.first(where: { $0.number == seasonNumber })
+    }
+    
+    func saveTVShowImages(_ tvShowImages: ImageResult, to tvShowId: Int) {
+        realm.beginWrite()
+        let tvShow = getTVShow(id: tvShowId)
+        tvShow?.images?.backdrops.append(objectsIn: tvShowImages.backdrops)
+        tvShow?.images?.posters.append(objectsIn: tvShowImages.posters)
+        try? realm.commitWrite()
     }
 
     // MARK: - people

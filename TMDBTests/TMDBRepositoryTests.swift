@@ -1611,7 +1611,7 @@ class TMDBRepositoryTests: XCTestCase {
     }
     
     // MARK: - tv show image
-    func getTVShowImageInRealm() {
+    func testGetTVShowImageInRealm() {
         let expectation = self.expectation(description: "")
         let tvShow = TVShow()
         tvShow.images = ImageResult()
@@ -1631,7 +1631,7 @@ class TMDBRepositoryTests: XCTestCase {
         verify(localDataSource).getTVShow(id: 3)
     }
     
-    func getTVShowRemoteImageSuccess() {
+    func testGetTVShowRemoteImageSuccess() {
         let expectation = self.expectation(description: "")
         let tvShow = TVShow()
         let request = TMDBURLRequestBuilder().getTVShowImagesURLRequest(from: 3)
@@ -1648,24 +1648,29 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).getTVShow(id: 3).thenReturn(tvShow)
             when(stub).saveTVShowImages(any(), to: 3).thenDoNothing()
         }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowImagesURLRequest(from: 3).thenReturn(request)
+        }
         /*WHEN*/
-        repository.getMovieImages(from: 3) { result in
+        repository.getTVShowImages(from: 3) { result in
             expectation.fulfill()
         }
         
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getTVShow(id: 3)
+        verify(requestBuilder).getTVShowImagesURLRequest(from: 3)
         verify(localDataSource).saveTVShowImages(any(), to: 3)
         verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: any())
     }
-    
-    func getTVShowRemoteImageFail() {
+
+    func testGetTVShowRemoteImageFail() {
         let expectation = self.expectation(description: "")
         let tvShow = TVShow()
-        let request = TMDBURLRequestBuilder().getTVShowImagesURLRequest(from: 1)
+        let request = TMDBURLRequestBuilder().getTVShowImagesURLRequest(from: 3)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-        
+
         /*GIVEN*/
         stub(session) { stub in
             when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).then { implementation in
@@ -1674,23 +1679,29 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(localDataSource) { stub in
-            when(stub).getTVShow(id: 1).thenReturn(tvShow)
-            when(stub).saveTVShowImages(any(), to: 1).thenDoNothing()
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+            when(stub).saveTVShowImages(any(), to: 3).thenDoNothing()
         }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowImagesURLRequest(from: 3).thenReturn(request)
+        }
+
         /*WHEN*/
-        repository.getMovieImages(from: 1) { result in
+        repository.getTVShowImages(from: 3) { result in
             expectation.fulfill()
         }
         
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getTVShow(id: 1)
-        verify(localDataSource, never()).saveTVShowImages(any(), to: 1)
+        verify(requestBuilder).getTVShowImagesURLRequest(from: 3)
+        verify(localDataSource).getTVShow(id: 3)
+        verify(localDataSource, never()).saveTVShowImages(any(), to: 3)
         verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: any())
     }
     
     // MARK: - get movie images
-    func getMovieImagesFromRealm() {
+    func testGetMovieImagesFromRealm() {
         let expectation = self.expectation(description: "")
         let movie = Movie()
         movie.images = ImageResult()
@@ -1705,10 +1716,11 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getMovie(id: 3)
     }
     
-    func getMovieRemoteImageSuccess() {
+    func testGetMovieRemoteImageSuccess() {
         let expectation = self.expectation(description: "")
         let movie = Movie()
         let request = TMDBURLRequestBuilder().getMovieImagesURLRequest(from: 3)
@@ -1725,6 +1737,11 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).getMovie(id: 3).thenReturn(movie)
             when(stub).saveMovieImages(any(), to: 3).thenDoNothing()
         }
+
+        stub(requestBuilder) { stub in
+            when(stub).getMovieImagesURLRequest(from: 3).thenReturn(request)
+        }
+
         /*WHEN*/
         repository.getMovieImages(from: 3) { result in
             expectation.fulfill()
@@ -1733,11 +1750,12 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(localDataSource).getMovie(id: 3)
+        verify(requestBuilder).getMovieImagesURLRequest(from: 3)
         verify(localDataSource).saveMovieImages(any(), to: 3)
         verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: any())
     }
     
-    func getMovieRemoteImageFail() {
+    func testGetMovieRemoteImageFail() {
         let expectation = self.expectation(description: "")
         let tvShow = Movie()
         let request = TMDBURLRequestBuilder().getMovieImagesURLRequest(from: 1)
@@ -1754,6 +1772,10 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).getMovie(id: 1).thenReturn(tvShow)
             when(stub).saveMovieImages(any(), to: 1).thenDoNothing()
         }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getMovieImagesURLRequest(from: 1).thenReturn(request)
+        }
 
         /*WHEN*/
         repository.getMovieImages(from: 1) { result in
@@ -1762,8 +1784,75 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getMovieImagesURLRequest(from: 1)
         verify(localDataSource).getMovie(id: 1)
         verify(localDataSource, never()).saveMovieImages(any(), to: 1)
         verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: any())
+    }
+
+    // MARK: - refresh movie detail
+    func testRefreshMovieDetail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(Movie()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode).thenReturn(request)
+        }
+
+        stub(localDataSource) { stub in
+            when(stub).saveMovie(any()).thenDoNothing()
+        }
+
+        /*WHEN*/
+        repository.refreshMovie(id: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).saveMovie(any())
+        verify(requestBuilder).getMovieDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
+        verify(session).send(request: requestMatcher, responseType: any(Movie.Type.self), completion: anyClosure())
+    }
+
+    // MARK: - refresh tv show
+    func testRefreshTVShowDetail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShow()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode).thenReturn(request)
+        }
+
+        stub(localDataSource) { stub in
+            when(stub).saveTVShow(any()).thenDoNothing()
+        }
+
+        /*GIVEN*/
+        repository.refreshTVShow(id: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).saveTVShow(any())
+        verify(requestBuilder).getTVShowDetailURLRequest(id: 3, language: NSLocale.current.languageCode)
+        verify(session).send(request: requestMatcher, responseType: any(TVShow.Type.self), completion: anyClosure())
     }
 }

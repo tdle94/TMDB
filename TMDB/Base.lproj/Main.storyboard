@@ -1316,7 +1316,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BGv-i2-cwN">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="793.66666666666663"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="593.66666666666663"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="9p3-i2-qCf">
                                                 <rect key="frame" x="18" y="30" width="186" height="279"/>
@@ -1349,17 +1349,17 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="G14-LW-Z9n">
-                                                <rect key="frame" x="0.0" y="578.66666666666663" width="414" height="200"/>
+                                                <rect key="frame" x="0.0" y="578.66666666666663" width="414" height="0.0"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="200" id="NHJ-pE-uJE"/>
+                                                    <constraint firstAttribute="height" id="NHJ-pE-uJE"/>
                                                 </constraints>
                                                 <prototypes>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TVShowEpisodeCell" textLabel="ZIX-eU-pcW" detailTextLabel="gaI-mu-kc8" style="IBUITableViewCellStyleSubtitle" id="i5j-1T-rHG">
-                                                        <rect key="frame" x="0.0" y="28" width="414" height="50.666667938232422"/>
+                                                        <rect key="frame" x="0.0" y="28" width="414" height="51"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="i5j-1T-rHG" id="Hfv-Ud-xFw">
-                                                            <rect key="frame" x="0.0" y="0.0" width="383" height="50.666667938232422"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="383" height="51"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZIX-eU-pcW">

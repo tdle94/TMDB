@@ -29,6 +29,7 @@ struct Constant {
         static let imageCell = "ImageCell"
         static let releaseDateCell = "ReleaseDateCell"
         static let tvShowSeasonCell = "TVShowSeasonCell"
+        static let tvShowEpisodeCell = "TVShowEpisodeCell"
     }
     struct ViewControllerIdentifier {
         static let tmdbSearchResultViewController = "TMDBSearchResultViewController"

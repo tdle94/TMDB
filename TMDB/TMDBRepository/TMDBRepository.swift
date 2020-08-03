@@ -101,7 +101,12 @@ extension TMDBRepository: TMDBTrendingRepository {
 
 extension TMDBRepository: TMDBTVShowRepository {
     func getTVShowSeasonDetail(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<Season, Error>) -> Void) {
-        if let season = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber) {
+        if
+            let season = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber),
+            !season.episodes.isEmpty,
+            season.credits != nil,
+            season.videos != nil
+        {
             completion(.success(season))
             return
         }

@@ -16,10 +16,30 @@ class TMDBTVShowSeasonViewController: UIViewController {
     var seasonNumber: Int?
 
     var coordinate: MainCoordinator?
-    
+
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+
     var repository: TMDBRepository = TMDBRepository.share
-    
+
     var tvShowSeasonDisplay: TMDBTVShowSeasonDisplay = TMDBTVShowSeasonDisplay()
+
+    enum SeasonSection: String, CaseIterable {
+        case Episode = "Episode"
+    }
+
+    enum CreditSection: String, CaseIterable {
+        case Credit = "Credit"
+    }
+
+    enum VideoSection: String, CaseIterable {
+        case Video = "Video"
+    }
+
+    var episodeDataSource: UITableViewDiffableDataSource<SeasonSection, Episode>!
+
+    var creditDataSource: UICollectionViewDiffableDataSource<CreditSection, Cast>!
+
+    var videoDataSource: UICollectionViewDiffableDataSource<VideoSection, Video>!
     
     // MARK: - ui
     @IBOutlet weak var scrollView: UIScrollView!
@@ -35,7 +55,78 @@ class TMDBTVShowSeasonViewController: UIViewController {
     @IBOutlet weak var airDateLabel: UILabel!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var overviewDetailLabel: UILabel!
-    
+    @IBOutlet weak var episodeTableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var videoCollectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var videoCollectionView: UICollectionView! {
+        didSet {
+            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            videoCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+            
+            videoDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+            
+            videoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.videoMovieHeader, for: indexPath) as? TMDBVideoHeaderView
+                return header
+            }
+            
+            var snapshot = videoDataSource.snapshot()
+            snapshot.appendSections([.Video])
+            videoDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+    @IBOutlet weak var creditCollectionView: UICollectionView! {
+        didSet {
+            creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            creditCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            
+            creditDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
+                cell?.configure(item: item)
+                return cell
+            }
+
+            creditDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.creditMovieHeader,
+                                                                             for: indexPath) as? TMDBCreditHeaderView
+                header?.segmentControl.removeSegment(at: 1, animated: false)
+                return header
+            }
+            
+            var snapshot = creditDataSource.snapshot()
+            snapshot.appendSections([.Credit])
+            creditDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+    @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var episodeTableView: UITableView! {
+        didSet {
+            episodeDataSource = UITableViewDiffableDataSource(tableView: episodeTableView) { tableView, indexPath, item in
+                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowEpisodeCell, for: indexPath)
+                cell.textLabel?.text = item.name
+                cell.detailTextLabel?.text = item.overview
+                if let path = item.stillPath, let url = self.userSetting.getImageURL(from: path) {
+                    cell.imageView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
+                    cell.imageView?.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage")) { _, _, _, _ in
+                        cell.layoutSubviews()
+                    }
+                }
+                return cell
+            }
+
+            var snapshot = episodeDataSource.snapshot()
+            snapshot.appendSections([.Episode])
+            episodeDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +136,10 @@ class TMDBTVShowSeasonViewController: UIViewController {
         tvShowSeasonDisplay.tvShowSeasonVC = self
         view.addSubview(loadingView)
         getSeason()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        episodeTableViewHeightConstraint.constant = episodeTableView.contentSize.height
     }
     
     // MARK: - service

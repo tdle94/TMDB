@@ -1505,6 +1505,10 @@ class TMDBRepositoryTests: XCTestCase {
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let seasonMatcher: ParameterMatcher<Season> = ParameterMatcher<Season>(matchesFunction: { $0 == season })
         season.number = 1
+        season.episodes.append(Episode())
+        season.videos = VideoResult()
+        season.images = ImageResult()
+        season.credits = CreditResult()
         tvShow.id = 3
         tvShow.seasons.append(season)
         

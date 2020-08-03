@@ -49,7 +49,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     func getTVShowSeasonDetailURLRequest(tvShowId: Int, seasonNumber: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "language", value: language ?? "en"),
-            URLQueryItem(name: "append_to_response", value: "credits,images,videos")
+            URLQueryItem(name: "append_to_response", value: "credits,videos")
         ]
         return buildURLRequest(path: "/3/tv/\(tvShowId)/season/\(seasonNumber)", queryItems: queryItems)
     }

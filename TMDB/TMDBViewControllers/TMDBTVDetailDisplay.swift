@@ -34,16 +34,13 @@ class TMDBTVDetailDisplay {
         displayReviewLabel(tvShow: tvShow)
         displayVideos(tvShow: tvShow)
         displayCreator(tvShow: tvShow)
-        displayBackdropImages(tvShow: tvShow)
         tvDetailVC?.title = tvShow.originalName
     }
 
-    func displayBackdropImages(tvShow: TVShow) {
-        guard
-            let images = tvShow.images?.backdrops,
-            var snapshot = tvDetailVC?.tvShowBackdropImageDataSource.snapshot() else { return }
+    func displayBackdropImages(_ imageResult: ImageResult) {
+        guard var snapshot = tvDetailVC?.tvShowBackdropImageDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Backdrop))
-        snapshot.appendItems(Array(images))
+        snapshot.appendItems(Array(imageResult.backdrops))
         tvDetailVC?.tvShowBackdropImageDataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -55,7 +52,7 @@ class TMDBTVDetailDisplay {
             tvDetailVC?.creatorCollectionViewHeightConstraint.constant = 0
             return
         }
-
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Creator))
         snapshot.appendItems(Array(tvShow.createdBy))
         tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
         tvDetailVC?.creatorCollectionViewHeightConstraint.constant = (tvDetailVC?.creatorCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/1.1
@@ -156,13 +153,11 @@ class TMDBTVDetailDisplay {
             tvDetailVC?.addtionalHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
             tvDetailVC?.addtionalHeaderView?.segmentControl.selectedSegmentIndex = 0
             tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(recommend.onTV))
-            tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+            displayTVShow(Array(recommend.onTV))
         } else if !similar.onTV.isEmpty, recommend.onTV.isEmpty {
             tvDetailVC?.addtionalHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
             tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(similar.onTV))
-            tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+            displayTVShow(Array(recommend.onTV))
         } else if !similar.onTV.isEmpty, !recommend.onTV.isEmpty {
             displayTVShow(Array(similar.onTV))
         } else {
@@ -183,14 +178,15 @@ class TMDBTVDetailDisplay {
     
     private func displaySeason(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.tvShowSeasonDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Season))
         snapshot.appendItems(Array(tvShow.seasons))
         tvDetailVC?.tvShowSeasonDataSource.apply(snapshot, animatingDifferences: true)
         tvDetailVC?.tvShowSeasonTableView.layoutIfNeeded()
-        tvDetailVC?.tvShowSeaonTableViewHeightConstraint.constant = tvDetailVC?.tvShowSeasonTableView.contentSize.height ?? 0
     }
 
     private func displayNetworks(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.movieNetworkImageDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Network))
         snapshot.appendItems(Array(tvShow.networks))
         tvDetailVC?.movieNetworkImageDataSource.apply(snapshot, animatingDifferences: true)
     }

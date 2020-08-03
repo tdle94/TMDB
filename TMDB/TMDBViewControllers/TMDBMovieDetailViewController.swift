@@ -286,14 +286,29 @@ class TMDBMovieDetailViewController: UIViewController {
 
     func getMovieDetail() {
         guard let id = movieId else { return }
+        let group = DispatchGroup()
+        group.enter()
+
         repository.getMovieDetail(id: id) { result in
             switch result {
             case .success(let movie):
-                self.loadingView.removeFromSuperview()
+                group.leave()
                 self.movieDetail.displayMovieDetail(movie: movie)
             case .failure(let error):
-                self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
+            }
+        }
+
+        group.notify(queue: .main) {
+            self.repository.getMovieImages(from: id) { result in
+                switch result {
+                case .success(let imageResult):
+                    self.loadingView.removeFromSuperview()
+                    self.movieDetail.displayBackdropImages(imageResult)
+                case .failure(let error):
+                    self.loadingView.showError(true)
+                    debugPrint(error.localizedDescription)
+                }
             }
         }
     }

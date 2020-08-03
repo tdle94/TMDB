@@ -162,6 +162,12 @@ class TMDBTVDetailViewController: UIViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowSeasonCell, for: indexPath)
                 cell.textLabel?.text = item.name
                 cell.detailTextLabel?.text = item.overview
+                if let path = item.posterPath, let url = self.userSetting.getImageURL(from: path) {
+                    cell.imageView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
+                    cell.imageView?.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage")) { _, _, _, _ in
+                        cell.layoutSubviews()
+                    }
+                }
                 return cell
             }
 
@@ -246,6 +252,10 @@ class TMDBTVDetailViewController: UIViewController {
         getTVShowDetail()
     }
 
+    override func viewDidLayoutSubviews() {
+        tvShowSeaonTableViewHeightConstraint.constant = tvShowSeasonTableView.contentSize.height
+    }
+
     // MARK: - service
 
     @objc func refreshTVShowDetail() {
@@ -263,15 +273,30 @@ class TMDBTVDetailViewController: UIViewController {
 
     func getTVShowDetail() {
         guard let id = tvId else { return }
+        let group = DispatchGroup()
+        group.enter()
+
         repository.getTVShowDetail(from: id) { result in
             self.scrollView.refreshControl?.endRefreshing()
             switch result {
             case .success(let tvShow):
-                self.loadingView.removeFromSuperview()
+                group.leave()
                 self.tvDetailDisplay.displayTVShowDetail(tvShow)
             case .failure(let error):
-                self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
+            }
+        }
+    
+        group.notify(queue: .main) {
+            self.repository.getTVShowImages(from: id) { result in
+                switch result {
+                case .failure(let error):
+                    self.loadingView.showError(true)
+                    debugPrint(error.localizedDescription)
+                case .success(let imageResult):
+                    self.loadingView.removeFromSuperview()
+                    self.tvDetailDisplay.displayBackdropImages(imageResult)
+                }
             }
         }
     }
@@ -400,6 +425,16 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
             let creator = tvShowCreatorDataSrouce.itemIdentifier(for: indexPath) {
             
             coordinate?.navigateToPersonDetail(id: creator.id)
+        }
+    }
+}
+
+extension TMDBTVDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let id = tvId else { return }
+        if tableView == tvShowSeasonTableView {
+            let seasonNumber = tvShowSeasonDataSource.snapshot().itemIdentifiers(inSection: .Season)[indexPath.row].number
+            coordinate?.navigateToTVShowSeasonDetail(tvId: id, seasonNumber: seasonNumber)
         }
     }
 }

@@ -105,12 +105,6 @@ class TVShow: Object, Decodable {
         videos = try container.decodeIfPresent(VideoResult.self, forKey: .videos)
         images = try container.decodeIfPresent(ImageResult.self, forKey: .images)
         originCountry.append(objectsIn: try container.decode(List<String>.self, forKey: .originCountry))
-    
-        if images != nil {
-            let additionalImage = Images()
-            additionalImage.filePath = backdropPath ?? ""
-            images?.backdrops.append(additionalImage)
-        }
 
         if let seasons = try container.decodeIfPresent(List<Season>.self, forKey: .seasons) {
             self.seasons.append(objectsIn: seasons)
@@ -180,10 +174,13 @@ class Season: Object, Decodable {
     dynamic var overview: String = ""
     dynamic var posterPath: String?
     dynamic var number: Int = 0
+    dynamic var credits: CreditResult?
+    dynamic var images: ImageResult?
+    dynamic var videos: VideoResult?
     let episodes: List<Episode> = List()
 
     enum CodingKeys: String, CodingKey {
-        case id, name, overview, episodes
+        case id, name, overview, episodes, credits, images, videos
         case number = "season_number"
         case airDate = "air_date"
         case episodeCount = "episode_count"
@@ -199,13 +196,15 @@ class Season: Object, Decodable {
         posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
         number = try container.decode(Int.self, forKey: .number)
         id = try container.decodeIfPresent(Int.self, forKey: .id) ?? 0
-
+        credits = try container.decodeIfPresent(CreditResult.self, forKey: .credits)
+        images = try container.decodeIfPresent(ImageResult.self, forKey: .images)
+        videos = try container.decodeIfPresent(VideoResult.self, forKey: .videos)
         
         if container.contains(.episodes) {
             episodes.append(objectsIn: try container.decode(List<Episode>.self, forKey: .episodes))
         }
 
-        episodeCount = try container.decodeIfPresent(Int.self, forKey: .number) ?? episodes.count
+        episodeCount = try container.decodeIfPresent(Int.self, forKey: .episodeCount) ?? episodes.count
     }
     
     required init() {

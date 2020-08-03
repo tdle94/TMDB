@@ -101,7 +101,12 @@ extension TMDBRepository: TMDBTrendingRepository {
 
 extension TMDBRepository: TMDBTVShowRepository {
     func getTVShowSeasonDetail(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<Season, Error>) -> Void) {
-        if let season = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber) {
+        if
+            let season = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber),
+            !season.episodes.isEmpty,
+            season.credits != nil,
+            season.videos != nil
+        {
             completion(.success(season))
             return
         }
@@ -269,9 +274,47 @@ extension TMDBRepository: TMDBTVShowRepository {
             }
         }
     }
+
+    func getTVShowImages(from tvShowId: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
+        if let images = localDataSource.getTVShow(id: tvShowId)?.images {
+            completion(.success(images))
+            return
+        }
+        
+        services.getTVShowImages(from: tvShowId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let imageResult):
+                    self.localDataSource.saveTVShowImages(imageResult, to: tvShowId)
+                    completion(.success(imageResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
 }
 
 extension TMDBRepository: TMDBMovieRepository {
+    func getMovieImages(from movieId: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
+        if let images = localDataSource.getMovie(id: movieId)?.images {
+            completion(.success(images))
+            return
+        }
+        
+        services.getMovieImages(from: movieId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let imageResult):
+                    self.localDataSource.saveMovieImages(imageResult, to: movieId)
+                    completion(.success(imageResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getMovieReleaseDates(from movieId: Int) -> ReleaseDateResults? {
         return localDataSource.getMovie(id: movieId)?.releaseDates
     }

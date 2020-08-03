@@ -9,6 +9,30 @@
 import Foundation
 import RealmSwift
 
+@objcMembers
+class ImageResult: Object, Decodable {
+    let backdrops: List<Images> = List()
+    let posters: List<Images> = List()
+    
+    enum CodingKeys: String, CodingKey {
+        case backdrops, posters
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if container.contains(.backdrops) {
+            backdrops.append(objectsIn: try container.decode(List<Images>.self, forKey: .backdrops))
+        }
+        if container.contains(.posters) {
+            posters.append(objectsIn: try container.decode(List<Images>.self, forKey: .posters))
+        }
+    }
+
+    required init() {
+        super.init()
+    }
+}
+
 struct ImageConfigResult: Codable {
     let id: Int = 0
     var images: ImageConfig = ImageConfig()

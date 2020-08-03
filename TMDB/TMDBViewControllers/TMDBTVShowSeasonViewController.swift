@@ -139,6 +139,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
+        episodeTableView.layoutIfNeeded()
         episodeTableViewHeightConstraint.constant = episodeTableView.contentSize.height
     }
     

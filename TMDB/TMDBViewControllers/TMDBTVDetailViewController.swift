@@ -162,6 +162,12 @@ class TMDBTVDetailViewController: UIViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowSeasonCell, for: indexPath)
                 cell.textLabel?.text = item.name
                 cell.detailTextLabel?.text = item.overview
+                if let path = item.posterPath, let url = self.userSetting.getImageURL(from: path) {
+                    cell.imageView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
+                    cell.imageView?.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage")) { _, _, _, _ in
+                        cell.layoutSubviews()
+                    }
+                }
                 return cell
             }
 
@@ -244,6 +250,10 @@ class TMDBTVDetailViewController: UIViewController {
         tvDetailDisplay.tvDetailVC = self
         view.addSubview(loadingView)
         getTVShowDetail()
+    }
+
+    override func viewDidLayoutSubviews() {
+        tvShowSeaonTableViewHeightConstraint.constant = tvShowSeasonTableView.contentSize.height
     }
 
     // MARK: - service

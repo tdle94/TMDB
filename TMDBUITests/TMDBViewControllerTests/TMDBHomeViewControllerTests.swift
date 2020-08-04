@@ -87,4 +87,81 @@ class TMDBHomeViewControllerTests: XCTestCase {
             tvShowSeasonTableView.cells.firstMatch.tap()
         }
     }
+    
+    func testTapPopularMovie() {
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        let expectations = expectation(description: "AsyncExpectations")
+        let movieDetailScrollView = app.scrollViews.matching(identifier: "MovieDetailScrollView")
+        let cast = app.segmentedControls.buttons[NSLocalizedString("Cast", comment: "")]
+        let crew = app.segmentedControls.buttons[NSLocalizedString("Crew", comment: "")]
+        let similarMovie = app.segmentedControls.buttons[NSLocalizedString("Similar", comment: "")]
+        let recommendMovie = app.segmentedControls.buttons[NSLocalizedString("Recommend", comment: "")]
+        app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].tap()
+        collectionView.cells.firstMatch.tap()
+        expectations.fulfill()
+        waitForExpectations(timeout: 5)
+
+        // cast and/or crew tap
+        if cast.exists && crew.exists {
+            while !cast.isHittable && !crew.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            cast.tap()
+            crew.tap()
+        } else if cast.exists {
+            while !cast.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            cast.tap()
+        } else {
+            while !crew.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            crew.tap()
+        }
+
+        // similar and/or recommend movie tap
+        if similarMovie.exists && recommendMovie.exists {
+            while !similarMovie.isHittable && !recommendMovie.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+
+            similarMovie.tap()
+            recommendMovie.tap()
+        } else if similarMovie.exists {
+            while !similarMovie.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+
+            similarMovie.tap()
+        }
+    }
+    
+    func testTapTrendingThisWeek() {
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        app.segmentedControls.buttons[NSLocalizedString("This Week", comment: "")].tap()
+        let expectations = expectation(description: "AsyncExpectations")
+        collectionView.cells.firstMatch.tap()
+        expectations.fulfill()
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func testTapTrendingToday() {
+         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        app.segmentedControls.buttons[NSLocalizedString("Today", comment: "")].tap()
+        let expectations = expectation(description: "AsyncExpectations")
+        collectionView.cells.firstMatch.tap()
+        expectations.fulfill()
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testTapPopularPeople() {
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        app.segmentedControls.buttons[NSLocalizedString("People", comment: "")].tap()
+        let expectations = expectation(description: "AsyncExpectations")
+        collectionView.cells.firstMatch.tap()
+        expectations.fulfill()
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
 }

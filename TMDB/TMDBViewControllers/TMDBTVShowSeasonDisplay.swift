@@ -43,9 +43,15 @@ class TMDBTVShowSeasonDisplay {
     }
 
     func displaySeasonCredit(_ season: Season) {
+        guard var snapshot = tvShowSeasonVC?.creditDataSource.snapshot() else { return }
         guard
             let casts = season.credits?.cast,
-            var snapshot = tvShowSeasonVC?.creditDataSource.snapshot() else { return }
+            !casts.isEmpty
+            else {
+                snapshot.deleteSections([.Credit])
+                tvShowSeasonVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
+                return
+            }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
         snapshot.appendItems(Array(casts))
         tvShowSeasonVC?.creditDataSource.apply(snapshot, animatingDifferences: true)

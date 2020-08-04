@@ -108,16 +108,10 @@ class TMDBTVShowSeasonViewController: UIViewController {
     @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var episodeTableView: UITableView! {
         didSet {
+            episodeTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.tvShowEpisodeCell)
             episodeDataSource = UITableViewDiffableDataSource(tableView: episodeTableView) { tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowEpisodeCell, for: indexPath)
-                cell.textLabel?.text = item.name
-                cell.detailTextLabel?.text = item.overview
-                if let path = item.stillPath, let url = self.userSetting.getImageURL(from: path) {
-                    cell.imageView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                    cell.imageView?.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage")) { _, _, _, _ in
-                        cell.layoutSubviews()
-                    }
-                }
+                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowEpisodeCell, for: indexPath) as? TMDBCustomTableViewCell
+                cell?.configure(text: item.name, detailText: item.overview, imagePath: item.stillPath)
                 return cell
             }
 
@@ -156,5 +150,11 @@ class TMDBTVShowSeasonViewController: UIViewController {
                 self.tvShowSeasonDisplay.displaySeason(season)
             }
         }
+    }
+}
+
+extension TMDBTVShowSeasonViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 }

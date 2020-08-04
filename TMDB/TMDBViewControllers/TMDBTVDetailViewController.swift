@@ -146,6 +146,7 @@ class TMDBTVDetailViewController: UIViewController {
             networkCollectionView.register(TMDBNetworkImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
             movieNetworkImageDataSource = UICollectionViewDiffableDataSource(collectionView: networkCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBNetworkImageCell
+                
                 cell?.configure(networks: item)
                 return cell
             }
@@ -157,17 +158,10 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var tvShowSeaonTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tvShowSeasonTableView: UITableView! {
         didSet {
-            
+            tvShowSeasonTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.tvShowSeasonCell)
             tvShowSeasonDataSource = UITableViewDiffableDataSource(tableView: tvShowSeasonTableView) { tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowSeasonCell, for: indexPath)
-                cell.textLabel?.text = item.name
-                cell.detailTextLabel?.text = item.overview
-                if let path = item.posterPath, let url = self.userSetting.getImageURL(from: path) {
-                    cell.imageView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                    cell.imageView?.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage")) { _, _, _, _ in
-                        cell.layoutSubviews()
-                    }
-                }
+                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowSeasonCell, for: indexPath) as? TMDBCustomTableViewCell
+                cell?.configure(text: item.name, detailText: item.overview, imagePath: item.posterPath)
                 return cell
             }
 
@@ -436,5 +430,9 @@ extension TMDBTVDetailViewController: UITableViewDelegate {
             let seasonNumber = tvShowSeasonDataSource.snapshot().itemIdentifiers(inSection: .Season)[indexPath.row].number
             coordinate?.navigateToTVShowSeasonDetail(tvId: id, seasonNumber: seasonNumber)
         }
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
 }

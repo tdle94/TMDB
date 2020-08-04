@@ -28,10 +28,10 @@ class TMDBSearchResultViewController: UIViewController {
     @IBOutlet weak var searchResultTableView: UITableView! {
         didSet {
             searchResultTableView.separatorInset = .zero
-            searchResultTableView.register(TMDBSearchResultCell.self, forCellReuseIdentifier: Constant.Identifier.searchResultCell)
+            searchResultTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.searchResultCell)
             searchResultDataSource = UITableViewDiffableDataSource(tableView: searchResultTableView) { tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.searchResultCell, for: indexPath) as! TMDBSearchResultCell
-                cell.configure(item: item)
+                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.searchResultCell, for: indexPath) as? TMDBCustomTableViewCell
+                cell?.configure(text: item.originalTitle ?? item.originalName ?? item.name, detailText: item.releaseDate ?? item.firstAirDate, imagePath: item.profilePath ?? item.posterPath)
                 return cell
             }
             
@@ -58,17 +58,14 @@ class TMDBSearchResultViewController: UIViewController {
 
 extension TMDBSearchResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard
-            let cell = tableView.cellForRow(at: indexPath) as? TMDBSearchResultCell,
-            let id = cell.id
-            else { return }
+        guard let item = searchResultDataSource.itemIdentifier(for: indexPath) else { return }
 
-        if cell.mediaType == "movie" {
-            tmdbSearchProtocol?.navigateToMovieDetail(id: id)
-        } else if cell.mediaType == "person" {
-            tmdbSearchProtocol?.navigateToPersonDetail(id: id)
-        } else if cell.mediaType == "tv" {
-            tmdbSearchProtocol?.navigateToTVShowDetail(id: id)
+        if item.mediaType == "movie" {
+            tmdbSearchProtocol?.navigateToMovieDetail(id: item.id)
+        } else if item.mediaType == "person" {
+            tmdbSearchProtocol?.navigateToPersonDetail(id: item.id)
+        } else if item.mediaType == "tv" {
+            tmdbSearchProtocol?.navigateToTVShowDetail(id: item.id)
         }
     }
     

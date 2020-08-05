@@ -250,10 +250,13 @@ class Episode: Object, Decodable {
     dynamic var stillPath: String?
     dynamic var voteAverage: Double = 0
     dynamic var voteCount: Int = 0
+    dynamic var videos: VideoResult?
+    dynamic var credits: CreditResult?
     let crew: List<Crew> = List()
-    
+    let guestStars: List<Cast> = List()
+
     enum CodingKeys: String, CodingKey {
-        case id, name, overview, crew
+        case id, name, overview, crew, videos, credits
         case airDate = "air_date"
         case episodeNumber = "episode_number"
         case productionCode = "production_code"
@@ -261,8 +264,9 @@ class Episode: Object, Decodable {
         case stillPath = "still_path"
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+        case guestStars = "guest_stars"
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         airDate = try container.decode(String.self, forKey: .airDate)
@@ -275,8 +279,13 @@ class Episode: Object, Decodable {
         stillPath = try container.decodeIfPresent(String.self, forKey: .stillPath)
         voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         voteCount = try container.decode(Int.self, forKey: .voteCount)
+        videos = try container.decodeIfPresent(VideoResult.self, forKey: .videos)
+        credits = try container.decodeIfPresent(CreditResult.self, forKey: .credits)
         if container.contains(.crew) {
             crew.append(objectsIn: try container.decode(List<Crew>.self, forKey: .crew))
+        }
+        if container.contains(.guestStars) {
+            guestStars.append(objectsIn: try container.decode(List<Cast>.self, forKey: .guestStars))
         }
     }
 

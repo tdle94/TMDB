@@ -12,7 +12,7 @@ import SDWebImage
 
 class TMDBCustomTableViewCell: UITableViewCell {
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
-    var noImage: UIImage?
+    var noImage: UIImage? = UIImage(named: "NoImage")?.sd_resizedImage(with: CGSize(width: 70, height: 50), scaleMode: .fill)
 
     override func prepareForReuse() {
         textLabel?.text = ""
@@ -34,7 +34,6 @@ class TMDBCustomTableViewCell: UITableViewCell {
         textLabel?.font = UIFont(name: textLabel!.font.fontName, size: 15)
         detailTextLabel?.numberOfLines = 2
         accessoryType = .disclosureIndicator
-        noImage = UIImage(named: "NoImage")?.sd_resizedImage(with: self.imageView?.frame.size ?? .zero, scaleMode: .aspectFit)
     }
 
     required init?(coder: NSCoder) {

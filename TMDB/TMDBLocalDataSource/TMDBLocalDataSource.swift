@@ -24,6 +24,8 @@ protocol TMDBLocalDataSourceProtocol {
     func saveTVShowSeason(_ season: Season, to tvShowId: Int)
     func getTVShowSeason(tvShowId: Int, seasonNumber: Int) -> Season?
     func saveTVShowImages(_ tvShowImages: ImageResult, to tvShowId: Int)
+    func getTVShowEpisode(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> Episode?
+    func saveTVShowEpisode(tvShowId: Int, seasonNumber: Int, episode: Episode)
     // people
     func getPerson(id: Int) -> People?
     func savePerson(_ person: People)
@@ -145,6 +147,23 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         realm.beginWrite()
         getTVShow(id: tvShowId)?.images = tvShowImages
         try? realm.commitWrite()
+    }
+
+    func saveTVShowEpisode(tvShowId: Int, seasonNumber: Int, episode: Episode) {
+        realm.beginWrite()
+        let tvShow = getTVShow(id: tvShowId)
+        let season = tvShow?.seasons.first(where: { $0.number == seasonNumber })
+        if
+            let seasonIndex = tvShow?.seasons.firstIndex(where: { $0.number == seasonNumber }),
+            let episodeIndex = season?.episodes.firstIndex(where: { $0.seasonNumber == seasonNumber })
+        {
+            tvShow?.seasons[seasonIndex].episodes[episodeIndex] = episode
+        }
+        try? realm.commitWrite()
+    }
+
+    func getTVShowEpisode(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> Episode? {
+        return getTVShow(id: tvShowId)?.seasons.first(where: { $0.number == seasonNumber })?.episodes.first(where: { $0.episodeNumber == episodeNumber })
     }
 
     // MARK: - people

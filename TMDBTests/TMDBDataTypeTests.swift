@@ -111,4 +111,8 @@ class TMDBDataTypeTests: XCTestCase {
     func testTVShowSesaonDetail() {
         XCTAssertNoThrow(try JSONDecoder().decode(Season.self, from: tvShowSeasonDetail))
     }
+    
+    func testTVShowEpisodeDetail() {
+        XCTAssertNoThrow(try JSONDecoder().decode(Episode.self, from: tvShowEpisodeFixture))
+    }
 }

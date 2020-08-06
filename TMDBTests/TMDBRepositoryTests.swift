@@ -1931,7 +1931,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     func testGetTVShowNotInRealmFail() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getTVShowEpisodeURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1, language: NSLocale.current.languageCode)
+        let request = TMDBURLRequestBuilder().getTVShowEpisodeURLRequest(from: 1, seasonNumber: 2, episodeNumber: 1, language: NSLocale.current.languageCode)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         
         /*GIVEN*/
@@ -1942,25 +1942,25 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         stub(requestBuilder) { stub in
-            when(stub).getTVShowEpisodeURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1, language: NSLocale.current.languageCode).thenReturn(request)
+            when(stub).getTVShowEpisodeURLRequest(from: 1, seasonNumber: 2, episodeNumber: 1, language: NSLocale.current.languageCode).thenReturn(request)
         }
         
         stub(localDataSource) { stub in
-            when(stub).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 1).thenReturn(nil)
-            when(stub).saveTVShowEpisode(tvShowId: 3, seasonNumber: 1, episode: any()).thenDoNothing()
+            when(stub).getTVShowEpisode(from: 1, seasonNumber: 2, episodeNumber: 1).thenReturn(nil)
+            when(stub).saveTVShowEpisode(tvShowId: 1, seasonNumber: 2, episode: any()).thenDoNothing()
         }
         
         /*WHEN*/
-        repository.getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 1) { _ in
+        repository.getTVShowEpisode(from: 1, seasonNumber: 2, episodeNumber: 1) { _ in
             expectation.fulfill()
         }
         
         
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 1)
-        verify(localDataSource, never()).saveTVShowEpisode(tvShowId: 3, seasonNumber: 1, episode: any())
+        verify(localDataSource).getTVShowEpisode(from: 1, seasonNumber: 2, episodeNumber: 1)
+        verify(localDataSource, never()).saveTVShowEpisode(tvShowId: 1, seasonNumber: 2, episode: any())
         verify(session).send(request: requestMatcher, responseType: any(Episode.Type.self), completion: anyClosure())
-        verify(requestBuilder).getTVShowEpisodeURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1, language: NSLocale.current.languageCode)
+        verify(requestBuilder).getTVShowEpisodeURLRequest(from: 1, seasonNumber: 2, episodeNumber: 1, language: NSLocale.current.languageCode)
     }
 }

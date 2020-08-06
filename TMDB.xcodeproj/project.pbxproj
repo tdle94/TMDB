@@ -26,6 +26,7 @@
 		342E66302489BB33003B5CB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 342E662E2489BB33003B5CB8 /* LaunchScreen.storyboard */; };
 		343CC9DE2498245600FEC4F6 /* TMDBImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343CC9DD2498245600FEC4F6 /* TMDBImageService.swift */; };
 		343CC9E02498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343CC9DF2498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift */; };
+		34504DB424DB150900FC6CE9 /* TVShowEpisodeFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34504DB324DB150900FC6CE9 /* TVShowEpisodeFixture.swift */; };
 		345CC92E24951D8600991A8B /* TMDBUserSettingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */; };
 		3470E7E224A82A1E00579E7B /* Credit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470E7E124A82A1E00579E7B /* Credit.swift */; };
 		347456FE24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347456FD24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift */; };
@@ -178,6 +179,7 @@
 		342E663C2489BB33003B5CB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		343CC9DD2498245600FEC4F6 /* TMDBImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBImageService.swift; sourceTree = "<group>"; };
 		343CC9DF2498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBServices+TMDBImageService.swift"; sourceTree = "<group>"; };
+		34504DB324DB150900FC6CE9 /* TVShowEpisodeFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowEpisodeFixture.swift; sourceTree = "<group>"; };
 		345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBUserSettingTests.swift; sourceTree = "<group>"; };
 		3470E7E124A82A1E00579E7B /* Credit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credit.swift; sourceTree = "<group>"; };
 		347456FD24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBPersonDetailDisplay.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 				3498AA0124BBD3090080399A /* MultiSearchFixture.swift */,
 				34D4C25C24BE463A0081DFA5 /* PersonDetailFixture.swift */,
 				349B9C4824D5DF7100B6531B /* TVShowSeasonDetail.swift */,
+				34504DB324DB150900FC6CE9 /* TVShowEpisodeFixture.swift */,
 			);
 			path = TMDBServiceJsonData;
 			sourceTree = "<group>";
@@ -1046,6 +1049,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34504DB424DB150900FC6CE9 /* TVShowEpisodeFixture.swift in Sources */,
 				345CC92E24951D8600991A8B /* TMDBUserSettingTests.swift in Sources */,
 				348BDA0A24946BF000EA9236 /* TrendingOnTVThisWeekFixture.swift in Sources */,
 				348BDA04249469E700EA9236 /* AllTodayTrending.swift in Sources */,

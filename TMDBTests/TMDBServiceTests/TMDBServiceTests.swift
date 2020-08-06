@@ -509,4 +509,32 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getMovieImagesURLRequest(from: 3)
     }
+    
+    // MARK: - tv show episode
+    func testGetTVShowEpisode() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowEpisodeURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1, language: NSLocale.current.languageCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(Episode.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(Episode()))
+            }
+        }
+
+        stub(urlRequestBuilder) { stub in
+            when(stub).getTVShowEpisodeURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1, language: NSLocale.current.languageCode).thenReturn(request)
+        }
+
+        /*WHEN*/
+        services.getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(Episode.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getTVShowEpisodeURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1, language: NSLocale.current.languageCode)
+    }
 }

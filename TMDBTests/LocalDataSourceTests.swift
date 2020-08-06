@@ -258,6 +258,29 @@ class LocalDataSourceTests: QuickSpec {
                 localDataSource.saveMovieImages(imageResult, to: 2)
                 expect(localDataSource.getMovie(id: 2)?.images).toNot(beNil())
             }
+
+            it("save tv show episode") {
+                let tvShow = TVShow()
+                let season = Season()
+                let episode = Episode()
+                season.number = 1
+                episode.episodeNumber = 1
+                tvShow.id = 1
+                season.episodes.append(episode)
+                tvShow.seasons.append(season)
+
+                localDataSource.saveTVShow(tvShow)
+                expect(localDataSource.getTVShow(id: 1)?.credits).to(beNil())
+                expect(localDataSource.getTVShow(id: 1)?.videos).to(beNil())
+
+                testRealm.beginWrite()
+                episode.credits = CreditResult()
+                episode.videos = VideoResult()
+                try? testRealm.commitWrite()
+                localDataSource.saveTVShowEpisode(tvShowId: 1, seasonNumber: 1, episode: episode)
+                expect(localDataSource.getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1)?.credits).toNot(beNil())
+                expect(localDataSource.getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1)?.videos).toNot(beNil())
+            }
         }
     }
 }

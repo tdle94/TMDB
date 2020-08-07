@@ -240,7 +240,7 @@ class Networks: Object, Decodable {
 
 @objcMembers
 class Episode: Object, Decodable {
-    dynamic var airDate: String = ""
+    dynamic var airDate: String?
     dynamic var episodeNumber: Int = 0
     dynamic var id: Int = 0
     dynamic var name: String = ""
@@ -269,7 +269,7 @@ class Episode: Object, Decodable {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        airDate = try container.decode(String.self, forKey: .airDate)
+        airDate = try container.decodeIfPresent(String.self, forKey: .airDate)
         episodeNumber = try container.decode(Int.self, forKey: .episodeNumber)
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)

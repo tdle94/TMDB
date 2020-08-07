@@ -31,6 +31,8 @@ class TMDBCustomTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         backgroundColor = Constant.Color.backgroundColor
+        contentView.backgroundColor = Constant.Color.backgroundColor
+        selectionStyle = .none
         textLabel?.font = UIFont(name: textLabel!.font.fontName, size: 15)
         detailTextLabel?.numberOfLines = 2
         accessoryType = .disclosureIndicator

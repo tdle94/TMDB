@@ -41,23 +41,18 @@ class TMDBPersonDetailDisplay {
         personDetailVC?.personImageDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayMovieAppearIn(movieCredit: MovieCredit?) {
-        guard
-            let cast = movieCredit?.cast,
-            var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
-
+    func displayMovieAppearIn(_ movies: [Movie]) {
+        guard var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers)
-        snapshot.appendItems(Array(cast))
+        snapshot.appendItems(Array(movies))
         personDetailVC?.appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func displayTVShowAppearIn(tvCredit: TVCredit?) {
-        guard
-            let cast = tvCredit?.cast,
-            var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
+    func displayTVShowAppearIn(_ tvShows: [TVShow]) {
+        guard var snapshot = personDetailVC?.appearInDataSource.snapshot() else { return }
         snapshot.deleteItems(snapshot.itemIdentifiers)
-        snapshot.appendItems(Array(cast))
+        snapshot.appendItems(Array(tvShows))
         personDetailVC?.appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -68,25 +63,26 @@ class TMDBPersonDetailDisplay {
             let movieCredit = person.movieCredits,
             let tvCredit = person.tvCredits
             else { return }
-
-        if movieCredit.cast.isEmpty, tvCredit.cast.isEmpty {
+        
+        if !movieCredit.cast.isEmpty {
+            personDetailVC?.appearInHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Movies", comment: ""), at: 0, animated: true)
+        }
+        
+        if !tvCredit.cast.isEmpty {
+            personDetailVC?.appearInHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("TV Shows", comment: ""), at: 1, animated: true)
+        }
+        
+        if personDetailVC?.appearInHeaderView?.segmentControl.numberOfSegments == 2 || tvCredit.cast.isEmpty {
+            displayMovieAppearIn(Array(movieCredit.cast))
+        } else if personDetailVC?.appearInHeaderView?.segmentControl.numberOfSegments == 1 {
+            displayTVShowAppearIn(Array(tvCredit.cast))
+        } else {
             snapshot.deleteSections(snapshot.sectionIdentifiers)
             personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
-            personDetailVC?.appearInCollectionViewHeightConstraint.constant = 0
-        } else if movieCredit.cast.isEmpty {
-            personDetailVC?.appearInHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
-            personDetailVC?.appearInHeaderView?.segmentControl.selectedSegmentIndex = 0
-            personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(tvCredit.cast))
-            personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
-        } else if tvCredit.cast.isEmpty {
-            personDetailVC?.appearInHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
-            personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
-            snapshot.appendItems(Array(movieCredit.cast))
-            personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
-        } else {
-            displayMovieAppearIn(movieCredit: movieCredit)
         }
+
+        personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()
+        personDetailVC?.appearInHeaderView?.segmentControl.selectedSegmentIndex = 0
     }
 
     private func displayBiographyDetail(person: People) {

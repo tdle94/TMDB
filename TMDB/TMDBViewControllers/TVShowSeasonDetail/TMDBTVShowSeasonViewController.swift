@@ -23,10 +23,6 @@ class TMDBTVShowSeasonViewController: UIViewController {
 
     var tvShowSeasonDisplay: TMDBTVShowSeasonDisplay = TMDBTVShowSeasonDisplay()
 
-    enum SeasonSection: String, CaseIterable {
-        case Episode = "Episode"
-    }
-
     enum CreditSection: String, CaseIterable {
         case Credit = "Credit"
     }
@@ -35,7 +31,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
         case Video = "Video"
     }
 
-    var episodeDataSource: UITableViewDiffableDataSource<SeasonSection, Episode>!
+    var episodeDataSource: TMDBTableDataSource!
 
     var creditDataSource: UICollectionViewDiffableDataSource<CreditSection, Cast>!
 
@@ -62,7 +58,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
         didSet {
             videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            videoCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+            videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
             videoDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
@@ -71,7 +67,8 @@ class TMDBTVShowSeasonViewController: UIViewController {
             }
             
             videoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.videoMovieHeader, for: indexPath) as? TMDBVideoHeaderView
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Video", comment: "")
                 return header
             }
             
@@ -84,7 +81,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
         didSet {
             creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            creditCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
             creditDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
@@ -94,9 +91,13 @@ class TMDBTVShowSeasonViewController: UIViewController {
 
             creditDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.creditMovieHeader,
-                                                                             for: indexPath) as? TMDBCreditHeaderView
-                header?.segmentControl.removeSegment(at: 1, animated: false)
+                                                                             withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                             for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Credit", comment: "")
+                if header?.segmentControl.numberOfSegments == 0 {
+                    header?.segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
+                }
+                header?.segmentControl.selectedSegmentIndex = 0
                 return header
             }
             
@@ -109,14 +110,15 @@ class TMDBTVShowSeasonViewController: UIViewController {
     @IBOutlet weak var episodeTableView: UITableView! {
         didSet {
             episodeTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.tvShowEpisodeCell)
-            episodeDataSource = UITableViewDiffableDataSource(tableView: episodeTableView) { tableView, indexPath, item in
+            episodeDataSource = TMDBTableDataSource(tableView: episodeTableView) { tableView, indexPath, item in
                 let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowEpisodeCell, for: indexPath) as? TMDBCustomTableViewCell
-                cell?.configure(text: item.name, detailText: item.overview, imagePath: item.stillPath)
+                let episode = item as? Episode
+                cell?.configure(text: episode?.name, detailText: episode?.overview, imagePath: episode?.stillPath)
                 return cell
             }
 
             var snapshot = episodeDataSource.snapshot()
-            snapshot.appendSections([.Episode])
+            snapshot.appendSections([.episode])
             episodeDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -156,5 +158,13 @@ class TMDBTVShowSeasonViewController: UIViewController {
 extension TMDBTVShowSeasonViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard
+            let tvId = tvId,
+            let episode = episodeDataSource.itemIdentifier(for: indexPath) as? Episode else { return }
+
+        coordinate?.navigateToTVShowEpisodeDetail(tvId: tvId, seasonNumber: episode.seasonNumber, episodeNumber: episode.episodeNumber)
     }
 }

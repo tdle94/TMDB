@@ -40,9 +40,9 @@ class TMDBPersonDetailViewController: UIViewController {
         didSet {
             personImageCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             personImageCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            personImageCollectionView.register(TMDBPersonImageHeaderView.self,
+            personImageCollectionView.register(TMDBPreviewHeaderView.self,
                                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                               withReuseIdentifier: Constant.Identifier.personImageHeader)
+                                               withReuseIdentifier: Constant.Identifier.previewHeader)
 
             personImageDataSource = UICollectionViewDiffableDataSource(collectionView: personImageCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
@@ -52,8 +52,9 @@ class TMDBPersonDetailViewController: UIViewController {
 
             personImageDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.personImageHeader,
-                                                                             for: indexPath) as? TMDBPersonImageHeaderView
+                                                                             withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                             for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Images", comment: "")
                 return header
             }
 
@@ -62,13 +63,13 @@ class TMDBPersonDetailViewController: UIViewController {
             personImageDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
-    weak var appearInHeaderView: TMDBAppearInHeaderView?
+    weak var appearInHeaderView: TMDBPreviewHeaderView?
     @IBOutlet weak var appearInCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var appearInCollectionView: UICollectionView! {
         didSet {
             appearInCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             appearInCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            appearInCollectionView.register(TMDBAppearInHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            appearInCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             appearInDataSource = UICollectionViewDiffableDataSource(collectionView: appearInCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
                 cell?.configure(item: item)
@@ -78,8 +79,9 @@ class TMDBPersonDetailViewController: UIViewController {
                 self.appearInHeaderView =
                     (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) ??
                     collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                            withReuseIdentifier: Constant.Identifier.creditMovieHeader,
-                                                                            for: indexPath)) as? TMDBAppearInHeaderView
+                                                                            withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                            for: indexPath)) as? TMDBPreviewHeaderView
+                self.appearInHeaderView?.label.text = NSLocalizedString("Appear In", comment: "")
                 self.appearInHeaderView?.delegate = self
                 return self.appearInHeaderView
             }
@@ -141,9 +143,9 @@ extension TMDBPersonDetailViewController: TMDBPreviewSegmentControl {
         guard let id = personId else { return }
 
         if selected == NSLocalizedString("Movies", comment: "") {
-            personDetail.displayMovieAppearIn(movieCredit: repository.getMovieCredits(from: id))
+            personDetail.displayMovieAppearIn(repository.getMovieCredits(from: id))
         } else if selected == NSLocalizedString("TV Shows", comment: "") {
-            personDetail.displayTVShowAppearIn(tvCredit: repository.getTVCredits(from: id))
+            personDetail.displayTVShowAppearIn(repository.getTVCredits(from: id))
         }
     }
 }

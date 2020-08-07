@@ -77,8 +77,8 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var availableLanguageLabel: UILabel!
     @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalInformationTableView: UITableView!
-    weak var creditHeader: TMDBCreditHeaderView?
-    weak var moreMovieHeader: TMDBAdditionalHeaderView?
+    weak var creditHeader: TMDBPreviewHeaderView?
+    weak var moreMovieHeader: TMDBPreviewHeaderView?
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
@@ -127,7 +127,7 @@ class TMDBMovieDetailViewController: UIViewController {
         didSet {
             videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            videoCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
+            videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
             videoMovieDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
@@ -136,7 +136,8 @@ class TMDBMovieDetailViewController: UIViewController {
             }
 
             videoMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.videoMovieHeader, for: indexPath) as? TMDBVideoHeaderView
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Video", comment: "")
                 return header
             }
             
@@ -149,7 +150,7 @@ class TMDBMovieDetailViewController: UIViewController {
         didSet {
             creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            creditCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
             creditMovieDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
@@ -157,11 +158,12 @@ class TMDBMovieDetailViewController: UIViewController {
                 return cell
             }
             
-            creditMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                self.creditHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? TMDBCreditHeaderView) ??
-                                 (collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                  withReuseIdentifier: Constant.Identifier.creditMovieHeader,
-                                                                                  for: indexPath) as? TMDBCreditHeaderView)
+            creditMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                self.creditHeader = (collectionView.supplementaryView(forElementKind: kind, at: indexPath)  ??
+                                 collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                  withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                                  for: indexPath)) as? TMDBPreviewHeaderView
+                self.creditHeader?.label.text = NSLocalizedString("Credit", comment: "")
                 self.creditHeader?.delegate = self
                 return self.creditHeader
             }
@@ -175,21 +177,20 @@ class TMDBMovieDetailViewController: UIViewController {
         didSet {
             matchingMoviesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            matchingMoviesCollectionView.register(TMDBAdditionalHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.additionalHeader)
-            
+            matchingMoviesCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             matchingMoviesDataSource = UICollectionViewDiffableDataSource(collectionView: matchingMoviesCollectionView) { collectionView, indexPath, movie in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
                 cell?.configure(item: movie)
                 return cell
             }
 
-            matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) ??
-                                        collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                        withReuseIdentifier: Constant.Identifier.additionalHeader,
-                                                                                        for: indexPath)) as? TMDBAdditionalHeaderView
+            matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ??
+                                        collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                                        for: indexPath)) as? TMDBPreviewHeaderView
                 self.moreMovieHeader?.delegate = self
-
+                self.moreMovieHeader?.label.text = NSLocalizedString("More", comment: "")
                 return self.moreMovieHeader
             }
 
@@ -202,17 +203,18 @@ class TMDBMovieDetailViewController: UIViewController {
         didSet {
             productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.2, fractionHeight: 0.4)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            productionCompaniesCollectionView.register(TMDBProduceByHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieProduceByHeader)
-            
+            productionCompaniesCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+
             productionCompanyDataSource = UICollectionViewDiffableDataSource(collectionView: productionCompaniesCollectionView) { collectionView, indexPath, productionCompany in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
                 cell?.configure(item: productionCompany)
                 return cell
             }
-            productionCompanyDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.movieProduceByHeader,
-                                                                             for: indexPath) as? TMDBProduceByHeaderView
+            productionCompanyDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                             withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                             for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Produce by", comment: "")
                 return header
             }
 
@@ -315,6 +317,7 @@ class TMDBMovieDetailViewController: UIViewController {
     
     @objc func refreshMovieDetail() {
         guard let id = movieId else { return }
+        backdropImageCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
         repository.refreshMovie(id: id) { result in
             self.scrollView.refreshControl?.endRefreshing()
             switch result {

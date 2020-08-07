@@ -60,7 +60,7 @@ class TMDBTVShowSeasonDisplay {
 
     func displaySeasonEpisode(_ season: Season) {
         guard var snapshot = tvShowSeasonVC?.episodeDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Episode))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .episode))
         snapshot.appendItems(Array(season.episodes))
         tvShowSeasonVC?.episodeDataSource.apply(snapshot, animatingDifferences: true)
         tvShowSeasonVC?.episodeTableViewHeightConstraint.constant = tvShowSeasonVC?.episodeTableView.contentSize.height ?? 0
@@ -80,7 +80,13 @@ class TMDBTVShowSeasonDisplay {
     }
 
     func displayAirDateLabel(_ season: Season) {
-        tvShowSeasonVC?.airDateLabel.attributedText = NSAttributedString(string: "\(season.episodeCount) episodes \u{2022} \(season.airDate ?? "")",
+        let airDate: String
+        if season.airDate == nil || season.airDate == "" {
+            airDate = "\(season.episodeCount) episodes"
+        } else {
+            airDate = "\(season.episodeCount) episodes \u{2022} \(season.airDate!)"
+        }
+        tvShowSeasonVC?.airDateLabel.attributedText = NSAttributedString(string: airDate,
                                                                          attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!])
     }
 

@@ -30,7 +30,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome) as! TMDBHomeViewController
         let movieVC = TMDBMovieViewController()
         let tvVC = TMDBTelevisionViewController()
-        let peopleVC = TMDBPeopleViewController()
         let searchVC = TMDBSearchViewController()
         
         let tmdbLogo = UIImage(named: Constant.imageLogo)?.withRenderingMode(.alwaysOriginal)
@@ -39,7 +38,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         homeVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
         movieVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
         tvVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
-        peopleVC.navigationItem.setLeftBarButton(imageBarButtonItem, animated: true)
 
         // set navigation controller
         let homeNavController = UINavigationController(rootViewController: homeVC)
@@ -59,11 +57,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tvNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         tvNavController.tabBarItem.title = NSLocalizedString("TV Shows", comment: "")
         tvNavController.tabBarItem.image = UIImage(systemName: "tv.fill")
-        
-        let peopleNavController = UINavigationController(rootViewController: peopleVC)
-        peopleNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        peopleNavController.tabBarItem.title = NSLocalizedString("People", comment: "")
-        peopleNavController.tabBarItem.image = UIImage(systemName: "person.2.fill")
+
 
         let searchNavController = UINavigationController(rootViewController: searchVC)
         searchNavController.navigationBar.barTintColor = Constant.Color.primaryColor
@@ -79,7 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
         tabBarController.tabBar.unselectedItemTintColor = Constant.Color.secondaryColor
         tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
-        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController, peopleNavController, searchNavController], animated: true)
+        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController, searchNavController], animated: true)
 
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController

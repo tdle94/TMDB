@@ -181,6 +181,7 @@ class TMDBTVDetailViewController: UIViewController {
             }
             matchingTVShowDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 self.addtionalHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath)) as? TMDBPreviewHeaderView
+                self.addtionalHeaderView?.label.text = NSLocalizedString("More", comment: "")
                 self.addtionalHeaderView?.delegate = self
                 return self.addtionalHeaderView
             }

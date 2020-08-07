@@ -190,7 +190,7 @@ extension TMDBHomeViewController {
         // language
         let button = UIButton()
         button.setTitle(NSLocale.current.languageCode?.uppercased(), for: .normal)
-        button.addTarget(self, action: #selector(changeLanguage), for: .touchUpInside)
+        button.addTarget(self, action: #selector(openSetting), for: .touchUpInside)
         button.layer.borderWidth = 1
         button.layer.borderColor = Constant.Color.backgroundColor.cgColor
         button.layer.cornerRadius = 5
@@ -200,7 +200,7 @@ extension TMDBHomeViewController {
         // region
         if let region = NSLocale.current.regionCode {
             let regionFlag = UIImage(named: "CountryFlags/\(userSetting.countriesCode.first(where: { $0.iso31661 == region })?.name ?? "")")?.sd_resizedImage(with: CGSize(width: 30, height: 30), scaleMode: .aspectFill)?.withRenderingMode(.alwaysOriginal)
-            let regionSetting = UIBarButtonItem(image: regionFlag, style: .plain, target: self, action: #selector(changeRegion))
+            let regionSetting = UIBarButtonItem(image: regionFlag, style: .plain, target: self, action: #selector(openSetting))
             navigationItem.setRightBarButtonItems([
                 languageSetting,
                 regionSetting
@@ -209,14 +209,8 @@ extension TMDBHomeViewController {
         
     }
 
-    @objc func changeRegion() {
+    @objc func openSetting() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
     }
-    
-    @objc func changeLanguage() {
-        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(url)
-    }
-
 }

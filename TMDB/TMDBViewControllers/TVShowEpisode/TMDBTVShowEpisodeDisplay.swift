@@ -48,6 +48,8 @@ class TMDBTVShowEpisodeDetailDisplay {
         } else {
             snapshot.deleteSections([.Credit])
             tvShowEpisodeVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
+            tvShowEpisodeVC?.creditCollectionViewHeightConstraint.constant = 0
+            return
         }
         tvShowEpisodeVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
         tvShowEpisodeVC?.creditCollectionView.collectionViewLayout.invalidateLayout()

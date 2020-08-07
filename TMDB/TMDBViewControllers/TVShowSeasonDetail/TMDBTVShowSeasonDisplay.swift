@@ -50,6 +50,7 @@ class TMDBTVShowSeasonDisplay {
             else {
                 snapshot.deleteSections([.Credit])
                 tvShowSeasonVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
+                tvShowSeasonVC?.creditCollectionViewHeightConstraint.constant = 0
                 return
             }
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))

@@ -554,8 +554,8 @@
 		34CB50032490375E00E9B5CF /* TMDBViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				34D6672524DC474B003A73BA /* TVShowEpisode */,
 				34D6672424DC464A003A73BA /* Search */,
+				34D6672524DC474B003A73BA /* TVShowEpisode */,
 				34D6672324DC45C7003A73BA /* PersonDetail */,
 				34D6672224DC45B8003A73BA /* TVShowSeasonDetail */,
 				34D6672124DC45A7003A73BA /* TVShowDetail */,

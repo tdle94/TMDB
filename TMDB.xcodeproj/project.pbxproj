@@ -28,7 +28,7 @@
 		343CC9E02498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343CC9DF2498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift */; };
 		34504DB424DB150900FC6CE9 /* TVShowEpisodeFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34504DB324DB150900FC6CE9 /* TVShowEpisodeFixture.swift */; };
 		345CC92E24951D8600991A8B /* TMDBUserSettingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */; };
-		346D95F524DDFB2E0056EE4C /* TMDBTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D95F424DDFB2E0056EE4C /* TMDBTableDataSource.swift */; };
+		346D95F524DDFB2E0056EE4C /* TMDBDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D95F424DDFB2E0056EE4C /* TMDBDataSource.swift */; };
 		3470E7E224A82A1E00579E7B /* Credit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470E7E124A82A1E00579E7B /* Credit.swift */; };
 		347456FE24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347456FD24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift */; };
 		347520B82490932B000ABA00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347520BA2490932B000ABA00 /* Localizable.strings */; };
@@ -176,7 +176,7 @@
 		343CC9DF2498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBServices+TMDBImageService.swift"; sourceTree = "<group>"; };
 		34504DB324DB150900FC6CE9 /* TVShowEpisodeFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowEpisodeFixture.swift; sourceTree = "<group>"; };
 		345CC92D24951D8600991A8B /* TMDBUserSettingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBUserSettingTests.swift; sourceTree = "<group>"; };
-		346D95F424DDFB2E0056EE4C /* TMDBTableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBTableDataSource.swift; sourceTree = "<group>"; };
+		346D95F424DDFB2E0056EE4C /* TMDBDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBDataSource.swift; sourceTree = "<group>"; };
 		3470E7E124A82A1E00579E7B /* Credit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credit.swift; sourceTree = "<group>"; };
 		347456FD24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBPersonDetailDisplay.swift; sourceTree = "<group>"; };
 		347520B92490932B000ABA00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -591,7 +591,7 @@
 				349A22E824B7F60900939367 /* TMDBReviewCell.swift */,
 				3498A9FD24BBB85A0080399A /* TMDBCustomTableViewCell.swift */,
 				34B55C2724C4E57800784C69 /* TMDBImageCell.swift */,
-				346D95F424DDFB2E0056EE4C /* TMDBTableDataSource.swift */,
+				346D95F424DDFB2E0056EE4C /* TMDBDataSource.swift */,
 			);
 			path = TMDBViews;
 			sourceTree = "<group>";
@@ -1083,7 +1083,7 @@
 				341BF67B24BD31A4000F8076 /* TMDBPersonDetailViewController.swift in Sources */,
 				3494A6EF24BA3CB000F098BF /* TMDBSearchService.swift in Sources */,
 				34088D8624A3B5BD00F4F846 /* TMDBMovieDetailViewController.swift in Sources */,
-				346D95F524DDFB2E0056EE4C /* TMDBTableDataSource.swift in Sources */,
+				346D95F524DDFB2E0056EE4C /* TMDBDataSource.swift in Sources */,
 				341BA3A024CFAB8E002A915B /* TMDBMovieRepository.swift in Sources */,
 				3488664124A67B3D00E205FA /* UIImageView+.swift in Sources */,
 				3485FEB72491784E0027DF41 /* TMDBUserSetting.swift in Sources */,

@@ -31,12 +31,12 @@ class TMDBTVShowSeasonDisplay {
             var snapshot = tvShowSeasonVC?.videoDataSource.snapshot() else { return }
         
         if videos.isEmpty {
-            snapshot.deleteSections([.Video])
+            snapshot.deleteSections([.video])
             tvShowSeasonVC?.videoDataSource.apply(snapshot, animatingDifferences: true)
             tvShowSeasonVC?.videoCollectionViewHeightConstraint.constant = 0
             return
         }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Video))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .video))
         snapshot.appendItems(Array(videos))
         tvShowSeasonVC?.videoDataSource.apply(snapshot, animatingDifferences: true)
         tvShowSeasonVC?.videoCollectionViewHeightConstraint.constant = (tvShowSeasonVC?.videoCollectionView.contentSize.height ?? 0)/2
@@ -48,12 +48,12 @@ class TMDBTVShowSeasonDisplay {
             let casts = season.credits?.cast,
             !casts.isEmpty
             else {
-                snapshot.deleteSections([.Credit])
+                snapshot.deleteSections([.credit])
                 tvShowSeasonVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
                 tvShowSeasonVC?.creditCollectionViewHeightConstraint.constant = 0
                 return
             }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(Array(casts))
         tvShowSeasonVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
         tvShowSeasonVC?.creditCollectionViewHeightConstraint.constant = tvShowSeasonVC?.creditCollectionView.contentSize.height ?? 0

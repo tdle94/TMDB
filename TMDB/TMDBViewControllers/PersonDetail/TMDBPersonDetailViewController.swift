@@ -8,28 +8,24 @@
 
 import Foundation
 import UIKit
-import RealmSwift
+import SDWebImage.SDImageCache
 
 class TMDBPersonDetailViewController: UIViewController {
-    var coordinate: MainCoordinator?
-
-    var personDetail: TMDBPersonDetailDisplay = TMDBPersonDetailDisplay()
-
-    var repository: TMDBRepository = TMDBRepository.share
-
     var personId: Int?
     
-    enum AppearInSection: String, CaseIterable {
-        case appearIn = "Appear In"
-    }
+    // MARK: - coordinate
+    var coordinate: MainCoordinator?
 
-    enum PersonImageSection: String, CaseIterable {
-        case image = "Image"
-    }
+    // MARK: - display
+    var personDetail: TMDBPersonDetailDisplay = TMDBPersonDetailDisplay()
 
-    var appearInDataSource: UICollectionViewDiffableDataSource<AppearInSection, Object>!
+    // MARK: - repository
+    var repository: TMDBRepository = TMDBRepository.share
 
-    var personImageDataSource: UICollectionViewDiffableDataSource<PersonImageSection, Images>!
+    // MARK: - data source
+    var appearInDataSource: TMDBCollectionDataSource!
+
+    var personImageDataSource: TMDBCollectionDataSource!
 
     // MARK: - ui
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -44,11 +40,7 @@ class TMDBPersonDetailViewController: UIViewController {
                                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                                withReuseIdentifier: Constant.Identifier.previewHeader)
 
-            personImageDataSource = UICollectionViewDiffableDataSource(collectionView: personImageCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            personImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: personImageCollectionView)
 
             personImageDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
@@ -70,11 +62,7 @@ class TMDBPersonDetailViewController: UIViewController {
             appearInCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             appearInCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             appearInCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
-            appearInDataSource = UICollectionViewDiffableDataSource(collectionView: appearInCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            appearInDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: appearInCollectionView)
             appearInDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 self.appearInHeaderView =
                     (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) ??
@@ -120,6 +108,11 @@ class TMDBPersonDetailViewController: UIViewController {
         view.addSubview(loadingView)
         // get person detail
         getPersonDetail()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk()
     }
 
     // MARK: - services

@@ -46,7 +46,7 @@ class TMDBTVShowEpisodeDetailDisplay {
         } else if tvShowEpisodeVC?.creditHeader?.segmentControl.numberOfSegments == 1 {
             displayCast(Array(episode.guestStars), reloadSection: false)
         } else {
-            snapshot.deleteSections([.Credit])
+            snapshot.deleteSections([.credit])
             tvShowEpisodeVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
             tvShowEpisodeVC?.creditCollectionViewHeightConstraint.constant = 0
             return
@@ -58,22 +58,22 @@ class TMDBTVShowEpisodeDetailDisplay {
 
     func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
         guard var snapshot = tvShowEpisodeVC?.creditDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(casts)
         tvShowEpisodeVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         if casts.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         tvShowEpisodeVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
         guard var snapshot = tvShowEpisodeVC?.creditDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(crews)
         tvShowEpisodeVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         if crews.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         tvShowEpisodeVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
     }

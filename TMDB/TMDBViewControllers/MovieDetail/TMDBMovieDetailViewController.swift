@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import RealmSwift
 import SDWebImage.SDImageCache
 
 class TMDBMovieDetailViewController: UIViewController {
@@ -17,47 +16,23 @@ class TMDBMovieDetailViewController: UIViewController {
 
     // MARK: - properties
 
-    enum ProdcutionCompanySection: String, CaseIterable {
-        case ProductionCompanies = "Produced By"
-    }
-
-    enum MatchingMovieSection: String, CaseIterable {
-        case More = "More"
-    }
-
-    enum CreditMovieSection: String, CaseIterable {
-        case Credit = "Credit"
-    }
-
-    enum VideoMovieSection: String, CaseIterable {
-        case Video = "Videos"
-    }
-
-    enum KeywordMovieSection: String, CaseIterable {
-        case Keyword = "Keyword"
-    }
-
-    enum MovieImageSection: String, CaseIterable {
-        case Image = "Image"
-    }
-
     var movieId: Int?
 
-    var videoMovieDataSource: UICollectionViewDiffableDataSource<VideoMovieSection, Video>!
+    // MARK: - data source
+    var videoMovieDataSource: TMDBCollectionDataSource!
 
-    var creditMovieDataSource: UICollectionViewDiffableDataSource<CreditMovieSection, Object>!
+    var creditMovieDataSource: TMDBCollectionDataSource!
 
-    var productionCompanyDataSource: UICollectionViewDiffableDataSource<ProdcutionCompanySection, ProductionCompany>!
+    var productionCompanyDataSource: TMDBCollectionDataSource!
 
-    var matchingMoviesDataSource: UICollectionViewDiffableDataSource<MatchingMovieSection, Movie>!
+    var matchingMoviesDataSource: TMDBCollectionDataSource!
 
-    var keywordMovieDataSource: UICollectionViewDiffableDataSource<KeywordMovieSection, Keyword>!
+    var keywordMovieDataSource: TMDBCollectionDataSource!
 
-    var movieImageDataSource: UICollectionViewDiffableDataSource<MovieImageSection, Images>!
+    var movieImageDataSource: TMDBCollectionDataSource!
 
+    // MARK: - display
     var movieDetail: TMDBMovieDetailDisplay!
-
-    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
     // MARK: - repository
 
@@ -105,13 +80,13 @@ class TMDBMovieDetailViewController: UIViewController {
             backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
 
-            movieImageDataSource = UICollectionViewDiffableDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
+            movieImageDataSource = TMDBCollectionDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
-                cell?.configure(image: item)
+                cell?.configure(image: item as! Images)
                 return cell
             }
             var snapshot = movieImageDataSource.snapshot()
-            snapshot.appendSections([.Image])
+            snapshot.appendSections([.image])
             movieImageDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -129,11 +104,7 @@ class TMDBMovieDetailViewController: UIViewController {
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
-            videoMovieDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            videoMovieDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: videoCollectionView)
 
             videoMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
@@ -142,7 +113,7 @@ class TMDBMovieDetailViewController: UIViewController {
             }
             
             var snapshot = videoMovieDataSource.snapshot()
-            snapshot.appendSections([.Video])
+            snapshot.appendSections([.video])
             videoMovieDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -152,11 +123,7 @@ class TMDBMovieDetailViewController: UIViewController {
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
-            creditMovieDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            creditMovieDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: creditCollectionView)
             
             creditMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 self.creditHeader = (collectionView.supplementaryView(forElementKind: kind, at: indexPath)  ??
@@ -169,7 +136,7 @@ class TMDBMovieDetailViewController: UIViewController {
             }
             
             var snapshot = creditMovieDataSource.snapshot()
-            snapshot.appendSections([.Credit])
+            snapshot.appendSections([.credit])
             creditMovieDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -178,11 +145,7 @@ class TMDBMovieDetailViewController: UIViewController {
             matchingMoviesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             matchingMoviesCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
-            matchingMoviesDataSource = UICollectionViewDiffableDataSource(collectionView: matchingMoviesCollectionView) { collectionView, indexPath, movie in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: movie)
-                return cell
-            }
+            matchingMoviesDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: matchingMoviesCollectionView)
 
             matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ??
@@ -195,7 +158,7 @@ class TMDBMovieDetailViewController: UIViewController {
             }
 
             var snapshot = matchingMoviesDataSource.snapshot()
-            snapshot.appendSections([.More])
+            snapshot.appendSections([.more])
             matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -205,11 +168,7 @@ class TMDBMovieDetailViewController: UIViewController {
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             productionCompaniesCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
 
-            productionCompanyDataSource = UICollectionViewDiffableDataSource(collectionView: productionCompaniesCollectionView) { collectionView, indexPath, productionCompany in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: productionCompany)
-                return cell
-            }
+            productionCompanyDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: productionCompaniesCollectionView)
             productionCompanyDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
                                                                              withReuseIdentifier: Constant.Identifier.previewHeader,
@@ -219,7 +178,7 @@ class TMDBMovieDetailViewController: UIViewController {
             }
 
             var snapshot = productionCompanyDataSource.snapshot()
-            snapshot.appendSections([.ProductionCompanies])
+            snapshot.appendSections([.productionCompanies])
             productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -351,15 +310,15 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
 
         if
             collectionView == matchingMoviesCollectionView,
-            let movie = matchingMoviesDataSource.itemIdentifier(for: indexPath)
+            let movie = matchingMoviesDataSource.itemIdentifier(for: indexPath) as? Movie
         {
             coordinator?.navigateToMovieDetail(id: movie.id)
         }
 
         if
             collectionView == videoCollectionView,
-            let video = videoMovieDataSource.itemIdentifier(for: indexPath),
-            let url = userSetting.getYoutubeVideoURL(key: video.key)
+            let video = videoMovieDataSource.itemIdentifier(for: indexPath) as? Video,
+            let url = TMDBUserSetting().getYoutubeVideoURL(key: video.key)
         {
             coordinator?.navigateToVideoPlayer(with: url)
         }

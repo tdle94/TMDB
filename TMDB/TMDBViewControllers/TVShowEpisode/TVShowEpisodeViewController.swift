@@ -8,23 +8,23 @@
 
 import Foundation
 import UIKit
-import RealmSwift
+import SDWebImage.SDImageCache
 
 class TMDBTVShowEpisodeViewController: UIViewController {
-    
+    // MARK: - properties
     var tvId: Int?
     var seasonNumber: Int?
     var episodeNumber: Int?
 
+    // MARK: - repository
     var repository: TMDBRepository = TMDBRepository.share
 
+    // MARK: - display
+
     var episodeDetailDisplay: TMDBTVShowEpisodeDetailDisplay = TMDBTVShowEpisodeDetailDisplay()
-    
-    var creditDataSource: UICollectionViewDiffableDataSource<EpisodeCredit, Object>!
-    
-    enum EpisodeCredit: String, CaseIterable {
-        case Credit = "Credit"
-    }
+
+    // MARK: - data source
+    var creditDataSource: TMDBCollectionDataSource!
 
     // MARK: - ui
     weak var creditHeader: TMDBPreviewHeaderView?
@@ -43,11 +43,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
             creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
-            creditDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            creditDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: creditCollectionView)
             creditDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 self.creditHeader = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath)) as? TMDBPreviewHeaderView
                 self.creditHeader?.delegate = self
@@ -55,7 +51,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
                 return self.creditHeader
             }
             var snapshot = creditDataSource.snapshot()
-            snapshot.appendSections([.Credit])
+            snapshot.appendSections([.credit])
             creditDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -65,6 +61,11 @@ class TMDBTVShowEpisodeViewController: UIViewController {
         super.viewDidLoad()
         episodeDetailDisplay.tvShowEpisodeVC = self
         getTVShowEpisode()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk()
     }
     
     // MARK: - service

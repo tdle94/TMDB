@@ -8,34 +8,28 @@
 
 import Foundation
 import UIKit
-import SDWebImage
+import SDWebImage.SDImageCache
 
 class TMDBTVShowSeasonViewController: UIViewController {
+    // MARK: - properties
     var tvId: Int?
 
     var seasonNumber: Int?
-
+    // MARK: - coordinate
     var coordinate: MainCoordinator?
 
-    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
-
+    // MARK: - repository
     var repository: TMDBRepository = TMDBRepository.share
 
+    // MARK: - display
     var tvShowSeasonDisplay: TMDBTVShowSeasonDisplay = TMDBTVShowSeasonDisplay()
 
-    enum CreditSection: String, CaseIterable {
-        case Credit = "Credit"
-    }
-
-    enum VideoSection: String, CaseIterable {
-        case Video = "Video"
-    }
-
+    // MARK: - data source
     var episodeDataSource: TMDBTableDataSource!
 
-    var creditDataSource: UICollectionViewDiffableDataSource<CreditSection, Cast>!
+    var creditDataSource: TMDBCollectionDataSource!
 
-    var videoDataSource: UICollectionViewDiffableDataSource<VideoSection, Video>!
+    var videoDataSource: TMDBCollectionDataSource!
     
     // MARK: - ui
     @IBOutlet weak var scrollView: UIScrollView!
@@ -60,11 +54,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
-            videoDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            videoDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: videoCollectionView)
             
             videoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
@@ -73,7 +63,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
             }
             
             var snapshot = videoDataSource.snapshot()
-            snapshot.appendSections([.Video])
+            snapshot.appendSections([.video])
             videoDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -83,11 +73,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
-            creditDataSource = UICollectionViewDiffableDataSource(collectionView: creditCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            creditDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: creditCollectionView)
 
             creditDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
@@ -102,7 +88,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
             }
             
             var snapshot = creditDataSource.snapshot()
-            snapshot.appendSections([.Credit])
+            snapshot.appendSections([.credit])
             creditDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -137,6 +123,11 @@ class TMDBTVShowSeasonViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         episodeTableView.layoutIfNeeded()
         episodeTableViewHeightConstraint.constant = episodeTableView.contentSize.height
+    }
+    
+    override func didReceiveMemoryWarning() {
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk()
     }
     
     // MARK: - service

@@ -39,7 +39,7 @@ class TMDBTVDetailDisplay {
 
     func displayBackdropImages(_ imageResult: ImageResult) {
         guard var snapshot = tvDetailVC?.tvShowBackdropImageDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Backdrop))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .backdrop))
         snapshot.appendItems(Array(imageResult.backdrops))
         tvDetailVC?.tvShowBackdropImageDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -47,12 +47,12 @@ class TMDBTVDetailDisplay {
     func displayCreator(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.tvShowCreatorDataSrouce.snapshot() else { return }
         guard !tvShow.createdBy.isEmpty else {
-            snapshot.deleteSections([.Creator])
+            snapshot.deleteSections([.creator])
             tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
             tvDetailVC?.creatorCollectionViewHeightConstraint.constant = 0
             return
         }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Creator))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .creator))
         snapshot.appendItems(Array(tvShow.createdBy))
         tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
         tvDetailVC?.creatorCollectionViewHeightConstraint.constant = (tvDetailVC?.creatorCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/1.1
@@ -61,13 +61,13 @@ class TMDBTVDetailDisplay {
     func displayVideos(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.tvShowVideoDataSource.snapshot() else { return }
         guard let videos = tvShow.videos?.videos, !videos.isEmpty else {
-            snapshot.deleteSections([.Video])
+            snapshot.deleteSections([.video])
             tvDetailVC?.tvShowVideoDataSource.apply(snapshot, animatingDifferences: true)
             tvDetailVC?.videoCollectionViewHeightConstraint.constant = 0
             return
         }
 
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Video))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .video))
         snapshot.appendItems(Array(videos))
         tvDetailVC?.tvShowVideoDataSource.apply(snapshot, animatingDifferences: true)
         tvDetailVC?.videoCollectionViewHeightConstraint.constant = (tvDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2
@@ -113,7 +113,7 @@ class TMDBTVDetailDisplay {
         } else if tvDetailVC?.creditHeaderView?.segmentControl.numberOfSegments == 1 {
             displayCrew(Array(crew), reloadSection: false)
         } else {
-            snapshot.deleteSections([.Credit])
+            snapshot.deleteSections([.credit])
             tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
         }
         
@@ -124,22 +124,22 @@ class TMDBTVDetailDisplay {
     
     func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(casts)
         tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
         if casts.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(crews)
         tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
         if crews.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -165,7 +165,7 @@ class TMDBTVDetailDisplay {
         } else if tvDetailVC?.addtionalHeaderView?.segmentControl.numberOfSegments == 1 {
             displayTVShow(Array(recommend.onTV))
         } else {
-            snapshot.deleteSections([.Matching])
+            snapshot.deleteSections([.matching])
             tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
         }
         tvDetailVC?.addtionalHeaderView?.segmentControl.selectedSegmentIndex = 0
@@ -175,8 +175,8 @@ class TMDBTVDetailDisplay {
     
     func displayTVShow(_ tvShows: [TVShow]) {
         guard var snapshot = tvDetailVC?.matchingTVShowDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Matching))
-        snapshot.appendItems(tvShows, toSection: .Matching)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .matching))
+        snapshot.appendItems(tvShows, toSection: .matching)
         tvDetailVC?.matchingTVShowCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -191,7 +191,7 @@ class TMDBTVDetailDisplay {
 
     private func displayNetworks(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.movieNetworkImageDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Network))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .network))
         snapshot.appendItems(Array(tvShow.networks))
         tvDetailVC?.movieNetworkImageDataSource.apply(snapshot, animatingDifferences: true)
     }

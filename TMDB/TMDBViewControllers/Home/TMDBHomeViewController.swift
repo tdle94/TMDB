@@ -17,10 +17,7 @@ class TMDBHomeViewController: UIViewController {
     var repository: TMDBRepository = TMDBRepository.share
 
     // MARK: - collectionview configuration
-    enum Section: String, CaseIterable {
-        case popular = "Popular"
-        case trending = "Trends"
-    }
+    var dataSource: TMDBCollectionDataSource!
 
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
@@ -29,13 +26,8 @@ class TMDBHomeViewController: UIViewController {
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
             
-            dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
-
-            dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath -> UICollectionReusableView? in
+            dataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: collectionView)
+            dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath in
                 if indexPath.section == 0 {
                     let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                  withReuseIdentifier: Constant.Identifier.popularHeader,
@@ -56,8 +48,6 @@ class TMDBHomeViewController: UIViewController {
             dataSource.apply(snapshot)
         }
     }
-
-    var dataSource: UICollectionViewDiffableDataSource<Section, Object>!
 
     lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { result in
         switch result {

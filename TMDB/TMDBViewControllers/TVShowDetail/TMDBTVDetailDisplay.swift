@@ -99,7 +99,15 @@ class TMDBTVDetailDisplay {
             let crew = tvShow.credits?.crew,
             let cast = tvShow.credits?.cast,
             var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
+
+        if cast.isEmpty, crew.isEmpty {
+            snapshot.deleteSections([.credit])
+            tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
+
         tvDetailVC?.creditHeaderView?.segmentControl.removeAllSegments()
+
         if !cast.isEmpty {
             tvDetailVC?.creditHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
         }
@@ -112,9 +120,6 @@ class TMDBTVDetailDisplay {
             displayCast(Array(cast), reloadSection: false)
         } else if tvDetailVC?.creditHeaderView?.segmentControl.numberOfSegments == 1 {
             displayCrew(Array(crew), reloadSection: false)
-        } else {
-            snapshot.deleteSections([.credit])
-            tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
         }
         
         tvDetailVC?.creditHeaderView?.segmentControl.selectedSegmentIndex = 0
@@ -151,6 +156,11 @@ class TMDBTVDetailDisplay {
             var snapshot = tvDetailVC?.matchingTVShowDataSource.snapshot() else {
             return
         }
+        if similar.onTV.isEmpty, recommend.onTV.isEmpty {
+            snapshot.deleteSections([.matching])
+            tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
         tvDetailVC?.addtionalHeaderView?.segmentControl.removeAllSegments()
         if !similar.onTV.isEmpty {
             tvDetailVC?.addtionalHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Similar", comment: ""), at: 0, animated: true)
@@ -164,9 +174,6 @@ class TMDBTVDetailDisplay {
             displayTVShow(Array(similar.onTV))
         } else if tvDetailVC?.addtionalHeaderView?.segmentControl.numberOfSegments == 1 {
             displayTVShow(Array(recommend.onTV))
-        } else {
-            snapshot.deleteSections([.matching])
-            tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
         }
         tvDetailVC?.addtionalHeaderView?.segmentControl.selectedSegmentIndex = 0
         tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()

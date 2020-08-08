@@ -27,6 +27,13 @@ class TMDBTVShowEpisodeDetailDisplay {
             var snapshot = tvShowEpisodeVC?.creditDataSource.snapshot(),
             let credit = episode.credits else { return }
         
+        if credit.cast.isEmpty, credit.crew.isEmpty {
+            snapshot.deleteSections([.credit])
+            tvShowEpisodeVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
+            tvShowEpisodeVC?.creditCollectionViewHeightConstraint.constant = 0
+            return
+        }
+
         if !credit.cast.isEmpty {
             tvShowEpisodeVC?.creditHeader?.segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
         }
@@ -45,11 +52,6 @@ class TMDBTVShowEpisodeDetailDisplay {
             displayCrew(Array(credit.crew), reloadSection: false)
         } else if tvShowEpisodeVC?.creditHeader?.segmentControl.numberOfSegments == 1 {
             displayCast(Array(episode.guestStars), reloadSection: false)
-        } else {
-            snapshot.deleteSections([.credit])
-            tvShowEpisodeVC?.creditDataSource.apply(snapshot, animatingDifferences: true)
-            tvShowEpisodeVC?.creditCollectionViewHeightConstraint.constant = 0
-            return
         }
         tvShowEpisodeVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
         tvShowEpisodeVC?.creditCollectionView.collectionViewLayout.invalidateLayout()

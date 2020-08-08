@@ -63,7 +63,13 @@ class TMDBPersonDetailDisplay {
             let movieCredit = person.movieCredits,
             let tvCredit = person.tvCredits
             else { return }
-        
+
+        if movieCredit.cast.isEmpty, tvCredit.cast.isEmpty {
+            snapshot.deleteSections(snapshot.sectionIdentifiers)
+            personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
+
         if !movieCredit.cast.isEmpty {
             personDetailVC?.appearInHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Movies", comment: ""), at: 0, animated: true)
         }
@@ -76,9 +82,6 @@ class TMDBPersonDetailDisplay {
             displayMovieAppearIn(Array(movieCredit.cast))
         } else if personDetailVC?.appearInHeaderView?.segmentControl.numberOfSegments == 1 {
             displayTVShowAppearIn(Array(tvCredit.cast))
-        } else {
-            snapshot.deleteSections(snapshot.sectionIdentifiers)
-            personDetailVC?.appearInDataSource.apply(snapshot, animatingDifferences: true)
         }
 
         personDetailVC?.appearInCollectionView.collectionViewLayout.invalidateLayout()

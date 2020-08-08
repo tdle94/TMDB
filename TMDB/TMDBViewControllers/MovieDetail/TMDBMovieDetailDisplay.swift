@@ -177,6 +177,12 @@ class TMDBMovieDetailDisplay {
             let recommend = movie.recommendations,
             var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
         
+        if similar.movies.isEmpty, recommend.movies.isEmpty {
+            snapshot.deleteSections([.more])
+            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: false)
+            return
+        }
+        
         movieDetailVC?.moreMovieHeader?.segmentControl.removeAllSegments()
         if !similar.movies.isEmpty {
             movieDetailVC?.moreMovieHeader?.segmentControl.insertSegment(withTitle: NSLocalizedString("Similar", comment: ""), at: 0, animated: true)
@@ -190,9 +196,6 @@ class TMDBMovieDetailDisplay {
             displayMoreMovie(Array(similar.movies))
         } else if movieDetailVC?.moreMovieHeader?.segmentControl.numberOfSegments == 1 {
             displayMoreMovie(Array(recommend.movies))
-        } else {
-            snapshot.deleteSections([.more])
-            movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: false)
         }
 
         movieDetailVC?.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
@@ -205,6 +208,13 @@ class TMDBMovieDetailDisplay {
             let credit = movie.credits,
             var snapshot = movieDetailVC?.creditMovieDataSource.snapshot()
             else { return }
+
+        if credit.cast.isEmpty, credit.crew.isEmpty {
+            snapshot.deleteSections([.credit])
+            movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
+
         movieDetailVC?.creditHeader?.segmentControl.removeAllSegments()
         if !credit.cast.isEmpty {
             movieDetailVC?.creditHeader?.segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
@@ -218,11 +228,8 @@ class TMDBMovieDetailDisplay {
             displayCast(Array(credit.cast), reloadSection: false)
         } else if movieDetailVC?.creditHeader?.segmentControl.numberOfSegments == 1 {
             displayCrew(Array(credit.crew), reloadSection: false)
-        } else {
-            snapshot.deleteSections([.credit])
-            movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
         }
-        
+
         movieDetailVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
         movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
         movieDetailVC?.creditCollectionViewHeightConstraint.constant = movieDetailVC?.creditCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0

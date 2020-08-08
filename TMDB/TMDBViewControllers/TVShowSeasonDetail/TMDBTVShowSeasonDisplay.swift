@@ -25,6 +25,13 @@ class TMDBTVShowSeasonDisplay {
         displaySeasonCredit(season)
     }
 
+    func displayBackdropImage(_ imageResult: ImageResult) {
+        guard var snapshot = tvShowSeasonVC?.posterImageDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .backdrop))
+        snapshot.appendItems(Array(imageResult.posters))
+        tvShowSeasonVC?.posterImageDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
     func displaySeasonVideo(_ season: Season) {
         guard
             let videos = season.videos?.videos,

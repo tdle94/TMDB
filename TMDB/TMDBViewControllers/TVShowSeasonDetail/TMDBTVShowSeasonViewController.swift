@@ -31,14 +31,32 @@ class TMDBTVShowSeasonViewController: UIViewController {
 
     var videoDataSource: TMDBCollectionDataSource!
     
+    var posterImageDataSource: TMDBCollectionDataSource!
+    
     // MARK: - ui
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var contentView: UIView!
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     
     @IBOutlet weak var posterImageView: UIImageView! {
         didSet {
             posterImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
             posterImageView.roundImage()
+        }
+    }
+    @IBOutlet weak var posterImageCollectionView: UICollectionView! {
+        didSet {
+            posterImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
+            posterImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            posterImageDataSource = TMDBCollectionDataSource(collectionView: posterImageCollectionView) { collectionView, indexPath, item in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
+                cell?.configure(image: item as! Images)
+                return cell
+            }
+
+            var snapshot = posterImageDataSource.snapshot()
+            snapshot.appendSections([.backdrop])
+            posterImageDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     @IBOutlet weak var seasonNameLabel: UILabel!
@@ -116,7 +134,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         tvShowSeasonDisplay.tvShowSeasonVC = self
-        view.addSubview(loadingView)
+        contentView.bringSubviewToFront(posterImageView)
         getSeason()
     }
     
@@ -133,7 +151,11 @@ class TMDBTVShowSeasonViewController: UIViewController {
     // MARK: - service
     func getSeason() {
         guard let id = tvId, let number = seasonNumber else { return }
+        let group = DispatchGroup()
+        view.addSubview(loadingView)
+        group.enter()
         repository.getTVShowSeasonDetail(from: id, seasonNumber: number) { result in
+            group.leave()
             switch result {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
@@ -141,6 +163,17 @@ class TMDBTVShowSeasonViewController: UIViewController {
             case .success(let season):
                 self.loadingView.removeFromSuperview()
                 self.tvShowSeasonDisplay.displaySeason(season)
+            }
+        }
+
+        group.notify(queue: .main) {
+            self.repository.getTVShowSeasonImage(from: id, seasonNumber: number) { result in
+                switch result {
+                case .failure(let error):
+                    debugPrint(error.localizedDescription)
+                case .success(let imageResult):
+                    self.tvShowSeasonDisplay.displayBackdropImage(imageResult)
+                }
             }
         }
     }

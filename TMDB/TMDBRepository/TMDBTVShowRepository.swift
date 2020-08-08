@@ -24,4 +24,5 @@ protocol TMDBTVShowRepository {
     func getTVShowEpisodeCast(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Cast]
     func getTVShowEpisodeCrew(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Crew]
     func getTVShowEpisodeGuestStar(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Cast]
+    func getTVShowSeasonImage(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void)
 }

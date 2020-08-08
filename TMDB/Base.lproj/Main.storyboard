@@ -73,7 +73,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="1500"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yEe-Ut-ac7" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1994.3333333333333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1575.3333333333333"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="Ilv-qd-jvq">
                                                 <rect key="frame" x="18" y="290.66666666666669" width="176" height="352.00000000000006"/>
@@ -194,10 +194,10 @@
                                                 </connections>
                                             </collectionView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="r88-4U-zXN">
-                                                <rect key="frame" x="0.0" y="1559.3333333333333" width="414" height="420"/>
+                                                <rect key="frame" x="0.0" y="1559.3333333333333" width="414" height="1"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="420" id="ZsW-Uk-YPA"/>
+                                                    <constraint firstAttribute="height" constant="1" id="ZsW-Uk-YPA"/>
                                                 </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Jh6-KD-c0f">
                                                     <size key="itemSize" width="128" height="128"/>
@@ -724,7 +724,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N8c-16-nJS">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1506"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1108"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="cRc-mH-MXA">
                                                 <rect key="frame" x="0.0" y="681" width="414" height="0.0"/>
@@ -910,10 +910,10 @@
                                                 </connections>
                                             </tableView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UaR-Gg-evP">
-                                                <rect key="frame" x="0.0" y="1091" width="414" height="200"/>
+                                                <rect key="frame" x="0.0" y="1091" width="414" height="1"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="200" id="Acx-Yj-rY0"/>
+                                                    <constraint firstAttribute="height" constant="1" id="Acx-Yj-rY0"/>
                                                 </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="a2M-Oz-F0H">
                                                     <size key="itemSize" width="128" height="128"/>
@@ -936,10 +936,10 @@
                                                 </connections>
                                             </collectionView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fPS-st-s2B">
-                                                <rect key="frame" x="0.0" y="1291" width="414" height="200"/>
+                                                <rect key="frame" x="0.0" y="1092" width="414" height="1"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="200" id="ftJ-RE-N3A"/>
+                                                    <constraint firstAttribute="height" constant="1" id="ftJ-RE-N3A"/>
                                                 </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0gu-6z-oCP">
                                                     <size key="itemSize" width="128" height="128"/>

@@ -74,7 +74,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             if let path = item.logoPath {
                 getImage(from: path)
             } else {
-                stackViewTopConstraint.constant = -60
+                stackViewTopConstraint.constant = -80
                 title.text = item.name
                 imageView.isHidden = true
             }

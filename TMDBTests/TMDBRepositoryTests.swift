@@ -908,7 +908,7 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).getPerson(id: 1).thenReturn(person)
         }
 
-        XCTAssertEqual(repository.getTVCredits(from: 1), tvCredits)
+        XCTAssertEqual(repository.getTVCredits(from: 1), Array(tvCredits.cast))
     }
 
     // MARK: - movie credits
@@ -923,7 +923,7 @@ class TMDBRepositoryTests: XCTestCase {
             when(stub).getPerson(id: 1).thenReturn(person)
         }
 
-        XCTAssertEqual(repository.getMovieCredits(from: 1), movieCredits)
+        XCTAssertEqual(repository.getMovieCredits(from: 1), Array(movieCredits.cast))
     }
     
     // MARK: - person detail
@@ -1962,5 +1962,91 @@ class TMDBRepositoryTests: XCTestCase {
         verify(localDataSource, never()).saveTVShowEpisode(tvShowId: 1, seasonNumber: 2, episode: any())
         verify(session).send(request: requestMatcher, responseType: any(Episode.Type.self), completion: anyClosure())
         verify(requestBuilder).getTVShowEpisodeURLRequest(from: 1, seasonNumber: 2, episodeNumber: 1, language: NSLocale.current.languageCode)
+    }
+    
+    // MARK: - tv show episode cast
+    func testGetTVShowEpisodeCastInRealm() {
+        let tvShow = TVShow()
+        let season = Season()
+        let episode = Episode()
+        let credit = CreditResult()
+        credit.cast.append(Cast())
+        tvShow.id = 3
+        episode.id = 3
+        episode.episodeNumber = 3
+        episode.seasonNumber = 1
+        episode.credits = CreditResult()
+        episode.credits?.cast.append(Cast())
+        season.number = 1
+        season.episodes.append(episode)
+        tvShow.seasons.append(season)
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 3).thenReturn(episode)
+        }
+        /*WHEN*/
+        let casts = repository.getTVShowEpisodeCast(from: 3, seasonNumber: 1, episodeNumber: 3)
+        XCTAssertEqual(casts.count, 1)
+
+        /*THEN*/
+        verify(localDataSource).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 3)
+    }
+
+    // MARK: - tv show episode crew
+    func testGetTVShowEpisodeCrewInRealm() {
+        let tvShow = TVShow()
+        let season = Season()
+        let episode = Episode()
+        let credit = CreditResult()
+        credit.cast.append(Cast())
+        credit.crew.append(Crew())
+        tvShow.id = 3
+        episode.id = 3
+        episode.episodeNumber = 3
+        episode.seasonNumber = 1
+        episode.credits = CreditResult()
+        episode.credits?.crew.append(Crew())
+        season.number = 1
+        season.episodes.append(episode)
+        tvShow.seasons.append(season)
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 3).thenReturn(episode)
+        }
+        /*WHEN*/
+        let crews = repository.getTVShowEpisodeCrew(from: 3, seasonNumber: 1, episodeNumber: 3)
+        XCTAssertEqual(crews.count, 1)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 3)
+    }
+
+    // MARK: - tv show episode guest star
+    func testGetTVSHowEpisodeGuestStarInRealm() {
+        let tvShow = TVShow()
+        let season = Season()
+        let episode = Episode()
+        episode.guestStars.append(Cast())
+        tvShow.id = 3
+        episode.id = 3
+        episode.episodeNumber = 3
+        episode.seasonNumber = 1
+        episode.credits = CreditResult()
+        season.number = 1
+        season.episodes.append(episode)
+        tvShow.seasons.append(season)
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 3).thenReturn(episode)
+        }
+        /*WHEN*/
+        let guestStars = repository.getTVShowEpisodeGuestStar(from: 3, seasonNumber: 1, episodeNumber: 3)
+        XCTAssertEqual(guestStars.count, 1)
+
+        /*THEN*/
+        verify(localDataSource).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 3)
     }
 }

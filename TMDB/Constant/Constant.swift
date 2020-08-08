@@ -13,12 +13,7 @@ struct Constant {
     struct Identifier {
         static let popularHeader = "PreviewHeader"
         static let trendHeader = "TrendHeader"
-        static let additionalHeader = "AdditionalHeader"
-        static let creditMovieHeader = "CreditMovieHeader"
-        static let creatorTVShowHeader = "CreatorTVShowHeader"
-        static let personImageHeader = "PersonImageHeader"
-        static let videoMovieHeader = "VideoMovieHeader"
-        static let movieProduceByHeader = "ProduceByHeader"
+        static let previewHeader = "PreviewHeader"
         static let preview = "Preview"
         static let reviewCell = "ReviewCell"
         static let keywordCell = "KeywordCell"
@@ -45,6 +40,7 @@ struct Constant {
         static let tmdbCompleteReleaseDateTableVC = "TMDBCompleteReleaseDateTableViewController"
         static let tmdbTVDetailVC = "TMDBTVDetailViewController"
         static let tmdbTVShowSeasonVC = "TMDBTVShowSeasonViewController"
+        static let tmdbTVShowEpisodeVC = "TMDBTVShowEpisodeViewController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

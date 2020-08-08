@@ -35,7 +35,6 @@ class TMDBSearchViewController: UIViewController {
         search.searchBar.backgroundColor = Constant.Color.backgroundColor
         search.searchBar.tintColor = .black
         search.searchBar.placeholder = NSLocalizedString("Search", comment: "")
-        search.delegate = self
         return search
     }()
 
@@ -65,15 +64,9 @@ class TMDBSearchViewController: UIViewController {
     }
 }
 
-extension TMDBSearchViewController: UISearchControllerDelegate {
-    func didPresentSearchController(_ searchController: UISearchController) {
-        
-    }
-}
-
 extension TMDBSearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        
+        // TODO: search for text
     }
 }
 

@@ -131,9 +131,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
     func saveTVShowSeason(_ season: Season, to tvShowId: Int) {
         realm.beginWrite()
         let tvShow = getTVShow(id: tvShowId)
-        if let seasonIndex = tvShow?.seasons.firstIndex(of: season) {
-            let seasonId = tvShow?.seasons[seasonIndex].id // api request for individual season does not contain id. That's why we save the old id to the new one
-            season.id = seasonId ?? 0
+        if let seasonIndex = tvShow?.seasons.firstIndex(where: { $0.id == season.id }) {
             tvShow?.seasons[seasonIndex] = season
         }
         try? realm.commitWrite()
@@ -155,7 +153,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         let season = tvShow?.seasons.first(where: { $0.number == seasonNumber })
         if
             let seasonIndex = tvShow?.seasons.firstIndex(where: { $0.number == seasonNumber }),
-            let episodeIndex = season?.episodes.firstIndex(where: { $0.seasonNumber == seasonNumber })
+            let episodeIndex = season?.episodes.firstIndex(where: { $0.id == episode.id })
         {
             tvShow?.seasons[seasonIndex].episodes[episodeIndex] = episode
         }

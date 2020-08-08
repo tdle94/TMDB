@@ -6,6 +6,7 @@
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 import Foundation
+import RealmSwift
 
 struct TMDBRepository {
     let services: TMDBServices
@@ -56,12 +57,12 @@ extension TMDBRepository: TMDBPeopleRepository {
         }
     }
 
-    func getTVCredits(from personId: Int) -> TVCredit? {
-        return localDataSource.getPerson(id: personId)?.tvCredits
+    func getTVCredits(from personId: Int) -> [TVShow] {
+        return Array(localDataSource.getPerson(id: personId)?.tvCredits?.cast ?? List<TVShow>())
     }
 
-    func getMovieCredits(from personId: Int) -> MovieCredit? {
-        return localDataSource.getPerson(id: personId)?.movieCredits
+    func getMovieCredits(from personId: Int) -> [Movie] {
+        return Array(localDataSource.getPerson(id: personId)?.movieCredits?.cast ?? List<Movie>())
     }
 
     func getPersonImageProfile(from personId: Int) -> ImageProfile? {
@@ -315,6 +316,27 @@ extension TMDBRepository: TMDBTVShowRepository {
                 }
             }
         }
+    }
+
+    func getTVShowEpisodeCast(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Cast] {
+        guard let casts = localDataSource.getTVShowEpisode(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)?.credits?.cast else {
+            return []
+        }
+        return Array(casts)
+    }
+
+    func getTVShowEpisodeCrew(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Crew] {
+        guard let crews = localDataSource.getTVShowEpisode(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)?.credits?.crew else {
+            return []
+        }
+        return Array(crews)
+    }
+
+    func getTVShowEpisodeGuestStar(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Cast] {
+        guard let guestStars  = localDataSource.getTVShowEpisode(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)?.guestStars else {
+            return []
+        }
+        return Array(guestStars)
     }
 }
 

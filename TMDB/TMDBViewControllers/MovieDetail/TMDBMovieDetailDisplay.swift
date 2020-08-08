@@ -57,7 +57,7 @@ class TMDBMovieDetailDisplay {
     func displayBackdropImages(_ imageResult: ImageResult) {
         guard var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
         movieDetailVC?.backdropPageControl.numberOfPages = imageResult.backdrops.count
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Image))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .image))
         snapshot.appendItems(Array(imageResult.backdrops))
         movieDetailVC?.movieImageDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -176,25 +176,30 @@ class TMDBMovieDetailDisplay {
             let similar = movie.similar,
             let recommend = movie.recommendations,
             var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
-
-        if similar.movies.isEmpty, !recommend.movies.isEmpty {
-            movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 0, animated: false)
-            movieDetailVC?.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
-            movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            displayMoreMovie(Array(recommend.movies))
-        } else if !similar.movies.isEmpty, recommend.movies.isEmpty {
-            movieDetailVC?.moreMovieHeader?.segmentControl.removeSegment(at: 1, animated: false)
-            movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
-            displayMoreMovie(Array(similar.movies))
-        } else if !similar.movies.isEmpty, !recommend.movies.isEmpty {
-            displayMoreMovie(Array(similar.movies))
-        } else {
-            snapshot.deleteAllItems()
-            snapshot.deleteSections([.More])
-            movieDetailVC?.matchingMovieCollectionViewHeightContraint.constant = 0
+        
+        if similar.movies.isEmpty, recommend.movies.isEmpty {
+            snapshot.deleteSections([.more])
             movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: false)
+            return
+        }
+        
+        movieDetailVC?.moreMovieHeader?.segmentControl.removeAllSegments()
+        if !similar.movies.isEmpty {
+            movieDetailVC?.moreMovieHeader?.segmentControl.insertSegment(withTitle: NSLocalizedString("Similar", comment: ""), at: 0, animated: true)
         }
 
+        if !recommend.movies.isEmpty {
+            movieDetailVC?.moreMovieHeader?.segmentControl.insertSegment(withTitle: NSLocalizedString("Recommend", comment: ""), at: 1, animated: true)
+        }
+
+        if movieDetailVC?.moreMovieHeader?.segmentControl.numberOfSegments == 2 || recommend.movies.isEmpty {
+            displayMoreMovie(Array(similar.movies))
+        } else if movieDetailVC?.moreMovieHeader?.segmentControl.numberOfSegments == 1 {
+            displayMoreMovie(Array(recommend.movies))
+        }
+
+        movieDetailVC?.moreMovieHeader?.segmentControl.selectedSegmentIndex = 0
+        movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.invalidateLayout()
         movieDetailVC?.matchingMovieCollectionViewHeightContraint.constant = movieDetailVC?.matchingMoviesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
     }
 
@@ -204,36 +209,43 @@ class TMDBMovieDetailDisplay {
             var snapshot = movieDetailVC?.creditMovieDataSource.snapshot()
             else { return }
 
-        if credit.cast.isEmpty, !credit.crew.isEmpty {
-            movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 0, animated: false)
-            movieDetailVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
-            movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCrew(Array(credit.crew), reloadSection: false)
-        } else if credit.crew.isEmpty, !credit.cast.isEmpty {
-            movieDetailVC?.creditHeader?.segmentControl.removeSegment(at: 1, animated: false)
-            movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCast(Array(credit.cast), reloadSection: false)
-        } else if !credit.cast.isEmpty, !credit.crew.isEmpty {
-            displayCast(Array(credit.cast), reloadSection: false)
-        } else {
-            snapshot.deleteSections([.Credit])
+        if credit.cast.isEmpty, credit.crew.isEmpty {
+            snapshot.deleteSections([.credit])
             movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
+            return
         }
 
+        movieDetailVC?.creditHeader?.segmentControl.removeAllSegments()
+        if !credit.cast.isEmpty {
+            movieDetailVC?.creditHeader?.segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
+        }
+        
+        if !credit.crew.isEmpty {
+            movieDetailVC?.creditHeader?.segmentControl.insertSegment(withTitle: NSLocalizedString("Crew", comment: ""), at: 1, animated: true)
+        }
+        
+        if movieDetailVC?.creditHeader?.segmentControl.numberOfSegments == 2 || credit.crew.isEmpty {
+            displayCast(Array(credit.cast), reloadSection: false)
+        } else if movieDetailVC?.creditHeader?.segmentControl.numberOfSegments == 1 {
+            displayCrew(Array(credit.crew), reloadSection: false)
+        }
+
+        movieDetailVC?.creditHeader?.segmentControl.selectedSegmentIndex = 0
+        movieDetailVC?.creditCollectionView.collectionViewLayout.invalidateLayout()
         movieDetailVC?.creditCollectionViewHeightConstraint.constant = movieDetailVC?.creditCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
     }
 
     func displayVideo(_ videoResult: VideoResult?) {
         guard var snapshot = movieDetailVC?.videoMovieDataSource.snapshot() else { return }
         guard let videoResult = videoResult, !videoResult.videos.isEmpty else {
-            snapshot.deleteSections([.Video])
+            snapshot.deleteSections([.video])
             movieDetailVC?.videoCollectionViewTopConstraint.constant = 0
             movieDetailVC?.videoCollectionViewHeightConstraint.constant = 0
             movieDetailVC?.videoMovieDataSource.apply(snapshot, animatingDifferences: true)
             return
         }
         let videos = Array(videoResult.videos)
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Video))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .video))
         snapshot.appendItems(videos)
         movieDetailVC?.videoMovieDataSource.apply(snapshot, animatingDifferences: true)
         movieDetailVC?.videoCollectionViewHeightConstraint.constant = (movieDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2
@@ -241,30 +253,30 @@ class TMDBMovieDetailDisplay {
 
     func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
-        snapshot.appendItems(casts, toSection: .Credit)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
+        snapshot.appendItems(casts, toSection: .credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         if casts.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
         guard var snapshot = movieDetailVC?.creditMovieDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
-        snapshot.appendItems(crews, toSection: .Credit)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
+        snapshot.appendItems(crews, toSection: .credit)
         movieDetailVC?.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         if crews.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         movieDetailVC?.creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayMoreMovie(_ movie: [Movie]) {
         guard var snapshot = movieDetailVC?.matchingMoviesDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .More))
-        snapshot.appendItems(movie, toSection: .More)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .more))
+        snapshot.appendItems(movie, toSection: .more)
         movieDetailVC?.matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -274,17 +286,19 @@ class TMDBMovieDetailDisplay {
         if movie.productionCompanies.isEmpty {
             movieDetailVC?.productionCompanyCollectionViewTopConstraint.constant = 0
             movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = 0
+            snapshot.deleteSections([.productionCompanies])
+            movieDetailVC?.productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
             return
         }
-        let productionCompanies = Array(movie.productionCompanies)
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .ProductionCompanies))
-        snapshot.appendItems(productionCompanies)
+
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .productionCompanies))
+        snapshot.appendItems(Array(movie.productionCompanies))
         movieDetailVC?.productionCompanyDataSource.apply(snapshot, animatingDifferences: true)
-        
+
         if movie.productionCompanies.contains(where: { $0.logoPath != nil }) {
             movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/3
         } else {
-            movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/4
+            movieDetailVC?.productionCompanyCollectionViewHeightConstraint.constant = (movieDetailVC?.productionCompaniesCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/5
         }
     }
 }

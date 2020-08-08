@@ -39,7 +39,7 @@ class TMDBTVDetailDisplay {
 
     func displayBackdropImages(_ imageResult: ImageResult) {
         guard var snapshot = tvDetailVC?.tvShowBackdropImageDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Backdrop))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .backdrop))
         snapshot.appendItems(Array(imageResult.backdrops))
         tvDetailVC?.tvShowBackdropImageDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -47,12 +47,12 @@ class TMDBTVDetailDisplay {
     func displayCreator(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.tvShowCreatorDataSrouce.snapshot() else { return }
         guard !tvShow.createdBy.isEmpty else {
-            snapshot.deleteSections([.Creator])
+            snapshot.deleteSections([.creator])
             tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
             tvDetailVC?.creatorCollectionViewHeightConstraint.constant = 0
             return
         }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Creator))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .creator))
         snapshot.appendItems(Array(tvShow.createdBy))
         tvDetailVC?.tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
         tvDetailVC?.creatorCollectionViewHeightConstraint.constant = (tvDetailVC?.creatorCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/1.1
@@ -61,13 +61,13 @@ class TMDBTVDetailDisplay {
     func displayVideos(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.tvShowVideoDataSource.snapshot() else { return }
         guard let videos = tvShow.videos?.videos, !videos.isEmpty else {
-            snapshot.deleteSections([.Video])
+            snapshot.deleteSections([.video])
             tvDetailVC?.tvShowVideoDataSource.apply(snapshot, animatingDifferences: true)
             tvDetailVC?.videoCollectionViewHeightConstraint.constant = 0
             return
         }
 
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Video))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .video))
         snapshot.appendItems(Array(videos))
         tvDetailVC?.tvShowVideoDataSource.apply(snapshot, animatingDifferences: true)
         tvDetailVC?.videoCollectionViewHeightConstraint.constant = (tvDetailVC?.videoCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0)/2
@@ -99,44 +99,52 @@ class TMDBTVDetailDisplay {
             let crew = tvShow.credits?.crew,
             let cast = tvShow.credits?.cast,
             var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
-        
-        if cast.isEmpty, !crew.isEmpty {
-            tvDetailVC?.creditHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
-            tvDetailVC?.creditHeaderView?.segmentControl.selectedSegmentIndex = 0
-            tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCrew(Array(crew), reloadSection: false)
-        } else if !cast.isEmpty, crew.isEmpty {
-            tvDetailVC?.creditHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
-            tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
-            displayCast(Array(cast), reloadSection: false)
-        } else if !cast.isEmpty, !crew.isEmpty {
-            displayCast(Array(cast), reloadSection: false)
-        } else {
-            snapshot.deleteSections([.Credit])
+
+        if cast.isEmpty, crew.isEmpty {
+            snapshot.deleteSections([.credit])
             tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
+
+        tvDetailVC?.creditHeaderView?.segmentControl.removeAllSegments()
+
+        if !cast.isEmpty {
+            tvDetailVC?.creditHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
         }
         
+        if !crew.isEmpty {
+            tvDetailVC?.creditHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Crew", comment: ""), at: 1, animated: true)
+        }
+        
+        if tvDetailVC?.creditHeaderView?.segmentControl.numberOfSegments == 2 || crew.isEmpty {
+            displayCast(Array(cast), reloadSection: false)
+        } else if tvDetailVC?.creditHeaderView?.segmentControl.numberOfSegments == 1 {
+            displayCrew(Array(crew), reloadSection: false)
+        }
+        
+        tvDetailVC?.creditHeaderView?.segmentControl.selectedSegmentIndex = 0
+        tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
         tvDetailVC?.tvShowCreditCollectionViewHeightConstraint.constant = tvDetailVC?.tvShowCreditCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
     }
     
     func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(casts)
         tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
         if casts.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
         guard var snapshot = tvDetailVC?.tvShowCreditDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Credit))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(crews)
         tvDetailVC?.tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
         if crews.count == 1, reloadSection {
-            snapshot.reloadSections([.Credit])
+            snapshot.reloadSections([.credit])
         }
         tvDetailVC?.tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -148,37 +156,41 @@ class TMDBTVDetailDisplay {
             var snapshot = tvDetailVC?.matchingTVShowDataSource.snapshot() else {
             return
         }
-        
-        if similar.onTV.isEmpty, !recommend.onTV.isEmpty {
-            tvDetailVC?.addtionalHeaderView?.segmentControl.removeSegment(at: 0, animated: false)
-            tvDetailVC?.addtionalHeaderView?.segmentControl.selectedSegmentIndex = 0
-            tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()
-            displayTVShow(Array(recommend.onTV))
-        } else if !similar.onTV.isEmpty, recommend.onTV.isEmpty {
-            tvDetailVC?.addtionalHeaderView?.segmentControl.removeSegment(at: 1, animated: false)
-            tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()
-            displayTVShow(Array(recommend.onTV))
-        } else if !similar.onTV.isEmpty, !recommend.onTV.isEmpty {
-            displayTVShow(Array(similar.onTV))
-        } else {
-            snapshot.deleteSections([.Matching])
+        if similar.onTV.isEmpty, recommend.onTV.isEmpty {
+            snapshot.deleteSections([.matching])
             tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
+            return
+        }
+        tvDetailVC?.addtionalHeaderView?.segmentControl.removeAllSegments()
+        if !similar.onTV.isEmpty {
+            tvDetailVC?.addtionalHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Similar", comment: ""), at: 0, animated: true)
         }
 
+        if !recommend.onTV.isEmpty {
+            tvDetailVC?.addtionalHeaderView?.segmentControl.insertSegment(withTitle: NSLocalizedString("Recommend", comment: ""), at: 1, animated: true)
+        }
+        
+        if tvDetailVC?.addtionalHeaderView?.segmentControl.numberOfSegments == 2 || recommend.onTV.isEmpty {
+            displayTVShow(Array(similar.onTV))
+        } else if tvDetailVC?.addtionalHeaderView?.segmentControl.numberOfSegments == 1 {
+            displayTVShow(Array(recommend.onTV))
+        }
+        tvDetailVC?.addtionalHeaderView?.segmentControl.selectedSegmentIndex = 0
+        tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.invalidateLayout()
         tvDetailVC?.matchingTVShowCollectionViewHeightConstraint.constant = tvDetailVC?.matchingTVShowCollectionView.collectionViewLayout.collectionViewContentSize.height ?? 0
     }
     
     func displayTVShow(_ tvShows: [TVShow]) {
         guard var snapshot = tvDetailVC?.matchingTVShowDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Matching))
-        snapshot.appendItems(tvShows, toSection: .Matching)
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .matching))
+        snapshot.appendItems(tvShows, toSection: .matching)
         tvDetailVC?.matchingTVShowCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         tvDetailVC?.matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
     }
     
     private func displaySeason(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.tvShowSeasonDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Season))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .season))
         snapshot.appendItems(Array(tvShow.seasons))
         tvDetailVC?.tvShowSeasonDataSource.apply(snapshot, animatingDifferences: true)
         tvDetailVC?.tvShowSeasonTableView.layoutIfNeeded()
@@ -186,7 +198,7 @@ class TMDBTVDetailDisplay {
 
     private func displayNetworks(tvShow: TVShow) {
         guard var snapshot = tvDetailVC?.movieNetworkImageDataSource.snapshot() else { return }
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .Network))
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .network))
         snapshot.appendItems(Array(tvShow.networks))
         tvDetailVC?.movieNetworkImageDataSource.apply(snapshot, animatingDifferences: true)
     }

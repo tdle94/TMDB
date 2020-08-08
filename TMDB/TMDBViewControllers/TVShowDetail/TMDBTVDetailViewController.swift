@@ -8,63 +8,36 @@
 
 import Foundation
 import UIKit
-import SDWebImage
-import RealmSwift
+import SDWebImage.SDImageCache
 
 class TMDBTVDetailViewController: UIViewController {
+    // MARK: - properties
     var tvId: Int?
-
+    
+    // MARK: - repository
     var repository: TMDBRepository = TMDBRepository.share
 
+    // MARK: - display
     var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
 
+    // MARK: - coordinate
     var coordinate: MainCoordinator?
-
-    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
     // MARK: - data source
 
-    enum TVShowCreator: String, CaseIterable {
-        case Creator = "Creator"
-    }
+    var movieNetworkImageDataSource: TMDBCollectionDataSource!
 
-    enum NetworkMovieImage: String, CaseIterable {
-        case Network = "Network"
-    }
+    var tvShowSeasonDataSource: TMDBTableDataSource!
 
-    enum TVShowSeason: String, CaseIterable {
-        case Season = "Season"
-    }
+    var matchingTVShowDataSource: TMDBCollectionDataSource!
 
-    enum MatchingTVShow: String, CaseIterable {
-        case Matching = "Matching"
-    }
+    var tvShowCreditDataSource: TMDBCollectionDataSource!
 
-    enum TVShowCredit: String, CaseIterable {
-        case Credit = "Credit"
-    }
+    var tvShowVideoDataSource: TMDBCollectionDataSource!
 
-    enum TVShowVideo: String, CaseIterable {
-        case Video = "Video"
-    }
+    var tvShowCreatorDataSrouce: TMDBCollectionDataSource!
 
-    enum TVShowBackdropImage: String, CaseIterable {
-        case Backdrop = "Backdrop"
-    }
-
-    var movieNetworkImageDataSource: UICollectionViewDiffableDataSource<NetworkMovieImage, Networks>!
-
-    var tvShowSeasonDataSource: UITableViewDiffableDataSource<TVShowSeason, Season>!
-
-    var matchingTVShowDataSource: UICollectionViewDiffableDataSource<MatchingTVShow, TVShow>!
-
-    var tvShowCreditDataSource: UICollectionViewDiffableDataSource<TVShowCredit, Object>!
-    
-    var tvShowVideoDataSource: UICollectionViewDiffableDataSource<TVShowVideo, Video>!
-
-    var tvShowCreatorDataSrouce: UICollectionViewDiffableDataSource<TVShowCreator, CreatedBy>!
-
-    var tvShowBackdropImageDataSource: UICollectionViewDiffableDataSource<TVShowBackdropImage, Images>!
+    var tvShowBackdropImageDataSource: TMDBCollectionDataSource!
 
     // MARK: - ui
     @IBOutlet weak var scrollView: UIScrollView! {
@@ -77,8 +50,8 @@ class TMDBTVDetailViewController: UIViewController {
         }
     }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
-    weak var creditHeaderView: TMDBCreditHeaderView?
-    weak var addtionalHeaderView: TMDBAdditionalHeaderView?
+    weak var creditHeaderView: TMDBPreviewHeaderView?
+    weak var addtionalHeaderView: TMDBPreviewHeaderView?
     @IBOutlet weak var posterImageView: UIImageView! {
         didSet {
             posterImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
@@ -104,14 +77,14 @@ class TMDBTVDetailViewController: UIViewController {
         didSet {
             backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
-            tvShowBackdropImageDataSource = UICollectionViewDiffableDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
+            tvShowBackdropImageDataSource = TMDBCollectionDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
-                cell?.configure(image: item)
+                cell?.configure(image: item as! Images)
                 return cell
             }
 
             var snapshot = tvShowBackdropImageDataSource.snapshot()
-            snapshot.appendSections([.Backdrop])
+            snapshot.appendSections([.backdrop])
             tvShowBackdropImageDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -119,18 +92,16 @@ class TMDBTVDetailViewController: UIViewController {
         didSet {
             videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            videoCollectionView.register(TMDBVideoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.videoMovieHeader)
-            tvShowVideoDataSource = UICollectionViewDiffableDataSource(collectionView: videoCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+
+            tvShowVideoDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: videoCollectionView)
             tvShowVideoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.videoMovieHeader, for: indexPath) as? TMDBVideoHeaderView
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Video", comment: "")
                 return header
             }
             var snapshot = tvShowVideoDataSource.snapshot()
-            snapshot.appendSections([.Video])
+            snapshot.appendSections([.video])
             tvShowVideoDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -144,14 +115,13 @@ class TMDBTVDetailViewController: UIViewController {
         didSet {
             networkCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout(fractionWidth: 0.2, fractionHeight: 1, scrollBehavior: .continuous)
             networkCollectionView.register(TMDBNetworkImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
-            movieNetworkImageDataSource = UICollectionViewDiffableDataSource(collectionView: networkCollectionView) { collectionView, indexPath, item in
+            movieNetworkImageDataSource = TMDBCollectionDataSource(collectionView: networkCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBNetworkImageCell
-                
-                cell?.configure(networks: item)
+                cell?.configure(networks: item as! Networks)
                 return cell
             }
             var snapshot = movieNetworkImageDataSource.snapshot()
-            snapshot.appendSections([.Network])
+            snapshot.appendSections([.network])
             movieNetworkImageDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -159,14 +129,15 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var tvShowSeasonTableView: UITableView! {
         didSet {
             tvShowSeasonTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.tvShowSeasonCell)
-            tvShowSeasonDataSource = UITableViewDiffableDataSource(tableView: tvShowSeasonTableView) { tableView, indexPath, item in
+            tvShowSeasonDataSource = TMDBTableDataSource(tableView: tvShowSeasonTableView) { tableView, indexPath, item in
                 let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowSeasonCell, for: indexPath) as? TMDBCustomTableViewCell
-                cell?.configure(text: item.name, detailText: item.overview, imagePath: item.posterPath)
+                let season = item as? Season
+                cell?.configure(text: season?.name, detailText: season?.overview, imagePath: season?.posterPath)
                 return cell
             }
 
             var snapshot = tvShowSeasonDataSource.snapshot()
-            snapshot.appendSections([.Season])
+            snapshot.appendSections([.season])
             tvShowSeasonDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -174,42 +145,36 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var matchingTVShowCollectionView: UICollectionView! {
         didSet {
             matchingTVShowCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
-            matchingTVShowCollectionView.register(TMDBAdditionalHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.additionalHeader)
+            matchingTVShowCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             matchingTVShowCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            matchingTVShowDataSource = UICollectionViewDiffableDataSource(collectionView: matchingTVShowCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
-            matchingTVShowDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
-                self.addtionalHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.additionalHeader, for: indexPath)) as? TMDBAdditionalHeaderView
+            matchingTVShowDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: matchingTVShowCollectionView)
+            matchingTVShowDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                self.addtionalHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath)) as? TMDBPreviewHeaderView
+                self.addtionalHeaderView?.label.text = NSLocalizedString("More", comment: "")
                 self.addtionalHeaderView?.delegate = self
                 return self.addtionalHeaderView
             }
             
             var snapshot = matchingTVShowDataSource.snapshot()
-            snapshot.appendSections([.Matching])
+            snapshot.appendSections([.matching])
             matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     @IBOutlet weak var tvShowCreditCollectionView: UICollectionView! {
         didSet {
             tvShowCreditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
-            tvShowCreditCollectionView.register(TMDBCreditHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creditMovieHeader)
+            tvShowCreditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             tvShowCreditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            tvShowCreditDataSource = UICollectionViewDiffableDataSource(collectionView: tvShowCreditCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            tvShowCreditDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: tvShowCreditCollectionView)
             tvShowCreditDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
-                self.creditHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.creditMovieHeader, for: indexPath)) as? TMDBCreditHeaderView
+                self.creditHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath)) as? TMDBPreviewHeaderView
+                self.creditHeaderView?.label.text = NSLocalizedString("Credit", comment: "")
                 self.creditHeaderView?.delegate = self
                 return self.creditHeaderView
             }
             
             var snapshot = tvShowCreditDataSource.snapshot()
-            snapshot.appendSections([.Credit])
+            snapshot.appendSections([.credit])
             tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -217,20 +182,17 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var creatorCollectionView: UICollectionView! {
         didSet {
             creatorCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
-            creatorCollectionView.register(TMDBCreatorHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.creatorTVShowHeader)
+            creatorCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             creatorCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            tvShowCreatorDataSrouce = UICollectionViewDiffableDataSource(collectionView: creatorCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.preview, for: indexPath) as? TMDBPreviewItemCell
-                cell?.configure(item: item)
-                return cell
-            }
+            tvShowCreatorDataSrouce = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: creatorCollectionView)
             tvShowCreatorDataSrouce.supplementaryViewProvider = { collectionView, kind, indexPath in
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.creatorTVShowHeader, for: indexPath) as? TMDBCreatorHeaderView
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Creator", comment: "")
                 return header
             }
 
             var snapshot = tvShowCreatorDataSrouce.snapshot()
-            snapshot.appendSections([.Creator])
+            snapshot.appendSections([.creator])
             tvShowCreatorDataSrouce.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -254,6 +216,7 @@ class TMDBTVDetailViewController: UIViewController {
 
     @objc func refreshTVShowDetail() {
         guard let id = tvId else { return }
+        backdropImageCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
         repository.refreshTVShow(id: id) { result in
             self.scrollView.refreshControl?.endRefreshing()
             switch result {
@@ -394,8 +357,10 @@ extension TMDBTVDetailViewController: UICollectionViewDataSource {
 
 extension TMDBTVDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == matchingTVShowCollectionView {
-            let id = matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row].id
+        if
+            collectionView == matchingTVShowCollectionView,
+            let id = (matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row] as? TVShow)?.id {
+
             coordinate?.navigateToTVShowDetail(tvId: id)
         }
 
@@ -408,17 +373,17 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
 
         if
             collectionView == videoCollectionView,
-            let video = tvShowVideoDataSource.itemIdentifier(for: indexPath),
-            let url = userSetting.getYoutubeVideoURL(key: video.key) {
+            let video = tvShowVideoDataSource.itemIdentifier(for: indexPath) as? Video,
+            let url = TMDBUserSetting().getYoutubeVideoURL(key: video.key) {
 
                 coordinate?.navigateToVideoPlayer(with: url)
         }
         
         if
             collectionView == creatorCollectionView,
-            let creator = tvShowCreatorDataSrouce.itemIdentifier(for: indexPath) {
+            let id = (tvShowCreatorDataSrouce.itemIdentifier(for: indexPath) as? CreatedBy)?.id {
             
-            coordinate?.navigateToPersonDetail(id: creator.id)
+            coordinate?.navigateToPersonDetail(id: id)
         }
     }
 }
@@ -426,8 +391,9 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
 extension TMDBTVDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let id = tvId else { return }
-        if tableView == tvShowSeasonTableView {
-            let seasonNumber = tvShowSeasonDataSource.snapshot().itemIdentifiers(inSection: .Season)[indexPath.row].number
+        if
+            tableView == tvShowSeasonTableView,
+            let seasonNumber = (tvShowSeasonDataSource.snapshot().itemIdentifiers(inSection: .season)[indexPath.row] as? Season)?.number {
             coordinate?.navigateToTVShowSeasonDetail(tvId: id, seasonNumber: seasonNumber)
         }
     }

@@ -22,6 +22,13 @@ class TMDBTVShowEpisodeDetailDisplay {
         displayCredit(episode)
     }
     
+    func displayStillImages(_ imageResult: ImageResult) {
+        guard var snapshot = tvShowEpisodeVC?.stillImageDataSource.snapshot() else { return }
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .backdrop))
+        snapshot.appendItems(Array(imageResult.stills))
+        tvShowEpisodeVC?.stillImageDataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
     func displayCredit(_ episode: Episode) {
         guard
             var snapshot = tvShowEpisodeVC?.creditDataSource.snapshot(),

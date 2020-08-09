@@ -252,6 +252,7 @@ class Episode: Object, Decodable {
     dynamic var voteCount: Int = 0
     dynamic var videos: VideoResult?
     dynamic var credits: CreditResult?
+    dynamic var images: ImageResult?
     let crew: List<Crew> = List()
     let guestStars: List<Cast> = List()
 

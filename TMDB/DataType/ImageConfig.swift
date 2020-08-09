@@ -13,11 +13,12 @@ import RealmSwift
 class ImageResult: Object, Decodable {
     let backdrops: List<Images> = List()
     let posters: List<Images> = List()
-    
+    let stills: List<Images> = List()
+
     enum CodingKeys: String, CodingKey {
-        case backdrops, posters
+        case backdrops, posters, stills
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         if container.contains(.backdrops) {
@@ -25,6 +26,9 @@ class ImageResult: Object, Decodable {
         }
         if container.contains(.posters) {
             posters.append(objectsIn: try container.decode(List<Images>.self, forKey: .posters))
+        }
+        if container.contains(.stills) {
+            stills.append(objectsIn: try container.decode(List<Images>.self, forKey: .stills))
         }
     }
 

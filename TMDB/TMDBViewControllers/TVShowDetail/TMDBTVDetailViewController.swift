@@ -79,7 +79,7 @@ class TMDBTVDetailViewController: UIViewController {
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
             tvShowBackdropImageDataSource = TMDBCollectionDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
-                cell?.configure(image: item as! Images)
+                cell?.configure(item: item)
                 return cell
             }
 
@@ -115,11 +115,7 @@ class TMDBTVDetailViewController: UIViewController {
         didSet {
             networkCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout(fractionWidth: 0.2, fractionHeight: 1, scrollBehavior: .continuous)
             networkCollectionView.register(TMDBNetworkImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
-            movieNetworkImageDataSource = TMDBCollectionDataSource(collectionView: networkCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBNetworkImageCell
-                cell?.configure(networks: item as! Networks)
-                return cell
-            }
+            movieNetworkImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: networkCollectionView)
             var snapshot = movieNetworkImageDataSource.snapshot()
             snapshot.appendSections([.network])
             movieNetworkImageDataSource.apply(snapshot, animatingDifferences: true)

@@ -56,7 +56,6 @@ class TMDBMovieDetailDisplay {
 
     func displayBackdropImages(_ imageResult: ImageResult) {
         guard var snapshot = movieDetailVC?.movieImageDataSource.snapshot() else { return }
-        movieDetailVC?.backdropPageControl.numberOfPages = imageResult.backdrops.count
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .image))
         snapshot.appendItems(Array(imageResult.backdrops))
         movieDetailVC?.movieImageDataSource.apply(snapshot, animatingDifferences: true)

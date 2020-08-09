@@ -270,16 +270,39 @@ class LocalDataSourceTests: QuickSpec {
                 tvShow.seasons.append(season)
 
                 localDataSource.saveTVShow(tvShow)
-                expect(localDataSource.getTVShow(id: 1)?.credits).to(beNil())
-                expect(localDataSource.getTVShow(id: 1)?.videos).to(beNil())
-
-                testRealm.beginWrite()
-                episode.credits = CreditResult()
-                episode.videos = VideoResult()
-                try? testRealm.commitWrite()
                 localDataSource.saveTVShowEpisode(tvShowId: 1, seasonNumber: 1, episode: episode)
-                expect(localDataSource.getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1)?.credits).toNot(beNil())
-                expect(localDataSource.getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1)?.videos).toNot(beNil())
+            }
+            
+            it("save tv show season image") {
+                let tvShow = TVShow()
+                let season = Season()
+                
+                tvShow.id = 1
+                season.id = 1
+                season.number = 1
+                
+                tvShow.seasons.append(season)
+                
+                localDataSource.saveTVShow(tvShow)
+                localDataSource.saveTVShowSeasonImage(ImageResult(), to: 1, seasonNumber: 1)
+            }
+            
+            it("save tv show episode image") {
+                let tvShow = TVShow()
+                let season = Season()
+                let episode = Episode()
+                
+                tvShow.id = 1
+                season.id = 1
+                season.number = 1
+                episode.episodeNumber = 1
+                episode.seasonNumber = 1
+                
+                season.episodes.append(episode)
+                tvShow.seasons.append(season)
+                
+                localDataSource.saveTVShow(tvShow)
+                localDataSource.saveTVShowEpisodeImage(ImageResult(), to: 1, seasonNumber: 1, episodeNumber: 1)
             }
         }
     }

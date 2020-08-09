@@ -48,18 +48,20 @@ enum Section: String {
     }
 }
 
+// Reusable table view data source
 class TMDBTableDataSource: UITableViewDiffableDataSource<Section, Object> {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.snapshot().sectionIdentifiers[section].header
     }
 }
 
+// Reusable collection view data source
 class TMDBCollectionDataSource: UICollectionViewDiffableDataSource<Section, Object> {
     init(cellIdentifier: String, collectionView: UICollectionView) {
         super.init(collectionView: collectionView) { collectionView, indexPath, item in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TMDBPreviewItemCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TMDBCellConfig
             cell?.configure(item: item)
-            return cell
+            return cell as? UICollectionViewCell
         }
     }
     

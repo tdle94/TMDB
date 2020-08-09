@@ -48,7 +48,6 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
-    @IBOutlet weak var backdropPageControl: UIPageControl!
     @IBOutlet weak var availableLanguageLabel: UILabel!
     @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalInformationTableView: UITableView!
@@ -80,11 +79,8 @@ class TMDBMovieDetailViewController: UIViewController {
             backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
 
-            movieImageDataSource = TMDBCollectionDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
-                cell?.configure(image: item as! Images)
-                return cell
-            }
+            movieImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: backdropImageCollectionView)
+
             var snapshot = movieImageDataSource.snapshot()
             snapshot.appendSections([.image])
             movieImageDataSource.apply(snapshot, animatingDifferences: true)
@@ -328,12 +324,6 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
             let id = (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
         {
             coordinator?.navigateToPersonDetail(id: id)
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if backdropImageCollectionView == collectionView {
-            backdropPageControl.currentPage = indexPath.row
         }
     }
 }

@@ -43,4 +43,14 @@ extension TMDBServices: TMDBTVService {
         let request = urlRequestBuilder.getTVShowEpisodeURLRequest(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: Episode.self, completion: completion)
     }
+
+    func getTVShowSeasonImage(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getTVShowSeasonImageURLRequest(from: tvShowId, seasonNumber: seasonNumber)
+        session.send(request: request, responseType: ImageResult.self, completion: completion)
+    }
+
+    func getTVShowEpisodeImage(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getTVShowEpisodeImageURLRequest(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)
+        session.send(request: request, responseType: ImageResult.self, completion: completion)
+    }
 }

@@ -25,14 +25,49 @@ class TMDBTVShowEpisodeViewController: UIViewController {
 
     // MARK: - data source
     var creditDataSource: TMDBCollectionDataSource!
+    
+    var stillImageDataSource: TMDBCollectionDataSource!
+    
+    var videoDataSource: TMDBCollectionDataSource!
 
     // MARK: - ui
+    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
     weak var creditHeader: TMDBPreviewHeaderView?
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     
     @IBOutlet weak var posterImageView: UIImageView! {
         didSet {
             posterImageView.roundImage()
+        }
+    }
+    @IBOutlet weak var videoCollectionView: UICollectionView! {
+        didSet {
+            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+            
+            videoDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: videoCollectionView)
+            videoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Video", comment: "")
+                return header
+            }
+            
+            var snapshot = videoDataSource.snapshot()
+            snapshot.appendSections([.video])
+            videoDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+    @IBOutlet weak var stillImageCollectionView: UICollectionView! {
+        didSet {
+            stillImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
+            stillImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            stillImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: stillImageCollectionView)
+            
+            var snapshot = stillImageDataSource.snapshot()
+            snapshot.appendSections([.backdrop])
+            stillImageDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     @IBOutlet weak var titleLabel: UILabel!
@@ -60,6 +95,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         episodeDetailDisplay.tvShowEpisodeVC = self
+        contentView.bringSubviewToFront(posterImageView)
         getTVShowEpisode()
     }
     
@@ -75,15 +111,29 @@ class TMDBTVShowEpisodeViewController: UIViewController {
             let seasonNumber = seasonNumber,
             let episodeNumber = episodeNumber else { return }
 
+        let group = DispatchGroup()
+        group.enter()
         view.addSubview(loadingView)
         repository.getTVShowEpisode(from: tvId, seasonNumber: seasonNumber, episodeNumber: episodeNumber) { result in
             self.loadingView.removeFromSuperview()
+            group.leave()
             switch result {
             case .failure(let error):
                 self.loadingView.showError(true)
                 debugPrint(error.localizedDescription)
             case .success(let episode):
                 self.episodeDetailDisplay.displayEpisodeDetail(episode)
+            }
+        }
+        
+        group.notify(queue: .main) {
+            self.repository.getTVShowEpisodeImage(from: tvId, seasonNumber: seasonNumber, episodeNumber: episodeNumber) { result in
+                switch result {
+                case .failure(let error):
+                    debugPrint(error.localizedDescription)
+                case .success(let imageResult):
+                    self.episodeDetailDisplay.displayStillImages(imageResult)
+                }
             }
         }
     }

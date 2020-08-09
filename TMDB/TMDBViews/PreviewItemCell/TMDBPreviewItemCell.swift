@@ -45,7 +45,9 @@ class TMDBPreviewItemCell: UICollectionViewCell {
         }
         imageView.sd_setImage(with: url, placeholderImage: nil)
     }
+}
 
+extension TMDBPreviewItemCell: TMDBCellConfig {
     func configure(item: Object) {
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             ratingLabel.isHidden = false

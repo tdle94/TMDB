@@ -101,6 +101,44 @@ extension TMDBRepository: TMDBTrendingRepository {
 }
 
 extension TMDBRepository: TMDBTVShowRepository {
+    func getTVShowEpisodeImage(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
+        if let imageResult = localDataSource.getTVShowEpisode(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)?.images {
+            completion(.success(imageResult))
+            return
+        }
+
+        services.getTVShowEpisodeImage(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let imageResult):
+                    self.localDataSource.saveTVShowEpisodeImage(imageResult, to: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)
+                    completion(.success(imageResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func getTVShowSeasonImage(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
+        if let imageResult = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber)?.images {
+            completion(.success(imageResult))
+            return
+        }
+
+        services.getTVShowSeasonImage(from: tvShowId, seasonNumber: seasonNumber) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let imageResult):
+                    self.localDataSource.saveTVShowSeasonImage(imageResult, to: tvShowId, seasonNumber: seasonNumber)
+                    completion(.success(imageResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getTVShowEpisode(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int, completion: @escaping (Result<Episode, Error>) -> Void) {
         if
             let episode = localDataSource.getTVShowEpisode(from: tvShowId, seasonNumber: seasonNumber, episodeNumber: episodeNumber),

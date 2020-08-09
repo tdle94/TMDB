@@ -20,6 +20,8 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        let solidIndicator = UIView(frame: CGRect(x: 0, y: bounds.height/4, width: 5, height: bounds.height/2))
+        solidIndicator.backgroundColor = Constant.Color.tertiaryColor
 
         segmentControl.selectedSegmentTintColor = Constant.Color.primaryColor
         segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
@@ -27,12 +29,13 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
         
         addSubview(label)
         addSubview(segmentControl)
+        addSubview(solidIndicator)
 
         label.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
-        
+
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         segmentControl.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         label.heightAnchor.constraint(equalToConstant: 44).isActive = true
         addConstraint(NSLayoutConstraint(item: label,

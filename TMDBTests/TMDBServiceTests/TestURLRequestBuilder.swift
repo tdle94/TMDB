@@ -189,4 +189,16 @@ class TestURLRequestBuilder: XCTestCase {
         let urlMatcher = "https://api.themoviedb.org/3/tv/3/season/1/episode/1?language=en&append_to_response=credits,videos&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
+    
+    func testTVShowSeasonImageURL() {
+        let matchRequest = urlRequestBuilder.getTVShowSeasonImageURLRequest(from: 3, seasonNumber: 1)
+        let urlMatcher = ""
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
+    
+    func testTVShowEpisodeImageURL() {
+        let matchRequest = urlRequestBuilder.getTVShowEpisodeImageURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1)
+        let urlMatcher = ""
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
 }

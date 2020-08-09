@@ -537,4 +537,53 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(Episode.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getTVShowEpisodeURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1, language: NSLocale.current.languageCode)
     }
+    
+    // MARK: - tv show season image
+    func testGetTVShowSeasonImage() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowSeasonImageURLRequest(from: 3, seasonNumber: 1)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).thenDoNothing()
+        }
+
+        stub(urlRequestBuilder) { stub in
+            when(stub).getTVShowSeasonImageURLRequest(from: 3, seasonNumber: 1).thenReturn(request)
+        }
+        /*WHEN*/
+        services.getTVShowSeasonImage(from: 3, seasonNumber: 1) { _ in
+            expectation.fulfill()
+        }
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getTVShowSeasonImageURLRequest(from: 3, seasonNumber: 1)
+    }
+    
+    // MARK: - tv show episode image
+    func testGetTVShowEpisodeImage() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowEpisodeImageURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).thenDoNothing()
+        }
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getTVShowEpisodeImageURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1).thenReturn(request)
+        }
+        /*WHEN*/
+        services.getTVShowEpisodeImage(from: 3, seasonNumber: 1, episodeNumber: 1) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getTVShowEpisodeImageURLRequest(from: 3, seasonNumber: 1, episodeNumber: 1)
+    }
 }

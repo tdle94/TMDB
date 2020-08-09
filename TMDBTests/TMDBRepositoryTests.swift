@@ -2218,4 +2218,62 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getNowPlayingMovieURLRequest(page: 3, language: any(), region: any())
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
     }
+    
+    // MARK: - top rated movie
+    func testGetTopRateMovieSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTopRateMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTopRateMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTopRateMovie(page: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTopRateMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetTopRateMovieFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTopRateMovieURLRequest(page: 3, language: nil, region: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTopRateMovieURLRequest(page: 3, language: any(), region: any()).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTopRateMovie(page: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTopRateMovieURLRequest(page: 3, language: any(), region: any())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+    
 }

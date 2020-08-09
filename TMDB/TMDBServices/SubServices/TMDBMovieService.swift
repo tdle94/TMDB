@@ -18,4 +18,5 @@ protocol TMDBMovieService {
     func getMovieImages(from movieId: Int, completion: @escaping (Result<ImageResult, Error>) -> Void)
     func getNowPlayingMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
     func getTopRateMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
+    func getUpcomingMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void)
 }

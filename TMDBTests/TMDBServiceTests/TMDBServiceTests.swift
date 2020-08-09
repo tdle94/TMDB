@@ -648,4 +648,32 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getTopRateMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
     }
+    
+    // MARK: - upcoming movie
+    func testGetUpcomingMovie() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getUpcomingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getUpcomingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        services.getUpcomingMovie(page: 1) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getUpcomingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+    }
 }

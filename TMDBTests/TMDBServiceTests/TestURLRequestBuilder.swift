@@ -213,4 +213,10 @@ class TestURLRequestBuilder: XCTestCase {
         let urlMatcher = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
+    
+    func testUpcomingMovieURL() {
+        let matchRequest = urlRequestBuilder.getUpcomingMovieURLRequest(page: 1, language: nil, region: nil)
+        let urlMatcher = "https://api.themoviedb.org/3/movie/upcoming?page=1&language=en&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
 }

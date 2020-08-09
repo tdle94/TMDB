@@ -379,6 +379,19 @@ extension TMDBRepository: TMDBTVShowRepository {
 }
 
 extension TMDBRepository: TMDBMovieRepository {
+    func getUpcomingMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        services.getUpcomingMovie(page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let upcomingMovieResult):
+                    completion(.success(upcomingMovieResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getTopRateMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         services.getTopRateMovie(page: page) { result in
             DispatchQueue.main.async {

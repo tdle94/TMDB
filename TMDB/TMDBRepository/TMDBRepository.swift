@@ -379,6 +379,19 @@ extension TMDBRepository: TMDBTVShowRepository {
 }
 
 extension TMDBRepository: TMDBMovieRepository {
+    func getNowPlayingMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        services.getNowPlayingMovie(page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let nowPlayingMovieResult):
+                    completion(.success(nowPlayingMovieResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getMovieImages(from movieId: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
         if let images = localDataSource.getMovie(id: movieId)?.images {
             completion(.success(images))

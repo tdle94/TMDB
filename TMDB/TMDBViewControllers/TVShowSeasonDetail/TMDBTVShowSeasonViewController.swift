@@ -48,11 +48,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
         didSet {
             posterImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
             posterImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
-            posterImageDataSource = TMDBCollectionDataSource(collectionView: posterImageCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
-                cell?.configure(image: item as! Images)
-                return cell
-            }
+            posterImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: posterImageCollectionView)
 
             var snapshot = posterImageDataSource.snapshot()
             snapshot.appendSections([.backdrop])

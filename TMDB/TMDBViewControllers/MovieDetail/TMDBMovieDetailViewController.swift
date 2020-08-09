@@ -79,11 +79,8 @@ class TMDBMovieDetailViewController: UIViewController {
             backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
 
-            movieImageDataSource = TMDBCollectionDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
-                cell?.configure(image: item as! Images)
-                return cell
-            }
+            movieImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: backdropImageCollectionView)
+
             var snapshot = movieImageDataSource.snapshot()
             snapshot.appendSections([.image])
             movieImageDataSource.apply(snapshot, animatingDifferences: true)

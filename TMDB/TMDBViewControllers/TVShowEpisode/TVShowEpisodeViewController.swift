@@ -63,11 +63,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
         didSet {
             stillImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
             stillImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
-            stillImageDataSource = TMDBCollectionDataSource(collectionView: stillImageCollectionView) { collectionView, indexPath, item in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
-                cell?.configure(image: item as! Images)
-                return cell
-            }
+            stillImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: stillImageCollectionView)
             
             var snapshot = stillImageDataSource.snapshot()
             snapshot.appendSections([.backdrop])

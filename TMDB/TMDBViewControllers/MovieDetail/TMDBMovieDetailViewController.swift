@@ -48,7 +48,6 @@ class TMDBMovieDetailViewController: UIViewController {
         }
     }
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
-    @IBOutlet weak var backdropPageControl: UIPageControl!
     @IBOutlet weak var availableLanguageLabel: UILabel!
     @IBOutlet weak var additionalInformationTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalInformationTableView: UITableView!
@@ -328,12 +327,6 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
             let id = (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
         {
             coordinator?.navigateToPersonDetail(id: id)
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if backdropImageCollectionView == collectionView {
-            backdropPageControl.currentPage = indexPath.row
         }
     }
 }

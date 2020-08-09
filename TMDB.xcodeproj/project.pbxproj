@@ -90,7 +90,7 @@
 		34995AF324968C340088576B /* TMDBURLSessionDataTaskProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34995AF224968C340088576B /* TMDBURLSessionDataTaskProtocol.swift */; };
 		349A22E924B7F60900939367 /* TMDBReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349A22E824B7F60900939367 /* TMDBReviewCell.swift */; };
 		349B9C4924D5DF7100B6531B /* TVShowSeasonDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349B9C4824D5DF7100B6531B /* TVShowSeasonDetail.swift */; };
-		34A0D0C224B3E64500386945 /* TMDBHomeViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A0D0C124B3E64500386945 /* TMDBHomeViewControllerTests.swift */; };
+		34A0D0C224B3E64500386945 /* ViewControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A0D0C124B3E64500386945 /* ViewControllerUITests.swift */; };
 		34A31D15248C7CCC00D56C10 /* TMDBSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A31D14248C7CCC00D56C10 /* TMDBSession.swift */; };
 		34A31D19248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A31D18248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift */; };
 		34A31D1E248C96AF00D56C10 /* TMDBServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A31D1D248C96AF00D56C10 /* TMDBServices.swift */; };
@@ -241,7 +241,7 @@
 		349B9C4824D5DF7100B6531B /* TVShowSeasonDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowSeasonDetail.swift; sourceTree = "<group>"; };
 		34A0D0B624B3E60F00386945 /* TMDBUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TMDBUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34A0D0BA24B3E61000386945 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		34A0D0C124B3E64500386945 /* TMDBHomeViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBHomeViewControllerTests.swift; sourceTree = "<group>"; };
+		34A0D0C124B3E64500386945 /* ViewControllerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerUITests.swift; sourceTree = "<group>"; };
 		34A31D14248C7CCC00D56C10 /* TMDBSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBSession.swift; sourceTree = "<group>"; };
 		34A31D18248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBURLRequestBuilder.swift; sourceTree = "<group>"; };
 		34A31D1D248C96AF00D56C10 /* TMDBServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBServices.swift; sourceTree = "<group>"; };
@@ -508,7 +508,7 @@
 		34A0D0C024B3E62B00386945 /* TMDBViewControllerTests */ = {
 			isa = PBXGroup;
 			children = (
-				34A0D0C124B3E64500386945 /* TMDBHomeViewControllerTests.swift */,
+				34A0D0C124B3E64500386945 /* ViewControllerUITests.swift */,
 			);
 			path = TMDBViewControllerTests;
 			sourceTree = "<group>";
@@ -1145,7 +1145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34A0D0C224B3E64500386945 /* TMDBHomeViewControllerTests.swift in Sources */,
+				34A0D0C224B3E64500386945 /* ViewControllerUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

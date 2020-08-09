@@ -1160,7 +1160,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="740"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bOz-Rc-kbd">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="899.66666666666663"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="909"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="g16-be-lvH">
                                                 <rect key="frame" x="18" y="280.66666666666669" width="186" height="279.00000000000006"/>
@@ -1184,7 +1184,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ysw-LJ-3rm">
-                                                <rect key="frame" x="0.0" y="620.66666666666663" width="414" height="264"/>
+                                                <rect key="frame" x="0.0" y="630" width="414" height="264"/>
                                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="264" id="yGG-QU-zoz"/>
@@ -1232,6 +1232,29 @@
                                                     <outlet property="delegate" destination="9DE-In-8rM" id="Ft9-wz-eRK"/>
                                                 </connections>
                                             </collectionView>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="iWR-T4-JCc">
+                                                <rect key="frame" x="0.0" y="621" width="414" height="1"/>
+                                                <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="k7S-wm-KKs"/>
+                                                </constraints>
+                                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ovu-fm-dDN">
+                                                    <size key="itemSize" width="128" height="128"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                                <cells>
+                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Wd4-gA-W4A">
+                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="0O4-nU-I5B">
+                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                        </collectionViewCellContentView>
+                                                    </collectionViewCell>
+                                                </cells>
+                                            </collectionView>
                                         </subviews>
                                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -1242,16 +1265,19 @@
                                             <constraint firstItem="g16-be-lvH" firstAttribute="leading" secondItem="bOz-Rc-kbd" secondAttribute="leading" constant="18" id="DUP-jc-waQ"/>
                                             <constraint firstAttribute="trailing" secondItem="g16-be-lvH" secondAttribute="trailing" constant="210" id="DmV-Jw-llb"/>
                                             <constraint firstItem="XFG-sJ-7vg" firstAttribute="top" secondItem="K0K-dU-OC6" secondAttribute="bottom" constant="5" id="IbP-Xd-lS4"/>
+                                            <constraint firstItem="iWR-T4-JCc" firstAttribute="leading" secondItem="bOz-Rc-kbd" secondAttribute="leading" id="Jy4-ko-0Kg"/>
                                             <constraint firstAttribute="trailing" secondItem="XFG-sJ-7vg" secondAttribute="trailing" constant="18" id="KVw-vP-n07"/>
                                             <constraint firstItem="T4Y-Cv-b5v" firstAttribute="width" secondItem="T4Y-Cv-b5v" secondAttribute="height" multiplier="4:3" id="Mqz-Ar-ULv"/>
+                                            <constraint firstItem="iWR-T4-JCc" firstAttribute="top" secondItem="XFG-sJ-7vg" secondAttribute="bottom" constant="8" id="RYX-NC-aDR"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="K0K-dU-OC6" secondAttribute="trailing" symbolic="YES" id="TNL-kH-rLp"/>
                                             <constraint firstAttribute="bottom" secondItem="Ysw-LJ-3rm" secondAttribute="bottom" constant="15" id="Uep-z5-ncO"/>
-                                            <constraint firstItem="Ysw-LJ-3rm" firstAttribute="top" secondItem="XFG-sJ-7vg" secondAttribute="bottom" constant="7.6666666666666856" id="WVB-GT-xqQ"/>
                                             <constraint firstItem="T4Y-Cv-b5v" firstAttribute="leading" secondItem="bOz-Rc-kbd" secondAttribute="leading" id="bfU-af-yTl"/>
                                             <constraint firstItem="g16-be-lvH" firstAttribute="top" secondItem="T4Y-Cv-b5v" secondAttribute="bottom" constant="-30" id="g89-Dm-siP"/>
                                             <constraint firstItem="K0K-dU-OC6" firstAttribute="top" secondItem="g16-be-lvH" secondAttribute="bottom" constant="10" id="gch-D2-db5"/>
                                             <constraint firstItem="T4Y-Cv-b5v" firstAttribute="top" secondItem="bOz-Rc-kbd" secondAttribute="top" id="hR1-WG-lsJ"/>
                                             <constraint firstItem="Ysw-LJ-3rm" firstAttribute="leading" secondItem="bOz-Rc-kbd" secondAttribute="leading" id="izU-ud-bgI"/>
+                                            <constraint firstItem="Ysw-LJ-3rm" firstAttribute="top" secondItem="iWR-T4-JCc" secondAttribute="bottom" constant="8" id="q5h-tu-SZK"/>
+                                            <constraint firstAttribute="trailing" secondItem="iWR-T4-JCc" secondAttribute="trailing" id="vXs-8a-R7F"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -1264,6 +1290,9 @@
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="Mwd-Oq-Xwk"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="Nhu-uL-Khe"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="TVShowEpisodeDetailScrollView"/>
+                                </userDefinedRuntimeAttributes>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
@@ -1285,6 +1314,8 @@
                         <outlet property="posterImageView" destination="g16-be-lvH" id="S7i-xM-6B7"/>
                         <outlet property="stillImageCollectionView" destination="T4Y-Cv-b5v" id="dbN-y3-qYp"/>
                         <outlet property="titleLabel" destination="K0K-dU-OC6" id="I9P-Eg-qJJ"/>
+                        <outlet property="videoCollectionView" destination="iWR-T4-JCc" id="IjT-i4-nXw"/>
+                        <outlet property="videoCollectionViewHeightConstraint" destination="k7S-wm-KKs" id="c72-gB-hre"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JM5-wg-Axh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1636,6 +1667,9 @@
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="Yv4-qz-7LZ"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="6kZ-x0-uco"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="TVShowSeasonDetailScrollView"/>
+                                </userDefinedRuntimeAttributes>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>

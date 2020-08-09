@@ -20,6 +20,25 @@ class TMDBTVShowEpisodeDetailDisplay {
         displayPosterImage(episode)
         displayOverview(episode)
         displayCredit(episode)
+        displayVideo(episode)
+    }
+
+    func displayVideo(_ episode: Episode) {
+        guard var snapshot = tvShowEpisodeVC?.videoDataSource.snapshot() else {
+            return
+        }
+        
+        guard let videos = episode.videos?.videos, !videos.isEmpty else {
+            snapshot.deleteSections([.video])
+            tvShowEpisodeVC?.videoDataSource.apply(snapshot, animatingDifferences: true)
+            tvShowEpisodeVC?.videoCollectionViewHeightConstraint.constant = 0
+            return
+        }
+        
+        snapshot.deleteAllItems()
+        snapshot.appendItems(Array(videos))
+        tvShowEpisodeVC?.videoDataSource.apply(snapshot, animatingDifferences: true)
+        tvShowEpisodeVC?.videoCollectionViewHeightConstraint.constant = (tvShowEpisodeVC?.videoCollectionView.contentSize.height ?? 0)/2
     }
     
     func displayStillImages(_ imageResult: ImageResult) {

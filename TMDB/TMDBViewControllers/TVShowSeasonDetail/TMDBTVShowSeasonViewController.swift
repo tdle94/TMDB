@@ -74,7 +74,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
             
             videoDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: videoCollectionView)
             
-            videoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+            videoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
                 header?.label.text = NSLocalizedString("Video", comment: "")
                 return header

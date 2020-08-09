@@ -27,15 +27,36 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     var creditDataSource: TMDBCollectionDataSource!
     
     var stillImageDataSource: TMDBCollectionDataSource!
+    
+    var videoDataSource: TMDBCollectionDataSource!
 
     // MARK: - ui
     @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
     weak var creditHeader: TMDBPreviewHeaderView?
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
     
     @IBOutlet weak var posterImageView: UIImageView! {
         didSet {
             posterImageView.roundImage()
+        }
+    }
+    @IBOutlet weak var videoCollectionView: UICollectionView! {
+        didSet {
+            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
+            
+            videoDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: videoCollectionView)
+            videoDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
+                header?.label.text = NSLocalizedString("Video", comment: "")
+                return header
+            }
+            
+            var snapshot = videoDataSource.snapshot()
+            snapshot.appendSections([.video])
+            videoDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     @IBOutlet weak var stillImageCollectionView: UICollectionView! {

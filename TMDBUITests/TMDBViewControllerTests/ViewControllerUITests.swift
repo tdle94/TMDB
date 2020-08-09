@@ -8,7 +8,7 @@
 
 import XCTest
 
-class TMDBHomeViewControllerTests: XCTestCase {
+class ViewControllerUITests: XCTestCase {
 
     let app = XCUIApplication()
 
@@ -33,6 +33,8 @@ class TMDBHomeViewControllerTests: XCTestCase {
         let similarTVShow = app.segmentedControls.buttons[NSLocalizedString("Similar", comment: "")]
         let recommendTVShow = app.segmentedControls.buttons[NSLocalizedString("Recommend", comment: "")]
         let tvShowSeasonTableView = tvShowDetailScrollView.tables.firstMatch
+        let tvShowSeasonScrollView = app.scrollViews.matching(identifier: "TVShowSeasonDetailScrollView")
+        let tvShowEpisodeTableView = tvShowSeasonScrollView.tables.firstMatch
 
         app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
         collectionView.cells.firstMatch.tap()
@@ -86,8 +88,17 @@ class TMDBHomeViewControllerTests: XCTestCase {
             }
             tvShowSeasonTableView.cells.firstMatch.tap()
         }
+        
+        // tap on tv show episode
+        if tvShowEpisodeTableView.exists {
+            while !tvShowEpisodeTableView.isHittable {
+                tvShowSeasonScrollView.firstMatch.swipeUp()
+            }
+            tvShowEpisodeTableView.cells.firstMatch.tap()
+        }
+        
     }
-    
+
     func testTapPopularMovie() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         let expectations = expectation(description: "AsyncExpectations")
@@ -136,7 +147,7 @@ class TMDBHomeViewControllerTests: XCTestCase {
             similarMovie.tap()
         }
     }
-    
+
     func testTapTrendingThisWeek() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         app.segmentedControls.buttons[NSLocalizedString("This Week", comment: "")].tap()
@@ -154,7 +165,7 @@ class TMDBHomeViewControllerTests: XCTestCase {
         expectations.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
     }
-    
+
     func testTapPopularPeople() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         app.segmentedControls.buttons[NSLocalizedString("People", comment: "")].tap()

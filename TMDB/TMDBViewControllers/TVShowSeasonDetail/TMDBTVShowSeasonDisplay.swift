@@ -33,11 +33,9 @@ class TMDBTVShowSeasonDisplay {
     }
 
     func displaySeasonVideo(_ season: Season) {
-        guard
-            let videos = season.videos?.videos,
-            var snapshot = tvShowSeasonVC?.videoDataSource.snapshot() else { return }
+        guard var snapshot = tvShowSeasonVC?.videoDataSource.snapshot() else { return }
         
-        if videos.isEmpty {
+        guard let videos = season.videos?.videos, !videos.isEmpty else {
             snapshot.deleteSections([.video])
             tvShowSeasonVC?.videoDataSource.apply(snapshot, animatingDifferences: true)
             tvShowSeasonVC?.videoCollectionViewHeightConstraint.constant = 0

@@ -543,19 +543,23 @@ class TMDBServiceTests: XCTestCase {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getTVShowSeasonImageURLRequest(from: 3, seasonNumber: 1)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-        
+
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).thenDoNothing()
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ImageResult()))
+            }
         }
 
         stub(urlRequestBuilder) { stub in
             when(stub).getTVShowSeasonImageURLRequest(from: 3, seasonNumber: 1).thenReturn(request)
         }
+
         /*WHEN*/
         services.getTVShowSeasonImage(from: 3, seasonNumber: 1) { _ in
             expectation.fulfill()
         }
+
         /*THEN*/
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
@@ -570,7 +574,9 @@ class TMDBServiceTests: XCTestCase {
         
         /*GIVEN*/
         stub(session) { stub in
-            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).thenDoNothing()
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ImageResult()))
+            }
         }
         
         stub(urlRequestBuilder) { stub in

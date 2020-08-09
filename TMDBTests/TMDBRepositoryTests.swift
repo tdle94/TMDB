@@ -2024,7 +2024,7 @@ class TMDBRepositoryTests: XCTestCase {
     }
 
     // MARK: - tv show episode guest star
-    func testGetTVSHowEpisodeGuestStarInRealm() {
+    func testGetTVShowEpisodeGuestStarInRealm() {
         let tvShow = TVShow()
         let season = Season()
         let episode = Episode()
@@ -2048,5 +2048,117 @@ class TMDBRepositoryTests: XCTestCase {
 
         /*THEN*/
         verify(localDataSource).getTVShowEpisode(from: 3, seasonNumber: 1, episodeNumber: 3)
+    }
+    
+    // MARK: - tv show season image
+    func testGetTVShowSeasonImageInRealm() {
+        let expectation = self.expectation(description: "")
+        let season = Season()
+        season.id = 1
+        season.images = ImageResult()
+        season.number = 1
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowSeason(tvShowId: 1, seasonNumber: 1).thenReturn(season)
+        }
+        /*WHEN*/
+        repository.getTVShowSeasonImage(from: 1, seasonNumber: 1) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShowSeason(tvShowId: 1, seasonNumber: 1)
+    }
+    
+    func testGetTVShowSeasonImageRemote() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowSeasonImageURLRequest(from: 1, seasonNumber: 1)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let season = Season()
+        season.id = 1
+        season.number = 1
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowSeason(tvShowId: 1, seasonNumber: 1).thenReturn(season)
+            when(stub).saveTVShowSeasonImage(any(), to: 1, seasonNumber: 1).thenDoNothing()
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowSeasonImageURLRequest(from: 1, seasonNumber: 1).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ImageResult()))
+            }
+        }
+        /*WHEN*/
+        repository.getTVShowSeasonImage(from: 1, seasonNumber: 1) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShowSeason(tvShowId: 1, seasonNumber: 1)
+        verify(localDataSource).saveTVShowSeasonImage(any(), to: 1, seasonNumber: 1)
+        verify(requestBuilder).getTVShowSeasonImageURLRequest(from: 1, seasonNumber: 1)
+        verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
+    }
+    
+    // tv show episode image
+    func testGetTVShowEpisodeImageInrealm() {
+        let expectation = self.expectation(description: "")
+        let episode = Episode()
+        episode.images = ImageResult()
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1).thenReturn(episode)
+        }
+        /*WHEN*/
+        repository.getTVShowEpisodeImage(from: 1, seasonNumber: 1, episodeNumber: 1) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1)
+    }
+    
+    func testGetTVShowEpisodeImageRemote() {
+        let expectation = self.expectation(description: "")
+        let episode = Episode()
+        let request = TMDBURLRequestBuilder().getTVShowEpisodeImageURLRequest(from: 1, seasonNumber: 1, episodeNumber: 1)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1).thenReturn(episode)
+            when(stub).saveTVShowEpisodeImage(any(), to: 1, seasonNumber: 1, episodeNumber: 1).thenDoNothing()
+        }
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowEpisodeImageURLRequest(from: 1, seasonNumber: 1, episodeNumber: 1).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(ImageResult()))
+            }
+        }
+        /*WHEN*/
+        repository.getTVShowEpisodeImage(from: 1, seasonNumber: 1, episodeNumber: 1) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(localDataSource).getTVShowEpisode(from: 1, seasonNumber: 1, episodeNumber: 1)
+        verify(localDataSource).saveTVShowEpisodeImage(any(), to: 1, seasonNumber: 1, episodeNumber: 1)
+        verify(requestBuilder).getTVShowEpisodeImageURLRequest(from: 1, seasonNumber: 1, episodeNumber: 1)
+        verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
     }
 }

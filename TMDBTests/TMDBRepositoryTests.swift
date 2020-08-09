@@ -2161,4 +2161,175 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getTVShowEpisodeImageURLRequest(from: 1, seasonNumber: 1, episodeNumber: 1)
         verify(session).send(request: requestMatcher, responseType: any(ImageResult.Type.self), completion: anyClosure())
     }
+    
+    // MARK: - now playing movie
+    func testGetNowPlayingMovieSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getNowPlayingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getNowPlayingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getNowPlayingMovie(page: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getNowPlayingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetNowPlayingMovieFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getNowPlayingMovieURLRequest(page: 3, language: nil, region: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getNowPlayingMovieURLRequest(page: 3, language: any(), region: any()).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getNowPlayingMovie(page: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getNowPlayingMovieURLRequest(page: 3, language: any(), region: any())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+    
+    // MARK: - top rated movie
+    func testGetTopRateMovieSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTopRateMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTopRateMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTopRateMovie(page: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTopRateMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetTopRateMovieFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTopRateMovieURLRequest(page: 3, language: nil, region: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTopRateMovieURLRequest(page: 3, language: any(), region: any()).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTopRateMovie(page: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTopRateMovieURLRequest(page: 3, language: any(), region: any())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+    
+    // MARK: - upcoming movie
+    func testGetUpcomingMovieSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getUpcomingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getUpcomingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getUpcomingMovie(page: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getUpcomingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+
+    func testGetUpcomingMovieFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getUpcomingMovieURLRequest(page: 3, language: nil, region: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getUpcomingMovieURLRequest(page: 3, language: any(), region: any()).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getUpcomingMovie(page: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getUpcomingMovieURLRequest(page: 3, language: any(), region: any())
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
 }

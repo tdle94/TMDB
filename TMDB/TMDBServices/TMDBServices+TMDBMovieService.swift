@@ -43,4 +43,19 @@ extension TMDBServices: TMDBMovieService {
         let request = urlRequestBuilder.getMovieImagesURLRequest(from: movieId)
         session.send(request: request, responseType: ImageResult.self, completion: completion)
     }
+    
+    func getNowPlayingMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getNowPlayingMovieURLRequest(page: page, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        session.send(request: request, responseType: MovieResult.self, completion: completion)
+    }
+
+    func getTopRateMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getTopRateMovieURLRequest(page: page, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        session.send(request: request, responseType: MovieResult.self, completion: completion)
+    }
+
+    func getUpcomingMovie(page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getUpcomingMovieURLRequest(page: page, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
+        session.send(request: request, responseType: MovieResult.self, completion: completion)
+    }
 }

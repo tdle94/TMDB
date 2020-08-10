@@ -33,11 +33,12 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
 
         label.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
-
+        
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        segmentControl.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         label.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        segmentControl.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         addConstraint(NSLayoutConstraint(item: label,
                                          attribute: .trailing,
                                          relatedBy: .equal,

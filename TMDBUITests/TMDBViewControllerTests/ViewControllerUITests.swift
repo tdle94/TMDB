@@ -24,7 +24,7 @@ class ViewControllerUITests: XCTestCase {
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
-    func testTapPopularTVShow() {
+    func tapPopularTVShow() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
         let expectations = expectation(description: "AsyncExpectations")
         let tvShowDetailScrollView = app.scrollViews.matching(identifier: "TVShowDetailScrollView")
@@ -40,13 +40,13 @@ class ViewControllerUITests: XCTestCase {
         collectionView.cells.firstMatch.tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
-        
+
         // similar and/or recommend movie tap
         if similarTVShow.exists && recommendTVShow.exists {
             while !similarTVShow.isHittable && !recommendTVShow.isHittable {
                 tvShowDetailScrollView.firstMatch.swipeUp()
             }
-            
+
             similarTVShow.tap()
             recommendTVShow.tap()
         } else if similarTVShow.exists {
@@ -61,7 +61,7 @@ class ViewControllerUITests: XCTestCase {
             }
             recommendTVShow.tap()
         }
-        
+
         // cast and/or crew tap
         if cast.exists && crew.exists {
             while !cast.isHittable && !crew.isHittable {
@@ -88,7 +88,7 @@ class ViewControllerUITests: XCTestCase {
             }
             tvShowSeasonTableView.cells.firstMatch.tap()
         }
-        
+
         // tap on tv show episode
         if tvShowEpisodeTableView.exists {
             while !tvShowEpisodeTableView.isHittable {
@@ -96,6 +96,7 @@ class ViewControllerUITests: XCTestCase {
             }
             tvShowEpisodeTableView.cells.firstMatch.tap()
         }
+
         
     }
 
@@ -145,34 +146,67 @@ class ViewControllerUITests: XCTestCase {
             }
 
             similarMovie.tap()
+        } else if recommendMovie.exists {
+            while !recommendMovie.isHittable {
+                movieDetailScrollView.firstMatch.swipeUp()
+            }
+            recommendMovie.tap()
         }
+
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        
+        tapPopularTVShow()
+        
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        
+        tapTrendingThisWeek()
     }
 
-    func testTapTrendingThisWeek() {
+    func tapTrendingThisWeek() {
         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
-        app.segmentedControls.buttons[NSLocalizedString("This Week", comment: "")].tap()
-        let expectations = expectation(description: "AsyncExpectations")
-        collectionView.cells.firstMatch.tap()
-        expectations.fulfill()
-        waitForExpectations(timeout: 5, handler: nil)
-    }
 
-    func testTapTrendingToday() {
-         let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
-        app.segmentedControls.buttons[NSLocalizedString("Today", comment: "")].tap()
-        let expectations = expectation(description: "AsyncExpectations")
-        collectionView.cells.firstMatch.tap()
-        expectations.fulfill()
-        waitForExpectations(timeout: 5, handler: nil)
-    }
-
-    func testTapPopularPeople() {
-        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        // tap popular people
         app.segmentedControls.buttons[NSLocalizedString("People", comment: "")].tap()
-        let expectations = expectation(description: "AsyncExpectations")
+        let expectations2 = expectation(description: "AsyncExpectations")
         collectionView.cells.firstMatch.tap()
-        expectations.fulfill()
+        expectations2.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
-    }
+        
+        app.scrollViews.firstMatch.swipeUp()
+        app.scrollViews.firstMatch.swipeUp()
+        
+        // tap appear in movie button
+        
+        if app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].exists {
+            app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].tap()
+        }
+        
+        if app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].exists {
+            app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
+        }
+        
+        app.navigationBars.buttons.element(boundBy: 0).tap()
 
+        // tap trending this week
+        app.segmentedControls.buttons[NSLocalizedString("This Week", comment: "")].tap()
+
+        
+        // tap trending today
+        app.segmentedControls.buttons[NSLocalizedString("Today", comment: "")].tap()
+
+
+        collectionView.firstMatch.swipeUp()
+        collectionView.firstMatch.swipeUp()
+
+        // tap now playing button
+        app.segmentedControls.buttons[NSLocalizedString("Now Playing", comment: "")].tap()
+        
+        // tap upcoming button
+        app.segmentedControls.buttons[NSLocalizedString("Upcoming", comment: "")].tap()
+        
+        // tap top rate button
+        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
+    }
 }

@@ -26,6 +26,7 @@ enum Section: String {
     case matching
     case backdrop
     case appearIn
+    case movie
 
     var header: String {
         switch self {
@@ -44,6 +45,7 @@ enum Section: String {
         case .matching: return NSLocalizedString("More", comment: "")
         case .backdrop: return NSLocalizedString("Images", comment: "")
         case .appearIn: return NSLocalizedString("Appear In", comment: "")
+        case .movie: return NSLocalizedString("Movie", comment: "")
         }
     }
 }

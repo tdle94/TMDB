@@ -11,10 +11,11 @@ import UIKit
 
 struct Constant {
     struct Identifier {
-        static let popularHeader = "PreviewHeader"
-        static let trendHeader = "TrendHeader"
+        static let popularPreviewHeader = "PreviewHeader"
+        static let trendPreviewHeader = "TrendHeader"
+        static let moviePreviewHeader = "MovieHeader"
         static let previewHeader = "PreviewHeader"
-        static let preview = "Preview"
+        static let previewItem = "PreviewItem"
         static let reviewCell = "ReviewCell"
         static let keywordCell = "KeywordCell"
         static let countryCell = "CountryCell"
@@ -48,12 +49,6 @@ struct Constant {
         static let tertiaryColor = UIColor(displayP3Red: 144/255, green: 206/255, blue:  161/255, alpha: 1)
         static let backgroundColor = UIColor(displayP3Red: 235/255, green: 235/255, blue:  240/255, alpha: 1)
         static let tabBarSelectedTextColor = UIColor(displayP3Red: 231/255, green: 232/255, blue:  238/255, alpha: 1)
-    }
-    struct UserSetting {
-        static let language = "language"
-        static let region = "region"
-        static let country = "country"
-        static let imageConfig = "image config"
     }
     static let imageLogo = "TMDB"
 }

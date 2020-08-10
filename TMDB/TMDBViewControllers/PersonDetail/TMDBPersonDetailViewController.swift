@@ -35,12 +35,12 @@ class TMDBPersonDetailViewController: UIViewController {
     @IBOutlet weak var personImageCollectionView: UICollectionView! {
         didSet {
             personImageCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
-            personImageCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            personImageCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             personImageCollectionView.register(TMDBPreviewHeaderView.self,
                                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                                withReuseIdentifier: Constant.Identifier.previewHeader)
 
-            personImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: personImageCollectionView)
+            personImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: personImageCollectionView)
 
             personImageDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
@@ -60,9 +60,9 @@ class TMDBPersonDetailViewController: UIViewController {
     @IBOutlet weak var appearInCollectionView: UICollectionView! {
         didSet {
             appearInCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
-            appearInCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
+            appearInCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             appearInCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
-            appearInDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: appearInCollectionView)
+            appearInDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: appearInCollectionView)
             appearInDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
                 self.appearInHeaderView =
                     (collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) ??

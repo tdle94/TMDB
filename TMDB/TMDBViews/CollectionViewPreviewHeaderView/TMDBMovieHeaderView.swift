@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 
 class TMDBMovieHeaderView: TMDBPreviewHeaderView {
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.text = NSLocalizedString("Movie", comment: "")
@@ -17,9 +21,5 @@ class TMDBMovieHeaderView: TMDBPreviewHeaderView {
         segmentControl.insertSegment(withTitle: NSLocalizedString("Now Playing", comment: ""), at: 1, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("Upcoming", comment: ""), at: 2, animated: true)
         segmentControl.selectedSegmentIndex = 0
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
     }
 }

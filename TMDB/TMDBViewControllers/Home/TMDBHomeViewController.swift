@@ -23,26 +23,26 @@ class TMDBHomeViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             collectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
-            collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
-            collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
-            collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
-            collectionView.register(TMDBMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieHeader)
+            collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendPreviewHeader)
+            collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularPreviewHeader)
+            collectionView.register(TMDBMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
             
-            dataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: collectionView)
+            dataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: collectionView)
             dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath in
                 let header: TMDBPreviewHeaderView?
                 if indexPath.section == 0 {
                     header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.popularHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.popularPreviewHeader,
                                                                              for: indexPath) as? TMDBPopularHeaderView
 
                 } else if indexPath.section == 1 {
                     header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.trendHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.trendPreviewHeader,
                                                                              for: indexPath) as? TMDBTrendHeaderView
                 } else {
                     header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.movieHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
                                                                              for: indexPath) as? TMDBMovieHeaderView
                 }
                 header?.delegate = self
@@ -91,8 +91,10 @@ extension TMDBHomeViewController: UICollectionViewDelegate {
         let item: Object
         if indexPath.section == 0 {
             item = dataSource.snapshot().itemIdentifiers(inSection: .popular)[indexPath.row]
-        } else {
+        } else if indexPath.section == 1 {
             item = dataSource.snapshot().itemIdentifiers(inSection: .trending)[indexPath.row]
+        } else {
+            item = dataSource.snapshot().itemIdentifiers(inSection: .movie)[indexPath.row]
         }
 
         if let item = item as? Movie ?? (item as? Trending)?.movie {

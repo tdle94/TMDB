@@ -19,4 +19,5 @@ protocol TMDBTVService {
     func getTVShowSeasonImage(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void)
     func getTVShowEpisodeImage(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void)
     func getTVShowOnTheAir(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
+    func getTVShowAiringToday(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
 }

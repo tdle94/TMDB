@@ -58,4 +58,9 @@ extension TMDBServices: TMDBTVService {
         let request = urlRequestBuilder.getTVShowOnTheAirURLRequest(page: page, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: TVShowResult.self, completion: completion)
     }
+
+    func getTVShowAiringToday(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getTVShowOnTheAirURLRequest(page: page, language: NSLocale.current.languageCode)
+        session.send(request: request, responseType: TVShowResult.self, completion: completion)
+    }
 }

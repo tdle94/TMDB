@@ -101,6 +101,19 @@ extension TMDBRepository: TMDBTrendingRepository {
 }
 
 extension TMDBRepository: TMDBTVShowRepository {
+    func getTVShowAiringToday(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        services.getTVShowAiringToday(page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tvShowAiringTodayResult):
+                    completion(.success(tvShowAiringTodayResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getTVShowOnTheAir(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
         services.getTVShowOnTheAir(page: page) { result in
             DispatchQueue.main.async {

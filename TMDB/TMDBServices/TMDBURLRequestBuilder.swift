@@ -19,6 +19,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getTVShowEpisodeURLRequest(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int, language: String?) -> URLRequest
     func getTVShowSeasonImageURLRequest(from tvShowId: Int, seasonNumber: Int) -> URLRequest
     func getTVShowEpisodeImageURLRequest(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> URLRequest
+    func getTVShowOnTheAirURLRequest(page: Int, language: String?) -> URLRequest
     // MARK: - people
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest
     func getPersonDetailURLRequest(id: Int, language: String?) -> URLRequest
@@ -50,6 +51,13 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     let apiKey = "6823a37cea296ab67c0a2a6ce3cb4ec5"
 
     // MARK: - tv shows
+
+    func getTVShowOnTheAirURLRequest(page: Int, language: String?) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "language", value: language ?? "en"),
+        ]
+        return buildURLRequest(path: "/3/tv/on_the_air", queryItems: queryItems)
+    }
 
     func getTVShowEpisodeImageURLRequest(from tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> URLRequest {
         buildURLRequest(path: "/3/tv/\(tvShowId)/season/\(seasonNumber)/episode/\(episodeNumber)/images", queryItems: nil)

@@ -16,35 +16,41 @@ class TMDBHomeViewController: UIViewController {
 
     var repository: TMDBRepository = TMDBRepository.share
 
-    // MARK: - collectionview configuration
+    // MARK: - data source
     var dataSource: TMDBCollectionDataSource!
 
+    // MARK: - ui
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             collectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.preview)
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularHeader)
+            collectionView.register(TMDBMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.movieHeader)
             
             dataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.preview, collectionView: collectionView)
             dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath in
+                let header: TMDBPreviewHeaderView?
                 if indexPath.section == 0 {
-                    let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                 withReuseIdentifier: Constant.Identifier.popularHeader,
-                                                                                 for: indexPath) as? TMDBPopularHeaderView
-                    header?.delegate = self
-                    return header
-                }
+                    header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.popularHeader,
+                                                                             for: indexPath) as? TMDBPopularHeaderView
 
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                } else if indexPath.section == 1 {
+                    header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: Constant.Identifier.trendHeader,
                                                                              for: indexPath) as? TMDBTrendHeaderView
+                } else {
+                    header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.movieHeader,
+                                                                             for: indexPath) as? TMDBMovieHeaderView
+                }
                 header?.delegate = self
                 return header
             }
 
             var snapshot = dataSource.snapshot()
-            snapshot.appendSections([.popular, .trending])
+            snapshot.appendSections([.popular, .trending, .movie])
             dataSource.apply(snapshot)
         }
     }
@@ -71,6 +77,7 @@ class TMDBHomeViewController: UIViewController {
         configureLanguageAndRegion()
         getPopularMovie()
         getTrendingToday()
+        getTopRatedMovie()
     }
 
     override func didReceiveMemoryWarning() {
@@ -111,6 +118,51 @@ extension TMDBHomeViewController {
                 snapshot.appendItems(Array(popularMovieResult.movies), toSection: .popular)
                 self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
+            }
+        }
+    }
+
+    func getTopRatedMovie() {
+        repository.getTopRateMovie(page: 1) { result in
+            switch result {
+            case .failure(let error):
+                debugPrint(error)
+            case .success(let topRatedMovieResult):
+                var snaphot = self.dataSource.snapshot()
+                snaphot.deleteItems(snaphot.itemIdentifiers(inSection: .movie))
+                snaphot.appendItems(Array(topRatedMovieResult.movies), toSection: .movie)
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
+                self.dataSource.apply(snaphot, animatingDifferences: true)
+            }
+        }
+    }
+
+    func getUpcomingMovie() {
+        repository.getUpcomingMovie(page: 1) { result in
+            switch result {
+            case .failure(let error):
+                debugPrint(error)
+            case .success(let upcomingMovieResult):
+                var snaphot = self.dataSource.snapshot()
+                snaphot.deleteItems(snaphot.itemIdentifiers(inSection: .movie))
+                snaphot.appendItems(Array(upcomingMovieResult.movies), toSection: .movie)
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
+                self.dataSource.apply(snaphot, animatingDifferences: true)
+            }
+        }
+    }
+
+    func getNowPlayingMovie() {
+        repository.getNowPlayingMovie(page: 1) { result in
+            switch result {
+            case .failure(let error):
+                debugPrint(error)
+            case .success(let nowPlayingMovieResult):
+                var snaphot = self.dataSource.snapshot()
+                snaphot.deleteItems(snaphot.itemIdentifiers(inSection: .movie))
+                snaphot.appendItems(Array(nowPlayingMovieResult.movies), toSection: .movie)
+                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
+                self.dataSource.apply(snaphot, animatingDifferences: true)
             }
         }
     }
@@ -165,8 +217,14 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
             getPopularMovie()
         } else if selected == NSLocalizedString("People", comment: "") {
             getPopularPeople()
-        } else {
+        } else if selected == NSLocalizedString("TV Shows", comment: "") {
             getPopularTVShow()
+        } else if selected == NSLocalizedString("Top Rated", comment: "") {
+            getTopRatedMovie()
+        } else if selected == NSLocalizedString("Upcoming", comment: "") {
+            getUpcomingMovie()
+        } else if selected == NSLocalizedString("Now Playing", comment: "") {
+            getNowPlayingMovie()
         }
     }
 }

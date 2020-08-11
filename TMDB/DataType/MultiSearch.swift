@@ -22,20 +22,21 @@ struct MultiSearchResult: Decodable {
     }
 }
 
-class MultiSearch: Decodable, Hashable {
-    let id: Int
-    let mediaType: String
-    let posterPath: String?
+@objcMembers
+class MultiSearch: Object, Decodable {
+    dynamic var id: Int = 0
+    dynamic var  mediaType: String = ""
+    dynamic var  posterPath: String?
     
     // for movie
-    let originalTitle: String?
-    let releaseDate: String?
+    dynamic var  originalTitle: String?
+    dynamic var  releaseDate: String?
     // for tv
-    let originalName: String?
-    let firstAirDate: String?
+    dynamic var  originalName: String?
+    dynamic var  firstAirDate: String?
     // for people
-    let name: String?
-    let profilePath: String?
+    dynamic var  name: String?
+    dynamic var  profilePath: String?
     
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -49,6 +50,7 @@ class MultiSearch: Decodable, Hashable {
     }
     
     required init(from decoder: Decoder) throws {
+        super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         mediaType = try container.decode(String.self, forKey: .mediaType)
@@ -65,12 +67,8 @@ class MultiSearch: Decodable, Hashable {
         // for people
         name = try container.decodeIfPresent(String.self, forKey: .name)
     }
-    
-    static func == (lhs: MultiSearch, rhs: MultiSearch) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+
+    required init() {
+        super.init()
     }
 }

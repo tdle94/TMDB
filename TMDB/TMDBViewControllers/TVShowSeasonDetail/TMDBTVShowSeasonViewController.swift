@@ -109,13 +109,8 @@ class TMDBTVShowSeasonViewController: UIViewController {
     @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var episodeTableView: UITableView! {
         didSet {
-            episodeTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.tvShowEpisodeCell)
-            episodeDataSource = TMDBTableDataSource(tableView: episodeTableView) { tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowEpisodeCell, for: indexPath) as? TMDBCustomTableViewCell
-                let episode = item as? Episode
-                cell?.configure(text: episode?.name, detailText: episode?.overview, imagePath: episode?.stillPath)
-                return cell
-            }
+            episodeTableView.register(UINib(nibName: "TMDBCustomTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.tvShowEpisodeCell)
+            episodeDataSource = TMDBTableDataSource(cellIdentifier: Constant.Identifier.tvShowEpisodeCell, tableView: episodeTableView)
 
             var snapshot = episodeDataSource.snapshot()
             snapshot.appendSections([.episode])

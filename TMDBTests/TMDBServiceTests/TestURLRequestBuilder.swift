@@ -219,4 +219,22 @@ class TestURLRequestBuilder: XCTestCase {
         let urlMatcher = "https://api.themoviedb.org/3/movie/upcoming?page=1&language=en&region=US&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
+    
+    func testTopRatedTVShowURL() {
+        let matchRequest = urlRequestBuilder.getTopRatedTVShowURLRequest(page: 1, language: nil)
+        let urlMatcher = "https://api.themoviedb.org/3/tv/top_rated?language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
+    
+    func testTVShowAiringTodayURL() {
+        let matchRequest = urlRequestBuilder.getTVShowAiringTodayURLRequest(page: 1, language: nil)
+        let urlMatcher = "https://api.themoviedb.org/3/tv/airing_today?language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
+
+    func testTVShowOnTheAirURL() {
+        let matchRequest = urlRequestBuilder.getTVShowOnTheAirURLRequest(page: 1, language: nil)
+        let urlMatcher = "https://api.themoviedb.org/3/tv/on_the_air?language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
 }

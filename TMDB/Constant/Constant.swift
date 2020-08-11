@@ -14,6 +14,7 @@ struct Constant {
         static let popularPreviewHeader = "PreviewHeader"
         static let trendPreviewHeader = "TrendHeader"
         static let moviePreviewHeader = "MovieHeader"
+        static let tvShowPreviewHeader = "TVShowHeader"
         static let previewHeader = "PreviewHeader"
         static let previewItem = "PreviewItem"
         static let reviewCell = "ReviewCell"

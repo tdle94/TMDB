@@ -124,13 +124,8 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var tvShowSeaonTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tvShowSeasonTableView: UITableView! {
         didSet {
-            tvShowSeasonTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.tvShowSeasonCell)
-            tvShowSeasonDataSource = TMDBTableDataSource(tableView: tvShowSeasonTableView) { tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowSeasonCell, for: indexPath) as? TMDBCustomTableViewCell
-                let season = item as? Season
-                cell?.configure(text: season?.name, detailText: season?.overview, imagePath: season?.posterPath)
-                return cell
-            }
+            tvShowSeasonTableView.register(UINib(nibName: "TMDBCustomTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.tvShowSeasonCell)
+            tvShowSeasonDataSource = TMDBTableDataSource(cellIdentifier: Constant.Identifier.tvShowSeasonCell, tableView: tvShowSeasonTableView)
 
             var snapshot = tvShowSeasonDataSource.snapshot()
             snapshot.appendSections([.season])
@@ -298,7 +293,7 @@ class TMDBTVDetailViewController: UIViewController {
 }
 
 extension TMDBTVDetailViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(at index: Int, text selected: String) {
+    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
         if selected == NSLocalizedString("Similar", comment: "") {
             getSimilarMovies()
         } else if selected == NSLocalizedString("Recommend", comment: "") {

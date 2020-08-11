@@ -27,6 +27,7 @@ class TMDBHomeViewController: UIViewController {
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendPreviewHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularPreviewHeader)
             collectionView.register(TMDBMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
+            collectionView.register(TMDBTVShowHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader)
             
             dataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: collectionView)
             dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath in
@@ -40,17 +41,21 @@ class TMDBHomeViewController: UIViewController {
                     header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: Constant.Identifier.trendPreviewHeader,
                                                                              for: indexPath) as? TMDBTrendHeaderView
-                } else {
+                } else if indexPath.section == 2 {
                     header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
                                                                              for: indexPath) as? TMDBMovieHeaderView
+                } else {
+                    header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader,
+                                                                             for: indexPath) as? TMDBTVShowHeaderView
                 }
                 header?.delegate = self
                 return header
             }
 
             var snapshot = dataSource.snapshot()
-            snapshot.appendSections([.popular, .trending, .movie])
+            snapshot.appendSections([.popular, .trending, .movie, .tvShow])
             dataSource.apply(snapshot)
         }
     }
@@ -67,6 +72,32 @@ class TMDBHomeViewController: UIViewController {
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
+    
+    lazy var tvShowHandler: (Result<TVShowResult, Error>) -> Void = { result in
+        switch result {
+        case .failure(let error):
+            debugPrint(error)
+        case .success(let tvShowResult):
+            var snapshot = self.dataSource.snapshot()
+            snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .tvShow))
+            snapshot.appendItems(Array(tvShowResult.onTV), toSection: .tvShow)
+            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 3), at: .centeredHorizontally, animated: true)
+            self.dataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+    
+    lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { result in
+        switch result {
+        case .failure(let error):
+            debugPrint(error)
+        case .success(let movieResult):
+            var snaphot = self.dataSource.snapshot()
+            snaphot.deleteItems(snaphot.itemIdentifiers(inSection: .movie))
+            snaphot.appendItems(Array(movieResult.movies), toSection: .movie)
+            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
+            self.dataSource.apply(snaphot, animatingDifferences: true)
+        }
+    }
 
     // MARK: - coordinator
     var coordinator: MainCoordinator?
@@ -78,6 +109,7 @@ class TMDBHomeViewController: UIViewController {
         getPopularMovie()
         getTrendingToday()
         getTopRatedMovie()
+        getTopRatedTVShow()
     }
 
     override func didReceiveMemoryWarning() {
@@ -93,8 +125,10 @@ extension TMDBHomeViewController: UICollectionViewDelegate {
             item = dataSource.snapshot().itemIdentifiers(inSection: .popular)[indexPath.row]
         } else if indexPath.section == 1 {
             item = dataSource.snapshot().itemIdentifiers(inSection: .trending)[indexPath.row]
-        } else {
+        } else if indexPath.section == 2 {
             item = dataSource.snapshot().itemIdentifiers(inSection: .movie)[indexPath.row]
+        } else {
+            item = dataSource.snapshot().itemIdentifiers(inSection: .tvShow)[indexPath.row]
         }
 
         if let item = item as? Movie ?? (item as? Trending)?.movie {
@@ -125,48 +159,15 @@ extension TMDBHomeViewController {
     }
 
     func getTopRatedMovie() {
-        repository.getTopRateMovie(page: 1) { result in
-            switch result {
-            case .failure(let error):
-                debugPrint(error)
-            case .success(let topRatedMovieResult):
-                var snaphot = self.dataSource.snapshot()
-                snaphot.deleteItems(snaphot.itemIdentifiers(inSection: .movie))
-                snaphot.appendItems(Array(topRatedMovieResult.movies), toSection: .movie)
-                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
-                self.dataSource.apply(snaphot, animatingDifferences: true)
-            }
-        }
+        repository.getTopRateMovie(page: 1, completion: movieHandler)
     }
 
     func getUpcomingMovie() {
-        repository.getUpcomingMovie(page: 1) { result in
-            switch result {
-            case .failure(let error):
-                debugPrint(error)
-            case .success(let upcomingMovieResult):
-                var snaphot = self.dataSource.snapshot()
-                snaphot.deleteItems(snaphot.itemIdentifiers(inSection: .movie))
-                snaphot.appendItems(Array(upcomingMovieResult.movies), toSection: .movie)
-                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
-                self.dataSource.apply(snaphot, animatingDifferences: true)
-            }
-        }
+        repository.getUpcomingMovie(page: 1, completion: movieHandler)
     }
 
     func getNowPlayingMovie() {
-        repository.getNowPlayingMovie(page: 1) { result in
-            switch result {
-            case .failure(let error):
-                debugPrint(error)
-            case .success(let nowPlayingMovieResult):
-                var snaphot = self.dataSource.snapshot()
-                snaphot.deleteItems(snaphot.itemIdentifiers(inSection: .movie))
-                snaphot.appendItems(Array(nowPlayingMovieResult.movies), toSection: .movie)
-                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
-                self.dataSource.apply(snaphot, animatingDifferences: true)
-            }
-        }
+        repository.getNowPlayingMovie(page: 1, completion: movieHandler)
     }
 
     func getPopularTVShow() {
@@ -182,6 +183,18 @@ extension TMDBHomeViewController {
                 self.dataSource.apply(snapshot, animatingDifferences: true)
             }
         }
+    }
+    
+    func getTVShowAiringToday() {
+        repository.getTVShowAiringToday(page: 1, completion: tvShowHandler)
+    }
+
+    func getTVShowOnTheAir() {
+        repository.getTVShowOnTheAir(page: 1, completion: tvShowHandler)
+    }
+
+    func getTopRatedTVShow() {
+        repository.getTopRatedTVShow(page: 1, completion: tvShowHandler)
     }
 
     func getPopularPeople() {
@@ -210,7 +223,7 @@ extension TMDBHomeViewController {
 
 // MARK: - segment control user interaction
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(at index: Int, text selected: String) {
+    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
         if selected == NSLocalizedString("Today", comment: "") {
             getTrendingToday()
         } else if selected == NSLocalizedString("This Week", comment: "")  {
@@ -222,11 +235,19 @@ extension TMDBHomeViewController: TMDBPreviewSegmentControl {
         } else if selected == NSLocalizedString("TV Shows", comment: "") {
             getPopularTVShow()
         } else if selected == NSLocalizedString("Top Rated", comment: "") {
-            getTopRatedMovie()
+            if header is TMDBMovieHeaderView {
+                getTopRatedMovie()
+            } else {
+                getTopRatedTVShow()
+            }
         } else if selected == NSLocalizedString("Upcoming", comment: "") {
             getUpcomingMovie()
         } else if selected == NSLocalizedString("Now Playing", comment: "") {
             getNowPlayingMovie()
+        } else if selected == NSLocalizedString("Air Today", comment: "") {
+            getTVShowAiringToday()
+        } else if selected == NSLocalizedString("On The Air", comment: "") {
+            getTVShowOnTheAir()
         }
     }
 }

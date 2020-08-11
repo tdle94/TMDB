@@ -198,7 +198,6 @@ class ViewControllerUITests: XCTestCase {
 
 
         collectionView.firstMatch.swipeUp()
-        collectionView.firstMatch.swipeUp()
 
         // tap now playing button
         app.segmentedControls.buttons[NSLocalizedString("Now Playing", comment: "")].tap()
@@ -208,5 +207,16 @@ class ViewControllerUITests: XCTestCase {
         
         // tap top rate button
         app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
+
+        collectionView.firstMatch.swipeUp()
+               
+        // tap air today tv show
+        app.segmentedControls.buttons[NSLocalizedString("Air Today", comment: "")].tap()
+               
+        // tap top rated tv show
+        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
+
+        // tap on the air tv show
+        app.segmentedControls.buttons[NSLocalizedString("On The Air", comment: "")].tap()
     }
 }

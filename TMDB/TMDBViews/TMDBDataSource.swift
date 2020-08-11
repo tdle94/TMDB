@@ -27,6 +27,7 @@ enum Section: String {
     case backdrop
     case appearIn
     case movie
+    case tvShow
 
     var header: String {
         switch self {
@@ -46,12 +47,21 @@ enum Section: String {
         case .backdrop: return NSLocalizedString("Images", comment: "")
         case .appearIn: return NSLocalizedString("Appear In", comment: "")
         case .movie: return NSLocalizedString("Movie", comment: "")
+        case .tvShow: return NSLocalizedString("TV Shows", comment: "")
         }
     }
 }
 
 // Reusable table view data source
 class TMDBTableDataSource: UITableViewDiffableDataSource<Section, Object> {
+    init(cellIdentifier: String, tableView: UITableView) {
+        super.init(tableView: tableView) { tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TMDBCellConfig
+            cell?.configure(item: item)
+            return cell as? UITableViewCell
+        }
+    }
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.snapshot().sectionIdentifiers[section].header
     }

@@ -43,7 +43,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
                 imageView.image = UIImage(named: "NoImage")
                 return
         }
-        imageView.sd_setImage(with: url, placeholderImage: nil)
+        imageView.sd_setImage(with: url)
     }
 }
 

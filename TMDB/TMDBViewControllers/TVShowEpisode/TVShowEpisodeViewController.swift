@@ -158,7 +158,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
 }
 
 extension TMDBTVShowEpisodeViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(at index: Int, text selected: String) {
+    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
         if selected == NSLocalizedString("Cast", comment: "") {
             getEpisodeCast()
         } else if selected == NSLocalizedString("Crew", comment: "") {

@@ -132,7 +132,7 @@ class TMDBPersonDetailViewController: UIViewController {
 }
 
 extension TMDBPersonDetailViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(at index: Int, text selected: String) {
+    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
         guard let id = personId else { return }
 
         if selected == NSLocalizedString("Movies", comment: "") {

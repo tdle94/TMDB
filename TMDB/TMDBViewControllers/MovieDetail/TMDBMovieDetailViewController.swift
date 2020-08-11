@@ -287,7 +287,7 @@ class TMDBMovieDetailViewController: UIViewController {
 
 // MARK: - segment user interaction
 extension TMDBMovieDetailViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(at index: Int, text selected: String) {
+    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
         if selected == NSLocalizedString("Cast", comment: "") {
             getMovieCast()
         } else if selected == NSLocalizedString("Crew", comment: "") {

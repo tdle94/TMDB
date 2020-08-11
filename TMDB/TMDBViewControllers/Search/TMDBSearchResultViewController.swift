@@ -28,10 +28,10 @@ class TMDBSearchResultViewController: UIViewController {
     @IBOutlet weak var searchResultTableView: UITableView! {
         didSet {
             searchResultTableView.separatorInset = .zero
-            searchResultTableView.register(TMDBCustomTableViewCell.self, forCellReuseIdentifier: Constant.Identifier.searchResultCell)
+            searchResultTableView.register(UINib(nibName: "TMDBCustomTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.searchResultCell)
             searchResultDataSource = UITableViewDiffableDataSource(tableView: searchResultTableView) { tableView, indexPath, item in
                 let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.searchResultCell, for: indexPath) as? TMDBCustomTableViewCell
-                cell?.configure(text: item.originalTitle ?? item.originalName ?? item.name, detailText: item.releaseDate ?? item.firstAirDate, imagePath: item.profilePath ?? item.posterPath)
+                cell?.configure(item: item)
                 return cell
             }
             

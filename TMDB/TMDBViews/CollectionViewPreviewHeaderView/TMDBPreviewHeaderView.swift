@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol TMDBPreviewSegmentControl: AnyObject {
-    func segmentControlSelected(at index: Int, text selected: String)
+    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String)
 }
 
 class TMDBPreviewHeaderView: UICollectionReusableView {
@@ -54,6 +54,6 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
     
     @objc func segmentControlAction(_ sender: UISegmentedControl) {
         let text = sender.titleForSegment(at: sender.selectedSegmentIndex)!
-        delegate?.segmentControlSelected(at: sender.selectedSegmentIndex, text: text)
+        delegate?.segmentControlSelected(self, text: text)
     }
 }

@@ -21,5 +21,3 @@
 ### TODO
 - Movie tab
 - TVShow tab
-- People tab
-- Search movie, tv and people (search feature)

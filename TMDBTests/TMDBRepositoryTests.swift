@@ -2332,4 +2332,175 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getUpcomingMovieURLRequest(page: 3, language: any(), region: any())
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
     }
+    
+    // MARK: - tv show on the air
+    func testGetTVShowOnTheAirSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowOnTheAirURLRequest(page: 1, language: NSLocale.current.languageCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowOnTheAirURLRequest(page: 1, language: NSLocale.current.languageCode).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTVShowOnTheAir(page: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTVShowOnTheAirURLRequest(page: 1, language: NSLocale.current.languageCode)
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetTVShowOnTheAirFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowOnTheAirURLRequest(page: 3, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowOnTheAirURLRequest(page: 3, language: any()).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTVShowOnTheAir(page: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTVShowOnTheAirURLRequest(page: 3, language: any())
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
+    
+    // MARK: - top rated tv show
+    func testGetTopRatedTVShowSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTopRatedTVShowURLRequest(page: 1, language: NSLocale.current.languageCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTopRatedTVShowURLRequest(page: 1, language: NSLocale.current.languageCode).thenReturn(request)
+        }
+
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTopRatedTVShow(page: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTopRatedTVShowURLRequest(page: 1, language: NSLocale.current.languageCode)
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetTopRatedTVShowFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTopRatedTVShowURLRequest(page: 3, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTopRatedTVShowURLRequest(page: 3, language: any()).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTopRatedTVShow(page: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTopRatedTVShowURLRequest(page: 3, language: any())
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
+    
+    // MARK: - tv show airing today
+    func testGetTVShowAiringTodaySuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowAiringTodayURLRequest(page: 1, language: NSLocale.current.languageCode)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowAiringTodayURLRequest(page: 1, language: NSLocale.current.languageCode).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getTVShowAiringToday(page: 1) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTVShowAiringTodayURLRequest(page: 1, language: NSLocale.current.languageCode)
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
+    
+    func testGetTVShowAiringTodayFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getTVShowAiringTodayURLRequest(page: 3, language: nil)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+
+        /*GIVEN*/
+
+        stub(requestBuilder) { stub in
+            when(stub).getTVShowAiringTodayURLRequest(page: 3, language: any()).thenReturn(request)
+        }
+
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+
+        /*WHEN*/
+        repository.getTVShowAiringToday(page: 3) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getTVShowAiringTodayURLRequest(page: 3, language: any())
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
 }

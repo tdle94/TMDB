@@ -8,52 +8,59 @@
 
 import Foundation
 import UIKit
+import RealmSwift
 import SDWebImage
 
 class TMDBCustomTableViewCell: UITableViewCell {
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
-    var noImage: UIImage? = UIImage(named: "NoImage")?.sd_resizedImage(with: CGSize(width: 70, height: 50), scaleMode: .fill)
+    private lazy var noImage: UIImage? = UIImage(named: "NoImage")?.sd_resizedImage(with: _imageView.frame.size, scaleMode: .aspectFit)
+
+    @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var _imageView: UIImageView!
 
     override func prepareForReuse() {
-        textLabel?.text = ""
-        detailTextLabel?.text = ""
-        imageView?.image = nil
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        imageView?.frame = CGRect(x: imageView?.frame.origin.x ?? 0,
-                                  y: 5,
-                                  width: imageView?.frame.size.width ?? 0,
-                                  height: frame.height - 10)
+        label.text = ""
+        subTitle.text = ""
+        _imageView.image = noImage
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        backgroundColor = Constant.Color.backgroundColor
-        contentView.backgroundColor = Constant.Color.backgroundColor
-        selectionStyle = .none
-        textLabel?.font = UIFont(name: textLabel!.font.fontName, size: 15)
-        detailTextLabel?.numberOfLines = 2
-        accessoryType = .disclosureIndicator
+        _imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        _imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
+}
 
-    func configure(text: String?, detailText: String?, imagePath: String?) {
-        textLabel?.text = text
-        detailTextLabel?.text = detailText
-        if let path = imagePath {
-            imageView?.sd_setImage(with: userSetting.getImageURL(from: path), placeholderImage: nil) { image, _, _, _ in
-                if image == nil {
-                    self.imageView?.image = self.noImage
-                }
-                self.layoutSubviews()
-            }
+extension TMDBCustomTableViewCell: TMDBCellConfig {
+    func configure(item: Object) {
+        var path: String?
+        if let item = item as? MultiSearch {
+            label.text = item.originalTitle ?? item.originalName ?? item.name
+            subTitle.text = item.releaseDate ?? item.firstAirDate
+            path = item.posterPath ?? item.profilePath
+        } else if let item = item as? Season {
+            label.text = item.name
+            subTitle.text = item.overview
+            path = item.posterPath
+        } else if let item = item as? Episode {
+            label.text = item.name
+            subTitle.text = item.overview
+            path = item.stillPath
+        }
+        
+        if let path = path {
+            _imageView.sd_setImage(with: userSetting.getImageURL(from: path))
         } else {
-            imageView?.image = noImage
+            _imageView.image = noImage
         }
     }
 }

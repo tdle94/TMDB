@@ -11,6 +11,7 @@ import UIKit
 
 struct Constant {
     struct Identifier {
+        static let previewFooter = "PreviewFooter"
         static let popularPreviewHeader = "PreviewHeader"
         static let trendPreviewHeader = "TrendHeader"
         static let moviePreviewHeader = "MovieHeader"
@@ -43,6 +44,7 @@ struct Constant {
         static let tmdbTVDetailVC = "TMDBTVDetailViewController"
         static let tmdbTVShowSeasonVC = "TMDBTVShowSeasonViewController"
         static let tmdbTVShowEpisodeVC = "TMDBTVShowEpisodeViewController"
+        static let tmdbAllMovieVC = "TMDBAllMovieViewController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 class TMDBAllMovieViewController: UIViewController {
+    // MARK: - coordinator
+    var coordinate: MainCoordinator?
+
     // MARK: - repository
     let repository: TMDBRepository = TMDBRepository.share
 
@@ -46,7 +49,7 @@ class TMDBAllMovieViewController: UIViewController {
     // MARK: - service
     func getAllMovie(page: Int) {
         footerLoadingView?.loadingIndicator.startAnimating()
-        repository.getAllMovie(query: DiscoverMovieQuery(page: page)) { result in
+        repository.getAllMovie(query: DiscoverQuery(page: page)) { result in
             self.footerLoadingView?.loadingIndicator.stopAnimating()
             self.loadingView.removeFromSuperview()
             switch result {
@@ -68,5 +71,10 @@ extension TMDBAllMovieViewController: UICollectionViewDelegate {
             let page = movieCount / 20 + 1
             getAllMovie(page: page)
         }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let movie = allMovieDataSource.itemIdentifier(for: indexPath) as? Movie else { return }
+        coordinate?.navigateToMovieDetail(id: movie.id)
     }
 }

@@ -68,6 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // set coordinators
         searchVC.coordinate = MainCoordinator(navigationController: searchNavController)
         homeVC.coordinator = MainCoordinator(navigationController: homeNavController)
+        movieVC.coordinate = MainCoordinator(navigationController: movieNavController)
         
         // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor

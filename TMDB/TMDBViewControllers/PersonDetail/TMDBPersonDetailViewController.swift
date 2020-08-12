@@ -34,7 +34,7 @@ class TMDBPersonDetailViewController: UIViewController {
     @IBOutlet weak var personImageCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var personImageCollectionView: UICollectionView! {
         didSet {
-            personImageCollectionView.collectionViewLayout = Layout.customLayout()
+            personImageCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             personImageCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             personImageCollectionView.register(TMDBPreviewHeaderView.self,
                                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -59,7 +59,7 @@ class TMDBPersonDetailViewController: UIViewController {
     @IBOutlet weak var appearInCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var appearInCollectionView: UICollectionView! {
         didSet {
-            appearInCollectionView.collectionViewLayout = Layout.customLayout()
+            appearInCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             appearInCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             appearInCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             appearInDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: appearInCollectionView)

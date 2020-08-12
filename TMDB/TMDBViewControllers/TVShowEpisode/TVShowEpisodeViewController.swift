@@ -43,7 +43,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
-            videoCollectionView.collectionViewLayout = Layout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
@@ -61,7 +61,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     }
     @IBOutlet weak var stillImageCollectionView: UICollectionView! {
         didSet {
-            stillImageCollectionView.collectionViewLayout = Layout.imageLayout()
+            stillImageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
             stillImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
             stillImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: stillImageCollectionView)
             
@@ -75,7 +75,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     @IBOutlet weak var creditCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
-            creditCollectionView.collectionViewLayout = Layout.customLayout()
+            creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             creditDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: creditCollectionView)

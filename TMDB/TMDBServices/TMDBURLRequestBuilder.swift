@@ -22,6 +22,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getTVShowOnTheAirURLRequest(page: Int, language: String?) -> URLRequest
     func getTVShowAiringTodayURLRequest(page: Int, language: String?) -> URLRequest
     func getTopRatedTVShowURLRequest(page: Int, language: String?) -> URLRequest
+    func getAllTVShowURLRequest(query: DiscoverQuery) -> URLRequest
     // MARK: - people
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest
     func getPersonDetailURLRequest(id: Int, language: String?) -> URLRequest
@@ -54,7 +55,14 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     let apiKey = "6823a37cea296ab67c0a2a6ce3cb4ec5"
 
     // MARK: - tv shows
-    
+
+    func getAllTVShowURLRequest(query: DiscoverQuery) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "page", value: String(query.page))
+        ]
+        return buildURLRequest(path: "/3/discover/tv", queryItems: queryItems)
+    }
+
     func getTopRatedTVShowURLRequest(page: Int, language: String?) -> URLRequest {
         let queryItems = [
             URLQueryItem(name: "language", value: language ?? "en"),

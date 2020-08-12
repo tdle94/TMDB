@@ -105,7 +105,7 @@
 		34CB5008249037D800E9B5CF /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB5007249037D800E9B5CF /* MainCoordinator.swift */; };
 		34CB501324903EC800E9B5CF /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB501224903EC800E9B5CF /* Constant.swift */; };
 		34CB501624904E0000E9B5CF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34CB501824904E0000E9B5CF /* InfoPlist.strings */; };
-		34CB501D2490761700E9B5CF /* TMDBTelevisionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB501C2490761700E9B5CF /* TMDBTelevisionViewController.swift */; };
+		34CB501D2490761700E9B5CF /* TMDBAllTVShowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB501C2490761700E9B5CF /* TMDBAllTVShowViewController.swift */; };
 		34CDDFBB24E1936D007D5A7B /* TMDBTrendHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CDDFBA24E1936D007D5A7B /* TMDBTrendHeaderView.swift */; };
 		34CDDFBD24E19379007D5A7B /* TMDBMovieHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CDDFBC24E19378007D5A7B /* TMDBMovieHeaderView.swift */; };
 		34CDDFBF24E1939D007D5A7B /* TMDBPopularHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CDDFBE24E1939D007D5A7B /* TMDBPopularHeaderView.swift */; };
@@ -271,7 +271,7 @@
 		34CB501224903EC800E9B5CF /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		34CB501724904E0000E9B5CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		34CB501924904E1200E9B5CF /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		34CB501C2490761700E9B5CF /* TMDBTelevisionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBTelevisionViewController.swift; sourceTree = "<group>"; };
+		34CB501C2490761700E9B5CF /* TMDBAllTVShowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBAllTVShowViewController.swift; sourceTree = "<group>"; };
 		34CDDFBA24E1936D007D5A7B /* TMDBTrendHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBTrendHeaderView.swift; sourceTree = "<group>"; };
 		34CDDFBC24E19378007D5A7B /* TMDBMovieHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBMovieHeaderView.swift; sourceTree = "<group>"; };
 		34CDDFBE24E1939D007D5A7B /* TMDBPopularHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBPopularHeaderView.swift; sourceTree = "<group>"; };
@@ -587,7 +587,7 @@
 				34D6672024DC4589003A73BA /* MovieDetail */,
 				34D6671F24DC4574003A73BA /* Home */,
 				34D2BB9C24B77667009C9246 /* TMDBReviewTableViewController.swift */,
-				34CB501C2490761700E9B5CF /* TMDBTelevisionViewController.swift */,
+				34CB501C2490761700E9B5CF /* TMDBAllTVShowViewController.swift */,
 				34D4FAF724B0D7C400CBB4AB /* TMDBVideoPlayerViewController.swift */,
 				34DB593024C5030E0022A5AB /* TMDBCompleteReleaseDateTableViewController.swift */,
 				34D6138324E43C15007961BC /* TMDBAllMovieViewController.swift */,
@@ -1061,7 +1061,7 @@
 			files = (
 				34D632CA24C75C8B0074106C /* TMDBTVDetailDisplay.swift in Sources */,
 				34722C9E24E0640E008D58F6 /* TMDBBackdropImageCell.swift in Sources */,
-				34CB501D2490761700E9B5CF /* TMDBTelevisionViewController.swift in Sources */,
+				34CB501D2490761700E9B5CF /* TMDBAllTVShowViewController.swift in Sources */,
 				34E0AD8F24DDDFC800FBBEA5 /* TMDBTVShowEpisodeDisplay.swift in Sources */,
 				34D3E7E3248D3524000F5D83 /* MovieResult.swift in Sources */,
 				3423C74424D62B4500FE1B97 /* TMDBTVShowSeasonViewController.swift in Sources */,
@@ -1382,7 +1382,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = TinTin.TMDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1401,7 +1401,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = TinTin.TMDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class TMDBTelevisionViewController: UIViewController {
+class TMDBAllTVShowViewController: UIViewController {
     // MARK: - coordinator
     var coordinator: MainCoordinator?
 

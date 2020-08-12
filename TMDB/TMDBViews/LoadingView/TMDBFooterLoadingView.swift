@@ -7,3 +7,8 @@
 //
 
 import Foundation
+import UIKit
+
+class TMDBFooterLoadingView: UICollectionReusableView {
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+}

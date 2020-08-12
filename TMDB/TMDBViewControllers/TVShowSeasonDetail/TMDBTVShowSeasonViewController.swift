@@ -46,7 +46,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
     }
     @IBOutlet weak var posterImageCollectionView: UICollectionView! {
         didSet {
-            posterImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
+            posterImageCollectionView.collectionViewLayout = Layout.imageLayout()
             posterImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
             posterImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: posterImageCollectionView)
 
@@ -64,7 +64,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
     @IBOutlet weak var videoCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
-            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.collectionViewLayout = Layout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
@@ -83,7 +83,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
     }
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
-            creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            creditCollectionView.collectionViewLayout = Layout.customLayout()
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             

@@ -22,7 +22,7 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - ui
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
-            collectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            collectionView.collectionViewLayout = Layout.customLayout()
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendPreviewHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularPreviewHeader)

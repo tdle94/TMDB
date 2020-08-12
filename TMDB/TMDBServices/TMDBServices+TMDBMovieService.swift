@@ -58,4 +58,9 @@ extension TMDBServices: TMDBMovieService {
         let request = urlRequestBuilder.getUpcomingMovieURLRequest(page: page, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
         session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
+
+    func getAllMovie(query: DiscoverMovieQuery, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getAllMovieURLRequest(query: query)
+        session.send(request: request, responseType: MovieResult.self, completion: completion)
+    }
 }

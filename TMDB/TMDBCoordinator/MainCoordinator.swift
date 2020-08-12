@@ -69,6 +69,7 @@ struct MainCoordinator: Coordinator {
         tvShowEpisodeVC.tvId = tvId
         tvShowEpisodeVC.seasonNumber = seasonNumber
         tvShowEpisodeVC.episodeNumber = episodeNumber
+        tvShowEpisodeVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(tvShowEpisodeVC, animated: true)
     }
 }

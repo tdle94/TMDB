@@ -68,4 +68,9 @@ extension TMDBServices: TMDBTVService {
         let request = urlRequestBuilder.getTopRatedTVShowURLRequest(page: page, language: NSLocale.current.languageCode)
         session.send(request: request, responseType: TVShowResult.self, completion: completion)
     }
+
+    func getAllTVShow(query: DiscoverQuery, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getAllTVShowURLRequest(query: query)
+        session.send(request: request, responseType: TVShowResult.self, completion: completion)
+    }
 }

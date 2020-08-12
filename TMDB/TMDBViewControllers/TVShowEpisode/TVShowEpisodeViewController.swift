@@ -15,6 +15,9 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     var tvId: Int?
     var seasonNumber: Int?
     var episodeNumber: Int?
+    
+    // MARK: - coordinator
+    var coordinate: MainCoordinator?
 
     // MARK: - repository
     var repository: TMDBRepository = TMDBRepository.share
@@ -94,6 +97,9 @@ class TMDBTVShowEpisodeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         episodeDetailDisplay.tvShowEpisodeVC = self
         contentView.bringSubviewToFront(posterImageView)
         getTVShowEpisode()
@@ -165,6 +171,15 @@ extension TMDBTVShowEpisodeViewController: TMDBPreviewSegmentControl {
             getEpisodeCrew()
         } else if selected == NSLocalizedString("Guest Star", comment: "") {
             getEpisodeGuestStar()
+        }
+    }
+}
+
+extension TMDBTVShowEpisodeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let object = creditDataSource.itemIdentifier(for: indexPath)
+        if collectionView == creditCollectionView, let id = (object as? Cast)?.id ?? (object as? Crew)?.id {
+            coordinate?.navigateToPersonDetail(id: id)
         }
     }
 }

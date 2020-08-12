@@ -2507,8 +2507,8 @@ class TMDBRepositoryTests: XCTestCase {
     // MARK: - all movies
     func testGetAllMovieSuccess() {
         let expectation = self.expectation(description: "")
-        let movieQuery = DiscoverMovieQuery(page: 1)
-        let queryMatcher: ParameterMatcher<DiscoverMovieQuery> = ParameterMatcher()
+        let movieQuery = DiscoverQuery(page: 1)
+        let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
         let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: movieQuery)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         
@@ -2536,8 +2536,8 @@ class TMDBRepositoryTests: XCTestCase {
     }
 
     func testGetAllMovieFail() {
-        let movieQuery = DiscoverMovieQuery(page: 3)
-        let queryMatcher: ParameterMatcher<DiscoverMovieQuery> = ParameterMatcher()
+        let movieQuery = DiscoverQuery(page: 3)
+        let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
         let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: movieQuery)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let expectation = self.expectation(description: "")

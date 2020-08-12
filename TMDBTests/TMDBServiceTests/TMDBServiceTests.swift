@@ -680,9 +680,9 @@ class TMDBServiceTests: XCTestCase {
     // MARK: - all movies
     func testGetAllMovie() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: DiscoverMovieQuery(page: 1))
+        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: DiscoverQuery(page: 1))
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-        let queryMatcher: ParameterMatcher<DiscoverMovieQuery> = ParameterMatcher()
+        let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
         
         /*GIVEN*/
         stub(session) { stub in
@@ -696,7 +696,7 @@ class TMDBServiceTests: XCTestCase {
         }
         
         /*WHEN*/
-        services.getAllMovie(query: DiscoverMovieQuery(page: 1)) { _ in
+        services.getAllMovie(query: DiscoverQuery(page: 1)) { _ in
             expectation.fulfill()
         }
         

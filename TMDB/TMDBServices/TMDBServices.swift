@@ -13,7 +13,8 @@ struct TMDBServices {
     let urlRequestBuilder: TMDBURLRequestBuilderProtocol
 }
 
-struct DiscoverMovieQuery {
+// Use for movie and tv show discovery api
+struct DiscoverQuery {
     enum SortBy {
         enum popularity: String {
             case ascending = "popularity.asc"

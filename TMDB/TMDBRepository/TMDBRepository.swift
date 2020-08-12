@@ -417,7 +417,7 @@ extension TMDBRepository: TMDBTVShowRepository {
 }
 
 extension TMDBRepository: TMDBMovieRepository {
-    func getAllMovie(query: DiscoverMovieQuery, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+    func getAllMovie(query: DiscoverQuery, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         services.getAllMovie(query: query) { result in
             DispatchQueue.main.async {
                 switch result {

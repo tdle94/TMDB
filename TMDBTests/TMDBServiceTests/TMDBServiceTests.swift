@@ -676,4 +676,33 @@ class TMDBServiceTests: XCTestCase {
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getUpcomingMovieURLRequest(page: 1, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode)
     }
+
+    // MARK: - all movies
+    func testGetAllMovie() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: DiscoverMovieQuery(page: 1))
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let queryMatcher: ParameterMatcher<DiscoverMovieQuery> = ParameterMatcher()
+        
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+        
+        stub(urlRequestBuilder) { stub in
+            when(stub).getAllMovieURLRequest(query: queryMatcher).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        services.getAllMovie(query: DiscoverMovieQuery(page: 1)) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getAllMovieURLRequest(query: queryMatcher)
+    }
 }

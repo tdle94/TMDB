@@ -75,7 +75,7 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var videoCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
         didSet {
-            backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
+            backdropImageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
             tvShowBackdropImageDataSource = TMDBCollectionDataSource(collectionView: backdropImageCollectionView) { collectionView, indexPath, item in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.imageCell, for: indexPath) as? TMDBBackdropImageCell
@@ -90,7 +90,7 @@ class TMDBTVDetailViewController: UIViewController {
     }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
-            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
 
@@ -113,7 +113,7 @@ class TMDBTVDetailViewController: UIViewController {
     }
     @IBOutlet weak var networkCollectionView: UICollectionView! {
         didSet {
-            networkCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout(fractionWidth: 0.2, fractionHeight: 1, scrollBehavior: .continuous)
+            networkCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout(fractionWidth: 0.2, fractionHeight: 1, scrollBehavior: .continuous)
             networkCollectionView.register(TMDBNetworkImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
             movieNetworkImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: networkCollectionView)
             var snapshot = movieNetworkImageDataSource.snapshot()
@@ -135,7 +135,7 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var matchingTVShowCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var matchingTVShowCollectionView: UICollectionView! {
         didSet {
-            matchingTVShowCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            matchingTVShowCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             matchingTVShowCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             matchingTVShowCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             matchingTVShowDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: matchingTVShowCollectionView)
@@ -153,7 +153,7 @@ class TMDBTVDetailViewController: UIViewController {
     }
     @IBOutlet weak var tvShowCreditCollectionView: UICollectionView! {
         didSet {
-            tvShowCreditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            tvShowCreditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             tvShowCreditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             tvShowCreditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             tvShowCreditDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: tvShowCreditCollectionView)
@@ -172,7 +172,7 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var creatorCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var creatorCollectionView: UICollectionView! {
         didSet {
-            creatorCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            creatorCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             creatorCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             creatorCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             tvShowCreatorDataSrouce = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: creatorCollectionView)

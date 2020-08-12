@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // set view controller
         let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome) as! TMDBHomeViewController
-        let movieVC = TMDBMovieViewController()
+        let movieVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllMovieVC) as! TMDBAllMovieViewController
         let tvVC = TMDBTelevisionViewController()
         let searchVC = TMDBSearchViewController()
         

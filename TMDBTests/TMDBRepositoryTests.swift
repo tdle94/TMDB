@@ -2503,4 +2503,65 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getTVShowAiringTodayURLRequest(page: 3, language: any())
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
     }
+
+    // MARK: - all movies
+    func testGetAllMovieSuccess() {
+        let expectation = self.expectation(description: "")
+        let movieQuery = DiscoverMovieQuery(page: 1)
+        let queryMatcher: ParameterMatcher<DiscoverMovieQuery> = ParameterMatcher()
+        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: movieQuery)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        
+        stub(requestBuilder) { stub in
+            when(stub).getAllMovieURLRequest(query: queryMatcher).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(MovieResult()))
+            }
+        }
+        
+        /*WHEN*/
+        repository.getAllMovie(query: movieQuery) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getAllMovieURLRequest(query: queryMatcher)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
+
+    func testGetAllMovieFail() {
+        let movieQuery = DiscoverMovieQuery(page: 3)
+        let queryMatcher: ParameterMatcher<DiscoverMovieQuery> = ParameterMatcher()
+        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: movieQuery)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let expectation = self.expectation(description: "")
+
+        /*GIVEN*/
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError()))
+            }
+        }
+
+        stub(requestBuilder) { stub in
+            when(stub).getAllMovieURLRequest(query: queryMatcher).thenReturn(request)
+        }
+        
+        /*WHEN*/
+        repository.getAllMovie(query: movieQuery) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getAllMovieURLRequest(query: queryMatcher)
+        verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
+    }
 }

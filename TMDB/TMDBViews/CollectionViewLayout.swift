@@ -9,7 +9,26 @@
 import Foundation
 import UIKit
 
-extension UICollectionViewLayout {
+struct CollectionViewLayout {
+    static func noHeaderTwoItemsPerRowLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.5))
+
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 5)
+        
+        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+        let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize, elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [sectionFooter]
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        
+        return layout
+    }
+
     static func customLayout(fractionWidth: CGFloat = 1, fractionHeight: CGFloat = 1) -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(fractionWidth), heightDimension: .fractionalHeight(fractionHeight))

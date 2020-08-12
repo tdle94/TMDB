@@ -76,7 +76,7 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
         didSet {
-            backdropImageCollectionView.collectionViewLayout = UICollectionViewLayout.imageLayout()
+            backdropImageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
             backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
 
             movieImageDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.imageCell, collectionView: backdropImageCollectionView)
@@ -96,13 +96,13 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
-            videoCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            videoCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
             videoMovieDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: videoCollectionView)
 
-            videoMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+            videoMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath) as? TMDBPreviewHeaderView
                 header?.label.text = NSLocalizedString("Video", comment: "")
                 return header
@@ -115,7 +115,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
-            creditCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             
@@ -138,7 +138,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     @IBOutlet weak var matchingMoviesCollectionView: UICollectionView! {
         didSet {
-            matchingMoviesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout()
+            matchingMoviesCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             matchingMoviesCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             matchingMoviesDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: matchingMoviesCollectionView)
@@ -160,7 +160,7 @@ class TMDBMovieDetailViewController: UIViewController {
     }
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
-            productionCompaniesCollectionView.collectionViewLayout = UICollectionViewLayout.customLayout(fractionWidth: 0.2, fractionHeight: 0.4)
+            productionCompaniesCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(fractionWidth: 0.2, fractionHeight: 0.4)
             productionCompaniesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             productionCompaniesCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
 

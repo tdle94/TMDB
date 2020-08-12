@@ -100,7 +100,7 @@ class TMDBHomeViewController: UIViewController {
     }
 
     // MARK: - coordinator
-    var coordinator: MainCoordinator?
+    var coordinate: MainCoordinator?
 
     // MARK: - overrides
     override func viewDidLoad() {
@@ -132,11 +132,11 @@ extension TMDBHomeViewController: UICollectionViewDelegate {
         }
 
         if let item = item as? Movie ?? (item as? Trending)?.movie {
-            coordinator?.navigateToMovieDetail(id: item.id)
+            coordinate?.navigateToMovieDetail(id: item.id)
         } else if let item = item as? People ?? (item as? Trending)?.people {
-            coordinator?.navigateToPersonDetail(id: item.id)
+            coordinate?.navigateToPersonDetail(id: item.id)
         } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
-            coordinator?.navigateToTVShowDetail(tvId: item.id)
+            coordinate?.navigateToTVShowDetail(tvId: item.id)
         }
     }
 }

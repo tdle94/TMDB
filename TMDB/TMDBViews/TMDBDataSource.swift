@@ -28,8 +28,9 @@ enum Section: String {
     case appearIn
     case movie
     case tvShow
+    case searchResult
 
-    var header: String {
+    var header: String? {
         switch self {
         case .season: return NSLocalizedString("Season", comment: "")
         case .episode: return NSLocalizedString("Episode", comment: "")
@@ -48,6 +49,7 @@ enum Section: String {
         case .appearIn: return NSLocalizedString("Appear In", comment: "")
         case .movie: return NSLocalizedString("Movie", comment: "")
         case .tvShow: return NSLocalizedString("TV Shows", comment: "")
+        case .searchResult: return nil
         }
     }
 }

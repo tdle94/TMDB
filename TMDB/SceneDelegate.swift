@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // set view controller
         let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome) as! TMDBHomeViewController
         let movieVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllMovieVC) as! TMDBAllMovieViewController
-        let tvVC = TMDBTelevisionViewController()
+        let tvVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllTVShowVC) as! TMDBAllTVShowViewController
         let searchVC = TMDBSearchViewController()
         
         let tmdbLogo = UIImage(named: Constant.imageLogo)?.withRenderingMode(.alwaysOriginal)
@@ -67,7 +67,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // set coordinators
         searchVC.coordinate = MainCoordinator(navigationController: searchNavController)
-        homeVC.coordinator = MainCoordinator(navigationController: homeNavController)
+        homeVC.coordinate = MainCoordinator(navigationController: homeNavController)
+        movieVC.coordinate = MainCoordinator(navigationController: movieNavController)
+        tvVC.coordinate = MainCoordinator(navigationController: tvNavController)
         
         // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor

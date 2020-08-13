@@ -59,7 +59,7 @@ extension TMDBServices: TMDBMovieService {
         session.send(request: request, responseType: MovieResult.self, completion: completion)
     }
 
-    func getAllMovie(query: DiscoverMovieQuery, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+    func getAllMovie(query: DiscoverQuery, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         let request = urlRequestBuilder.getAllMovieURLRequest(query: query)
         session.send(request: request, responseType: MovieResult.self, completion: completion)
     }

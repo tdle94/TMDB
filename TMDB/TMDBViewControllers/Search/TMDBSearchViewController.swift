@@ -17,7 +17,7 @@ protocol TMDBSearchProtocol: AnyObject {
 }
 
 class TMDBSearchViewController: UIViewController {
-    var repository: TMDBRepository!
+    var repository: TMDBRepository = TMDBRepository.share
 
     var coordinate: MainCoordinator?
     
@@ -28,7 +28,6 @@ class TMDBSearchViewController: UIViewController {
 
     lazy var searchController: UISearchController = {
         let search = UISearchController(searchResultsController: searchResultViewController)
-        search.searchResultsUpdater = self
         search.searchBar.delegate = self
         search.obscuresBackgroundDuringPresentation = false
         search.hidesNavigationBarDuringPresentation = false
@@ -43,12 +42,19 @@ class TMDBSearchViewController: UIViewController {
         searchResultViewController.tmdbSearchProtocol = self
         view.backgroundColor = Constant.Color.backgroundColor
         definesPresentationContext = true
-        repository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
-                                                           urlRequestBuilder: TMDBURLRequestBuilder()),
-                                    localDataSource: TMDBLocalDataSource())
         view.backgroundColor = Constant.Color.backgroundColor
         navigationItem.titleView = searchController.searchBar
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+      super.viewDidAppear(animated)
+
+      DispatchQueue.main.async {
+        if self.searchResultViewController.searchResultDataSource == nil {
+            self.searchController.searchBar.becomeFirstResponder()
+        }
+      }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,12 +67,6 @@ class TMDBSearchViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController?.navigationBar.shadowImage = nil
-    }
-}
-
-extension TMDBSearchViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        // TODO: search for text
     }
 }
 

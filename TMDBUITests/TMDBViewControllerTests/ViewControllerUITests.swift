@@ -96,8 +96,6 @@ class ViewControllerUITests: XCTestCase {
             }
             tvShowEpisodeTableView.cells.firstMatch.tap()
         }
-
-        
     }
 
     func testTapPopularMovie() {
@@ -162,6 +160,10 @@ class ViewControllerUITests: XCTestCase {
         app.navigationBars.buttons.element(boundBy: 0).tap()
         
         tapTrendingThisWeek()
+
+        app.tabBars.buttons[NSLocalizedString("Movies", comment: "")].tap()
+        app.tabBars.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
+        app.tabBars.buttons[NSLocalizedString("Search", comment: "")].tap()
     }
 
     func tapTrendingThisWeek() {

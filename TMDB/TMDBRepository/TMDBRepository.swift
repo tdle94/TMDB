@@ -101,6 +101,19 @@ extension TMDBRepository: TMDBTrendingRepository {
 }
 
 extension TMDBRepository: TMDBTVShowRepository {
+    func getAllTVShow(query: DiscoverQuery, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
+        services.getAllTVShow(query: query) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let allTVShowResult):
+                    completion(.success(allTVShowResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
     func getTopRatedTVShow(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void) {
         services.getTopRatedTVShow(page: page) { result in
             DispatchQueue.main.async {
@@ -417,7 +430,7 @@ extension TMDBRepository: TMDBTVShowRepository {
 }
 
 extension TMDBRepository: TMDBMovieRepository {
-    func getAllMovie(query: DiscoverMovieQuery, completion: @escaping (Result<MovieResult, Error>) -> Void) {
+    func getAllMovie(query: DiscoverQuery, completion: @escaping (Result<MovieResult, Error>) -> Void) {
         services.getAllMovie(query: query) { result in
             DispatchQueue.main.async {
                 switch result {

@@ -183,3 +183,11 @@ extension TMDBTVShowSeasonViewController: UITableViewDelegate {
         coordinate?.navigateToTVShowEpisodeDetail(tvId: tvId, seasonNumber: episode.seasonNumber, episodeNumber: episode.episodeNumber)
     }
 }
+
+extension TMDBTVShowSeasonViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == creditCollectionView, let cast = creditDataSource.itemIdentifier(for: indexPath) as? Cast {
+            coordinate?.navigateToPersonDetail(id: cast.id)
+        }
+    }
+}

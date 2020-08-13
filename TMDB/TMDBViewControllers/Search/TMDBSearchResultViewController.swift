@@ -12,12 +12,8 @@ import SDWebImage
 
 class TMDBSearchResultViewController: UIViewController {
     weak var tmdbSearchProtocol: TMDBSearchProtocol?
-    
-    var searchResultDataSource: UITableViewDiffableDataSource<ResultSection, MultiSearch>!
-    
-    enum ResultSection: String, CaseIterable {
-        case result = "Result"
-    }
+
+    var searchResultDataSource: TMDBTableDataSource!
 
     @IBOutlet weak var loadMoreButton: UIButton! {
         didSet {
@@ -29,14 +25,10 @@ class TMDBSearchResultViewController: UIViewController {
         didSet {
             searchResultTableView.separatorInset = .zero
             searchResultTableView.register(UINib(nibName: "TMDBCustomTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.searchResultCell)
-            searchResultDataSource = UITableViewDiffableDataSource(tableView: searchResultTableView) { tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.searchResultCell, for: indexPath) as? TMDBCustomTableViewCell
-                cell?.configure(item: item)
-                return cell
-            }
-            
+            searchResultDataSource = TMDBTableDataSource(cellIdentifier: Constant.Identifier.searchResultCell, tableView: searchResultTableView)
+
             var snapshot = searchResultDataSource.snapshot()
-            snapshot.appendSections([.result])
+            snapshot.appendSections([.searchResult])
             searchResultDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -58,7 +50,7 @@ class TMDBSearchResultViewController: UIViewController {
 
 extension TMDBSearchResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let item = searchResultDataSource.itemIdentifier(for: indexPath) else { return }
+        guard let item = searchResultDataSource.itemIdentifier(for: indexPath) as? MultiSearch else { return }
 
         if item.mediaType == "movie" {
             tmdbSearchProtocol?.navigateToMovieDetail(id: item.id)

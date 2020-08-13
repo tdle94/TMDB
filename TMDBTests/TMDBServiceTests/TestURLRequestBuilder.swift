@@ -138,7 +138,7 @@ class TestURLRequestBuilder: XCTestCase {
     
     func testMultiSearchURL() {
         let matchRequest = urlRequestBuilder.getMultiSearchURLRequest(query: "T", language: nil, region: nil)
-        let urlMatcher = "https://api.themoviedb.org/3/search/multi?page=1&language=en&query=T&region=US&include_adult=true&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        let urlMatcher = "https://api.themoviedb.org/3/search/multi?page=1&language=en&query=T&region=US&include_adult=false&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
     

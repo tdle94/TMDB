@@ -1,15 +1,15 @@
 //
-//  AllMovieCollectionView.swift
+//  TMDBTelevisionViewController.swift
 //  TMDB
 //
-//  Created by Tuyen Le on 8/12/20.
+//  Created by Tuyen Le on 6/9/20.
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class TMDBAllMovieViewController: UIViewController {
+class TMDBAllTVShowViewController: UIViewController {
     // MARK: - coordinator
     var coordinate: MainCoordinator?
 
@@ -17,8 +17,8 @@ class TMDBAllMovieViewController: UIViewController {
     let repository: TMDBRepository = TMDBRepository.share
 
     // MARK: - data source
-    var allMovieDataSource: TMDBCollectionDataSource!
-
+    var allTVShowDataSource: TMDBCollectionDataSource!
+    
     // MARK: - ui
     weak var footerLoadingView: TMDBFooterLoadingView?
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -28,56 +28,54 @@ class TMDBAllMovieViewController: UIViewController {
             collectionView.register(UINib(nibName: "TMDBFooterLoadingView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: Constant.Identifier.previewFooter)
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
 
-            allMovieDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: collectionView)
-            allMovieDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            allTVShowDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: collectionView)
+            allTVShowDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 self.footerLoadingView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewFooter, for: indexPath) as? TMDBFooterLoadingView
                 return self.footerLoadingView
             }
-            var snapshot = allMovieDataSource.snapshot()
+            var snapshot = allTVShowDataSource.snapshot()
             snapshot.appendSections([.movie])
-            allMovieDataSource.apply(snapshot, animatingDifferences: true)
+            allTVShowDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
 
-    // MARK: - override
+    // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         view.addSubview(loadingView)
-        getAllMovie(page: 1)
+        getAllTVShow(page: 1)
     }
 
     // MARK: - service
-    func getAllMovie(page: Int) {
-        footerLoadingView?.loadingIndicator.startAnimating()
-        repository.getAllMovie(query: DiscoverQuery(page: page)) { result in
-            self.footerLoadingView?.loadingIndicator.stopAnimating()
+    func getAllTVShow(page: Int) {
+        repository.getAllTVShow(query: DiscoverQuery(page: page)) { result in
             self.loadingView.removeFromSuperview()
             switch result {
             case .failure(let error):
-                debugPrint(error)
-            case .success(let allMovieResult):
-                var snapshot = self.allMovieDataSource.snapshot()
-                snapshot.appendItems(Array(allMovieResult.movies))
-                self.allMovieDataSource.apply(snapshot, animatingDifferences: true)
+                debugPrint(error.localizedDescription)
+            case .success(let tvShowResult):
+                var snapshot = self.allTVShowDataSource.snapshot()
+                snapshot.appendItems(Array(tvShowResult.onTV))
+                self.allTVShowDataSource.apply(snapshot, animatingDifferences: true)
             }
         }
     }
 }
 
-extension TMDBAllMovieViewController: UICollectionViewDelegate {
+extension TMDBAllTVShowViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let movieCount = allMovieDataSource.snapshot().itemIdentifiers.count
+        let movieCount = allTVShowDataSource.snapshot().itemIdentifiers.count
         if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
             let page = movieCount / 20 + 1
-            getAllMovie(page: page)
+            getAllTVShow(page: page)
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let movie = allMovieDataSource.itemIdentifier(for: indexPath) as? Movie else { return }
-        coordinate?.navigateToMovieDetail(id: movie.id)
+        guard let tvShow = allTVShowDataSource.itemIdentifier(for: indexPath) as? TVShow else { return }
+        coordinate?.navigateToTVShowDetail(tvId: tvShow.id)
     }
 }

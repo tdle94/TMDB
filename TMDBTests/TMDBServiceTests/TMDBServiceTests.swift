@@ -680,9 +680,9 @@ class TMDBServiceTests: XCTestCase {
     // MARK: - all movies
     func testGetAllMovie() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: DiscoverMovieQuery(page: 1))
+        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: DiscoverQuery(page: 1))
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
-        let queryMatcher: ParameterMatcher<DiscoverMovieQuery> = ParameterMatcher()
+        let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
         
         /*GIVEN*/
         stub(session) { stub in
@@ -696,7 +696,7 @@ class TMDBServiceTests: XCTestCase {
         }
         
         /*WHEN*/
-        services.getAllMovie(query: DiscoverMovieQuery(page: 1)) { _ in
+        services.getAllMovie(query: DiscoverQuery(page: 1)) { _ in
             expectation.fulfill()
         }
         
@@ -704,5 +704,34 @@ class TMDBServiceTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(MovieResult.Type.self), completion: anyClosure())
         verify(urlRequestBuilder).getAllMovieURLRequest(query: queryMatcher)
+    }
+    
+    // MARK: - all tv shows
+    func testGetAllTVShow() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getAllTVShowURLRequest(query: DiscoverQuery(page: 1))
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
+
+        /*GIVEN*/
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(TVShowResult()))
+            }
+        }
+
+        stub(urlRequestBuilder) { stub in
+            when(stub).getAllTVShowURLRequest(query: queryMatcher).thenReturn(request)
+        }
+
+        /*WHEN*/
+        services.getAllTVShow(query: DiscoverQuery(page: 1)) { _ in
+            expectation.fulfill()
+        }
+
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+        verify(urlRequestBuilder).getAllTVShowURLRequest(query: queryMatcher)
     }
 }

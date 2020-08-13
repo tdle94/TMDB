@@ -291,7 +291,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "language", value: language ?? "en"),
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "region", value: region ?? "US"),
-            URLQueryItem(name: "include_adult", value: String(true))
+            URLQueryItem(name: "include_adult", value: String(false))
         ]
         return buildURLRequest(path: "/3/search/multi", queryItems: queryItems)
     }

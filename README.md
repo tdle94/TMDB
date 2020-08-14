@@ -13,7 +13,7 @@
 - [SDWebImage](https://github.com/SDWebImage/SDWebImage) for image loading & caching
 - [RealmSwift](https://github.com/realm/realm-cocoa) cache movie for faster access
 - [Material Design](https://material.io/design)
-- Original Logo, Color, And datas are from [TMDB](https://www.themoviedb.org/about/logos-attribution) website
+- Original Logo, Color, And API are from [TMDB](https://www.themoviedb.org/about/logos-attribution) website
 
 ![alt text](https://i.ibb.co/qmyM1hW/Webp-net-resizeimage.png) ![alt text](https://i.ibb.co/qWTFHPd/Webp-net-resizeimage-1.png) ![alt text](https://i.ibb.co/LkSYDmX/Webp-net-resizeimage-2.png)
 

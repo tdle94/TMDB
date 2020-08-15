@@ -105,6 +105,9 @@ class TMDBHomeViewController: UIViewController {
     // MARK: - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = NSLocalizedString("Home", comment: "")
+        navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         configureLanguageAndRegion()
         getPopularMovie()
         getTrendingToday()

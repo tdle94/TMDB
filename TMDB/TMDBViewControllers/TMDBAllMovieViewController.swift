@@ -42,6 +42,7 @@ class TMDBAllMovieViewController: UIViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = NSLocalizedString("Movies", comment: "")
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]

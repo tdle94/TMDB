@@ -587,9 +587,9 @@
 				34D6672024DC4589003A73BA /* MovieDetail */,
 				34D6671F24DC4574003A73BA /* Home */,
 				34D2BB9C24B77667009C9246 /* TMDBReviewTableViewController.swift */,
-				34CB501C2490761700E9B5CF /* TMDBAllTVShowViewController.swift */,
 				34D4FAF724B0D7C400CBB4AB /* TMDBVideoPlayerViewController.swift */,
 				34DB593024C5030E0022A5AB /* TMDBCompleteReleaseDateTableViewController.swift */,
+				34CB501C2490761700E9B5CF /* TMDBAllTVShowViewController.swift */,
 				34D6138324E43C15007961BC /* TMDBAllMovieViewController.swift */,
 			);
 			path = TMDBViewControllers;

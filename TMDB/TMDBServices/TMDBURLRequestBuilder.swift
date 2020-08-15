@@ -57,9 +57,14 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     // MARK: - tv shows
 
     func getAllTVShowURLRequest(query: DiscoverQuery) -> URLRequest {
-        let queryItems = [
+        var queryItems = [
             URLQueryItem(name: "page", value: String(query.page))
         ]
+        
+        if let keyword = query.withKeyword {
+            queryItems.append(URLQueryItem(name: "with_keywords", value: keyword))
+        }
+
         return buildURLRequest(path: "/3/discover/tv", queryItems: queryItems)
     }
 
@@ -203,9 +208,14 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     // MARK: - movies
 
     func getAllMovieURLRequest(query: DiscoverQuery) -> URLRequest {
-        let queryItems = [
+        var queryItems = [
             URLQueryItem(name: "page", value: String(query.page))
         ]
+
+        if let keyword = query.withKeyword {
+            queryItems.append(URLQueryItem(name: "with_keywords", value: keyword))
+        }
+
         return buildURLRequest(path: "/3/discover/movie", queryItems: queryItems)
     }
 

@@ -562,8 +562,8 @@ extension TMDBRepository: TMDBMovieRepository {
 
         // get from cache
         if page <= similarMovie.page {
-            let fromMovie = similarMovie.movies.count / similarMovie.totalPages * (page - 1)
-            let toMovie = similarMovie.totalResults / similarMovie.totalPages * page - 1
+            let fromMovie = 20 * (page - 1)
+            let toMovie = page == similarMovie.page ? similarMovie.movies.count - 1 : (20 * page) - 1
             let result = MovieResult()
             result.movies.append(objectsIn: similarMovie.movies[fromMovie...toMovie])
             completion(.success(result))
@@ -598,8 +598,8 @@ extension TMDBRepository: TMDBMovieRepository {
         }
         // get from cache
         if page <= recommendMovie.page {
-            let fromMovie = recommendMovie.movies.count / recommendMovie.totalPages * (page - 1)
-            let toMovie = recommendMovie.totalResults / recommendMovie.totalPages * page - 1
+            let fromMovie = 20 * (page - 1)
+            let toMovie = page == recommendMovie.page ? recommendMovie.movies.count - 1 : (20 * page) - 1
             let result = MovieResult()
             result.movies.append(objectsIn: recommendMovie.movies[fromMovie...toMovie])
             completion(.success(result))

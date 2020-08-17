@@ -30,7 +30,7 @@ struct DiscoverQuery {
         }
     }
     
-    let page: Int
+    var page: Int
     var language: String?
     var region: String?
     var sortBy: SortBy?

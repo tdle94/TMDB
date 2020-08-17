@@ -376,6 +376,11 @@ extension TMDBTVDetailViewController: UICollectionViewDelegate {
             
             coordinate?.navigateToPersonDetail(id: id)
         }
+
+        if collectionView == keywordCollectionView, let id = tvId {
+            let keywordId = repository.getTVShowKeywords(from: id)[indexPath.row].id
+            coordinate?.navigateToAllTVShow(query: DiscoverQuery(page: 1, withKeyword: String(keywordId)))
+        }
     }
 }
 

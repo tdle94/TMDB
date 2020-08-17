@@ -14,6 +14,10 @@ class TMDBAllMovieViewController: UIViewController {
     var coordinate: MainCoordinator?
 
     // MARK: - repository
+    var query: DiscoverQuery = DiscoverQuery(page: 1)
+
+    private var totalMovies: Int = 0
+
     let repository: TMDBRepository = TMDBRepository.share
 
     // MARK: - data source
@@ -47,19 +51,20 @@ class TMDBAllMovieViewController: UIViewController {
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         view.addSubview(loadingView)
-        getAllMovie(page: 1)
+        getAllMovie()
     }
 
     // MARK: - service
-    func getAllMovie(page: Int) {
+    func getAllMovie() {
         footerLoadingView?.loadingIndicator.startAnimating()
-        repository.getAllMovie(query: DiscoverQuery(page: page)) { result in
+        repository.getAllMovie(query: query) { result in
             self.footerLoadingView?.loadingIndicator.stopAnimating()
             self.loadingView.removeFromSuperview()
             switch result {
             case .failure(let error):
                 debugPrint(error)
             case .success(let allMovieResult):
+                self.totalMovies = allMovieResult.totalResults
                 var snapshot = self.allMovieDataSource.snapshot()
                 snapshot.appendItems(Array(allMovieResult.movies))
                 self.allMovieDataSource.apply(snapshot, animatingDifferences: true)
@@ -71,9 +76,10 @@ class TMDBAllMovieViewController: UIViewController {
 extension TMDBAllMovieViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let movieCount = allMovieDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
+        if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), movieCount != totalMovies {
             let page = movieCount / 20 + 1
-            getAllMovie(page: page)
+            query.page = page
+            getAllMovie()
         }
     }
 

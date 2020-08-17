@@ -27,8 +27,6 @@ class TMDBMovieDetailViewController: UIViewController {
 
     var matchingMoviesDataSource: TMDBCollectionDataSource!
 
-    var keywordMovieDataSource: TMDBCollectionDataSource!
-
     var movieImageDataSource: TMDBCollectionDataSource!
 
     // MARK: - display
@@ -325,6 +323,15 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
         {
             coordinator?.navigateToPersonDetail(id: id)
         }
+
+        if
+            collectionView == keywordCollectionView,
+            let id = movieId
+        {
+            let keyword = repository.getMovieKeywords(from: id)
+            coordinator?.navigateToAllMovie(query: DiscoverQuery(page: 1, withKeyword: String(keyword[indexPath.row].id)))
+        }
+            
     }
 }
 

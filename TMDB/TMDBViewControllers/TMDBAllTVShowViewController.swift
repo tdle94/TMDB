@@ -14,11 +14,15 @@ class TMDBAllTVShowViewController: UIViewController {
     var coordinate: MainCoordinator?
 
     // MARK: - repository
+    private var totalTVShows: Int = 0
+
+    var query: DiscoverQuery = DiscoverQuery(page: 1)
+
     let repository: TMDBRepository = TMDBRepository.share
 
     // MARK: - data source
     var allTVShowDataSource: TMDBCollectionDataSource!
-    
+
     // MARK: - ui
     weak var footerLoadingView: TMDBFooterLoadingView?
     var loadingView: TMDBLoadingView = UINib(nibName: "TMDBLoadingView", bundle: nil).instantiate(withOwner: nil, options: nil).first as! TMDBLoadingView
@@ -47,12 +51,12 @@ class TMDBAllTVShowViewController: UIViewController {
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         view.addSubview(loadingView)
-        getAllTVShow(page: 1)
+        getAllTVShow()
     }
 
     // MARK: - service
-    func getAllTVShow(page: Int) {
-        repository.getAllTVShow(query: DiscoverQuery(page: page)) { result in
+    func getAllTVShow() {
+        repository.getAllTVShow(query: query) { result in
             self.loadingView.removeFromSuperview()
             switch result {
             case .failure(let error):
@@ -71,7 +75,8 @@ extension TMDBAllTVShowViewController: UICollectionViewDelegate {
         let movieCount = allTVShowDataSource.snapshot().itemIdentifiers.count
         if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
             let page = movieCount / 20 + 1
-            getAllTVShow(page: page)
+            query.page = page
+            getAllTVShow()
         }
     }
 

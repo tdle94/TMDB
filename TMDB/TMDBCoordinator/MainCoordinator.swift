@@ -72,4 +72,16 @@ struct MainCoordinator: Coordinator {
         tvShowEpisodeVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(tvShowEpisodeVC, animated: true)
     }
+
+    func navigateToAllMovie(query: DiscoverQuery) {
+        let allMovieVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllMovieVC) as! TMDBAllMovieViewController
+        allMovieVC.query = query
+        navigationController.pushViewController(allMovieVC, animated: true)
+    }
+
+    func navigateToAllTVShow(query: DiscoverQuery) {
+        let allTVShowVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllTVShowVC) as! TMDBAllTVShowViewController
+        allTVShowVC.query = query
+        navigationController.pushViewController(allTVShowVC, animated: true)
+    }
 }

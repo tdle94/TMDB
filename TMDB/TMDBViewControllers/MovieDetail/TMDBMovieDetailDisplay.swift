@@ -179,6 +179,7 @@ class TMDBMovieDetailDisplay {
         if similar.movies.isEmpty, recommend.movies.isEmpty {
             snapshot.deleteSections([.more])
             movieDetailVC?.matchingMoviesDataSource.apply(snapshot, animatingDifferences: false)
+            movieDetailVC?.matchingMovieCollectionViewHeightContraint.constant = 0
             return
         }
         

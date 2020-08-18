@@ -100,6 +100,11 @@
 		34AD7CDC24AA6674004A7C0A /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7CDB24AA6674004A7C0A /* Review.swift */; };
 		34AD7CDE24AA79DC004A7C0A /* MovieReviewFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7CDD24AA79DC004A7C0A /* MovieReviewFixture.swift */; };
 		34B55C2824C4E57800784C69 /* TMDBImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B55C2724C4E57800784C69 /* TMDBImageCell.swift */; };
+		34C7663A24EB227000BD65DD /* TMDBHomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C7663924EB227000BD65DD /* TMDBHomePresenter.swift */; };
+		34C7663C24EB39A800BD65DD /* TMDBHomeViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C7663B24EB39A800BD65DD /* TMDBHomeViewDelegate.swift */; };
+		34C7663E24EB39CF00BD65DD /* TMDBHomeViewController+TMDBHomeViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C7663D24EB39CF00BD65DD /* TMDBHomeViewController+TMDBHomeViewDelegate.swift */; };
+		34C7664024EB39F000BD65DD /* TMDBHomeViewController+TMDBPreviewSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C7663F24EB39F000BD65DD /* TMDBHomeViewController+TMDBPreviewSegmentControl.swift */; };
+		34C7664224EB3A2600BD65DD /* TMDBHomeViewController+UICollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C7664124EB3A2600BD65DD /* TMDBHomeViewController+UICollectionViewDelegate.swift */; };
 		34C9215724E2075E0043E6F5 /* TMDBTVShowHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C9215624E2075E0043E6F5 /* TMDBTVShowHeaderView.swift */; };
 		34CB5006249037B400E9B5CF /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB5005249037B400E9B5CF /* Coordinator.swift */; };
 		34CB5008249037D800E9B5CF /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CB5007249037D800E9B5CF /* MainCoordinator.swift */; };
@@ -265,6 +270,11 @@
 		34AD7CDB24AA6674004A7C0A /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
 		34AD7CDD24AA79DC004A7C0A /* MovieReviewFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieReviewFixture.swift; sourceTree = "<group>"; };
 		34B55C2724C4E57800784C69 /* TMDBImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBImageCell.swift; sourceTree = "<group>"; };
+		34C7663924EB227000BD65DD /* TMDBHomePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBHomePresenter.swift; sourceTree = "<group>"; };
+		34C7663B24EB39A800BD65DD /* TMDBHomeViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBHomeViewDelegate.swift; sourceTree = "<group>"; };
+		34C7663D24EB39CF00BD65DD /* TMDBHomeViewController+TMDBHomeViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBHomeViewController+TMDBHomeViewDelegate.swift"; sourceTree = "<group>"; };
+		34C7663F24EB39F000BD65DD /* TMDBHomeViewController+TMDBPreviewSegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBHomeViewController+TMDBPreviewSegmentControl.swift"; sourceTree = "<group>"; };
+		34C7664124EB3A2600BD65DD /* TMDBHomeViewController+UICollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBHomeViewController+UICollectionViewDelegate.swift"; sourceTree = "<group>"; };
 		34C9215624E2075E0043E6F5 /* TMDBTVShowHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBTVShowHeaderView.swift; sourceTree = "<group>"; };
 		34CB5005249037B400E9B5CF /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		34CB5007249037D800E9B5CF /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -656,6 +666,11 @@
 			isa = PBXGroup;
 			children = (
 				342E66272489BB33003B5CB8 /* TMDBHomeViewController.swift */,
+				34C7663924EB227000BD65DD /* TMDBHomePresenter.swift */,
+				34C7663B24EB39A800BD65DD /* TMDBHomeViewDelegate.swift */,
+				34C7663D24EB39CF00BD65DD /* TMDBHomeViewController+TMDBHomeViewDelegate.swift */,
+				34C7663F24EB39F000BD65DD /* TMDBHomeViewController+TMDBPreviewSegmentControl.swift */,
+				34C7664124EB3A2600BD65DD /* TMDBHomeViewController+UICollectionViewDelegate.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1093,18 +1108,22 @@
 				347C35B12499C826003EEF7E /* ImageConfig.swift in Sources */,
 				3498A9FE24BBB85A0080399A /* TMDBCustomTableViewCell.swift in Sources */,
 				34CB5006249037B400E9B5CF /* Coordinator.swift in Sources */,
+				34C7664224EB3A2600BD65DD /* TMDBHomeViewController+UICollectionViewDelegate.swift in Sources */,
 				34A31D15248C7CCC00D56C10 /* TMDBSession.swift in Sources */,
 				34AD7CDA24AA5177004A7C0A /* TMDBCircleUserRating.swift in Sources */,
 				34940A6E24D7008F00E4CF28 /* TMDBTVShowSeasonDisplay.swift in Sources */,
+				34C7663C24EB39A800BD65DD /* TMDBHomeViewDelegate.swift in Sources */,
 				34D6138624E45933007961BC /* TMDBFooterLoadingView.swift in Sources */,
 				348F635F2491C49700245BE6 /* TMDBPeopleService.swift in Sources */,
 				3488664024A67B3D00E205FA /* UIImage+.swift in Sources */,
 				348F635D2491C3C100245BE6 /* TMDBTVService.swift in Sources */,
 				343CC9E02498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift in Sources */,
+				34C7663A24EB227000BD65DD /* TMDBHomePresenter.swift in Sources */,
 				34A31D19248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift in Sources */,
 				34722CA024E06425008D58F6 /* TMDBNetworkImageCell.swift in Sources */,
 				3488663724A6559000E205FA /* TMDBMovieDetailDisplay.swift in Sources */,
 				34DB593124C5030E0022A5AB /* TMDBCompleteReleaseDateTableViewController.swift in Sources */,
+				34C7664024EB39F000BD65DD /* TMDBHomeViewController+TMDBPreviewSegmentControl.swift in Sources */,
 				34AD7CDC24AA6674004A7C0A /* Review.swift in Sources */,
 				348F63632491C83000245BE6 /* TMDBServices+TMDBMovieService.swift in Sources */,
 				34CDDFBB24E1936D007D5A7B /* TMDBTrendHeaderView.swift in Sources */,
@@ -1137,6 +1156,7 @@
 				34D3E7E5248D3B84000F5D83 /* PopularPeople.swift in Sources */,
 				340CA6DE248DAC4C00E5A72D /* TrendingResult.swift in Sources */,
 				342E66262489BB33003B5CB8 /* SceneDelegate.swift in Sources */,
+				34C7663E24EB39CF00BD65DD /* TMDBHomeViewController+TMDBHomeViewDelegate.swift in Sources */,
 				3488663F24A67B3D00E205FA /* CollectionViewLayout.swift in Sources */,
 				34D9567D24D470F300A478E5 /* LanguageCode.swift in Sources */,
 				34995AEF2496832E0088576B /* TMDBURLSessionProtocol.swift in Sources */,

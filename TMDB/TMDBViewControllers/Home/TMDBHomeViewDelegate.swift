@@ -9,8 +9,8 @@
 import Foundation
 
 protocol TMDBHomeViewDelegate: NSObjectProtocol {
-    func displayMovies(_ movies: [Movie], type: TMDBHomePresenter.`Type`)
-    func displayTVShows(_ tvShows: [TVShow], type: TMDBHomePresenter.`Type`)
+    func displayMovies(_ movies: [Movie], type: TMDBHomePresenter.Popular)
+    func displayTVShows(_ tvShows: [TVShow], type: TMDBHomePresenter.Popular)
     func displayPeople(_ people: [People])
     func displayTrends(_ trends: [Trending])
 }

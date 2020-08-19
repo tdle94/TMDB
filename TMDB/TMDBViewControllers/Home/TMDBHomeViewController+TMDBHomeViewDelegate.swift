@@ -9,7 +9,7 @@
 import Foundation
 
 extension TMDBHomeViewController: TMDBHomeViewDelegate {
-    func displayMovies(_ movies: [Movie], type: TMDBHomePresenter.`Type`) {
+    func displayMovies(_ movies: [Movie], type: TMDBHomePresenter.Popular) {
         var snaphot = self.dataSource.snapshot()
         
         if type == .popularMovie {
@@ -25,7 +25,7 @@ extension TMDBHomeViewController: TMDBHomeViewDelegate {
         self.dataSource.apply(snaphot, animatingDifferences: true)
     }
 
-    func displayTVShows(_ tvShows: [TVShow], type: TMDBHomePresenter.`Type`) {
+    func displayTVShows(_ tvShows: [TVShow], type: TMDBHomePresenter.Popular) {
         var snapshot = self.dataSource.snapshot()
 
         if type == .popularTVShow {

@@ -13,13 +13,13 @@ class TMDBHomePresenter {
 
     weak private var homeViewDelegate: TMDBHomeViewDelegate?
     
-    enum `Type` {
+    enum Popular {
         case popularMovie
         case popularTVShow
         case none
     }
 
-    private lazy var movieHandler: (TMDBHomePresenter.`Type`) -> ((Result<MovieResult, Error>) -> Void) = { type in
+    private lazy var movieHandler: (TMDBHomePresenter.Popular) -> ((Result<MovieResult, Error>) -> Void) = { type in
         return { result in
             switch result {
             case .failure(let error):
@@ -30,7 +30,7 @@ class TMDBHomePresenter {
         }
     }
 
-    private lazy var tvShowHandler: (TMDBHomePresenter.`Type`) -> ((Result<TVShowResult, Error>) -> Void) = { type in
+    private lazy var tvShowHandler: (TMDBHomePresenter.Popular) -> ((Result<TVShowResult, Error>) -> Void) = { type in
         return { result in
             switch result {
             case .failure(let error):
@@ -77,7 +77,7 @@ class TMDBHomePresenter {
     }
     
     // MARK: - trend
-    func getTrend(page: Int, time: TrendingTime) {
+    func getTrend(time: TrendingTime) {
         repository.getTrending(time: time, type: .all, completion: trendingHandler)
     }
     

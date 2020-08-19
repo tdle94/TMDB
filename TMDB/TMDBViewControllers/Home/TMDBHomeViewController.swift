@@ -72,7 +72,7 @@ class TMDBHomeViewController: UIViewController {
         configureLanguageAndRegion()
 
         presenter.getPopularMovie(page: 1)
-        presenter.getTrend(page: 1, time: .today)
+        presenter.getTrend(time: .today)
         presenter.getTopRatedMovie(page: 1)
         presenter.getTopRatedTVShow(page: 1)
     }

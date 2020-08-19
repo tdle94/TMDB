@@ -137,6 +137,14 @@
 		34DB593124C5030E0022A5AB /* TMDBCompleteReleaseDateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DB593024C5030E0022A5AB /* TMDBCompleteReleaseDateTableViewController.swift */; };
 		34E0AD8F24DDDFC800FBBEA5 /* TMDBTVShowEpisodeDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AD8E24DDDFC800FBBEA5 /* TMDBTVShowEpisodeDisplay.swift */; };
 		34E5432424AE87F20057C7F3 /* MovieVideoFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5432324AE87F20057C7F3 /* MovieVideoFixture.swift */; };
+		34EB005C24ED81A100063B5F /* TMDBMovieDetailViewController+TMDBMovieDetailDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB005B24ED81A100063B5F /* TMDBMovieDetailViewController+TMDBMovieDetailDelegate.swift */; };
+		34EB005E24ED81C700063B5F /* TMDBMovieDetailDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB005D24ED81C700063B5F /* TMDBMovieDetailDelegate.swift */; };
+		34EB006024ED81E800063B5F /* TMDBMovieDetailViewController+TMDBPreviewSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB005F24ED81E800063B5F /* TMDBMovieDetailViewController+TMDBPreviewSegmentControl.swift */; };
+		34EB006224ED820500063B5F /* TMDBMovieDetailViewController+UICollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB006124ED820500063B5F /* TMDBMovieDetailViewController+UICollectionViewDelegate.swift */; };
+		34EB006424ED822F00063B5F /* TMDBMovieDetailViewController+UICollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB006324ED822F00063B5F /* TMDBMovieDetailViewController+UICollectionViewDataSource.swift */; };
+		34EB006624ED824800063B5F /* TMDBMovieDetailViewController+TMDBKeywordLayoutDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB006524ED824800063B5F /* TMDBMovieDetailViewController+TMDBKeywordLayoutDelegate.swift */; };
+		34EB006824ED826000063B5F /* TMDBMovieDetailViewController+UITableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB006724ED826000063B5F /* TMDBMovieDetailViewController+UITableViewDataSource.swift */; };
+		34EB006A24ED827500063B5F /* TMDBMovieDetailViewController+UITableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB006924ED827500063B5F /* TMDBMovieDetailViewController+UITableViewDelegate.swift */; };
 		34ED1B8B24C606E6001A7431 /* TMDBTVDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ED1B8A24C606E6001A7431 /* TMDBTVDetailViewController.swift */; };
 		34F6AA5A24A4124E000DC080 /* lineto-circular-black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F6AA5624A41242000DC080 /* lineto-circular-black.ttf */; };
 		34F6AA5B24A4124E000DC080 /* lineto-circular-pro-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F6AA5924A41243000DC080 /* lineto-circular-pro-bold.ttf */; };
@@ -308,6 +316,14 @@
 		34DB593024C5030E0022A5AB /* TMDBCompleteReleaseDateTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBCompleteReleaseDateTableViewController.swift; sourceTree = "<group>"; };
 		34E0AD8E24DDDFC800FBBEA5 /* TMDBTVShowEpisodeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBTVShowEpisodeDisplay.swift; sourceTree = "<group>"; };
 		34E5432324AE87F20057C7F3 /* MovieVideoFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieVideoFixture.swift; sourceTree = "<group>"; };
+		34EB005B24ED81A100063B5F /* TMDBMovieDetailViewController+TMDBMovieDetailDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBMovieDetailViewController+TMDBMovieDetailDelegate.swift"; sourceTree = "<group>"; };
+		34EB005D24ED81C700063B5F /* TMDBMovieDetailDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBMovieDetailDelegate.swift; sourceTree = "<group>"; };
+		34EB005F24ED81E800063B5F /* TMDBMovieDetailViewController+TMDBPreviewSegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBMovieDetailViewController+TMDBPreviewSegmentControl.swift"; sourceTree = "<group>"; };
+		34EB006124ED820500063B5F /* TMDBMovieDetailViewController+UICollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBMovieDetailViewController+UICollectionViewDelegate.swift"; sourceTree = "<group>"; };
+		34EB006324ED822F00063B5F /* TMDBMovieDetailViewController+UICollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBMovieDetailViewController+UICollectionViewDataSource.swift"; sourceTree = "<group>"; };
+		34EB006524ED824800063B5F /* TMDBMovieDetailViewController+TMDBKeywordLayoutDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBMovieDetailViewController+TMDBKeywordLayoutDelegate.swift"; sourceTree = "<group>"; };
+		34EB006724ED826000063B5F /* TMDBMovieDetailViewController+UITableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBMovieDetailViewController+UITableViewDataSource.swift"; sourceTree = "<group>"; };
+		34EB006924ED827500063B5F /* TMDBMovieDetailViewController+UITableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TMDBMovieDetailViewController+UITableViewDelegate.swift"; sourceTree = "<group>"; };
 		34ED1B8A24C606E6001A7431 /* TMDBTVDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBTVDetailViewController.swift; sourceTree = "<group>"; };
 		34F6AA5624A41242000DC080 /* lineto-circular-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lineto-circular-black.ttf"; sourceTree = "<group>"; };
 		34F6AA5724A41242000DC080 /* lineto-circular-pro-medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lineto-circular-pro-medium.ttf"; sourceTree = "<group>"; };
@@ -680,6 +696,14 @@
 			children = (
 				34088D8524A3B5BD00F4F846 /* TMDBMovieDetailViewController.swift */,
 				3488663624A6559000E205FA /* TMDBMovieDetailDisplay.swift */,
+				34EB005B24ED81A100063B5F /* TMDBMovieDetailViewController+TMDBMovieDetailDelegate.swift */,
+				34EB005D24ED81C700063B5F /* TMDBMovieDetailDelegate.swift */,
+				34EB005F24ED81E800063B5F /* TMDBMovieDetailViewController+TMDBPreviewSegmentControl.swift */,
+				34EB006124ED820500063B5F /* TMDBMovieDetailViewController+UICollectionViewDelegate.swift */,
+				34EB006324ED822F00063B5F /* TMDBMovieDetailViewController+UICollectionViewDataSource.swift */,
+				34EB006524ED824800063B5F /* TMDBMovieDetailViewController+TMDBKeywordLayoutDelegate.swift */,
+				34EB006724ED826000063B5F /* TMDBMovieDetailViewController+UITableViewDataSource.swift */,
+				34EB006924ED827500063B5F /* TMDBMovieDetailViewController+UITableViewDelegate.swift */,
 			);
 			path = MovieDetail;
 			sourceTree = "<group>";
@@ -1086,8 +1110,11 @@
 				34722C9B24E063D5008D58F6 /* TMDBCellConfig.swift in Sources */,
 				3495838E249D8E2000B40174 /* People.swift in Sources */,
 				3494A6F524BA887400F098BF /* TMDBSearchResultViewController.swift in Sources */,
+				34EB006024ED81E800063B5F /* TMDBMovieDetailViewController+TMDBPreviewSegmentControl.swift in Sources */,
 				347B8E9D24B2675E00A5E9AB /* TMDBMovieKeywordLayout.swift in Sources */,
 				347456FE24BEB35500487CB0 /* TMDBPersonDetailDisplay.swift in Sources */,
+				34EB005C24ED81A100063B5F /* TMDBMovieDetailViewController+TMDBMovieDetailDelegate.swift in Sources */,
+				34EB006824ED826000063B5F /* TMDBMovieDetailViewController+UITableViewDataSource.swift in Sources */,
 				3494A6F124BA3EE800F098BF /* MultiSearch.swift in Sources */,
 				34CDDFBD24E19379007D5A7B /* TMDBMovieHeaderView.swift in Sources */,
 				34B55C2824C4E57800784C69 /* TMDBImageCell.swift in Sources */,
@@ -1095,6 +1122,7 @@
 				341BA39E24CFAB8E002A915B /* TMDBPeopleRepsoitory.swift in Sources */,
 				348F635B2491C35B00245BE6 /* TMDBMovieService.swift in Sources */,
 				34D6672724DC475F003A73BA /* TVShowEpisodeViewController.swift in Sources */,
+				34EB006424ED822F00063B5F /* TMDBMovieDetailViewController+UICollectionViewDataSource.swift in Sources */,
 				34CB501324903EC800E9B5CF /* Constant.swift in Sources */,
 				3470E7E224A82A1E00579E7B /* Credit.swift in Sources */,
 				3494A6ED24BA2A5300F098BF /* TMDBSearchViewController.swift in Sources */,
@@ -1120,9 +1148,11 @@
 				343CC9E02498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift in Sources */,
 				34C7663A24EB227000BD65DD /* TMDBHomePresenter.swift in Sources */,
 				34A31D19248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift in Sources */,
+				34EB006A24ED827500063B5F /* TMDBMovieDetailViewController+UITableViewDelegate.swift in Sources */,
 				34722CA024E06425008D58F6 /* TMDBNetworkImageCell.swift in Sources */,
 				3488663724A6559000E205FA /* TMDBMovieDetailDisplay.swift in Sources */,
 				34DB593124C5030E0022A5AB /* TMDBCompleteReleaseDateTableViewController.swift in Sources */,
+				34EB006224ED820500063B5F /* TMDBMovieDetailViewController+UICollectionViewDelegate.swift in Sources */,
 				34C7664024EB39F000BD65DD /* TMDBHomeViewController+TMDBPreviewSegmentControl.swift in Sources */,
 				34AD7CDC24AA6674004A7C0A /* Review.swift in Sources */,
 				348F63632491C83000245BE6 /* TMDBServices+TMDBMovieService.swift in Sources */,
@@ -1147,6 +1177,7 @@
 				341BA3A024CFAB8E002A915B /* TMDBMovieRepository.swift in Sources */,
 				3488664124A67B3D00E205FA /* UIImageView+.swift in Sources */,
 				3485FEB72491784E0027DF41 /* TMDBUserSetting.swift in Sources */,
+				34EB006624ED824800063B5F /* TMDBMovieDetailViewController+TMDBKeywordLayoutDelegate.swift in Sources */,
 				34844CD624AC309B00953708 /* Video.swift in Sources */,
 				34D4FAF824B0D7C400CBB4AB /* TMDBVideoPlayerViewController.swift in Sources */,
 				34ED1B8B24C606E6001A7431 /* TMDBTVDetailViewController.swift in Sources */,
@@ -1158,6 +1189,7 @@
 				342E66262489BB33003B5CB8 /* SceneDelegate.swift in Sources */,
 				34C7663E24EB39CF00BD65DD /* TMDBHomeViewController+TMDBHomeViewDelegate.swift in Sources */,
 				3488663F24A67B3D00E205FA /* CollectionViewLayout.swift in Sources */,
+				34EB005E24ED81C700063B5F /* TMDBMovieDetailDelegate.swift in Sources */,
 				34D9567D24D470F300A478E5 /* LanguageCode.swift in Sources */,
 				34995AEF2496832E0088576B /* TMDBURLSessionProtocol.swift in Sources */,
 				348F63652491C85500245BE6 /* TMDBServices+TMDBTVService.swift in Sources */,

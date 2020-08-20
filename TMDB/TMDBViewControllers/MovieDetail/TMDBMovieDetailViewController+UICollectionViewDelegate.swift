@@ -39,7 +39,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
             collectionView == keywordCollectionView,
             let id = movieId
         {
-            let keyword = repository.getMovieKeywords(from: id)
+            let keyword = presenter.repository.getMovieKeywords(from: id)
             coordinator?.navigateToAllMovie(query: DiscoverQuery(page: 1, withKeyword: String(keyword[indexPath.row].id)))
         }
             

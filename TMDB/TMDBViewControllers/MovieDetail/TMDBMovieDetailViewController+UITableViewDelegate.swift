@@ -13,7 +13,7 @@ extension TMDBMovieDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let id = movieId else { return }
         if indexPath.row == 0 {
-            coordinator?.navigateToReview(reivew: repository.getMovieReview(from: id))
+            coordinator?.navigateToReview(reivew: presenter.repository.getMovieReview(from: id))
         } else {
             coordinator?.navigateToCompleteReleaseDates(movieId: id)
         }

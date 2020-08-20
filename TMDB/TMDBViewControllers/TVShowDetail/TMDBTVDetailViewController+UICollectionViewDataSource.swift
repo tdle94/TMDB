@@ -1,5 +1,5 @@
 //
-//  TMDBMovieDetailViewController+UICollectionViewDataSource.swift
+//  TMDBTVDetailViewController+UICollectionViewDataSource.swift
 //  TMDB
 //
 //  Created by Tuyen Le on 8/19/20.
@@ -9,10 +9,9 @@
 import Foundation
 import UIKit
 
-// MARK: -  keyword collectionview datasource
-extension TMDBMovieDetailViewController: UICollectionViewDataSource {
+extension TMDBTVDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let id = movieId else {
+        guard let id = tvId else {
             return UICollectionViewCell()
         }
 
@@ -20,7 +19,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDataSource {
             collectionView == keywordCollectionView,
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBKeywordCell
         {
-            let keyword = presenter.repository.getMovieKeywords(from: id)[indexPath.row]
+            let keyword = presenter.repository.getTVShowKeywords(from: id)[indexPath.row]
             cell.configure(keyword: keyword)
             return cell
         }
@@ -32,7 +31,7 @@ extension TMDBMovieDetailViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let id = movieId else { return 0 }
-        return presenter.repository.getMovieKeywords(from: id).count
+        guard let id = tvId else { return 0 }
+        return presenter.repository.getTVShowKeywords(from: id).count
     }
 }

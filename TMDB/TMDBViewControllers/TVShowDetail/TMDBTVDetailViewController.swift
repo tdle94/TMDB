@@ -13,12 +13,11 @@ import SDWebImage.SDImageCache
 class TMDBTVDetailViewController: UIViewController {
     // MARK: - properties
     var tvId: Int?
-    
-    // MARK: - repository
-    var repository: TMDBRepository = TMDBRepository.share
 
-    // MARK: - display
-    var tvDetailDisplay: TMDBTVDetailDisplay = TMDBTVDetailDisplay()
+    // MARK: - presenter
+    let userSetting: TMDBUserSetting = TMDBUserSetting()
+
+    lazy var presenter: TMDBTVShowDetailPresenter = TMDBTVShowDetailPresenter(delegate: self)
 
     // MARK: - coordinate
     var coordinate: MainCoordinator?
@@ -194,207 +193,22 @@ class TMDBTVDetailViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
-        tvDetailDisplay.tvDetailVC = self
         view.addSubview(loadingView)
-        getTVShowDetail()
+        presenter.getTVShowDetail(tvShowId: tvId!)
     }
 
     override func viewDidLayoutSubviews() {
         tvShowSeaonTableViewHeightConstraint.constant = tvShowSeasonTableView.contentSize.height
     }
 
-    // MARK: - service
+    // MARK: - action
 
     @objc func refreshTVShowDetail() {
-        guard let id = tvId else { return }
-        backdropImageCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
-        repository.refreshTVShow(id: id) { result in
-            self.scrollView.refreshControl?.endRefreshing()
-            switch result {
-            case .success(let tvShow):
-                self.tvDetailDisplay.displayTVShowDetail(tvShow)
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            }
-        }
-    }
-
-    func getTVShowDetail() {
-        guard let id = tvId else { return }
-        let group = DispatchGroup()
-        group.enter()
-
-        repository.getTVShowDetail(from: id) { result in
-            self.scrollView.refreshControl?.endRefreshing()
-            switch result {
-            case .success(let tvShow):
-                group.leave()
-                self.tvDetailDisplay.displayTVShowDetail(tvShow)
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            }
-        }
-    
-        group.notify(queue: .main) {
-            self.repository.getTVShowImages(from: id) { result in
-                switch result {
-                case .failure(let error):
-                    self.loadingView.showError(true)
-                    debugPrint(error.localizedDescription)
-                case .success(let imageResult):
-                    self.loadingView.removeFromSuperview()
-                    self.tvDetailDisplay.displayBackdropImages(imageResult)
-                }
-            }
-        }
-    }
-
-    func getSimilarMovies() {
-        guard let id = tvId else { return }
-        repository.getSimilarTVShows(from: id, page: 1) { result in
-            switch result {
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            case .success(let tvShowResult):
-                self.tvDetailDisplay.displayTVShow(Array(tvShowResult.onTV))
-            }
-        }
-    }
-
-    func getRecommendMovies() {
-        guard let id = tvId else { return }
-        repository.getRecommendTVShows(from: id, page: 1) { result in
-            switch result {
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            case .success(let tvShowResult):
-                self.tvDetailDisplay.displayTVShow(Array(tvShowResult.onTV))
-            }
-        }
-    }
-
-    func getTVShowCast() {
-        guard let id = tvId else { return }
-        let cast = repository.getTVShowCast(from: id)
-        tvDetailDisplay.displayCast(cast)
-    }
-
-    func getTVShowCrew() {
-        guard let id = tvId else { return }
-        let crew = repository.getTVShowCrew(from: id)
-        tvDetailDisplay.displayCrew(crew)
+        presenter.refreshTVShowDetail(tvShowId: tvId!)
     }
 
     @IBAction func reviewButtonTap() {
-        guard let id = tvId else { return }
-        let reviews = repository.getTVShowReviews(from: id)
+        let reviews = presenter.repository.getTVShowReviews(from: tvId!)
         coordinate?.navigateToReview(reivew: reviews)
-    }
-}
-
-extension TMDBTVDetailViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
-        if selected == NSLocalizedString("Similar", comment: "") {
-            getSimilarMovies()
-        } else if selected == NSLocalizedString("Recommend", comment: "") {
-            getRecommendMovies()
-        } else if selected == NSLocalizedString("Cast", comment: "") {
-            getTVShowCast()
-        } else if selected == NSLocalizedString("Crew", comment: "") {
-            getTVShowCrew()
-        }
-    }
-}
-
-extension TMDBTVDetailViewController: TMDBKeywordLayoutDelegate {
-    // dynamic width base on text
-    func tagCellLayoutSize(layout: TMDBKeywordLayout, at index: Int) -> CGSize {
-        if let id = tvId {
-            let keyword = repository.getTVShowKeywords(from: id)[index]
-            let label = UILabel()
-            label.text = keyword.name
-            return label.intrinsicContentSize
-        }
-        return .zero
-    }
-}
-
-extension TMDBTVDetailViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let id = tvId else {
-            return UICollectionViewCell()
-        }
-
-        if
-            collectionView == keywordCollectionView,
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.keywordCell, for: indexPath) as? TMDBKeywordCell
-        {
-            let keyword = repository.getTVShowKeywords(from: id)[indexPath.row]
-            cell.configure(keyword: keyword)
-            return cell
-        }
-        return UICollectionViewCell()
-    }
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let id = tvId else { return 0 }
-        return repository.getTVShowKeywords(from: id).count
-    }
-}
-
-extension TMDBTVDetailViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if
-            collectionView == matchingTVShowCollectionView,
-            let id = (matchingTVShowDataSource.snapshot().itemIdentifiers[indexPath.row] as? TVShow)?.id {
-
-            coordinate?.navigateToTVShowDetail(tvId: id)
-        }
-
-        if
-            collectionView == tvShowCreditCollectionView,
-            let id = (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (tvShowCreditDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
-        {
-            coordinate?.navigateToPersonDetail(id: id)
-        }
-
-        if
-            collectionView == videoCollectionView,
-            let video = tvShowVideoDataSource.itemIdentifier(for: indexPath) as? Video,
-            let url = TMDBUserSetting().getYoutubeVideoURL(key: video.key) {
-
-                coordinate?.navigateToVideoPlayer(with: url)
-        }
-        
-        if
-            collectionView == creatorCollectionView,
-            let id = (tvShowCreatorDataSrouce.itemIdentifier(for: indexPath) as? CreatedBy)?.id {
-            
-            coordinate?.navigateToPersonDetail(id: id)
-        }
-
-        if collectionView == keywordCollectionView, let id = tvId {
-            let keywordId = repository.getTVShowKeywords(from: id)[indexPath.row].id
-            coordinate?.navigateToAllTVShow(query: DiscoverQuery(page: 1, withKeyword: String(keywordId)))
-        }
-    }
-}
-
-extension TMDBTVDetailViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let id = tvId else { return }
-        if
-            tableView == tvShowSeasonTableView,
-            let seasonNumber = (tvShowSeasonDataSource.snapshot().itemIdentifiers(inSection: .season)[indexPath.row] as? Season)?.number {
-            coordinate?.navigateToTVShowSeasonDetail(tvId: id, seasonNumber: seasonNumber)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
     }
 }

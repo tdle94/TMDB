@@ -21,10 +21,10 @@ extension TMDBMovieDetailViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailInfoCell", for: indexPath)
         cell.indentationLevel = 1
         if indexPath.row == 0 {
-            let reviewCount = repository.getMovieReview(from: id).count
+            let reviewCount = presenter.repository.getMovieReview(from: id).count
             cell.textLabel?.text = NSLocalizedString("Review", comment: "") + " (\(reviewCount))"
         } else {
-            let releaseDateCount = repository.getMovieReleaseDates(from: id)?.results.count ?? 0
+            let releaseDateCount = presenter.repository.getMovieReleaseDates(from: id)?.results.count ?? 0
             cell.textLabel?.text = NSLocalizedString("Release Date", comment: "") + " (\(releaseDateCount))"
         }
         return cell

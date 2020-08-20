@@ -11,7 +11,7 @@ import UIKit
 
 class TMDBMovieDetailPresenter {
 
-    private let repository: TMDBRepository = TMDBRepository.share
+    let repository: TMDBRepository = TMDBRepository.share
 
     private weak var movieDetailDelegate: TMDBMovieDetailDelegate?
 

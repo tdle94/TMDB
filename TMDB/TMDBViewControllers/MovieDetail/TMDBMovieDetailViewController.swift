@@ -32,11 +32,9 @@ class TMDBMovieDetailViewController: UIViewController {
     // MARK: - presenter
     lazy var presenter: TMDBMovieDetailPresenter = TMDBMovieDetailPresenter(delegate: self)
 
-    // MARK: - repository
+    // MARK: - setting
 
     let userSetting: TMDBUserSetting = TMDBUserSetting()
-
-    var repository: TMDBRepository = TMDBRepository.share
 
     // MARK: - ui views
     @IBOutlet weak var scrollView: UIScrollView! {

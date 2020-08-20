@@ -16,7 +16,7 @@ extension TMDBMovieDetailViewController: TMDBKeywordLayoutDelegate {
         guard let id = movieId else {
             return .zero
         }
-        let keyword = repository.getMovieKeywords(from: id)[index]
+        let keyword = presenter.repository.getMovieKeywords(from: id)[index]
         let label = UILabel()
         label.text = keyword.name
         return label.intrinsicContentSize

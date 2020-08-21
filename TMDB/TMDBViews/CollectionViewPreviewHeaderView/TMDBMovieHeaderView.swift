@@ -16,7 +16,7 @@ class TMDBMovieHeaderView: TMDBPreviewHeaderView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        label.text = NSLocalizedString("Movie", comment: "")
+        label.text = NSLocalizedString("Movies", comment: "")
         segmentControl.insertSegment(withTitle: NSLocalizedString("Top Rated", comment: ""), at: 0, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("Now Playing", comment: ""), at: 1, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("Upcoming", comment: ""), at: 2, animated: true)

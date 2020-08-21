@@ -73,13 +73,16 @@ class TMDBSearchViewController: UIViewController {
 extension TMDBSearchViewController: TMDBSearchProtocol {
     func multiSearch(query: String?, newSearch: Bool) {
         guard let query = query ?? searchController.searchBar.text else { return }
+        if newSearch {
+            searchResultViewController.removeSearchResult()
+        }
         repository.multiSearch(query: query, page: page) { result in
             switch result {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             case .success(let multiSearchResult):
                 self.page += 1
-                self.searchResultViewController.updateSnapshot(item: multiSearchResult.results, newSearch: newSearch)
+                self.searchResultViewController.updateSnapshot(item: multiSearchResult.results)
             }
         }
     }

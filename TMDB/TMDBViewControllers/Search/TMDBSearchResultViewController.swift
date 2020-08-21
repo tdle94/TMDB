@@ -13,6 +13,7 @@ import SDWebImage
 class TMDBSearchResultViewController: UIViewController {
     weak var tmdbSearchProtocol: TMDBSearchProtocol?
 
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     var searchResultDataSource: TMDBTableDataSource!
 
     @IBOutlet weak var loadMoreButton: UIButton! {
@@ -33,17 +34,26 @@ class TMDBSearchResultViewController: UIViewController {
         }
     }
     
-    func updateSnapshot(item: [MultiSearch], newSearch: Bool) {
+    func updateSnapshot(item: [MultiSearch]) {
         loadMoreButton.isHidden = false
+        loadingIndicator.stopAnimating()
+
         var snapshot = searchResultDataSource.snapshot()
-        if newSearch {
-            snapshot.deleteItems(snapshot.itemIdentifiers)
-        }
         snapshot.appendItems(item)
         searchResultDataSource.apply(snapshot, animatingDifferences: true)
     }
+
+    func removeSearchResult() {
+        loadMoreButton.isHidden = true
+        loadingIndicator.startAnimating()
+        var snapshot = searchResultDataSource.snapshot()
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .searchResult))
+        searchResultDataSource.apply(snapshot, animatingDifferences: true)
+    }
+
     @IBAction func loadMoreButtonTap() {
         loadMoreButton.isHidden = true
+        loadingIndicator.startAnimating()
         tmdbSearchProtocol?.multiSearch(query: nil, newSearch: false)
     }
 }

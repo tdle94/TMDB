@@ -1459,12 +1459,18 @@
                                                 <action selector="loadMoreButtonTap" destination="IJR-ES-F32" eventType="touchUpInside" id="lz2-my-sqm"/>
                                             </connections>
                                         </button>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="zHa-Qp-xVm">
+                                            <rect key="frame" x="197" y="12" width="20" height="20"/>
+                                            <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </activityIndicatorView>
                                     </subviews>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstItem="Ye3-GO-b9o" firstAttribute="top" secondItem="xPB-P5-Cah" secondAttribute="top" id="4CB-nq-d1l"/>
+                                        <constraint firstItem="zHa-Qp-xVm" firstAttribute="centerX" secondItem="xPB-P5-Cah" secondAttribute="centerX" id="9oh-dU-f1F"/>
                                         <constraint firstAttribute="bottom" secondItem="Ye3-GO-b9o" secondAttribute="bottom" id="DA7-kO-b88"/>
                                         <constraint firstItem="Ye3-GO-b9o" firstAttribute="leading" secondItem="xPB-P5-Cah" secondAttribute="leading" id="GNh-gF-a8P"/>
+                                        <constraint firstItem="zHa-Qp-xVm" firstAttribute="centerY" secondItem="xPB-P5-Cah" secondAttribute="centerY" id="Lbc-hH-iWj"/>
                                         <constraint firstAttribute="trailing" secondItem="Ye3-GO-b9o" secondAttribute="trailing" id="cQt-Cs-GpH"/>
                                     </constraints>
                                 </view>
@@ -1512,6 +1518,7 @@
                     <navigationItem key="navigationItem" id="BSy-Ls-iMB"/>
                     <connections>
                         <outlet property="loadMoreButton" destination="Ye3-GO-b9o" id="pOM-h0-feq"/>
+                        <outlet property="loadingIndicator" destination="zHa-Qp-xVm" id="9pT-wZ-SQK"/>
                         <outlet property="searchResultTableView" destination="akH-Zy-qaU" id="n7J-UB-2DH"/>
                     </connections>
                 </viewController>

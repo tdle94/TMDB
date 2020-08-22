@@ -7,3 +7,10 @@
 //
 
 import Foundation
+
+protocol TMDBTVShowEpisodeDelegate: NSObjectProtocol {
+    func displayEpisode(episode: Episode)
+    func displayCasts(casts: [Cast])
+    func displayCrews(crews: [Crew])
+    func displayImages(images: [Images])
+}

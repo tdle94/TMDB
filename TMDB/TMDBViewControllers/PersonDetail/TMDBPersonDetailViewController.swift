@@ -16,11 +16,10 @@ class TMDBPersonDetailViewController: UIViewController {
     // MARK: - coordinate
     var coordinate: MainCoordinator?
 
-    // MARK: - display
-    var personDetail: TMDBPersonDetailDisplay = TMDBPersonDetailDisplay()
+    // MARK: - presentor
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
-    // MARK: - repository
-    var repository: TMDBRepository = TMDBRepository.share
+    lazy var presenter: TMDBPersonDetailPresenter = TMDBPersonDetailPresenter(delegate: self)
 
     // MARK: - data source
     var appearInDataSource: TMDBCollectionDataSource!
@@ -100,55 +99,16 @@ class TMDBPersonDetailViewController: UIViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
-        personDetail.personDetailVC = self
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
 
         view.addSubview(loadingView)
-        // get person detail
-        getPersonDetail()
+        presenter.getPersonDetail(id: personId!)
     }
     
     override func didReceiveMemoryWarning() {
         SDImageCache.shared.clearMemory()
         SDImageCache.shared.clearDisk()
-    }
-
-    // MARK: - services
-    func getPersonDetail() {
-        guard let id = personId else { return }
-        repository.getPersonDetail(id: id) { result in
-            switch result {
-            case .failure(let error):
-                self.loadingView.showError(true)
-                debugPrint(error.localizedDescription)
-            case .success(let person):
-                self.loadingView.removeFromSuperview()
-                self.personDetail.displayPersonDetail(person)
-            }
-        }
-    }
-}
-
-extension TMDBPersonDetailViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
-        guard let id = personId else { return }
-
-        if selected == NSLocalizedString("Movies", comment: "") {
-            personDetail.displayMovieAppearIn(repository.getMovieCredits(from: id))
-        } else if selected == NSLocalizedString("TV Shows", comment: "") {
-            personDetail.displayTVShowAppearIn(repository.getTVCredits(from: id))
-        }
-    }
-}
-
-extension TMDBPersonDetailViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let item = appearInDataSource.itemIdentifier(for: indexPath) as? Movie {
-            coordinate?.navigateToMovieDetail(id: item.id)
-        } else if let item = appearInDataSource.itemIdentifier(for: indexPath) as? TVShow {
-            coordinate?.navigateToTVShowDetail(tvId: item.id)
-        }
     }
 }

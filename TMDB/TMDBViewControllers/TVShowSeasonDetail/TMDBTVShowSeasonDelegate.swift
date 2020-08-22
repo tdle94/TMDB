@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol TMDBTVShowSeasonDelegate {
+protocol TMDBTVShowSeasonDelegate: NSObjectProtocol {
     func displaySeason(season: Season)
     func displayBackdropImage(backdropImages: [Images])
 }

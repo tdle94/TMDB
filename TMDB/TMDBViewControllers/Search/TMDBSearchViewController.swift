@@ -33,7 +33,7 @@ class TMDBSearchViewController: UIViewController {
         search.hidesNavigationBarDuringPresentation = false
         search.searchBar.backgroundColor = Constant.Color.backgroundColor
         search.searchBar.tintColor = .black
-        search.searchBar.placeholder = NSLocalizedString("Search", comment: "")
+        search.searchBar.placeholder = NSLocalizedString("Search Bar", comment: "")
         return search
     }()
 

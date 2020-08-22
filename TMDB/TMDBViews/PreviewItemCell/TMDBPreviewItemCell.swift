@@ -76,7 +76,7 @@ extension TMDBPreviewItemCell: TMDBCellConfig {
             if let path = item.logoPath {
                 getImage(from: path)
             } else {
-                stackViewTopConstraint.constant = -90
+                stackViewTopConstraint.constant = -80
                 title.text = item.name
                 imageView.isHidden = true
             }

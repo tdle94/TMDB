@@ -8,18 +8,10 @@
 
 import Foundation
 
-protocol TMDBTVShowDetailDelegate {
-    func displayTVShowDetail(tvShow: TVShow)
-    func displayTVShows(tvShows: [TVShow])
-    func displayCasts(casts: [Cast])
-    func displayCrews(crews: [Crew])
-    func displayBackdropImage(images: [Images])
-}
-
 class TMDBTVShowDetailPresenter {
     var repository: TMDBRepository = TMDBRepository.share
     
-    private var tvShowDetailDelegate: TMDBTVShowDetailDelegate?
+    private weak var tvShowDetailDelegate: TMDBTVShowDetailDelegate?
     
     init(delegate: TMDBTVShowDetailDelegate) {
         tvShowDetailDelegate = delegate

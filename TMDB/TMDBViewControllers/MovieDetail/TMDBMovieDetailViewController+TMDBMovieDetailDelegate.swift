@@ -257,9 +257,9 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         }
         
         if creditHeader?.segmentControl.numberOfSegments == 2 || credit.crew.isEmpty {
-            displayCast(Array(credit.cast), reloadSection: false)
+            displayMovieCasts(Array(credit.cast))
         } else if creditHeader?.segmentControl.numberOfSegments == 1 {
-            displayCrew(Array(credit.crew), reloadSection: false)
+            displayMovieCrews(Array(credit.crew))
         }
 
         creditHeader?.segmentControl.selectedSegmentIndex = 0
@@ -281,28 +281,6 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         snapshot.appendItems(videos)
         videoMovieDataSource.apply(snapshot, animatingDifferences: true)
         videoCollectionViewHeightConstraint.constant = videoCollectionView.collectionViewLayout.collectionViewContentSize.height/2
-    }
-
-    func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
-        var snapshot = creditMovieDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
-        snapshot.appendItems(casts, toSection: .credit)
-        creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        if casts.count == 1, reloadSection {
-            snapshot.reloadSections([.credit])
-        }
-        creditMovieDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
-        var snapshot = creditMovieDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
-        snapshot.appendItems(crews, toSection: .credit)
-        creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
-        if crews.count == 1, reloadSection {
-            snapshot.reloadSections([.credit])
-        }
-        creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
 
     func displayMoreMovie(movie: [Movie]) {

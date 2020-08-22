@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+protocol TMDBPersonDetailDelegate: NSObjectProtocol {
+    func displayPerson(person: People)
+    func displayMovieCredit(movies: [Movie])
+    func displayTVShowCredit(tvShows: [TVShow])
+}

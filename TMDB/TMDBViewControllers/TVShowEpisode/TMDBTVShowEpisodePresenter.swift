@@ -9,6 +9,15 @@
 import Foundation
 import UIKit
 
+protocol TMDBTVSHowEpisodeDelegate {
+    func 
+}
+
+
+class TMDBTVShowEpisodePresenter {
+    
+}
+
 class TMDBTVShowEpisodeDetailDisplay {
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 

@@ -21,7 +21,7 @@ class TMDBSearchViewController: UIViewController {
 
     var coordinate: MainCoordinator?
     
-    var page: Int = 1
+    var page: Int = 0
     
     let searchResultViewController = UIStoryboard(name: "Main",
                                                   bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbSearchResultViewController) as! TMDBSearchResultViewController
@@ -82,7 +82,7 @@ extension TMDBSearchViewController: TMDBSearchProtocol {
                 debugPrint(error.localizedDescription)
             case .success(let multiSearchResult):
                 self.page += 1
-                self.searchResultViewController.updateSnapshot(item: multiSearchResult.results)
+                self.searchResultViewController.updateSnapshot(multiSearchResult: multiSearchResult)
             }
         }
     }

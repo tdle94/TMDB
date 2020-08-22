@@ -18,11 +18,11 @@ class TMDBTVShowSeasonViewController: UIViewController {
     // MARK: - coordinate
     var coordinate: MainCoordinator?
 
-    // MARK: - repository
-    var repository: TMDBRepository = TMDBRepository.share
+    // MARK: - user setting
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
-    // MARK: - display
-    var tvShowSeasonDisplay: TMDBTVShowSeasonDisplay = TMDBTVShowSeasonDisplay()
+    // MARK: - presenter
+    lazy var presenter: TMDBTVShowSeasonPresenter = TMDBTVShowSeasonPresenter(delegate: self)
 
     // MARK: - data source
     var episodeDataSource: TMDBTableDataSource!
@@ -124,9 +124,9 @@ class TMDBTVShowSeasonViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
-        tvShowSeasonDisplay.tvShowSeasonVC = self
         contentView.bringSubviewToFront(posterImageView)
-        getSeason()
+        view.addSubview(loadingView)
+        presenter.getSeasonDetail(tvId: tvId!, seasonNumber: seasonNumber!)
     }
     
     override func viewDidLayoutSubviews() {
@@ -137,57 +137,5 @@ class TMDBTVShowSeasonViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         SDImageCache.shared.clearMemory()
         SDImageCache.shared.clearDisk()
-    }
-    
-    // MARK: - service
-    func getSeason() {
-        guard let id = tvId, let number = seasonNumber else { return }
-        let group = DispatchGroup()
-        view.addSubview(loadingView)
-        group.enter()
-        repository.getTVShowSeasonDetail(from: id, seasonNumber: number) { result in
-            group.leave()
-            switch result {
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-                self.loadingView.showError(true)
-            case .success(let season):
-                self.loadingView.removeFromSuperview()
-                self.tvShowSeasonDisplay.displaySeason(season)
-            }
-        }
-
-        group.notify(queue: .main) {
-            self.repository.getTVShowSeasonImage(from: id, seasonNumber: number) { result in
-                switch result {
-                case .failure(let error):
-                    debugPrint(error.localizedDescription)
-                case .success(let imageResult):
-                    self.tvShowSeasonDisplay.displayBackdropImage(imageResult)
-                }
-            }
-        }
-    }
-}
-
-extension TMDBTVShowSeasonViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard
-            let tvId = tvId,
-            let episode = episodeDataSource.itemIdentifier(for: indexPath) as? Episode else { return }
-
-        coordinate?.navigateToTVShowEpisodeDetail(tvId: tvId, seasonNumber: episode.seasonNumber, episodeNumber: episode.episodeNumber)
-    }
-}
-
-extension TMDBTVShowSeasonViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == creditCollectionView, let cast = creditDataSource.itemIdentifier(for: indexPath) as? Cast {
-            coordinate?.navigateToPersonDetail(id: cast.id)
-        }
     }
 }

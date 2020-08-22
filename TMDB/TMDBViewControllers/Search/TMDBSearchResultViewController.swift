@@ -34,12 +34,14 @@ class TMDBSearchResultViewController: UIViewController {
         }
     }
     
-    func updateSnapshot(item: [MultiSearch]) {
-        loadMoreButton.isHidden = false
+    func updateSnapshot(multiSearchResult: MultiSearchResult) {
+        if multiSearchResult.totalResults != multiSearchResult.results.count + searchResultDataSource.snapshot().itemIdentifiers.count {
+            loadMoreButton.isHidden = false
+        }
         loadingIndicator.stopAnimating()
 
         var snapshot = searchResultDataSource.snapshot()
-        snapshot.appendItems(item)
+        snapshot.appendItems(multiSearchResult.results)
         searchResultDataSource.apply(snapshot, animatingDifferences: true)
     }
 

@@ -9,12 +9,6 @@
 import Foundation
 import UIKit
 
-protocol TMDBPersonDetailDelegate: NSObjectProtocol {
-    func displayPerson(person: People)
-    func displayMovieCredit(movies: [Movie])
-    func displayTVShowCredit(tvShows: [TVShow])
-}
-
 class TMDBPersonDetailPresenter {
     let repository: TMDBRepository = TMDBRepository.share
 

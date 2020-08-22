@@ -15,22 +15,22 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     var tvId: Int?
     var seasonNumber: Int?
     var episodeNumber: Int?
-    
+
     // MARK: - coordinator
     var coordinate: MainCoordinator?
 
-    // MARK: - repository
-    var repository: TMDBRepository = TMDBRepository.share
+    // MARK: - presentor
+    lazy var presenter: TMDBTVShowEpisodePresenter = TMDBTVShowEpisodePresenter(delegate: self)
 
     // MARK: - display
 
-    var episodeDetailDisplay: TMDBTVShowEpisodeDetailDisplay = TMDBTVShowEpisodeDetailDisplay()
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
     // MARK: - data source
     var creditDataSource: TMDBCollectionDataSource!
-    
+
     var stillImageDataSource: TMDBCollectionDataSource!
-    
+
     var videoDataSource: TMDBCollectionDataSource!
 
     // MARK: - ui
@@ -93,6 +93,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
             creditDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
+
     // MARK: - override
 
     override func viewDidLoad() {
@@ -100,86 +101,13 @@ class TMDBTVShowEpisodeViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
-        episodeDetailDisplay.tvShowEpisodeVC = self
+        view.addSubview(loadingView)
         contentView.bringSubviewToFront(posterImageView)
-        getTVShowEpisode()
+        presenter.getEpisodeDetail(tvShowId: tvId!, seasonNumber: seasonNumber!, episodeNumber: episodeNumber!)
     }
-    
+
     override func didReceiveMemoryWarning() {
         SDImageCache.shared.clearMemory()
         SDImageCache.shared.clearDisk()
-    }
-    
-    // MARK: - service
-    func getTVShowEpisode() {
-        guard
-            let tvId = tvId,
-            let seasonNumber = seasonNumber,
-            let episodeNumber = episodeNumber else { return }
-
-        let group = DispatchGroup()
-        group.enter()
-        view.addSubview(loadingView)
-        repository.getTVShowEpisode(from: tvId, seasonNumber: seasonNumber, episodeNumber: episodeNumber) { result in
-            self.loadingView.removeFromSuperview()
-            group.leave()
-            switch result {
-            case .failure(let error):
-                self.loadingView.showError(true)
-                debugPrint(error.localizedDescription)
-            case .success(let episode):
-                self.episodeDetailDisplay.displayEpisodeDetail(episode)
-            }
-        }
-        
-        group.notify(queue: .main) {
-            self.repository.getTVShowEpisodeImage(from: tvId, seasonNumber: seasonNumber, episodeNumber: episodeNumber) { result in
-                switch result {
-                case .failure(let error):
-                    debugPrint(error.localizedDescription)
-                case .success(let imageResult):
-                    self.episodeDetailDisplay.displayStillImages(imageResult)
-                }
-            }
-        }
-    }
-    
-    func getEpisodeCast() {
-        guard let tvId = tvId, let seasonNumber = seasonNumber, let episodeNumber = episodeNumber else { return }
-        let casts = repository.getTVShowEpisodeCast(from: tvId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)
-        episodeDetailDisplay.displayCast(casts)
-    }
-    
-    func getEpisodeCrew() {
-        guard let tvId = tvId, let seasonNumber = seasonNumber, let episodeNumber = episodeNumber else { return }
-        let crews = repository.getTVShowEpisodeCrew(from: tvId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)
-        episodeDetailDisplay.displayCrew(crews)
-    }
-    
-    func getEpisodeGuestStar() {
-        guard let tvId = tvId, let seasonNumber = seasonNumber, let episodeNumber = episodeNumber else { return }
-        let guestStar = repository.getTVShowEpisodeGuestStar(from: tvId, seasonNumber: seasonNumber, episodeNumber: episodeNumber)
-        episodeDetailDisplay.displayCast(guestStar)
-    }
-}
-
-extension TMDBTVShowEpisodeViewController: TMDBPreviewSegmentControl {
-    func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
-        if selected == NSLocalizedString("Cast", comment: "") {
-            getEpisodeCast()
-        } else if selected == NSLocalizedString("Crew", comment: "") {
-            getEpisodeCrew()
-        } else if selected == NSLocalizedString("Guest Star", comment: "") {
-            getEpisodeGuestStar()
-        }
-    }
-}
-
-extension TMDBTVShowEpisodeViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let object = creditDataSource.itemIdentifier(for: indexPath)
-        if collectionView == creditCollectionView, let id = (object as? Cast)?.id ?? (object as? Crew)?.id {
-            coordinate?.navigateToPersonDetail(id: id)
-        }
     }
 }

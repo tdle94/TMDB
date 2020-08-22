@@ -12,7 +12,7 @@ import UIKit
 class TMDBTVShowSeasonPresenter {
     var repository: TMDBRepository = TMDBRepository.share
 
-    private var tvShowSeasonDetailDelegate: TMDBTVShowSeasonDelegate?
+    private weak var tvShowSeasonDetailDelegate: TMDBTVShowSeasonDelegate?
 
     init(delegate: TMDBTVShowSeasonDelegate) {
         tvShowSeasonDetailDelegate = delegate

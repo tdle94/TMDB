@@ -145,36 +145,14 @@ extension TMDBTVDetailViewController: TMDBTVShowDetailDelegate {
         }
         
         if creditHeaderView?.segmentControl.numberOfSegments == 2 || crew.isEmpty {
-            displayCast(Array(cast), reloadSection: false)
+            displayCasts(casts: Array(cast))
         } else if creditHeaderView?.segmentControl.numberOfSegments == 1 {
-            displayCrew(Array(crew), reloadSection: false)
+            displayCrews(crews: Array(crew))
         }
         
         creditHeaderView?.segmentControl.selectedSegmentIndex = 0
         tvShowCreditCollectionView.collectionViewLayout.invalidateLayout()
         tvShowCreditCollectionViewHeightConstraint.constant = tvShowCreditCollectionView.collectionViewLayout.collectionViewContentSize.height
-    }
-    
-    func displayCast(_ casts: [Cast], reloadSection: Bool = true) {
-        var snapshot = tvShowCreditDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
-        snapshot.appendItems(casts)
-        tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
-        if casts.count == 1, reloadSection {
-            snapshot.reloadSections([.credit])
-        }
-        tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
-    }
-
-    func displayCrew(_ crews: [Crew], reloadSection: Bool = true) {
-        var snapshot = tvShowCreditDataSource.snapshot()
-        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
-        snapshot.appendItems(crews)
-        tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
-        if crews.count == 1, reloadSection {
-            snapshot.reloadSections([.credit])
-        }
-        tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
     
     func displayMoreTVShows(tvShow: TVShow) {

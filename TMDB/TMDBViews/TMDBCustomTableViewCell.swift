@@ -23,6 +23,7 @@ class TMDBCustomTableViewCell: UITableViewCell {
         label.text = ""
         subTitle.text = ""
         _imageView.image = noImage
+        _imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -61,6 +62,7 @@ extension TMDBCustomTableViewCell: TMDBCellConfig {
             _imageView.sd_setImage(with: userSetting.getImageURL(from: path))
         } else {
             _imageView.image = noImage
+            _imageView.sd_imageIndicator = nil
         }
     }
 }

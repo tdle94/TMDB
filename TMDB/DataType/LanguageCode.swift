@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct LanguageCode: Decodable {
+struct LanguageCode: Decodable, Hashable {
     var iso6391: String
     var name: String
 

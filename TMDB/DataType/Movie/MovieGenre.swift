@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+struct MovieGenre: Decodable {
+    let genres: [Genre]
+}

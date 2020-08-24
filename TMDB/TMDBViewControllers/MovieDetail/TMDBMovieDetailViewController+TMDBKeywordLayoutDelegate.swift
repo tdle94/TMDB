@@ -13,10 +13,7 @@ import UIKit
 extension TMDBMovieDetailViewController: TMDBKeywordLayoutDelegate {
     // dynamic width base on text
     func tagCellLayoutSize(layout: TMDBKeywordLayout, at index: Int) -> CGSize {
-        guard let id = movieId else {
-            return .zero
-        }
-        let keyword = presenter.repository.getMovieKeywords(from: id)[index]
+        let keyword = presenter.repository.getMovieKeywords(from: movieId!)[index]
         let label = UILabel()
         label.text = keyword.name
         return label.intrinsicContentSize

@@ -12,12 +12,9 @@ import UIKit
 extension TMDBTVDetailViewController: TMDBKeywordLayoutDelegate {
     // dynamic width base on text
     func tagCellLayoutSize(layout: TMDBKeywordLayout, at index: Int) -> CGSize {
-        if let id = tvId {
-            let keyword = presenter.repository.getTVShowKeywords(from: id)[index]
-            let label = UILabel()
-            label.text = keyword.name
-            return label.intrinsicContentSize
-        }
-        return .zero
+        let keyword = presenter.repository.getTVShowKeywords(from: tvId!)[index]
+        let label = UILabel()
+        label.text = keyword.name
+        return label.intrinsicContentSize
     }
 }

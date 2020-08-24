@@ -209,11 +209,19 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getAllMovieURLRequest(query: DiscoverQuery) -> URLRequest {
         var queryItems = [
-            URLQueryItem(name: "page", value: String(query.page))
+            URLQueryItem(name: "page", value: String(query.page)),
         ]
 
         if let keyword = query.withKeyword {
             queryItems.append(URLQueryItem(name: "with_keywords", value: keyword))
+        }
+        
+        if let language = query.withOriginalLanguage {
+            queryItems.append(URLQueryItem(name: "with_original_language", value: language))
+        }
+        
+        if let genres = query.withGenres {
+            queryItems.append(URLQueryItem(name: "with_genres", value: genres))
         }
 
         return buildURLRequest(path: "/3/discover/movie", queryItems: queryItems)

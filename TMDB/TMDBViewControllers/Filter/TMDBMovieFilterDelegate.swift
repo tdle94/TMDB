@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TMDBMovieFilterDelegate: NSObjectProtocol {
-    func filter(movieQuery: DiscoverQuery)
+    func filter(query: DiscoverQuery)
 }

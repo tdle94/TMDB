@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 class TMDBMovieFilterViewController: UITableViewController {
+    // MARK: - property
+    var languageSelected: String?
+
     // MARK: - filter movie delegate
     weak var delegate: TMDBMovieFilterDelegate?
 
@@ -30,15 +33,16 @@ class TMDBMovieFilterViewController: UITableViewController {
 
     @IBOutlet weak var genreCollectionView: UICollectionView! {
         didSet {
-            let genres = movieQuery?.withGenres?.components(separatedBy: ",")
             genreCollectionView.allowsMultipleSelection = true
-            genreCollectionView.register(TMDBGenreCell.self, forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            genreCollectionView.register(TMDBFilterCell.self, forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             genreDataSource = UICollectionViewDiffableDataSource(collectionView: genreCollectionView) { collectionView, indexPath, genre in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBGenreCell
+                let genres = self.movieQuery?.withGenres?.components(separatedBy: ",")
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBFilterCell
                 let keyword = Keyword()
                 keyword.name = genre.name
                 if genres?.contains(String(genre.id)) ?? false {
-                    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                    cell?.isSelected = true
                 }
                 cell?.configure(keyword: keyword)
                 return cell
@@ -52,14 +56,16 @@ class TMDBMovieFilterViewController: UITableViewController {
 
     @IBOutlet weak var languageCollectionView: UICollectionView! {
         didSet {
-            languageCollectionView.register(TMDBGenreCell.self, forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            languageCollectionView.register(TMDBFilterCell.self, forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             languageDataSource = UICollectionViewDiffableDataSource(collectionView: languageCollectionView) { collectionView, indexPath, language in
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBGenreCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBFilterCell
                 let keyword = Keyword()
                 keyword.name = language.name
                 
-                if language.iso6391 == self.movieQuery?.language {
-                    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+                if language.iso6391 == self.movieQuery?.withOriginalLanguage {
+                    self.languageSelected = language.name
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                    cell?.isSelected = true
                 }
 
                 cell?.configure(keyword: keyword)
@@ -102,13 +108,16 @@ class TMDBMovieFilterViewController: UITableViewController {
         if let indexPath = selectedLanguageIndexPaths, let language = languageDataSource.itemIdentifier(for: indexPath) {
             selectedlanguage = language
         }
-        
+
         movieQuery?.withGenres = selectedGenres.map({ "\($0.id)" }).joined(separator: ",")
         movieQuery?.withOriginalLanguage = selectedlanguage?.iso6391
         movieQuery?.page = 1
-
+        
+        if movieQuery?.withGenres == "" {
+            movieQuery?.withGenres = nil
+        }
         dismiss(animated: true) {
-            self.delegate?.filter(movieQuery: self.movieQuery!)
+            self.delegate?.filter(query: self.movieQuery!)
         }
     }
 }
@@ -121,23 +130,40 @@ extension TMDBMovieFilterViewController: UICollectionViewDelegateFlowLayout {
         let label = UILabel()
         label.text = collectionView == genreCollectionView ? setting.movieGenres[indexPath.row].name : setting.languagesCode[indexPath.row].name
         label.sizeToFit()
-        return CGSize(width: label.intrinsicContentSize.width, height: 20)
+        return CGSize(width: label.intrinsicContentSize.width, height: 30)
     }
 }
 
 extension TMDBMovieFilterViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? TMDBGenreCell
-        cell?.isSelected = !(cell?.isSelected ?? true)
+        guard collectionView == languageCollectionView else { return }
+
+        let cell = collectionView.cellForItem(at: indexPath) as? TMDBFilterCell
+
+        if cell?.label.text == languageSelected {
+            collectionView.deselectItem(at: indexPath, animated: false)
+            languageSelected = nil
+        } else {
+            languageSelected = cell?.label.text
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? TMDBGenreCell
-        cell?.isSelected = false
+        let cell = collectionView.cellForItem(at: indexPath) as! TMDBFilterCell
+
+        if collectionView == languageCollectionView {
+            movieQuery?.withOriginalLanguage = nil
+        } else {
+            var genres = movieQuery?.withGenres?.components(separatedBy: ",")
+            let genreId = setting.movieGenres.first(where: { $0.name == cell.label.text })!.id
+            genres?.removeAll(where: { $0 == String(genreId) })
+            movieQuery?.withGenres = genres?.joined(separator: ",")
+        }
     }
+    
 }
 
-class TMDBGenreCell: TMDBKeywordCell {
+class TMDBFilterCell: TMDBKeywordCell {
     override var isSelected: Bool {
         didSet {
             if isSelected {

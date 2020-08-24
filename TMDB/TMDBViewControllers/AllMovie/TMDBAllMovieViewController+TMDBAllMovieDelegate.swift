@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+extension TMDBAllMovieViewController: TMDBAllMovieDelegate {
+    func displayAllMovie(movies: [Movie]) {
+        loadingView.removeFromSuperview()
+        footerLoadingView?.loadingIndicator.stopAnimating()
+        var snapshot = self.allMovieDataSource.snapshot()
+        snapshot.appendItems(movies)
+        self.allMovieDataSource.apply(snapshot, animatingDifferences: true)
+    }
+}

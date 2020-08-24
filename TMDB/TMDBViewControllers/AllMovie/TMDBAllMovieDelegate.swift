@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+protocol TMDBAllMovieDelegate: NSObjectProtocol {
+    func displayAllMovie(movies: [Movie])
+}

@@ -9,18 +9,26 @@
 import Foundation
 import UIKit
 
-class TMDBMovieFilterViewController: UITableViewController {
+class TMDBFilterViewController: UITableViewController {
     // MARK: - property
+
+    enum FilterChoice {
+        case movie
+        case tvShow
+    }
+
+    var filterChoice: FilterChoice = .movie
+
     var languageSelected: String?
 
     // MARK: - filter movie delegate
-    weak var delegate: TMDBMovieFilterDelegate?
+    weak var delegate: TMDBFilterDelegate?
 
     // MARK: - user setting
     var setting: TMDBUserSettingProtocol = TMDBUserSetting()
 
     // MARK: - data source
-    var movieQuery: DiscoverQuery?
+    var query: DiscoverQuery?
 
     var genreDataSource: UICollectionViewDiffableDataSource<Section, Genre>!
 
@@ -36,7 +44,7 @@ class TMDBMovieFilterViewController: UITableViewController {
             genreCollectionView.allowsMultipleSelection = true
             genreCollectionView.register(TMDBFilterCell.self, forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             genreDataSource = UICollectionViewDiffableDataSource(collectionView: genreCollectionView) { collectionView, indexPath, genre in
-                let genres = self.movieQuery?.withGenres?.components(separatedBy: ",")
+                let genres = self.query?.withGenres?.components(separatedBy: ",")
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBFilterCell
                 let keyword = Keyword()
                 keyword.name = genre.name
@@ -49,7 +57,7 @@ class TMDBMovieFilterViewController: UITableViewController {
             }
             var snapshot = genreDataSource.snapshot()
             snapshot.appendSections([.genres])
-            snapshot.appendItems(setting.movieGenres)
+            snapshot.appendItems( filterChoice == .movie ? setting.movieGenres : setting.tvShowGenres)
             genreDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -62,7 +70,7 @@ class TMDBMovieFilterViewController: UITableViewController {
                 let keyword = Keyword()
                 keyword.name = language.name
                 
-                if language.iso6391 == self.movieQuery?.withOriginalLanguage {
+                if language.iso6391 == self.query?.withOriginalLanguage {
                     self.languageSelected = language.name
                     collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                     cell?.isSelected = true
@@ -93,95 +101,24 @@ class TMDBMovieFilterViewController: UITableViewController {
     }
 
     @objc func doneFiltering() {
-        var selectedGenres: [Genre] = []
         var selectedlanguage: LanguageCode?
         let selectedGenreIndexPaths = genreCollectionView.indexPathsForSelectedItems
         let selectedLanguageIndexPaths = languageCollectionView.indexPathsForSelectedItems?.first
-
-        for indexPath in selectedGenreIndexPaths ?? [] {
-            if let genre = genreDataSource.itemIdentifier(for: indexPath) {
-                selectedGenres.append(genre)
-            }
-        }
-        
 
         if let indexPath = selectedLanguageIndexPaths, let language = languageDataSource.itemIdentifier(for: indexPath) {
             selectedlanguage = language
         }
 
-        movieQuery?.withGenres = selectedGenres.map({ "\($0.id)" }).joined(separator: ",")
-        movieQuery?.withOriginalLanguage = selectedlanguage?.iso6391
-        movieQuery?.page = 1
-        
-        if movieQuery?.withGenres == "" {
-            movieQuery?.withGenres = nil
+        query?.withGenres = selectedGenreIndexPaths?.compactMap({ self.genreDataSource.itemIdentifier(for: $0) }).map({ "\($0.id)" }).joined(separator: ",")
+        query?.withOriginalLanguage = selectedlanguage?.iso6391
+        query?.page = 1
+
+        if query?.withGenres == "" {
+            query?.withGenres = nil
         }
+
         dismiss(animated: true) {
-            self.delegate?.filter(query: self.movieQuery!)
+            self.delegate?.filter(query: self.query!)
         }
-    }
-}
-
-extension TMDBMovieFilterViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize
-    {
-        let label = UILabel()
-        label.text = collectionView == genreCollectionView ? setting.movieGenres[indexPath.row].name : setting.languagesCode[indexPath.row].name
-        label.sizeToFit()
-        return CGSize(width: label.intrinsicContentSize.width, height: 30)
-    }
-}
-
-extension TMDBMovieFilterViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard collectionView == languageCollectionView else { return }
-
-        let cell = collectionView.cellForItem(at: indexPath) as? TMDBFilterCell
-
-        if cell?.label.text == languageSelected {
-            collectionView.deselectItem(at: indexPath, animated: false)
-            languageSelected = nil
-        } else {
-            languageSelected = cell?.label.text
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! TMDBFilterCell
-
-        if collectionView == languageCollectionView {
-            movieQuery?.withOriginalLanguage = nil
-        } else {
-            var genres = movieQuery?.withGenres?.components(separatedBy: ",")
-            let genreId = setting.movieGenres.first(where: { $0.name == cell.label.text })!.id
-            genres?.removeAll(where: { $0 == String(genreId) })
-            movieQuery?.withGenres = genres?.joined(separator: ",")
-        }
-    }
-    
-}
-
-class TMDBFilterCell: TMDBKeywordCell {
-    override var isSelected: Bool {
-        didSet {
-            if isSelected {
-                layer.backgroundColor = Constant.Color.primaryColor.cgColor
-                label.textColor = .white
-            } else {
-                layer.backgroundColor = nil
-                label.textColor = UIColor(white: 0.333333, alpha: 1)
-            }
-        }
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        layer.cornerRadius = 0
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
     }
 }

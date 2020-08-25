@@ -7,3 +7,15 @@
 //
 
 import Foundation
+import UIKit
+
+class TMDBFilterCell: TMDBKeywordCell {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        layer.cornerRadius = 0
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+}

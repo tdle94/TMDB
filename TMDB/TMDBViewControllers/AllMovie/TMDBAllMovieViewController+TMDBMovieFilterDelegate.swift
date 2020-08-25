@@ -8,10 +8,10 @@
 
 import Foundation
 
-extension TMDBAllMovieViewController: TMDBMovieFilterDelegate {
+extension TMDBAllMovieViewController: TMDBFilterDelegate {
     func filter(query: DiscoverQuery) {
         movieQuery = query
-        collectionView.scrollRectToVisible(.zero, animated: false)
+        collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .bottom, animated: false)
         var snapshot = allMovieDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .movie))
         allMovieDataSource.apply(snapshot, animatingDifferences: true)

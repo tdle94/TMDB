@@ -40,9 +40,6 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
             let id = movieId
         {
             let keyword = presenter.repository.getMovieKeywords(from: id)
-            let cell = collectionView.cellForItem(at: indexPath) as? TMDBKeywordCell
-            cell?.layer.backgroundColor = Constant.Color.primaryColor.cgColor
-            cell?.label.textColor = .white
             coordinator?.navigateToAllMovie(query: DiscoverQuery(page: 1, withKeyword: String(keyword[indexPath.row].id)))
         }
     }

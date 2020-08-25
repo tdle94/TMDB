@@ -165,6 +165,8 @@ class ViewControllerUITests: XCTestCase {
         app.navigationBars.children(matching: .button).firstMatch.tap()
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.tabBars.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
+        app.navigationBars.children(matching: .button).firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
         app.tabBars.buttons[NSLocalizedString("Search", comment: "")].tap()
     }
 

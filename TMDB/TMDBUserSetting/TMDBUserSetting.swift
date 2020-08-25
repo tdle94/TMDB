@@ -14,6 +14,7 @@ protocol TMDBUserSettingProtocol {
     var countriesCode: [CountryCode] { get }
     var languagesCode: [LanguageCode] { get }
     var movieGenres: [Genre] { get }
+    var tvShowGenres: [Genre] { get }
     func getImageURL(from path: String) -> URL?
     func getYoutubeImageURL(key: String) -> URL?
     func getYoutubeVideoURL(key: String) -> URL?
@@ -42,7 +43,13 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
     var movieGenres: [Genre] {
         let path = Bundle.main.path(forResource: "MovieGenres", ofType: "json")!
         let jsonData = try! NSData(contentsOfFile: path, options: .dataReadingMapped)
-        return try! JSONDecoder().decode(MovieGenre.self, from: jsonData as Data).genres
+        return try! JSONDecoder().decode(GenreResult.self, from: jsonData as Data).genres
+    }
+
+    var tvShowGenres: [Genre] {
+        let path = Bundle.main.path(forResource: "TVShowGenres", ofType: "json")!
+        let jsonData = try! NSData(contentsOfFile: path, options: .dataReadingMapped)
+        return try! JSONDecoder().decode(GenreResult.self, from: jsonData as Data).genres
     }
 
     func getImageURL(from path: String) -> URL? {

@@ -60,6 +60,6 @@ class TMDBAllMovieViewController: UIViewController {
 
     // MARK: - user action
     @objc func filterMovies() {
-        coordinate?.presentMovieFilter(delegate: self, movieQuery: movieQuery)
+        coordinate?.presentFilter(delegate: self, query: movieQuery, choice: .movie)
     }
 }

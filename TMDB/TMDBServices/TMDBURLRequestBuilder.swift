@@ -60,9 +60,21 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         var queryItems = [
             URLQueryItem(name: "page", value: String(query.page))
         ]
-        
+
+        if let language = query.withOriginalLanguage {
+            queryItems.append(URLQueryItem(name: "with_original_language", value: language))
+        }
+
+        if let genres = query.withGenres {
+            queryItems.append(URLQueryItem(name: "with_genres", value: genres))
+        }
+
         if let keyword = query.withKeyword {
             queryItems.append(URLQueryItem(name: "with_keywords", value: keyword))
+        }
+        
+        if let primaryReleaseYear = query.primaryReleaseYear {
+            queryItems.append(URLQueryItem(name: "primary_release_year", value: String(primaryReleaseYear)))
         }
 
         return buildURLRequest(path: "/3/discover/tv", queryItems: queryItems)
@@ -197,7 +209,10 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         urlComponent.path = path
         urlComponent.queryItems = queryItems ?? []
         urlComponent.queryItems?.append(URLQueryItem(name: "api_key", value: apiKey))
-        return URLRequest(url: urlComponent.url!)
+        if let url = urlComponent.url {
+            return URLRequest(url: url)
+        }
+        fatalError("Invalid url")
     }
 
     // MARK: - image config
@@ -222,6 +237,10 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         
         if let genres = query.withGenres {
             queryItems.append(URLQueryItem(name: "with_genres", value: genres))
+        }
+
+        if let primaryReleaseYear = query.primaryReleaseYear {
+            queryItems.append(URLQueryItem(name: "primary_release_year", value: String(primaryReleaseYear)))
         }
 
         return buildURLRequest(path: "/3/discover/movie", queryItems: queryItems)

@@ -152,16 +152,18 @@ class ViewControllerUITests: XCTestCase {
         }
 
         app.navigationBars.buttons.element(boundBy: 0).tap()
-        
+
         tapPopularTVShow()
-        
+
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.navigationBars.buttons.element(boundBy: 0).tap()
-        
+
         tapTrendingThisWeek()
 
         app.tabBars.buttons[NSLocalizedString("Movies", comment: "")].tap()
+        app.navigationBars.children(matching: .button).firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
         app.tabBars.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
         app.tabBars.buttons[NSLocalizedString("Search", comment: "")].tap()
     }
@@ -175,46 +177,44 @@ class ViewControllerUITests: XCTestCase {
         collectionView.cells.firstMatch.tap()
         expectations2.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
-        
+
         app.scrollViews.firstMatch.swipeUp()
         app.scrollViews.firstMatch.swipeUp()
-        
+
         // tap appear in movie button
-        
+
         if app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].exists {
             app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].tap()
         }
-        
+
         if app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].exists {
             app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
         }
-        
+
         app.navigationBars.buttons.element(boundBy: 0).tap()
 
         // tap trending this week
         app.segmentedControls.buttons[NSLocalizedString("This Week", comment: "")].tap()
 
-        
         // tap trending today
         app.segmentedControls.buttons[NSLocalizedString("Today", comment: "")].tap()
-
 
         collectionView.firstMatch.swipeUp()
 
         // tap now playing button
         app.segmentedControls.buttons[NSLocalizedString("Now Playing", comment: "")].tap()
-        
+
         // tap upcoming button
         app.segmentedControls.buttons[NSLocalizedString("Upcoming", comment: "")].tap()
-        
+
         // tap top rate button
         app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
 
         collectionView.firstMatch.swipeUp()
-               
+
         // tap air today tv show
         app.segmentedControls.buttons[NSLocalizedString("Air Today", comment: "")].tap()
-               
+
         // tap top rated tv show
         app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
 

@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+extension TMDBAllTVShowViewController: TMDBAllTVShowDelegate {
+    func displayAllTVShow(tvShows: [TVShow]) {
+        loadingView.removeFromSuperview()
+        footerLoadingView?.loadingIndicator.stopAnimating()
+        var snapshot = allTVShowDataSource.snapshot()
+        snapshot.appendItems(tvShows)
+        allTVShowDataSource.apply(snapshot, animatingDifferences: true)
+    }
+}

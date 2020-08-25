@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+protocol TMDBAllTVShowDelegate: NSObjectProtocol {
+    func displayAllTVShow(tvShows: [TVShow])
+}

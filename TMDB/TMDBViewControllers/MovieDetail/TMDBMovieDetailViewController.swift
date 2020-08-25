@@ -196,9 +196,9 @@ class TMDBMovieDetailViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let cell = keywordCollectionView.visibleCells.first(where: { $0.layer.backgroundColor == Constant.Color.primaryColor.cgColor }) as? TMDBKeywordCell
-        cell?.layer.backgroundColor = nil
-        cell?.label.textColor = UIColor(white: 0.333333, alpha: 1)
+        if let selectIndexPathh = keywordCollectionView.indexPathsForSelectedItems?.first {
+            keywordCollectionView.deselectItem(at: selectIndexPathh, animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {

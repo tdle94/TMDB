@@ -20,6 +20,8 @@ class TMDBFilterViewController: UITableViewController {
     var filterChoice: FilterChoice = .movie
 
     var languageSelected: String?
+    
+    var yearSelected: String?
 
     // MARK: - filter movie delegate
     weak var delegate: TMDBFilterDelegate?
@@ -30,15 +32,50 @@ class TMDBFilterViewController: UITableViewController {
     // MARK: - data source
     var query: DiscoverQuery?
 
+    lazy var years: [Int] = {
+        var initialYear = 1950
+        var currentYear = Calendar.current.component(.year, from: Date())
+        var years: [Int] = []
+        for i in initialYear...currentYear {
+            years.append(i)
+        }
+        return years
+    }()
+
     var genreDataSource: UICollectionViewDiffableDataSource<Section, Genre>!
 
     var languageDataSource: UICollectionViewDiffableDataSource<Section, LanguageCode>!
+    
+    var yearDataSource: UICollectionViewDiffableDataSource<Section, Int>!
 
     // MARK: - ui
     @IBOutlet weak var yearLabel: UILabel!
     @IBOutlet weak var genreLabel: UILabel!
     @IBOutlet weak var languageLabel: UILabel!
+    @IBOutlet weak var yearCollectionView: UICollectionView! {
+        didSet {
+            yearCollectionView.register(TMDBFilterCell.self, forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            yearDataSource = UICollectionViewDiffableDataSource(collectionView: yearCollectionView) { collectionView, indexPath, year in
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBFilterCell
+                let keyword = Keyword()
+                keyword.name = String(year)
 
+                if self.query?.primaryReleaseYear == year {
+                    self.yearSelected = String(year)
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                    cell?.isSelected = true
+                }
+                cell?.configure(keyword: keyword)
+                return cell
+            }
+            
+            var snapshot = yearDataSource.snapshot()
+            snapshot.appendSections([.year])
+            snapshot.appendItems(years)
+            yearDataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+    
     @IBOutlet weak var genreCollectionView: UICollectionView! {
         didSet {
             genreCollectionView.allowsMultipleSelection = true
@@ -102,15 +139,22 @@ class TMDBFilterViewController: UITableViewController {
 
     @objc func doneFiltering() {
         var selectedlanguage: LanguageCode?
+        var selectedYear: Int?
         let selectedGenreIndexPaths = genreCollectionView.indexPathsForSelectedItems
-        let selectedLanguageIndexPaths = languageCollectionView.indexPathsForSelectedItems?.first
+        let selectedLanguageIndexPath = languageCollectionView.indexPathsForSelectedItems?.first
+        let selectedYearIndexPath = yearCollectionView.indexPathsForSelectedItems?.first
 
-        if let indexPath = selectedLanguageIndexPaths, let language = languageDataSource.itemIdentifier(for: indexPath) {
+        if let indexPath = selectedLanguageIndexPath, let language = languageDataSource.itemIdentifier(for: indexPath) {
             selectedlanguage = language
+        }
+        
+        if let indexPath = selectedYearIndexPath, let year = yearDataSource.itemIdentifier(for: indexPath) {
+            selectedYear = year
         }
 
         query?.withGenres = selectedGenreIndexPaths?.compactMap({ self.genreDataSource.itemIdentifier(for: $0) }).map({ "\($0.id)" }).joined(separator: ",")
         query?.withOriginalLanguage = selectedlanguage?.iso6391
+        query?.primaryReleaseYear = selectedYear
         query?.page = 1
 
         if query?.withGenres == "" {

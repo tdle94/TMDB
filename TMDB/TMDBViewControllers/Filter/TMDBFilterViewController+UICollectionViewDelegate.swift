@@ -9,18 +9,26 @@
 import Foundation
 import UIKit
 
-extension TMDBMovieFilterViewController: UICollectionViewDelegate {
+extension TMDBFilterViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard collectionView == languageCollectionView else { return }
-
         let cell = collectionView.cellForItem(at: indexPath) as? TMDBFilterCell
 
-        if cell?.label.text == languageSelected {
-            collectionView.deselectItem(at: indexPath, animated: false)
-            languageSelected = nil
-        } else {
-            languageSelected = cell?.label.text
+        if collectionView == languageCollectionView {
+            if cell?.label.text == languageSelected {
+                collectionView.deselectItem(at: indexPath, animated: false)
+                languageSelected = nil
+            } else {
+                languageSelected = cell?.label.text
+            }
+        } else if collectionView == yearCollectionView {
+            if cell?.label.text == yearSelected {
+                collectionView.deselectItem(at: indexPath, animated: false)
+                yearSelected = nil
+            } else {
+                yearSelected = cell?.label.text
+            }
         }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -28,6 +36,8 @@ extension TMDBMovieFilterViewController: UICollectionViewDelegate {
 
         if collectionView == languageCollectionView {
             query?.withOriginalLanguage = nil
+        } else if collectionView == yearCollectionView {
+            query?.primaryReleaseYear = nil
         } else {
             var genres = query?.withGenres?.components(separatedBy: ",")
             let genreId = setting.movieGenres.first(where: { $0.name == cell.label.text })!.id

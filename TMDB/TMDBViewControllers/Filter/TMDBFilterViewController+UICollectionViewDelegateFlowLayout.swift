@@ -9,13 +9,23 @@
 import Foundation
 import UIKit
 
-extension TMDBMovieFilterViewController: UICollectionViewDelegateFlowLayout {
+extension TMDBFilterViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize
     {
         let label = UILabel()
-        label.text = collectionView == genreCollectionView ? setting.movieGenres[indexPath.row].name : setting.languagesCode[indexPath.row].name
+        if genreCollectionView == collectionView {
+            if filterChoice == .movie {
+                label.text = setting.movieGenres[indexPath.row].name
+            } else {
+                label.text = setting.tvShowGenres[indexPath.row].name
+            }
+        } else if languageCollectionView == collectionView {
+            label.text = setting.languagesCode[indexPath.row].name
+        } else {
+            label.text = String(years[indexPath.row])
+        }
         label.sizeToFit()
         return CGSize(width: label.intrinsicContentSize.width, height: 30)
     }

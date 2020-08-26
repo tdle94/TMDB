@@ -10,15 +10,14 @@ import Foundation
 import UIKit
 
 class TMDBAllTVShowViewController: UIViewController {
+    // MARK: - query
+    var tvQuery: DiscoverQuery = DiscoverQuery(page: 1)
+
     // MARK: - coordinator
     var coordinate: MainCoordinator?
 
-    // MARK: - repository
-    private var totalTVShows: Int = 0
-
-    var query: DiscoverQuery = DiscoverQuery(page: 1)
-
-    let repository: TMDBRepository = TMDBRepository.share
+    // MARK: - presenter
+    lazy var presenter: TMDBAllTVShowPresenter = TMDBAllTVShowPresenter(delegate: self)
 
     // MARK: - data source
     var allTVShowDataSource: TMDBCollectionDataSource!
@@ -38,7 +37,7 @@ class TMDBAllTVShowViewController: UIViewController {
                 return self.footerLoadingView
             }
             var snapshot = allTVShowDataSource.snapshot()
-            snapshot.appendSections([.movie])
+            snapshot.appendSections([.tvShow])
             allTVShowDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -50,38 +49,17 @@ class TMDBAllTVShowViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
+        let filter = UIBarButtonItem(title: NSLocalizedString("Filter", comment: ""),
+                                style: .plain,
+                                target: self,
+                                action: #selector(filterMovies))
+        navigationItem.setRightBarButton(filter, animated: false)
         view.addSubview(loadingView)
-        getAllTVShow()
+        presenter.getAllTVShow(tvShowQuery: tvQuery)
     }
 
-    // MARK: - service
-    func getAllTVShow() {
-        repository.getAllTVShow(query: query) { result in
-            self.loadingView.removeFromSuperview()
-            switch result {
-            case .failure(let error):
-                debugPrint(error.localizedDescription)
-            case .success(let tvShowResult):
-                var snapshot = self.allTVShowDataSource.snapshot()
-                snapshot.appendItems(Array(tvShowResult.onTV))
-                self.allTVShowDataSource.apply(snapshot, animatingDifferences: true)
-            }
-        }
-    }
-}
-
-extension TMDBAllTVShowViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let movieCount = allTVShowDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
-            let page = movieCount / 20 + 1
-            query.page = page
-            getAllTVShow()
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let tvShow = allTVShowDataSource.itemIdentifier(for: indexPath) as? TVShow else { return }
-        coordinate?.navigateToTVShowDetail(tvId: tvShow.id)
+    // MARK: - user action
+    @objc func filterMovies() {
+        coordinate?.presentFilter(delegate: self, query: tvQuery, choice: .tvShow)
     }
 }

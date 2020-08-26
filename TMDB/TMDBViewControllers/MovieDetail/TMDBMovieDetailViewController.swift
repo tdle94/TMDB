@@ -194,6 +194,13 @@ class TMDBMovieDetailViewController: UIViewController {
         presenter.getMovieDetail(movieId: movieId!)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectIndexPathh = keywordCollectionView.indexPathsForSelectedItems?.first {
+            keywordCollectionView.deselectItem(at: selectIndexPathh, animated: true)
+        }
+    }
+
     override func didReceiveMemoryWarning() {
         SDImageCache.shared.clearMemory()
         SDImageCache.shared.clearDisk()

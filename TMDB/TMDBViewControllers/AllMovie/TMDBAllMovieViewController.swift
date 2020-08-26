@@ -13,12 +13,11 @@ class TMDBAllMovieViewController: UIViewController {
     // MARK: - coordinator
     var coordinate: MainCoordinator?
 
-    // MARK: - repository
-    var query: DiscoverQuery = DiscoverQuery(page: 1)
-
-    private var totalMovies: Int = 0
-
-    let repository: TMDBRepository = TMDBRepository.share
+    // MARK: - query
+    var movieQuery: DiscoverQuery = DiscoverQuery(page: 1)
+    
+    // MARK: - presentor
+    lazy var presenter: TMDBAllMoviePresenter = TMDBAllMoviePresenter(delegate: self)
 
     // MARK: - data source
     var allMovieDataSource: TMDBCollectionDataSource!
@@ -51,40 +50,16 @@ class TMDBAllMovieViewController: UIViewController {
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         view.addSubview(loadingView)
-        getAllMovie()
+        let filter = UIBarButtonItem(title: NSLocalizedString("Filter", comment: ""),
+                                style: .plain,
+                                target: self,
+                                action: #selector(filterMovies))
+        navigationItem.setRightBarButton(filter, animated: false)
+        presenter.getAllMovie(query: movieQuery)
     }
 
-    // MARK: - service
-    func getAllMovie() {
-        footerLoadingView?.loadingIndicator.startAnimating()
-        repository.getAllMovie(query: query) { result in
-            self.footerLoadingView?.loadingIndicator.stopAnimating()
-            self.loadingView.removeFromSuperview()
-            switch result {
-            case .failure(let error):
-                debugPrint(error)
-            case .success(let allMovieResult):
-                self.totalMovies = allMovieResult.totalResults
-                var snapshot = self.allMovieDataSource.snapshot()
-                snapshot.appendItems(Array(allMovieResult.movies))
-                self.allMovieDataSource.apply(snapshot, animatingDifferences: true)
-            }
-        }
-    }
-}
-
-extension TMDBAllMovieViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let movieCount = allMovieDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), movieCount != totalMovies {
-            let page = movieCount / 20 + 1
-            query.page = page
-            getAllMovie()
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let movie = allMovieDataSource.itemIdentifier(for: indexPath) as? Movie else { return }
-        coordinate?.navigateToMovieDetail(id: movie.id)
+    // MARK: - user action
+    @objc func filterMovies() {
+        coordinate?.presentFilter(delegate: self, query: movieQuery, choice: .movie)
     }
 }

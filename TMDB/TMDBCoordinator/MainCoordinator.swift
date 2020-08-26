@@ -75,15 +75,24 @@ struct MainCoordinator: Coordinator {
 
     func navigateToAllMovie(query: DiscoverQuery) {
         let allMovieVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllMovieVC) as! TMDBAllMovieViewController
-        allMovieVC.query = query
+        allMovieVC.movieQuery = query
         allMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(allMovieVC, animated: true)
     }
 
     func navigateToAllTVShow(query: DiscoverQuery) {
         let allTVShowVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllTVShowVC) as! TMDBAllTVShowViewController
-        allTVShowVC.query = query
+        allTVShowVC.tvQuery = query
         allTVShowVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(allTVShowVC, animated: true)
+    }
+
+    func presentFilter(delegate: TMDBFilterDelegate, query: DiscoverQuery, choice: TMDBFilterViewController.FilterChoice) {
+        let filterNav = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbFilterNav) as! UINavigationController
+        let filterVC = filterNav.viewControllers.first as? TMDBFilterViewController
+        filterVC?.delegate = delegate
+        filterVC?.query = query
+        filterVC?.filterChoice = choice
+        navigationController.present(filterNav, animated: true)
     }
 }

@@ -2507,7 +2507,11 @@ class TMDBRepositoryTests: XCTestCase {
     // MARK: - all movies
     func testGetAllMovieSuccess() {
         let expectation = self.expectation(description: "")
-        let movieQuery = DiscoverQuery(page: 1)
+        var movieQuery = DiscoverQuery(page: 1)
+        movieQuery.primaryReleaseYear = 2019
+        movieQuery.withKeyword = "3243"
+        movieQuery.withOriginalLanguage = "532"
+        movieQuery.withGenres = "32"
         let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
         let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: movieQuery)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
@@ -2568,9 +2572,13 @@ class TMDBRepositoryTests: XCTestCase {
     // MARK: - all tv shows
     func testGetAllTVShowSuccess() {
         let expectation = self.expectation(description: "")
-        let movieQuery = DiscoverQuery(page: 1)
+        var tvQuery = DiscoverQuery(page: 1)
+        tvQuery.primaryReleaseYear = 2019
+        tvQuery.withKeyword = "3243"
+        tvQuery.withOriginalLanguage = "532"
+        tvQuery.withGenres = "32"
         let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
-        let request = TMDBURLRequestBuilder().getAllTVShowURLRequest(query: movieQuery)
+        let request = TMDBURLRequestBuilder().getAllTVShowURLRequest(query: tvQuery)
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
 
         /*GIVEN*/
@@ -2585,7 +2593,7 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         /*WHEN*/
-        repository.getAllTVShow(query: movieQuery) { _ in
+        repository.getAllTVShow(query: tvQuery) { _ in
             expectation.fulfill()
         }
 

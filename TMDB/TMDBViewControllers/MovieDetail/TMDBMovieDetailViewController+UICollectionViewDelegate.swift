@@ -42,6 +42,5 @@ extension TMDBMovieDetailViewController: UICollectionViewDelegate {
             let keyword = presenter.repository.getMovieKeywords(from: id)
             coordinator?.navigateToAllMovie(query: DiscoverQuery(page: 1, withKeyword: String(keyword[indexPath.row].id)))
         }
-            
     }
 }

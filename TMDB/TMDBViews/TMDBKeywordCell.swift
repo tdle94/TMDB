@@ -12,6 +12,18 @@ import UIKit
 class TMDBKeywordCell: UICollectionViewCell {
     let label = UILabel()
 
+    override var isSelected: Bool {
+        didSet {
+            if isSelected {
+                layer.backgroundColor = Constant.Color.primaryColor.cgColor
+                label.textColor = .white
+            } else {
+                layer.backgroundColor = nil
+                label.textColor = UIColor(white: 0.333333, alpha: 1)
+            }
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height)

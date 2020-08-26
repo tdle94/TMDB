@@ -51,10 +51,18 @@ class TMDBUserSettingTests: XCTestCase {
     }
     
     func testGetLanguageCode() {
-        XCTAssertEqual(setting.languagesCode.count, 187)
+        XCTAssertEqual(setting.languagesCode.count, 186)
     }
     
     func testGetCountryCode() {
         XCTAssertEqual(setting.countriesCode.count, 247)
+    }
+    
+    func testGetMovieGenres() {
+        XCTAssertEqual(setting.movieGenres.count, 19)
+    }
+    
+    func testGetTVShowGenres() {
+        XCTAssertEqual(setting.tvShowGenres.count, 16)
     }
 }

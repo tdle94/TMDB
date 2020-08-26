@@ -162,11 +162,25 @@ class ViewControllerUITests: XCTestCase {
         tapTrendingThisWeek()
 
         app.tabBars.buttons[NSLocalizedString("Movies", comment: "")].tap()
+        // tap on filter
         app.navigationBars.children(matching: .button).firstMatch.tap()
+        // go back
         app.navigationBars.buttons.element(boundBy: 0).tap()
+        // tap on filter
+        app.navigationBars.children(matching: .button).firstMatch.tap()
+        // tap on done
+        app.navigationBars.children(matching: .button)[NSLocalizedString("Done", comment: "")].tap()
+        
         app.tabBars.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
+        // tap on filter
         app.navigationBars.children(matching: .button).firstMatch.tap()
+        // go back
         app.navigationBars.buttons.element(boundBy: 0).tap()
+        // tap on filter
+        app.navigationBars.children(matching: .button).firstMatch.tap()
+        // tap on done
+        app.navigationBars.children(matching: .button)[NSLocalizedString("Done", comment: "")].tap()
+
         app.tabBars.buttons[NSLocalizedString("Search", comment: "")].tap()
     }
 

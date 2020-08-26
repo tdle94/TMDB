@@ -129,8 +129,8 @@ class TMDBFilterViewController: UITableViewController {
         navigationController?.navigationBar.barTintColor = Constant.Color.primaryColor
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
-        navigationItem.setRightBarButton(UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneFiltering)), animated: false)
-        navigationItem.setLeftBarButton(UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelFiltering)), animated: false)
+        navigationItem.setRightBarButton(UIBarButtonItem(title: NSLocalizedString("Done", comment: ""), style: .done, target: self, action: #selector(doneFiltering)), animated: false)
+        navigationItem.setLeftBarButton(UIBarButtonItem(title: NSLocalizedString("Cancel", comment: ""), style: .plain, target: self, action: #selector(cancelFiltering)), animated: false)
     }
 
     @objc func cancelFiltering() {

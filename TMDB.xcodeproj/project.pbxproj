@@ -45,6 +45,7 @@
 		34722C9E24E0640E008D58F6 /* TMDBBackdropImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34722C9D24E0640E008D58F6 /* TMDBBackdropImageCell.swift */; };
 		34722CA024E06425008D58F6 /* TMDBNetworkImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34722C9F24E06425008D58F6 /* TMDBNetworkImageCell.swift */; };
 		347456FE24BEB35500487CB0 /* TMDBPersonDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347456FD24BEB35500487CB0 /* TMDBPersonDetailPresenter.swift */; };
+		3474EC4024F827EC00CA6B36 /* MovieRecommender.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 3474EC3F24F827EC00CA6B36 /* MovieRecommender.mlmodel */; };
 		347520B82490932B000ABA00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347520BA2490932B000ABA00 /* Localizable.strings */; };
 		3475FE8E24CF77C4005B3337 /* TMDBLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3475FE8D24CF77C4005B3337 /* TMDBLoadingView.swift */; };
 		3475FE9024CF7AD7005B3337 /* TMDBLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3475FE8F24CF7AD7005B3337 /* TMDBLoadingView.xib */; };
@@ -251,6 +252,7 @@
 		34722C9D24E0640E008D58F6 /* TMDBBackdropImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBBackdropImageCell.swift; sourceTree = "<group>"; };
 		34722C9F24E06425008D58F6 /* TMDBNetworkImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBNetworkImageCell.swift; sourceTree = "<group>"; };
 		347456FD24BEB35500487CB0 /* TMDBPersonDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBPersonDetailPresenter.swift; sourceTree = "<group>"; };
+		3474EC3F24F827EC00CA6B36 /* MovieRecommender.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MovieRecommender.mlmodel; sourceTree = "<group>"; };
 		347520B92490932B000ABA00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		347520BC24909347000ABA00 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3475FE8D24CF77C4005B3337 /* TMDBLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBLoadingView.swift; sourceTree = "<group>"; };
@@ -477,6 +479,7 @@
 		342E66222489BB33003B5CB8 /* TMDB */ = {
 			isa = PBXGroup;
 			children = (
+				3474EC3F24F827EC00CA6B36 /* MovieRecommender.mlmodel */,
 				3488663B24A67B3600E205FA /* Extension */,
 				34F6AA5124A411EC000DC080 /* Fonts */,
 				348F636F2491D0B900245BE6 /* TMDBLocalDataSource */,
@@ -1302,6 +1305,7 @@
 				348F635F2491C49700245BE6 /* TMDBPeopleService.swift in Sources */,
 				3488664024A67B3D00E205FA /* UIImage+.swift in Sources */,
 				348F635D2491C3C100245BE6 /* TMDBTVService.swift in Sources */,
+				3474EC4024F827EC00CA6B36 /* MovieRecommender.mlmodel in Sources */,
 				343CC9E02498247E00FEC4F6 /* TMDBServices+TMDBImageService.swift in Sources */,
 				34C7663A24EB227000BD65DD /* TMDBHomePresenter.swift in Sources */,
 				34A31D19248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift in Sources */,
@@ -1599,14 +1603,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = DTUTGY3V82;
 				INFOPLIST_FILE = TMDB/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = tmdb;
 				PRODUCT_NAME = TMDB;
 				SWIFT_VERSION = 5.0;
@@ -1620,14 +1624,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = DTUTGY3V82;
 				INFOPLIST_FILE = TMDB/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = tmdb;
 				PRODUCT_NAME = TMDB;
 				SWIFT_VERSION = 5.0;

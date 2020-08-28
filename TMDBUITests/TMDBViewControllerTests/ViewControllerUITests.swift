@@ -217,14 +217,14 @@ class ViewControllerUITests: XCTestCase {
 
         collectionView.firstMatch.swipeUp()
 
-        // tap now playing button
+        // tap top rate movie button
+        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
+
+        // tap now playing movie button
         app.segmentedControls.buttons[NSLocalizedString("Now Playing", comment: "")].tap()
 
-        // tap upcoming button
+        // tap upcoming movie button
         app.segmentedControls.buttons[NSLocalizedString("Upcoming", comment: "")].tap()
-
-        // tap top rate button
-        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
 
         collectionView.firstMatch.swipeUp()
 

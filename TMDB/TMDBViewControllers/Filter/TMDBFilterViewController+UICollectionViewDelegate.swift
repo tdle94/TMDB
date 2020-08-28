@@ -32,7 +32,7 @@ extension TMDBFilterViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! TMDBFilterCell
+        let cell = collectionView.cellForItem(at: indexPath) as? TMDBFilterCell
 
         if collectionView == languageCollectionView {
             query?.withOriginalLanguage = nil
@@ -40,7 +40,7 @@ extension TMDBFilterViewController: UICollectionViewDelegate {
             query?.primaryReleaseYear = nil
         } else {
             var genres = query?.withGenres?.components(separatedBy: ",")
-            let genreId = setting.movieGenres.first(where: { $0.name == cell.label.text })!.id
+            let genreId = setting.movieGenres.first(where: { $0.name == cell?.label.text })!.id
             genres?.removeAll(where: { $0 == String(genreId) })
             query?.withGenres = genres?.joined(separator: ",")
         }

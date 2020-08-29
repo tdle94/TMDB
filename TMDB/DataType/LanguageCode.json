@@ -125,6 +125,11 @@
         "name": "Finu' Chamorro"
     },
     {
+        "iso_639_1": "ny",
+        "english_name": "Chichewa; Nyanja",
+        "name": ""
+    },
+    {
         "iso_639_1": "cs",
         "english_name": "Czech",
         "name": "Český"
@@ -242,11 +247,6 @@
     {
         "iso_639_1": "gd",
         "english_name": "Gaelic",
-        "name": ""
-    },
-    {
-        "iso_639_1": "ny",
-        "english_name": "Chichewa; Nyanja",
         "name": ""
     },
     {

@@ -28,6 +28,7 @@ enum Section: String {
     case appearIn
     case movie
     case tvShow
+    case all
     case searchResult
     case genres
     case languages
@@ -52,7 +53,7 @@ enum Section: String {
         case .appearIn: return NSLocalizedString("Appear In", comment: "")
         case .movie: return NSLocalizedString("Movie", comment: "")
         case .tvShow: return NSLocalizedString("TV Shows", comment: "")
-        case .genres, .searchResult, .languages, .year: return nil
+        case .genres, .searchResult, .languages, .year, .all: return nil
         }
     }
 }

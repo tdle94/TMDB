@@ -7,3 +7,27 @@
 //
 
 import Foundation
+import UIKit
+
+class TMDBAllTVShowOnTheAirViewController: TMDBDisplayAllViewController {
+    // MARK: - override
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = NSLocalizedString("TV Shows", comment: "") + " " + NSLocalizedString("On The Air", comment: "")
+        presenter.getTVShowOnTheAir(page: 1)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let peopleCount = allDataSource.snapshot().itemIdentifiers.count
+        if indexPath.row == peopleCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), peopleCount != presenter.total {
+            presenter.page = presenter.page + 1
+            footerLoadingView?.loadingIndicator.startAnimating()
+            presenter.getTVShowOnTheAir(page: presenter.page)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let tvShow = allDataSource.itemIdentifier(for: indexPath) as? TVShow else { return }
+        coordinate?.navigateToTVShowDetail(tvId: tvShow.id)
+    }
+}

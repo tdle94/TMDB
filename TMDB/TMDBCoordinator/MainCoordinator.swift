@@ -86,6 +86,80 @@ struct MainCoordinator: Coordinator {
         allTVShowVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(allTVShowVC, animated: true)
     }
+    
+    func navigateToAllRecommendMovie(id: Int) {
+        let recommendMovieVC = TMDBAllRecommendMovieViewController()
+        recommendMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
+        recommendMovieVC.presenter.id = id
+        navigationController.pushViewController(recommendMovieVC, animated: true)
+    }
+    
+    func navigateToAllSimilarMovie(id: Int) {
+        let similarMovieVC = TMDBAllSimilarMovieViewController()
+        similarMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
+        similarMovieVC.presenter.id = id
+        navigationController.pushViewController(similarMovieVC, animated: true)
+    }
+
+    func navigateToAllPopularMovie() {
+        let popularMovieVC = TMDBAllPopularMovieViewController()
+        popularMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(popularMovieVC, animated: true)
+    }
+    
+    func navigateToAllTopRatedMovie() {
+        let topRatedMovieVC = TMDBAllTopRatedMovieViewController()
+        topRatedMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(topRatedMovieVC, animated: true)
+    }
+
+    func navigateToAllUpcomingMovie() {
+        let upcomingMovieVC = TMDBAllUpcomingMovieViewController()
+        upcomingMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(upcomingMovieVC, animated: true)
+    }
+
+    func navigateToAllNowPlayingMovie() {
+        let nowPlayingMovieVC = TMDBAllNowPlayingMovieViewController()
+        nowPlayingMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(nowPlayingMovieVC, animated: true)
+    }
+
+    func navigateToAllPopularTVShow() {
+        let popularTVShow = TMDBAllPopularTVShowController()
+        popularTVShow.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(popularTVShow, animated: true)
+    }
+    
+    func navigateToAllTopRatedTVShow() {
+        let topRatedTVShow = TMDBAllTopRatedTVShowViewController()
+        topRatedTVShow.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(topRatedTVShow, animated: true)
+    }
+    
+    func navigateToAllTVShowAiringToday() {
+        let tvShowAiringTodayVC = TMDBAllTVShowAirTodayViewController()
+        tvShowAiringTodayVC.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(tvShowAiringTodayVC, animated: true)
+    }
+    
+    func navigateToAllTVShowOnTheAir() {
+        let tvShowOnTheAirVC = TMDBAllTVShowOnTheAirViewController()
+        tvShowOnTheAirVC.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(tvShowOnTheAirVC, animated: true)
+    }
+    
+    func navigateToAllPopularPeople() {
+        let popularPeople = TMDBAllPopularPeopleController()
+        popularPeople.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(popularPeople, animated: true)
+    }
+
+    func navigateToAllTrend(time: TrendingTime) {
+        let trendingVC = TMDBAllTrendingViewController(time: time)
+        trendingVC.coordinate = MainCoordinator(navigationController: navigationController)
+        navigationController.pushViewController(trendingVC, animated: true)
+    }
 
     func presentFilter(delegate: TMDBFilterDelegate, query: DiscoverQuery, choice: TMDBFilterViewController.FilterChoice) {
         let filterNav = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbFilterNav) as! UINavigationController

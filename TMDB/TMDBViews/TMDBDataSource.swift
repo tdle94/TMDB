@@ -75,8 +75,14 @@ class TMDBTableDataSource: UITableViewDiffableDataSource<Section, Object> {
 
 // Reusable collection view data source
 class TMDBCollectionDataSource: UICollectionViewDiffableDataSource<Section, Object> {
-    init(cellIdentifier: String, collectionView: UICollectionView) {
+    init(cellIdentifier: String, collectionView: UICollectionView, firstCellViewAllIdentifier: String? = nil) {
         super.init(collectionView: collectionView) { collectionView, indexPath, item in
+            if
+                indexPath.row == 0,
+                let identifier = firstCellViewAllIdentifier
+            {
+                return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+            }
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TMDBCellConfig
             cell?.configure(item: item)
             return cell as? UICollectionViewCell

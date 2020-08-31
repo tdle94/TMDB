@@ -251,15 +251,12 @@ extension TMDBRepository: TMDBTVShowRepository {
         // get from cache
         if page <= similarTVShow.page {
             // get page less than or equal current page
-            let fromTVShow = similarTVShow.totalResults / similarTVShow.totalPages * (page - 1)
-            let toTVShow = similarTVShow.totalResults / similarTVShow.totalPages * page - 1
+            let from = 20 * (page - 1)
+            let to = page == similarTVShow.page ? similarTVShow.onTV.count - 1 : (20 * page) - 1
             let result = TVShowResult()
-            result.onTV.append(objectsIn: similarTVShow.onTV[fromTVShow...toTVShow])
+            result.onTV.append(objectsIn: similarTVShow.onTV[from...to])
             completion(.success(result))
-        } else if page != similarTVShow.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= similarTVShow.totalPages {
             services.getSimilarTVShows(from: tvShowId, page: page) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -288,15 +285,12 @@ extension TMDBRepository: TMDBTVShowRepository {
         // get from cache
         if page <= recommendTVShow.page {
             // get page less than or equal current page
-            let fromTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * (page - 1)
-            let toTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * page - 1
+            let from = 20 * (page - 1)
+            let to = page == recommendTVShow.page ? recommendTVShow.onTV.count - 1 : (20 * page) - 1
             let result = TVShowResult()
-            result.onTV.append(objectsIn: recommendTVShow.onTV[fromTVShow...toTVShow])
+            result.onTV.append(objectsIn: recommendTVShow.onTV[from...to])
             completion(.success(result))
-        } else if page != recommendTVShow.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= recommendTVShow.totalPages {
             services.getRecommendTVShows(from: tvShowId, page: page) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -562,15 +556,12 @@ extension TMDBRepository: TMDBMovieRepository {
 
         // get from cache
         if page <= similarMovie.page {
-            let fromMovie = 20 * (page - 1)
-            let toMovie = page == similarMovie.page ? similarMovie.movies.count - 1 : (20 * page) - 1
+            let from = 20 * (page - 1)
+            let to = page == similarMovie.page ? similarMovie.movies.count - 1 : (20 * page) - 1
             let result = MovieResult()
-            result.movies.append(objectsIn: similarMovie.movies[fromMovie...toMovie])
+            result.movies.append(objectsIn: similarMovie.movies[from...to])
             completion(.success(result))
-        } else if page != similarMovie.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= similarMovie.totalPages {
             // new page
             services.getSimilarMovies(from: movieId, page: page) { result in
                 DispatchQueue.main.async {
@@ -598,15 +589,12 @@ extension TMDBRepository: TMDBMovieRepository {
         }
         // get from cache
         if page <= recommendMovie.page {
-            let fromMovie = 20 * (page - 1)
-            let toMovie = page == recommendMovie.page ? recommendMovie.movies.count - 1 : (20 * page) - 1
+            let from = 20 * (page - 1)
+            let to = page == recommendMovie.page ? recommendMovie.movies.count - 1 : (20 * page) - 1
             let result = MovieResult()
-            result.movies.append(objectsIn: recommendMovie.movies[fromMovie...toMovie])
+            result.movies.append(objectsIn: recommendMovie.movies[from...to])
             completion(.success(result))
-        } else if page != recommendMovie.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= recommendMovie.totalPages {
             // new page
             services.getRecommendMovies(from: movieId, page: page) { result in
                 DispatchQueue.main.async {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -1149,9 +1149,9 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bwT-Nq-OtB">
-                                                <rect key="frame" x="239.66666666666663" y="719" width="154.33333333333337" height="34"/>
+                                                <rect key="frame" x="189.66666666666663" y="725" width="204.33333333333337" height="22"/>
                                                 <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" title="Button">
+                                                <state key="normal" title="Button" image="arrow.left" catalog="system">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
@@ -1215,7 +1215,7 @@
                                         <constraints>
                                             <constraint firstItem="bwT-Nq-OtB" firstAttribute="centerY" secondItem="E3b-o5-OaQ" secondAttribute="centerY" id="0Z3-rk-v5o"/>
                                             <constraint firstAttribute="trailing" secondItem="Se9-vU-v2c" secondAttribute="trailing" id="0gH-Uz-JnN"/>
-                                            <constraint firstItem="bwT-Nq-OtB" firstAttribute="leading" relation="lessThanOrEqual" secondItem="E3b-o5-OaQ" secondAttribute="trailing" constant="150" id="2aV-dw-ozW"/>
+                                            <constraint firstItem="bwT-Nq-OtB" firstAttribute="leading" relation="lessThanOrEqual" secondItem="E3b-o5-OaQ" secondAttribute="trailing" constant="100" id="2aV-dw-ozW"/>
                                             <constraint firstItem="59c-U8-ciG" firstAttribute="leading" secondItem="N8c-16-nJS" secondAttribute="leading" id="5ng-U0-kRa"/>
                                             <constraint firstItem="Se9-vU-v2c" firstAttribute="leading" secondItem="N8c-16-nJS" secondAttribute="leading" id="6Lm-3W-4vi"/>
                                             <constraint firstItem="VaP-nR-fZ8" firstAttribute="top" secondItem="Zon-H4-Zoo" secondAttribute="bottom" constant="5" id="7Pe-EU-mJs"/>
@@ -1312,6 +1312,7 @@
                         <outlet property="genresLabel" destination="oeU-1K-jv4" id="lIQ-je-kkV"/>
                         <outlet property="keywordCollectionView" destination="cRc-mH-MXA" id="2Sx-vM-eIF"/>
                         <outlet property="keywordCollectionViewHeightConstraint" destination="5td-MD-slt" id="crB-fG-5i0"/>
+                        <outlet property="keywordCollectionViewTopConstraint" destination="zyU-63-o53" id="n3w-7V-Jmg"/>
                         <outlet property="matchingTVShowCollectionView" destination="UaR-Gg-evP" id="urU-L2-rzs"/>
                         <outlet property="matchingTVShowCollectionViewHeightConstraint" destination="Acx-Yj-rY0" id="w8q-8I-xk1"/>
                         <outlet property="networkCollectionView" destination="VaP-nR-fZ8" id="2P8-3L-gbs"/>
@@ -1320,8 +1321,10 @@
                         <outlet property="originalLanguageLabel" destination="bmg-H8-2Er" id="1RH-wf-ZBG"/>
                         <outlet property="overviewDetailLabel" destination="82w-1v-Pxz" id="9Uw-sF-mZy"/>
                         <outlet property="overviewLabel" destination="E3b-o5-OaQ" id="L79-0D-NJu"/>
+                        <outlet property="overviewLabelTopConstraint" destination="b36-4y-i2p" id="tiO-8q-s7h"/>
                         <outlet property="posterImageView" destination="qpj-MJ-CdV" id="5gB-wV-USx"/>
                         <outlet property="reviewButton" destination="bwT-Nq-OtB" id="Sc6-KS-FE9"/>
+                        <outlet property="reviewButtonLeadingConstraint" destination="2aV-dw-ozW" id="VMq-hP-L2E"/>
                         <outlet property="runtimeLabel" destination="Zon-H4-Zoo" id="sO6-oJ-pMU"/>
                         <outlet property="scrollView" destination="Zzz-ez-fZ5" id="M36-XJ-3ye"/>
                         <outlet property="statusLabel" destination="biu-bT-k3G" id="Es4-d4-PbN"/>
@@ -1930,5 +1933,6 @@
     </scenes>
     <resources>
         <image name="NoImage" width="450" height="450"/>
+        <image name="arrow.left" catalog="system" width="128" height="98"/>
     </resources>
 </document>

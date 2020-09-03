@@ -86,8 +86,8 @@ extension TMDBRepository: TMDBSearchRepository {
 }
 
 extension TMDBRepository: TMDBTrendingRepository {
-    func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
-        services.getTrending(time: time, type: type) { result in
+    func getTrending(page: Int, time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
+        services.getTrending(page: page, time: time, type: type) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let trendingResult):
@@ -251,15 +251,13 @@ extension TMDBRepository: TMDBTVShowRepository {
         // get from cache
         if page <= similarTVShow.page {
             // get page less than or equal current page
-            let fromTVShow = similarTVShow.totalResults / similarTVShow.totalPages * (page - 1)
-            let toTVShow = similarTVShow.totalResults / similarTVShow.totalPages * page - 1
+            let from = 20 * (page - 1)
+            let to = page == similarTVShow.page ? similarTVShow.onTV.count - 1 : (20 * page) - 1
             let result = TVShowResult()
-            result.onTV.append(objectsIn: similarTVShow.onTV[fromTVShow...toTVShow])
+            result.onTV.append(objectsIn: similarTVShow.onTV[from...to])
+            result.totalResults = similarTVShow.onTV.count
             completion(.success(result))
-        } else if page != similarTVShow.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= similarTVShow.totalPages {
             services.getSimilarTVShows(from: tvShowId, page: page) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -270,6 +268,10 @@ extension TMDBRepository: TMDBTVShowRepository {
                         completion(.success(tvShowResult))
                     }
                 }
+            }
+        } else {
+            DispatchQueue.main.async {
+                completion(.failure(NSError(domain: "No more pages for \(tvShowId)", code: 400, userInfo: nil)))
             }
         }
     }
@@ -288,15 +290,13 @@ extension TMDBRepository: TMDBTVShowRepository {
         // get from cache
         if page <= recommendTVShow.page {
             // get page less than or equal current page
-            let fromTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * (page - 1)
-            let toTVShow = recommendTVShow.totalResults / recommendTVShow.totalPages * page - 1
+            let from = 20 * (page - 1)
+            let to = page == recommendTVShow.page ? recommendTVShow.onTV.count - 1 : (20 * page) - 1
             let result = TVShowResult()
-            result.onTV.append(objectsIn: recommendTVShow.onTV[fromTVShow...toTVShow])
+            result.onTV.append(objectsIn: recommendTVShow.onTV[from...to])
+            result.totalResults = recommendTVShow.onTV.count
             completion(.success(result))
-        } else if page != recommendTVShow.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= recommendTVShow.totalPages {
             services.getRecommendTVShows(from: tvShowId, page: page) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -307,6 +307,10 @@ extension TMDBRepository: TMDBTVShowRepository {
                         completion(.success(tvShowResult))
                     }
                 }
+            }
+        } else {
+            DispatchQueue.main.async {
+                completion(.failure(NSError(domain: "No more pages for \(tvShowId)", code: 400, userInfo: nil)))
             }
         }
     }
@@ -562,15 +566,13 @@ extension TMDBRepository: TMDBMovieRepository {
 
         // get from cache
         if page <= similarMovie.page {
-            let fromMovie = 20 * (page - 1)
-            let toMovie = page == similarMovie.page ? similarMovie.movies.count - 1 : (20 * page) - 1
+            let from = 20 * (page - 1)
+            let to = page == similarMovie.page ? similarMovie.movies.count - 1 : (20 * page) - 1
             let result = MovieResult()
-            result.movies.append(objectsIn: similarMovie.movies[fromMovie...toMovie])
+            result.movies.append(objectsIn: similarMovie.movies[from...to])
+            result.totalResults = similarMovie.movies.count
             completion(.success(result))
-        } else if page != similarMovie.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= similarMovie.totalPages {
             // new page
             services.getSimilarMovies(from: movieId, page: page) { result in
                 DispatchQueue.main.async {
@@ -582,6 +584,10 @@ extension TMDBRepository: TMDBMovieRepository {
                         completion(.failure(error))
                     }
                 }
+            }
+        } else {
+            DispatchQueue.main.async {
+                completion(.failure(NSError(domain: "No more pages for \(movieId)", code: 400, userInfo: nil)))
             }
         }
     }
@@ -598,15 +604,13 @@ extension TMDBRepository: TMDBMovieRepository {
         }
         // get from cache
         if page <= recommendMovie.page {
-            let fromMovie = 20 * (page - 1)
-            let toMovie = page == recommendMovie.page ? recommendMovie.movies.count - 1 : (20 * page) - 1
+            let from = 20 * (page - 1)
+            let to = page == recommendMovie.page ? recommendMovie.movies.count - 1 : (20 * page) - 1
             let result = MovieResult()
-            result.movies.append(objectsIn: recommendMovie.movies[fromMovie...toMovie])
+            result.movies.append(objectsIn: recommendMovie.movies[from...to])
+            result.totalResults = recommendMovie.movies.count
             completion(.success(result))
-        } else if page != recommendMovie.page + 1 {
-            // only consider next consecutive page
-            completion(.failure(NSError(domain: "next page is not a consecutive of current page", code: 401, userInfo: nil)))
-        } else {
+        } else if page <= recommendMovie.totalPages {
             // new page
             services.getRecommendMovies(from: movieId, page: page) { result in
                 DispatchQueue.main.async {
@@ -618,6 +622,10 @@ extension TMDBRepository: TMDBMovieRepository {
                         completion(.failure(error))
                     }
                 }
+            }
+        } else {
+            DispatchQueue.main.async {
+                completion(.failure(NSError(domain: "No more pages for \(movieId)", code: 400, userInfo: nil)))
             }
         }
     }

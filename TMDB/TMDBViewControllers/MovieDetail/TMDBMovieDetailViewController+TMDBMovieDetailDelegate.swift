@@ -58,6 +58,7 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
     func displayMovies(_ movies: [Movie]) {
         var snapshot = matchingMoviesDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .more))
+        snapshot.appendItems(.init(), toSection: .more) // for view all card
         snapshot.appendItems(movies, toSection: .more)
         matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)
@@ -69,6 +70,10 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         snapshot.appendItems(images)
         movieImageDataSource.apply(snapshot, animatingDifferences: true)
         backdropImageCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+    }
+
+    func displayError(_ error: Error) {
+        loadingView.showError(true)
     }
 
     // MARK: - display subviews
@@ -286,6 +291,7 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
     func displayMoreMovie(movie: [Movie]) {
         var snapshot = matchingMoviesDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .more))
+        snapshot.appendItems([.init()], toSection: .more)
         snapshot.appendItems(movie, toSection: .more)
         matchingMoviesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingMoviesDataSource.apply(snapshot, animatingDifferences: true)

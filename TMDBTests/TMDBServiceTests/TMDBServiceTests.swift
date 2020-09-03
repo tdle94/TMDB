@@ -306,21 +306,21 @@ class TMDBServiceTests: XCTestCase {
         
         switch type {
         case .all:
-            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .all)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: time, type: .all)
             trendingType =  TrendingMediaMatchable(matcher: self.allTrending)
         case .movie:
-            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .movie)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: time, type: .movie)
             trendingType = TrendingMediaMatchable(matcher: self.movieTrending)
         case .person:
-            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .person)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: time, type: .person)
             trendingType = TrendingMediaMatchable(matcher: self.personTrending)
         case .tv:
-            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: .tv)
+            matchRequest = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: time, type: .tv)
             trendingType = TrendingMediaMatchable(matcher: self.tvTrending)
         }
 
         stub(urlRequestBuilder) { stub in
-            when(stub).getTrendingURLRequest(time: trendingTime, type: trendingType).thenReturn(matchRequest)
+            when(stub).getTrendingURLRequest(page: 1, time: trendingTime, type: trendingType).thenReturn(matchRequest)
         }
 
         stub(session) { stub in
@@ -330,12 +330,12 @@ class TMDBServiceTests: XCTestCase {
             }
         }
 
-        services.getTrending(time: time, type: type) { result in
+        services.getTrending(page: 1, time: time, type: type) { result in
             expectation.fulfill()
         }
 
         waitForExpectations(timeout: 5, handler: nil)
-        verify(urlRequestBuilder).getTrendingURLRequest(time: trendingTime, type: trendingType)
+        verify(urlRequestBuilder).getTrendingURLRequest(page: 1, time: trendingTime, type: trendingType)
         verify(session, times(1)).send(request: ArgumentCaptor<URLRequest>().capture(), responseType: any(TrendingResult.Type.self), completion: anyClosure())
     }
 

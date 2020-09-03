@@ -38,8 +38,8 @@ class TMDBAllTVShowViewController: TMDBDisplayAllViewController {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let movieCount = allDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), movieCount != presenter.total {
-            let page = movieCount / 20 + 1
+        if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
+            let page = tvQuery.page + 1
             tvQuery.page = page
             footerLoadingView?.loadingIndicator.startAnimating()
             presenter.getAllTVShow(tvShowQuery: tvQuery)

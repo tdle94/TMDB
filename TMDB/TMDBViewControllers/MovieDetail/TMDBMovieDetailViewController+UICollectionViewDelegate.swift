@@ -12,30 +12,34 @@ import UIKit
 // MARK: - preview poster user interaction
 extension TMDBMovieDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
         if
+            let selectedIndex = moreMovieHeader?.segmentControl.selectedSegmentIndex,
+            collectionView == matchingMoviesCollectionView,
+            indexPath.row == 0
+        {
+            if moreMovieHeader?.segmentControl.titleForSegment(at: selectedIndex) == NSLocalizedString("Similar", comment: "") {
+                coordinator?.navigateToAllSimilarMovie(id: movieId!)
+            } else {
+                coordinator?.navigateToAllRecommendMovie(id: movieId!)
+            }
+        } else if
             collectionView == matchingMoviesCollectionView,
             let movie = matchingMoviesDataSource.itemIdentifier(for: indexPath) as? Movie
         {
             coordinator?.navigateToMovieDetail(id: movie.id)
-        }
-
-        if
+        } else if
             collectionView == videoCollectionView,
             let video = videoMovieDataSource.itemIdentifier(for: indexPath) as? Video,
             let url = TMDBUserSetting().getYoutubeVideoURL(key: video.key)
         {
             coordinator?.navigateToVideoPlayer(with: url)
-        }
-
-        if
+        } else if
             collectionView == creditCollectionView,
-            let id = (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Cast)?.id ?? (creditMovieDataSource.snapshot().itemIdentifiers[indexPath.row] as? Crew)?.id
+            let id = (creditMovieDataSource.itemIdentifier(for: indexPath) as? Cast)?.id ??
+                (creditMovieDataSource.itemIdentifier(for: indexPath) as? Crew)?.id
         {
             coordinator?.navigateToPersonDetail(id: id)
-        }
-
-        if
+        } else if
             collectionView == keywordCollectionView,
             let id = movieId
         {

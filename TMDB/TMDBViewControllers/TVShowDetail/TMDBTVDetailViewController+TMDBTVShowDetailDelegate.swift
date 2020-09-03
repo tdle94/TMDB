@@ -60,7 +60,11 @@ extension TMDBTVDetailViewController: TMDBTVShowDetailDelegate {
         tvShowCreditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: false)
         tvShowCreditDataSource.apply(snapshot, animatingDifferences: true)
     }
-    
+
+    func displayError(_ error: Error) {
+        loadingView.showError(true)
+    }
+
     // MARK: - display subviews
     
     func displayBackdropImage(images: [Images]) {
@@ -189,6 +193,7 @@ extension TMDBTVDetailViewController: TMDBTVShowDetailDelegate {
     func displayTVShow(_ tvShows: [TVShow]) {
         var snapshot = matchingTVShowDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .matching))
+        snapshot.appendItems([.init()], toSection: .matching)
         snapshot.appendItems(tvShows, toSection: .matching)
         matchingTVShowCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         matchingTVShowDataSource.apply(snapshot, animatingDifferences: true)
@@ -216,12 +221,19 @@ extension TMDBTVDetailViewController: TMDBTVShowDetailDelegate {
     }
 
     private func displayOverview(tvShow: TVShow) {
+        guard tvShow.overview != "" else {
+            overviewLabel.isHidden = true
+            overviewDetailLabel.text = ""
+            overviewLabel.text = ""
+            reviewButtonLeadingConstraint.constant = 0
+            reviewButton.contentHorizontalAlignment = .left
+            overviewLabelTopConstraint.constant = 20
+            keywordCollectionViewTopConstraint.constant = 20
+            return
+        }
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
 
-        if tvShow.overview == "" {
-            overviewLabel.isHidden = true
-        }
         overviewLabel.attributedText = NSAttributedString(string: NSLocalizedString("Overview", comment: "") + ": ",
                                                                              attributes: [NSAttributedString.Key.font: UIFont(name: "Circular-Book",
                                                                                                                               size: UIFont.labelFontSize)!])

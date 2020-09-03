@@ -12,9 +12,9 @@ import Foundation
 extension TMDBHomeViewController: TMDBPreviewSegmentControl {
     func segmentControlSelected(_ header: TMDBPreviewHeaderView, text selected: String) {
         if selected == NSLocalizedString("Today", comment: "") {
-            presenter.getTrend(time: .today)
+            presenter.getTrend(page: 1, time: .today)
         } else if selected == NSLocalizedString("This Week", comment: "")  {
-            presenter.getTrend(time: .week)
+            presenter.getTrend(page: 1, time: .week)
         } else if selected == NSLocalizedString("Movies", comment: "") {
             presenter.getPopularMovie(page: 1)
         } else if selected == NSLocalizedString("People", comment: "") {

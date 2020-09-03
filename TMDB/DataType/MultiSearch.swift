@@ -25,8 +25,8 @@ struct MultiSearchResult: Decodable {
 @objcMembers
 class MultiSearch: Object, Decodable {
     dynamic var id: Int = 0
-    dynamic var  mediaType: String = ""
-    dynamic var  posterPath: String?
+    dynamic var mediaType: String = ""
+    dynamic var posterPath: String?
     
     // for movie
     dynamic var  originalTitle: String?

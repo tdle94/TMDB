@@ -39,11 +39,12 @@ class TMDBAllTrendingViewController: TMDBDisplayAllViewController {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let person = allDataSource.itemIdentifier(for: indexPath) as? People {
+        let item = allDataSource.itemIdentifier(for: indexPath) as? Trending
+        if let person = item?.people {
             coordinate?.navigateToPersonDetail(id: person.id)
-        } else if let movie = allDataSource.itemIdentifier(for: indexPath) as? Movie {
+        } else if let movie = item?.movie {
             coordinate?.navigateToMovieDetail(id: movie.id)
-        } else if let tvShow = allDataSource.itemIdentifier(for: indexPath) as? TVShow {
+        } else if let tvShow = item?.tv {
             coordinate?.navigateToTVShowDetail(tvId: tvShow.id)
         }
     }

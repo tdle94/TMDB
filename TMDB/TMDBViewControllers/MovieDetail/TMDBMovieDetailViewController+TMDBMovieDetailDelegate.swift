@@ -72,6 +72,10 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         backdropImageCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
     }
 
+    func displayError(_ error: Error) {
+        loadingView.showError(true)
+    }
+
     // MARK: - display subviews
     
     var numberFormatter: NumberFormatter {

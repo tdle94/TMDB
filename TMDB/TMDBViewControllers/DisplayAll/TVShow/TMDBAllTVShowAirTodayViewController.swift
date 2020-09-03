@@ -1,5 +1,5 @@
 //
-//  TMDBAllUpcomingMovieViewController.swift
+//  TMDBAllTVShowAirTodayViewController.swift
 //  TMDB
 //
 //  Created by Tuyen Le on 30.08.20.
@@ -9,25 +9,25 @@
 import Foundation
 import UIKit
 
-class TMDBAllUpcomingMovieViewController: TMDBDisplayAllViewController {
+class TMDBAllTVShowAirTodayViewController: TMDBDisplayAllViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("Upcoming", comment: "") + " " + NSLocalizedString("Movies", comment: "")
-        presenter.getUpcomingMovie(page: 1)
+        title = NSLocalizedString("TV Shows", comment: "") + " " + NSLocalizedString("Air Today", comment: "")
+        presenter.getTVShowAirToday(page: 1)
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let peopleCount = allDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == peopleCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), peopleCount != presenter.total {
+        if indexPath.row == peopleCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
             presenter.page = presenter.page + 1
             footerLoadingView?.loadingIndicator.startAnimating()
-            presenter.getUpcomingMovie(page: presenter.page)
+            presenter.getTVShowAirToday(page: presenter.page)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let movie = allDataSource.itemIdentifier(for: indexPath) as? Movie else { return }
-        coordinate?.navigateToMovieDetail(id: movie.id)
+        guard let tvShow = allDataSource.itemIdentifier(for: indexPath) as? TVShow else { return }
+        coordinate?.navigateToTVShowDetail(tvId: tvShow.id)
     }
 }

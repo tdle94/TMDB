@@ -349,7 +349,7 @@ class TMDBRepositoryTests: XCTestCase {
     // MARK: - trending
     private func setUpTrendingTest(time: TrendingTime, type: TrendingMediaType) {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getTrendingURLRequest(time: time, type: type)
+        let request = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: time, type: type)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let trendingTimeMatcher = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == time })
         let trendingTypeMatcher = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == type })
@@ -362,11 +362,11 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher).thenReturn(request)
+            when(stub).getTrendingURLRequest(page: 1, time: trendingTimeMatcher, type: trendingTypeMatcher).thenReturn(request)
         }
 
         /*WHEN*/
-        repository.getTrending(time: time, type: type) { result in
+        repository.getTrending(page: 1, time: time, type: type) { result in
             XCTAssertNoThrow(try! result.get())
             expectation.fulfill()
         }
@@ -374,7 +374,7 @@ class TMDBRepositoryTests: XCTestCase {
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher)
+        verify(requestBuilder).getTrendingURLRequest(page: 1, time: trendingTimeMatcher, type: trendingTypeMatcher)
     }
 
     func testAllTrendingToday() {
@@ -411,7 +411,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     func testTrendingFail() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getTrendingURLRequest(time: .today, type: .all)
+        let request = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: .today, type: .all)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let trendingTimeMatcher = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .today })
         let trendingTypeMatcher = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .all })
@@ -424,18 +424,18 @@ class TMDBRepositoryTests: XCTestCase {
         }
 
         stub(requestBuilder) { stub in
-            when(stub).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher).thenReturn(request)
+            when(stub).getTrendingURLRequest(page: 1, time: trendingTimeMatcher, type: trendingTypeMatcher).thenReturn(request)
         }
 
         /*WHEN*/
-        repository.getTrending(time: .today, type: .all) { result in
+        repository.getTrending(page: 1, time: .today, type: .all) { result in
             expectation.fulfill()
         }
 
         /*THEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(session).send(request: requestMatcher, responseType: any(TrendingResult.Type.self), completion: anyClosure())
-        verify(requestBuilder).getTrendingURLRequest(time: trendingTimeMatcher, type: trendingTypeMatcher)
+        verify(requestBuilder).getTrendingURLRequest(page: 1, time: trendingTimeMatcher, type: trendingTypeMatcher)
     }
 
     // MARK: - similar movies
@@ -520,32 +520,6 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         /*THEN*/
-        waitForExpectations(timeout: 1, handler: nil)
-        verify(localDataSource).getMovie(id: 3)
-    }
-    
-    func testSimilarMovieIncorrectPage() {
-        let expectation = self.expectation(description: "")
-        let movie = Movie()
-        let similar = MovieResult()
-        movie.id = 3
-        similar.page = 1
-        similar.totalPages = 2
-        similar.totalResults = 2
-        similar.movies.append(Movie())
-        movie.similar = similar
-        
-        /*GIVEN*/
-        stub(localDataSource) { stub in
-            when(stub).getMovie(id: 3).thenReturn(movie)
-        }
-        
-        /*THEN*/
-        repository.getSimilarMovies(from: 3, page: 5) { result in
-            expectation.fulfill()
-        }
-        
-        /*WHEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(localDataSource).getMovie(id: 3)
     }
@@ -653,32 +627,6 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         /*THEN*/
-        waitForExpectations(timeout: 1, handler: nil)
-        verify(localDataSource).getMovie(id: 3)
-    }
-    
-    func testGetRecommendMovieIncorrectPage() {
-        let expectation = self.expectation(description: "")
-        let movie = Movie()
-        let recommendation = MovieResult()
-        movie.id = 3
-        recommendation.page = 1
-        recommendation.totalPages = 2
-        recommendation.totalResults = 2
-        recommendation.movies.append(Movie())
-        movie.recommendations = recommendation
-        
-        /*GIVEN*/
-        stub(localDataSource) { stub in
-            when(stub).getMovie(id: 3).thenReturn(movie)
-        }
-        
-        /*THEN*/
-        repository.getRecommendMovies(from: 3, page: 5) { result in
-            expectation.fulfill()
-        }
-        
-        /*WHEN*/
         waitForExpectations(timeout: 1, handler: nil)
         verify(localDataSource).getMovie(id: 3)
     }
@@ -1172,30 +1120,6 @@ class TMDBRepositoryTests: XCTestCase {
         verify(localDataSource).getTVShow(id: 3)
     }
     
-    func testGetSimilarTVShowIncorrectPage() {
-        let expectaion = self.expectation(description: "")
-        let tvShow = TVShow()
-        let similarTVShow = TVShowResult()
-        similarTVShow.onTV.append(TVShow())
-        similarTVShow.page = 1
-        tvShow.id = 3
-        tvShow.similar = similarTVShow
-
-        /*GIVEN*/
-        stub(localDataSource) { stub in
-            when(stub).getTVShow(id: 3).thenReturn(tvShow)
-        }
-        
-        /*WHEN*/
-        repository.getSimilarTVShows(from: 3, page: 4) { result in
-            expectaion.fulfill()
-        }
-        
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getTVShow(id: 3)
-    }
-    
     func testGetNonExistSimilarTVShow() {
         let expectaion = self.expectation(description: "")
         let tvShow = TVShow()
@@ -1322,32 +1246,6 @@ class TMDBRepositoryTests: XCTestCase {
         
         /*WHEN*/
         repository.getRecommendTVShows(from: 3, page: 1) { result in
-            expectaion.fulfill()
-        }
-        
-        /*THEN*/
-        waitForExpectations(timeout: 5, handler: nil)
-        verify(localDataSource).getTVShow(id: 3)
-    }
-    
-    func testGetRecommendTVShowIncorrectPage() {
-        let expectaion = self.expectation(description: "")
-        let tvShow = TVShow()
-        let recommendTVShow = TVShowResult()
-        recommendTVShow.onTV.append(TVShow())
-        recommendTVShow.page = 1
-        recommendTVShow.totalResults = 2
-        recommendTVShow.totalPages = 2
-        tvShow.id = 3
-        tvShow.recommendations = recommendTVShow
-
-        /*GIVEN*/
-        stub(localDataSource) { stub in
-            when(stub).getTVShow(id: 3).thenReturn(tvShow)
-        }
-        
-        /*WHEN*/
-        repository.getRecommendTVShows(from: 3, page: 4) { result in
             expectaion.fulfill()
         }
         

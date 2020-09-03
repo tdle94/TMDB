@@ -1,20 +1,20 @@
 //
-//  TMDBAllPopularPeopleController.swift
+//  TMDBAllNowPlayingMovieViewController.swift
 //  TMDB
 //
-//  Created by Tuyen Le on 29.08.20.
+//  Created by Tuyen Le on 30.08.20.
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class TMDBAllPopularPeopleController: TMDBDisplayAllViewController {
+class TMDBAllNowPlayingMovieViewController: TMDBDisplayAllViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("Popular", comment: "") + " " + NSLocalizedString("People", comment: "")
-        presenter.getPopularPeople(page: 1)
+        title = NSLocalizedString("Now Playing", comment: "") + " " + NSLocalizedString("Movies", comment: "")
+        presenter.getNowPlayingMovie(page: 1)
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -22,12 +22,12 @@ class TMDBAllPopularPeopleController: TMDBDisplayAllViewController {
         if indexPath.row == peopleCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
             presenter.page = presenter.page + 1
             footerLoadingView?.loadingIndicator.startAnimating()
-            presenter.getPopularPeople(page: presenter.page)
+            presenter.getNowPlayingMovie(page: presenter.page)
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let person = allDataSource.itemIdentifier(for: indexPath) as? People else { return }
-        coordinate?.navigateToPersonDetail(id: person.id)
+        guard let movie = allDataSource.itemIdentifier(for: indexPath) as? Movie else { return }
+        coordinate?.navigateToMovieDetail(id: movie.id)
     }
 }

@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TMDBTrendingRepository {
-    func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
+    func getTrending(page: Int, time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 }

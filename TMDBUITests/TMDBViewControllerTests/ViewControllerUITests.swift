@@ -38,6 +38,8 @@ class ViewControllerUITests: XCTestCase {
 
         app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
         collectionView.cells.firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        collectionView.cells.element(boundBy: 1).tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
 
@@ -108,6 +110,8 @@ class ViewControllerUITests: XCTestCase {
         let recommendMovie = app.segmentedControls.buttons[NSLocalizedString("Recommend", comment: "")]
         app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].tap()
         collectionView.cells.firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        collectionView.cells.element(boundBy: 1).tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5)
 
@@ -137,18 +141,26 @@ class ViewControllerUITests: XCTestCase {
             }
 
             similarMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
             recommendMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
         } else if similarMovie.exists {
             while !similarMovie.isHittable {
                 movieDetailScrollView.firstMatch.swipeUp()
             }
 
             similarMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
         } else if recommendMovie.exists {
             while !recommendMovie.isHittable {
                 movieDetailScrollView.firstMatch.swipeUp()
             }
             recommendMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
         }
 
         app.navigationBars.buttons.element(boundBy: 0).tap()
@@ -185,12 +197,14 @@ class ViewControllerUITests: XCTestCase {
     }
 
     func tapTrendingThisWeek() {
-        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView").firstMatch
 
         // tap popular people
         app.segmentedControls.buttons[NSLocalizedString("People", comment: "")].tap()
         let expectations2 = expectation(description: "AsyncExpectations")
         collectionView.cells.firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        collectionView.cells.element(boundBy: 1).tap()
         expectations2.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
 

@@ -28,7 +28,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getPersonDetailURLRequest(id: Int, language: String?) -> URLRequest
 
     // MARK: - trending
-    func getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest
+    func getTrendingURLRequest(page: Int, time: TrendingTime, type: TrendingMediaType) -> URLRequest
 
     // MARK: - image configuration
     func getImageConfigURLRequest() -> URLRequest
@@ -82,6 +82,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getTopRatedTVShowURLRequest(page: Int, language: String?) -> URLRequest {
         let queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language ?? "en"),
         ]
         return buildURLRequest(path: "/3/tv/top_rated", queryItems: queryItems)
@@ -89,6 +90,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getTVShowAiringTodayURLRequest(page: Int, language: String?) -> URLRequest {
         let queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language ?? "en"),
         ]
         return buildURLRequest(path: "/3/tv/airing_today", queryItems: queryItems)
@@ -96,6 +98,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getTVShowOnTheAirURLRequest(page: Int, language: String?) -> URLRequest {
         let queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "language", value: language ?? "en"),
         ]
         return buildURLRequest(path: "/3/tv/on_the_air", queryItems: queryItems)
@@ -180,7 +183,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     }
 
     // MARK: - trending
-    func getTrendingURLRequest(time: TrendingTime, type: TrendingMediaType) -> URLRequest {
+    func getTrendingURLRequest(page: Int, time: TrendingTime, type: TrendingMediaType) -> URLRequest {
         var path = "/3/trending/"
         switch type {
         case .all:
@@ -199,7 +202,12 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         case .week:
             path += "week"
         }
-        return buildURLRequest(path: path, queryItems: nil)
+
+        let query = [
+            URLQueryItem(name: "page", value: String(page))
+        ]
+
+        return buildURLRequest(path: path, queryItems: query)
     }
 
     private func buildURLRequest(path: String, queryItems: [URLQueryItem]?) -> URLRequest {

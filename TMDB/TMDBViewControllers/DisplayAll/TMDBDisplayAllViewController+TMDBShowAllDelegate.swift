@@ -15,7 +15,6 @@ extension TMDBDisplayAllViewController: TMDBShowAllDelegate {
         footerLoadingView?.loadingIndicator.stopAnimating()
         var snapshot = allDataSource.snapshot()
         snapshot.appendItems(objects)
-        print(snapshot.itemIdentifiers.count)
         allDataSource.apply(snapshot, animatingDifferences: true)
     }
 }

@@ -1,28 +1,28 @@
 //
-//  TMDBAllTopRatedTVShowViewController.swift
+//  TMDBAllRecommendTVShowViewController.swift
 //  TMDB
 //
-//  Created by Tuyen Le on 30.08.20.
+//  Created by Tuyen Le on 9/1/20.
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class TMDBAllTopRatedTVShowViewController: TMDBDisplayAllViewController {
+class TMDBAllRecommendTVShowViewController: TMDBDisplayAllViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("TV Shows", comment: "") + " " + NSLocalizedString("Top Rated", comment: "")
-        presenter.getTopRatedTVShow(page: 1)
+        title = NSLocalizedString("Similar", comment: "")
+        presenter.getRecommendTVShow(id: presenter.id!, page: 1)
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let peopleCount = allDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == peopleCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), peopleCount != presenter.total {
+        if indexPath.row == peopleCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
             presenter.page = presenter.page + 1
             footerLoadingView?.loadingIndicator.startAnimating()
-            presenter.getTopRatedTVShow(page: presenter.page)
+            presenter.getRecommendTVShow(id: presenter.id!, page: presenter.page)
         }
     }
     
@@ -31,3 +31,4 @@ class TMDBAllTopRatedTVShowViewController: TMDBDisplayAllViewController {
         coordinate?.navigateToTVShowDetail(tvId: tvShow.id)
     }
 }
+

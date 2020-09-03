@@ -1,30 +1,28 @@
 //
-//  TMDBAllRecommendMovieViewController.swift
+//  TMDBAllPopularMovieViewController.swift
 //  TMDB
 //
-//  Created by Tuyen Le on 31.08.20.
+//  Created by Tuyen Le on 29.08.20.
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class TMDBAllRecommendMovieViewController: TMDBDisplayAllViewController {
+class TMDBAllPopularMovieViewController: TMDBDisplayAllViewController {
     // MARK: - override
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("Recommend", comment: "")
-        if let id = presenter.id {
-            presenter.getRecommendMovie(id: id, page: 1)
-        }
+        title = NSLocalizedString("Popular", comment: "") + " " + NSLocalizedString("Movies", comment: "")
+        presenter.getPopularMovie(page: 1)
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let peopleCount = allDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == peopleCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), peopleCount != presenter.total, let id = presenter.id {
+        let movieCount = allDataSource.snapshot().itemIdentifiers.count
+        if indexPath.row == movieCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
             presenter.page = presenter.page + 1
             footerLoadingView?.loadingIndicator.startAnimating()
-            presenter.getRecommendMovie(id: id, page: presenter.page)
+            presenter.getPopularMovie(page: presenter.page)
         }
     }
 

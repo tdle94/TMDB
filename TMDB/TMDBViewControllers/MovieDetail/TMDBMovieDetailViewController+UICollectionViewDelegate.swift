@@ -13,10 +13,11 @@ import UIKit
 extension TMDBMovieDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if
+            let selectedIndex = moreMovieHeader?.segmentControl.selectedSegmentIndex,
             collectionView == matchingMoviesCollectionView,
             indexPath.row == 0
         {
-            if moreMovieHeader?.segmentControl.selectedSegmentIndex == 0 {
+            if moreMovieHeader?.segmentControl.titleForSegment(at: selectedIndex) == NSLocalizedString("Similar", comment: "") {
                 coordinator?.navigateToAllSimilarMovie(id: movieId!)
             } else {
                 coordinator?.navigateToAllRecommendMovie(id: movieId!)

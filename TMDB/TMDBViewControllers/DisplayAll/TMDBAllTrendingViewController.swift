@@ -31,8 +31,8 @@ class TMDBAllTrendingViewController: TMDBDisplayAllViewController {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let trendingCount = allDataSource.snapshot().itemIdentifiers.count
-        if indexPath.row == trendingCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true), trendingCount != presenter.total {
-            presenter.page = presenter.page + 1
+        if indexPath.row == trendingCount - 1, !(footerLoadingView?.loadingIndicator.isAnimating ?? true) {
+            presenter.page += 1
             footerLoadingView?.loadingIndicator.startAnimating()
             presenter.getTrending(page: presenter.page, time: time)
         }

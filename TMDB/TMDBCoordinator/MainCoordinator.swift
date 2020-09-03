@@ -124,6 +124,20 @@ struct MainCoordinator: Coordinator {
         nowPlayingMovieVC.coordinate = MainCoordinator(navigationController: navigationController)
         navigationController.pushViewController(nowPlayingMovieVC, animated: true)
     }
+    
+    func navigateToSimilarTVShow(id: Int) {
+        let similarTVShow = TMDBAllSimilarTVShowViewController()
+        similarTVShow.coordinate = MainCoordinator(navigationController: navigationController)
+        similarTVShow.presenter.id = id
+        navigationController.pushViewController(similarTVShow, animated: true)
+    }
+    
+    func navigateToRecommendTVShow(id: Int) {
+        let recommendTVShow = TMDBAllRecommendTVShowViewController()
+        recommendTVShow.coordinate = MainCoordinator(navigationController: navigationController)
+        recommendTVShow.presenter.id = id
+        navigationController.pushViewController(recommendTVShow, animated: true)
+    }
 
     func navigateToAllPopularTVShow() {
         let popularTVShow = TMDBAllPopularTVShowController()

@@ -11,18 +11,16 @@ import Foundation
 class TMDBAllPresenter {
     let repository: TMDBRepository = TMDBRepository.share
 
-    private(set) var total: Int = 0
-
     var page: Int = 1
 
     var id: Int?
-    
+
     private lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { result in
         switch result {
         case .failure(let error):
             debugPrint(error)
+            self.showAllDelegate?.displayAll(objects: [])
         case .success(let movieResult):
-            self.total = movieResult.totalResults
             self.showAllDelegate?.displayAll(objects: Array(movieResult.movies))
         }
     }
@@ -31,8 +29,8 @@ class TMDBAllPresenter {
         switch result {
         case .failure(let error):
             debugPrint(error)
+            self.showAllDelegate?.displayAll(objects: [])
         case .success(let tvShowResult):
-            self.total = tvShowResult.totalResults
             self.showAllDelegate?.displayAll(objects: Array(tvShowResult.onTV))
         }
     }
@@ -95,14 +93,22 @@ class TMDBAllPresenter {
         repository.getTVShowOnTheAir(page: page, completion: tvShowHandler)
     }
 
+    func getSimilarTVShow(id: Int, page: Int) {
+        repository.getSimilarTVShows(from: id, page: page, completion: tvShowHandler)
+    }
+
+    func getRecommendTVShow(id: Int, page: Int) {
+        repository.getRecommendTVShows(from: id, page: page, completion: tvShowHandler)
+    }
+
     // MARK: - people service
     func getPopularPeople(page: Int) {
         repository.getPopularPeople(page: page) { result in
             switch result {
             case .failure(let error):
                 debugPrint(error)
+                self.showAllDelegate?.displayAll(objects: [])
             case .success(let popularPeople):
-                self.total = popularPeople.totalPages
                 self.showAllDelegate?.displayAll(objects: Array(popularPeople.peoples))
             }
         }
@@ -110,12 +116,12 @@ class TMDBAllPresenter {
     
     // MARK: - trending service
     func getTrending(page: Int, time: TrendingTime) {
-        repository.getTrending(time: time, type: .all) { result in
+        repository.getTrending(page: page, time: time, type: .all) { result in
             switch result {
             case .failure(let error):
                 debugPrint(error)
+                self.showAllDelegate?.displayAll(objects: [])
             case .success(let trendingResult):
-                self.total = trendingResult.totalPages
                 self.showAllDelegate?.displayAll(objects: Array(trendingResult.trending))
             }
         }

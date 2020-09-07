@@ -43,6 +43,9 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         var snapshot = creditMovieDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(casts, toSection: .credit)
+        if casts.count == 1 {
+            snapshot.reloadSections([.credit])
+        }
         creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -51,6 +54,9 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         var snapshot = creditMovieDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .credit))
         snapshot.appendItems(crews, toSection: .credit)
+        if crews.count == 1 {
+            snapshot.reloadSections([.credit])
+        }
         creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         creditMovieDataSource.apply(snapshot, animatingDifferences: true)
     }

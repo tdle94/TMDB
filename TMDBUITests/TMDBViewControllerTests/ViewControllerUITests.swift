@@ -117,9 +117,7 @@ class ViewControllerUITests: XCTestCase {
 
         // cast and/or crew tap
         if cast.exists && crew.exists {
-            while !cast.isHittable && !crew.isHittable {
-                movieDetailScrollView.firstMatch.swipeUp()
-            }
+            movieDetailScrollView.firstMatch.swipeUp()
             cast.tap()
             crew.tap()
         } else if cast.exists {

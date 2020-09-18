@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class TMDBKeywordCell: UICollectionViewCell {
-    let label = UILabel()
+    let label = UILabel(frame: .zero)
 
     override var isSelected: Bool {
         didSet {
@@ -26,8 +26,8 @@ class TMDBKeywordCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        label.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height)
         contentView.addSubview(label)
+
         layer.cornerRadius = 5
         layer.borderColor = UIColor.black.cgColor
         layer.borderWidth = 0.3

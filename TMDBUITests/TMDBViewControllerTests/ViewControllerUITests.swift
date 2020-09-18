@@ -161,7 +161,7 @@ class ViewControllerUITests: XCTestCase {
             app.navigationBars.buttons.element(boundBy: 0).tap()
         }
 
-
+        app.navigationBars.buttons.element(boundBy: 0).tap()
         tapPopularTVShow()
 
         app.navigationBars.buttons.element(boundBy: 0).tap()
@@ -232,7 +232,7 @@ class ViewControllerUITests: XCTestCase {
         app.segmentedControls.buttons[NSLocalizedString("Now Playing", comment: "")].tap()
 
         // tap top rate movie button
-        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
+        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].firstMatch.tap()
 
         // tap upcoming movie button
         app.segmentedControls.buttons[NSLocalizedString("Upcoming", comment: "")].tap()

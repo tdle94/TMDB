@@ -1,17 +1,17 @@
 PODS:
-  - Cuckoo (1.4.0):
-    - Cuckoo/Swift (= 1.4.0)
-  - Cuckoo/Swift (1.4.0)
-  - Nimble (8.1.1)
+  - Cuckoo (1.4.1):
+    - Cuckoo/Swift (= 1.4.1)
+  - Cuckoo/Swift (1.4.1)
+  - Nimble (8.1.2)
   - Quick (3.0.0)
-  - Realm (5.2.0):
-    - Realm/Headers (= 5.2.0)
-  - Realm/Headers (5.2.0)
-  - RealmSwift (5.2.0):
-    - Realm (= 5.2.0)
-  - SDWebImage (5.8.3):
-    - SDWebImage/Core (= 5.8.3)
-  - SDWebImage/Core (5.8.3)
+  - Realm (5.4.1):
+    - Realm/Headers (= 5.4.1)
+  - Realm/Headers (5.4.1)
+  - RealmSwift (5.4.1):
+    - Realm (= 5.4.1)
+  - SDWebImage (5.9.1):
+    - SDWebImage/Core (= 5.9.1)
+  - SDWebImage/Core (5.9.1)
 
 DEPENDENCIES:
   - Cuckoo
@@ -30,12 +30,12 @@ SPEC REPOS:
     - SDWebImage
 
 SPEC CHECKSUMS:
-  Cuckoo: da26594ea25d227d788cd2f25466442a4348c486
-  Nimble: 5f8a2fb6fa343a7242dfdd9d42f7267419d464b2
+  Cuckoo: 4625f7f54d9bb880123270e8969898d6c1d036b5
+  Nimble: 3864815b4703c7ebffba875973c70e854489fbae
   Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
-  Realm: f749c723e272f08fdf1939af5e61d2bd09b203e8
-  RealmSwift: bf0ab78b52c5bafba8b3ad73be8dfb4c1ea5cf01
-  SDWebImage: 112503ec94a5a2a41869503844a15e8d8f1ead5c
+  Realm: 7e887608ef1de2d0c3a33dd9b1449e08fc9d9807
+  RealmSwift: ef998d9b678fd74e047c56ef4d99d9b77e87c1eb
+  SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
 
 PODFILE CHECKSUM: 9b867632f8b104eb81fca0624a0ba84f16d369e2
 

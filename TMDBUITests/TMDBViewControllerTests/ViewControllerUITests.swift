@@ -161,7 +161,6 @@ class ViewControllerUITests: XCTestCase {
             app.navigationBars.buttons.element(boundBy: 0).tap()
         }
 
-        app.navigationBars.buttons.element(boundBy: 0).tap()
         tapPopularTVShow()
 
         app.navigationBars.buttons.element(boundBy: 0).tap()

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class TMDBKeywordCell: UICollectionViewCell {
-    let label = UILabel()
+    let label = UILabel(frame: .zero)
 
     override var isSelected: Bool {
         didSet {
@@ -26,14 +26,19 @@ class TMDBKeywordCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        label.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height)
         contentView.addSubview(label)
+
         layer.cornerRadius = 5
         layer.borderColor = UIColor.black.cgColor
         layer.borderWidth = 0.3
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .darkGray
         label.textAlignment = .center
         label.font = UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)
+        
+        label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
     }
 
     required init?(coder: NSCoder) {
@@ -42,8 +47,5 @@ class TMDBKeywordCell: UICollectionViewCell {
 
     func configure(keyword: Keyword) {
         label.text = keyword.name
-        label.sizeToFit()
-        label.frame.origin = CGPoint(x: bounds.midX - label.frame.size.width/2,
-                                     y: 0 + (bounds.maxY - label.bounds.maxY)/2)
     }
 }

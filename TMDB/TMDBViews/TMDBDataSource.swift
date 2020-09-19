@@ -28,6 +28,7 @@ enum Section: String {
     case appearIn
     case movie
     case tvShow
+    case all
     case searchResult
     case genres
     case languages
@@ -52,7 +53,7 @@ enum Section: String {
         case .appearIn: return NSLocalizedString("Appear In", comment: "")
         case .movie: return NSLocalizedString("Movie", comment: "")
         case .tvShow: return NSLocalizedString("TV Shows", comment: "")
-        case .genres, .searchResult, .languages, .year: return nil
+        case .genres, .searchResult, .languages, .year, .all: return nil
         }
     }
 }
@@ -74,8 +75,14 @@ class TMDBTableDataSource: UITableViewDiffableDataSource<Section, Object> {
 
 // Reusable collection view data source
 class TMDBCollectionDataSource: UICollectionViewDiffableDataSource<Section, Object> {
-    init(cellIdentifier: String, collectionView: UICollectionView) {
+    init(cellIdentifier: String, collectionView: UICollectionView, firstCellViewAllIdentifier: String? = nil) {
         super.init(collectionView: collectionView) { collectionView, indexPath, item in
+            if
+                indexPath.row == 0,
+                let identifier = firstCellViewAllIdentifier
+            {
+                return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+            }
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TMDBCellConfig
             cell?.configure(item: item)
             return cell as? UICollectionViewCell

@@ -37,8 +37,13 @@ class TMDBTVDetailViewController: UIViewController {
     var tvShowCreatorDataSrouce: TMDBCollectionDataSource!
 
     var tvShowBackdropImageDataSource: TMDBCollectionDataSource!
+    
+    var d: UICollectionViewDiffableDataSource<Int, Movie>!
 
     // MARK: - ui
+    @IBOutlet weak var keywordCollectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var overviewLabelTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var reviewButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.refreshControl = UIRefreshControl()
@@ -135,9 +140,10 @@ class TMDBTVDetailViewController: UIViewController {
     @IBOutlet weak var matchingTVShowCollectionView: UICollectionView! {
         didSet {
             matchingTVShowCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
+            matchingTVShowCollectionView.register(TMDBViewAllCell.self, forCellWithReuseIdentifier: Constant.Identifier.displayAllCell)
             matchingTVShowCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
             matchingTVShowCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
-            matchingTVShowDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: matchingTVShowCollectionView)
+            matchingTVShowDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: matchingTVShowCollectionView, firstCellViewAllIdentifier: Constant.Identifier.displayAllCell)
             matchingTVShowDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 self.addtionalHeaderView = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ?? collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constant.Identifier.previewHeader, for: indexPath)) as? TMDBPreviewHeaderView
                 self.addtionalHeaderView?.label.text = NSLocalizedString("More", comment: "")
@@ -199,6 +205,13 @@ class TMDBTVDetailViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         tvShowSeaonTableViewHeightConstraint.constant = tvShowSeasonTableView.contentSize.height
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectIndexPathh = keywordCollectionView.indexPathsForSelectedItems?.first {
+            keywordCollectionView.deselectItem(at: selectIndexPathh, animated: true)
+        }
     }
 
     // MARK: - action

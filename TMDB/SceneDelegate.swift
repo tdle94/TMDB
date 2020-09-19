@@ -28,8 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // set view controller
         let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome) as! TMDBHomeViewController
-        let movieVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllMovieVC) as! TMDBAllMovieViewController
-        let tvVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbAllTVShowVC) as! TMDBAllTVShowViewController
+        let movieVC = TMDBAllMovieViewController()
+        let tvVC = TMDBAllTVShowViewController()
         let searchVC = TMDBSearchViewController()
 
         // set navigation controller

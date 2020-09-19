@@ -9,8 +9,8 @@
 import Foundation
 
 extension TMDBServices: TMDBTrendingService {
-    func getTrending(time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
-        let request = urlRequestBuilder.getTrendingURLRequest(time: time, type: type)
+    func getTrending(page: Int, time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getTrendingURLRequest(page: page, time: time, type: type)
         session.send(request: request, responseType: TrendingResult.self, completion: completion)
     }
 }

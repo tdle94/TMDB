@@ -27,6 +27,9 @@ extension TMDBPersonDetailViewController: TMDBPersonDetailDelegate {
         var snapshot = appearInDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers)
         snapshot.appendItems(movies)
+        if movies.count == 1 {
+            snapshot.reloadSections([.appearIn])
+        }
         appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         appearInDataSource.apply(snapshot, animatingDifferences: true)
     }
@@ -35,6 +38,9 @@ extension TMDBPersonDetailViewController: TMDBPersonDetailDelegate {
         var snapshot = appearInDataSource.snapshot()
         snapshot.deleteItems(snapshot.itemIdentifiers)
         snapshot.appendItems(tvShows)
+        if tvShows.count == 1 {
+            snapshot.reloadSections([.appearIn])
+        }
         appearInCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .right, animated: true)
         appearInDataSource.apply(snapshot, animatingDifferences: true)
     }

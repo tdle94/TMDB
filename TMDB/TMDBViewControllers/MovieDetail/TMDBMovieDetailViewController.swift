@@ -137,9 +137,16 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var matchingMoviesCollectionView: UICollectionView! {
         didSet {
             matchingMoviesCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
-            matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
-            matchingMoviesCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
-            matchingMoviesDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: matchingMoviesCollectionView)
+            matchingMoviesCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil),
+                                                  forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            matchingMoviesCollectionView.register(TMDBViewAllCell.self,
+                                                  forCellWithReuseIdentifier: Constant.Identifier.displayAllCell)
+            matchingMoviesCollectionView.register(TMDBPreviewHeaderView.self,
+                                                  forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                                  withReuseIdentifier: Constant.Identifier.previewHeader)
+            matchingMoviesDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem,
+                                                                collectionView: matchingMoviesCollectionView,
+                                                                firstCellViewAllIdentifier: Constant.Identifier.displayAllCell)
 
             matchingMoviesDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
                 self.moreMovieHeader = (collectionView.supplementaryView(forElementKind: kind, at: indexPath) ??

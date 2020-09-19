@@ -16,8 +16,3 @@
 - Original Logo, Color, And API are from [TMDB](https://www.themoviedb.org/about/logos-attribution) website
 
 ![alt text](https://i.ibb.co/qmyM1hW/Webp-net-resizeimage.png) ![alt text](https://i.ibb.co/qWTFHPd/Webp-net-resizeimage-1.png) ![alt text](https://i.ibb.co/LkSYDmX/Webp-net-resizeimage-2.png)
-
-### TODO
-- Like button
-- Filter movie and tv shows
-- Add machine learning model for recommendation base on user like

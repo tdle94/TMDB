@@ -77,8 +77,8 @@ class TMDBHomePresenter {
     }
     
     // MARK: - trend
-    func getTrend(time: TrendingTime) {
-        repository.getTrending(time: time, type: .all, completion: trendingHandler)
+    func getTrend(page: Int, time: TrendingTime) {
+        repository.getTrending(page: page, time: time, type: .all, completion: trendingHandler)
     }
     
     // MARK: - movie

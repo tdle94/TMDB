@@ -55,7 +55,7 @@ extension TMDBTVShowEpisodeViewController: TMDBTVShowEpisodeDelegate {
             return
         }
         
-        snapshot.deleteAllItems()
+        snapshot.deleteItems(snapshot.itemIdentifiers(inSection: .video))
         snapshot.appendItems(Array(videos))
         videoDataSource.apply(snapshot, animatingDifferences: true)
         videoCollectionViewHeightConstraint.constant = videoCollectionView.contentSize.height/2

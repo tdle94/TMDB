@@ -49,9 +49,21 @@ class TMDBFilterViewController: UITableViewController {
     var yearDataSource: UICollectionViewDiffableDataSource<Section, Int>!
 
     // MARK: - ui
-    @IBOutlet weak var yearLabel: UILabel!
-    @IBOutlet weak var genreLabel: UILabel!
-    @IBOutlet weak var languageLabel: UILabel!
+    @IBOutlet weak var yearLabel: UILabel! {
+        didSet {
+            yearLabel.text = NSLocalizedString("Year", comment: "")
+        }
+    }
+    @IBOutlet weak var genreLabel: UILabel! {
+        didSet {
+            genreLabel.text = NSLocalizedString("Genre", comment: "")
+        }
+    }
+    @IBOutlet weak var languageLabel: UILabel! {
+        didSet {
+            languageLabel.text = NSLocalizedString("Language", comment: "")
+        }
+    }
     @IBOutlet weak var yearCollectionView: UICollectionView! {
         didSet {
             yearCollectionView.register(TMDBFilterCell.self, forCellWithReuseIdentifier: Constant.Identifier.previewItem)

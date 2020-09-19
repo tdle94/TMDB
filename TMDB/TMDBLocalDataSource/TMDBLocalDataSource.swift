@@ -13,14 +13,14 @@ protocol TMDBLocalDataSourceProtocol {
     // movie
     func getMovie(id: Int) -> Movie?
     func saveMovie(_ movie: Movie)
-    func saveSimilarMovie(_ similarMovie: List<Movie>, to movieId: Int)
-    func saveRecommendMovie(_ recommendMovie: List<Movie>, to movieId: Int)
+    func saveSimilarMovie(_ similarMovies: List<Movie>, to movieId: Int)
+    func saveRecommendMovie(_ recommendMovies: List<Movie>, to movieId: Int)
     func saveMovieImages(_ movieImages: ImageResult, to movieId: Int)
     // tv show
     func getTVShow(id: Int) -> TVShow?
     func saveTVShow(_ tvShow: TVShow)
-    func saveSimilarTVShow(_ similarTVShow: List<TVShow>, to tvShowId: Int)
-    func saveRecommendTVShow(_ recommendTVShow: List<TVShow>, to tvShowId: Int)
+    func saveSimilarTVShow(_ similarTVShows: List<TVShow>, to tvShowId: Int)
+    func saveRecommendTVShow(_ recommendTVShows: List<TVShow>, to tvShowId: Int)
     func saveTVShowSeason(_ season: Season, to tvShowId: Int)
     func getTVShowSeason(tvShowId: Int, seasonNumber: Int) -> Season?
     func saveTVShowImages(_ tvShowImages: ImageResult, to tvShowId: Int)
@@ -75,18 +75,39 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         try? realm.commitWrite()
     }
 
-    func saveSimilarMovie(_ similarMovie: List<Movie>, to movieId: Int) {
+    func saveSimilarMovie(_ similarMovies: List<Movie>, to movieId: Int) {
         realm.beginWrite()
         let movie = getMovie(id: movieId)
-        movie?.similar?.movies.append(objectsIn: similarMovie)
+        var saveMovies: [Movie] = []
+        
+        for movie in similarMovies {
+            let existedMovie = getMovie(id: movie.id)
+            if existedMovie == nil {
+                saveMovies.append(movie)
+            } else {
+                saveMovies.append(existedMovie!)
+            }
+        }
+        movie?.similar?.movies.append(objectsIn: saveMovies)
         movie?.similar?.page += 1
         try? realm.commitWrite()
     }
 
-    func saveRecommendMovie(_ recommendMovie: List<Movie>, to movieId: Int) {
+    func saveRecommendMovie(_ recommendMovies: List<Movie>, to movieId: Int) {
         realm.beginWrite()
         let movie = getMovie(id: movieId)
-        movie?.recommendations?.movies.append(objectsIn: recommendMovie)
+        var saveMovies: [Movie] = []
+        
+        for movie in recommendMovies {
+            let existedMovie = getMovie(id: movie.id)
+            if existedMovie == nil {
+                saveMovies.append(movie)
+            } else {
+                saveMovies.append(existedMovie!)
+            }
+        }
+
+        movie?.recommendations?.movies.append(objectsIn: recommendMovies)
         movie?.recommendations?.page += 1
         try? realm.commitWrite()
     }
@@ -114,18 +135,38 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         try? realm.commitWrite()
     }
 
-    func saveSimilarTVShow(_ similarTVShow: List<TVShow>, to tvShowId: Int) {
+    func saveSimilarTVShow(_ similarTVShows: List<TVShow>, to tvShowId: Int) {
         realm.beginWrite()
         let tvShow = getTVShow(id: tvShowId)
-        tvShow?.similar?.onTV.append(objectsIn: similarTVShow)
+        var saveTVShows: [TVShow] = []
+        
+        for similarTVShow in similarTVShows {
+            let existedTVShow = getTVShow(id: similarTVShow.id)
+            if existedTVShow == nil {
+                saveTVShows.append(similarTVShow)
+            } else {
+                saveTVShows.append(existedTVShow!)
+            }
+        }
+        tvShow?.similar?.onTV.append(objectsIn: saveTVShows)
         tvShow?.similar?.page += 1
         try? realm.commitWrite()
     }
 
-    func saveRecommendTVShow(_ recommendTVShow: List<TVShow>,to tvShowId: Int) {
+    func saveRecommendTVShow(_ recommendTVShows: List<TVShow>,to tvShowId: Int) {
         realm.beginWrite()
         let tvShow = getTVShow(id: tvShowId)
-        tvShow?.recommendations?.onTV.append(objectsIn: recommendTVShow)
+        var saveTVShows: [TVShow] = []
+        
+        for recommendTVShow in recommendTVShows {
+            let existedTVShow = getTVShow(id: recommendTVShow.id)
+            if existedTVShow == nil {
+                saveTVShows.append(recommendTVShow)
+            } else {
+                saveTVShows.append(existedTVShow!)
+            }
+        }
+        tvShow?.recommendations?.onTV.append(objectsIn: saveTVShows)
         tvShow?.recommendations?.page += 1
         try? realm.commitWrite()
     }

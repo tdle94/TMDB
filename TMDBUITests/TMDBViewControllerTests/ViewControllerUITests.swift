@@ -38,6 +38,8 @@ class ViewControllerUITests: XCTestCase {
 
         app.segmentedControls.buttons[NSLocalizedString("TV Shows", comment: "")].tap()
         collectionView.cells.firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        collectionView.cells.element(boundBy: 1).tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
 
@@ -108,14 +110,14 @@ class ViewControllerUITests: XCTestCase {
         let recommendMovie = app.segmentedControls.buttons[NSLocalizedString("Recommend", comment: "")]
         app.segmentedControls.buttons[NSLocalizedString("Movies", comment: "")].tap()
         collectionView.cells.firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        collectionView.cells.element(boundBy: 1).tap()
         expectations.fulfill()
         waitForExpectations(timeout: 5)
 
         // cast and/or crew tap
         if cast.exists && crew.exists {
-            while !cast.isHittable && !crew.isHittable {
-                movieDetailScrollView.firstMatch.swipeUp()
-            }
+            movieDetailScrollView.firstMatch.swipeUp()
             cast.tap()
             crew.tap()
         } else if cast.exists {
@@ -137,21 +139,27 @@ class ViewControllerUITests: XCTestCase {
             }
 
             similarMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
             recommendMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
         } else if similarMovie.exists {
             while !similarMovie.isHittable {
                 movieDetailScrollView.firstMatch.swipeUp()
             }
 
             similarMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
         } else if recommendMovie.exists {
             while !recommendMovie.isHittable {
                 movieDetailScrollView.firstMatch.swipeUp()
             }
             recommendMovie.tap()
+            app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
         }
-
-        app.navigationBars.buttons.element(boundBy: 0).tap()
 
         tapPopularTVShow()
 
@@ -185,12 +193,14 @@ class ViewControllerUITests: XCTestCase {
     }
 
     func tapTrendingThisWeek() {
-        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView")
+        let collectionView = app.collectionViews.matching(identifier: "HomeCollectionView").firstMatch
 
         // tap popular people
         app.segmentedControls.buttons[NSLocalizedString("People", comment: "")].tap()
         let expectations2 = expectation(description: "AsyncExpectations")
         collectionView.cells.firstMatch.tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        collectionView.cells.element(boundBy: 1).tap()
         expectations2.fulfill()
         waitForExpectations(timeout: 5, handler: nil)
 
@@ -217,14 +227,14 @@ class ViewControllerUITests: XCTestCase {
 
         collectionView.firstMatch.swipeUp()
 
-        // tap now playing button
+        // tap now playing movie button
         app.segmentedControls.buttons[NSLocalizedString("Now Playing", comment: "")].tap()
 
-        // tap upcoming button
-        app.segmentedControls.buttons[NSLocalizedString("Upcoming", comment: "")].tap()
+        // tap top rate movie button
+        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].firstMatch.tap()
 
-        // tap top rate button
-        app.segmentedControls.buttons[NSLocalizedString("Top Rated", comment: "")].tap()
+        // tap upcoming movie button
+        app.segmentedControls.buttons[NSLocalizedString("Upcoming", comment: "")].tap()
 
         collectionView.firstMatch.swipeUp()
 

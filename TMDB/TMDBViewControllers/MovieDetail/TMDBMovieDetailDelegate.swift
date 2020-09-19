@@ -14,4 +14,5 @@ protocol TMDBMovieDetailDelegate: NSObjectProtocol {
     func displayMovieCrews(_ crews: [Crew])
     func displayMovies(_ movies: [Movie])
     func displayBackdropImage(_ images: [Images])
+    func displayError(_ error: Error)
 }

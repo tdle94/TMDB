@@ -7,3 +7,15 @@
 //
 
 import Foundation
+
+struct GuestSession: Codable, Equatable {
+    let success: Bool
+    let id: String
+    let expiration: String
+
+    enum CodingKeys: String, CodingKey {
+        case success
+        case id = "guest_session_id"
+        case expiration = "expires_at"
+    }
+}

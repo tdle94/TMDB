@@ -65,4 +65,14 @@ class TMDBUserSettingTests: XCTestCase {
     func testGetTVShowGenres() {
         XCTAssertEqual(setting.tvShowGenres.count, 16)
     }
+    
+    func testGetAPIKey() {
+        XCTAssertEqual(setting.apiKey, "6823a37cea296ab67c0a2a6ce3cb4ec5")
+    }
+
+    func testGuestSession() {
+        XCTAssertNil(setting.guestSession)
+        setting.guestSession = GuestSession(success: true, id: "", expiration: "")
+        XCTAssertNotNil(setting.guestSession)
+    }
 }

@@ -237,4 +237,10 @@ class TestURLRequestBuilder: XCTestCase {
         let urlMatcher = "https://api.themoviedb.org/3/tv/on_the_air?page=1&language=en&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
+
+    func testGetGuestSessionURL() {
+        let matchRequest = urlRequestBuilder.getGuestSessionURLRequest()
+        let urlMatcher = "https://api.themoviedb.org/3/authentication/guest_session/new?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
 }

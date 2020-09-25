@@ -8,15 +8,18 @@
 import Foundation
 import RealmSwift
 
-struct TMDBRepository {
+class TMDBRepository {
     let services: TMDBServices
     let localDataSource: TMDBLocalDataSourceProtocol
+    var userSetting: TMDBUserSettingProtocol
+    
     static let share: TMDBRepository = TMDBRepository(services: TMDBServices(session: TMDBSession(session: URLSession.shared),
                                                                       urlRequestBuilder: TMDBURLRequestBuilder()),
-                                               localDataSource: TMDBLocalDataSource())
-    init(services: TMDBServices, localDataSource: TMDBLocalDataSourceProtocol) {
+                                                      localDataSource: TMDBLocalDataSource(), userSetting: TMDBUserSetting())
+    init(services: TMDBServices, localDataSource: TMDBLocalDataSourceProtocol, userSetting: TMDBUserSettingProtocol) {
         self.services = services
         self.localDataSource = localDataSource
+        self.userSetting = userSetting
     }
 }
 
@@ -660,5 +663,47 @@ extension TMDBRepository: TMDBMovieRepository {
                 }
             }
         }
+    }
+}
+
+extension TMDBRepository: TMDBAuthenticationRepository {
+    func getUTCDate(from date: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        return formatter.date(from: date)
+    }
+    
+    func getCurrentUTCDate() -> Date? {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        let utcTimeZoneStr = formatter.string(from: date)
+        return getUTCDate(from: utcTimeZoneStr)
+    }
+
+    func getGuestSession() {
+        guard
+            let guestSession = userSetting.guestSession,
+            let sessionDate = getUTCDate(from: guestSession.expiration),
+            let currentDate = getCurrentUTCDate(),
+            sessionDate >= currentDate
+            else {
+                services.getGuestSession { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let guestSession):
+                            if guestSession.success {
+                                self.userSetting.guestSession = guestSession
+                                debugPrint("Success getting guest session: \(guestSession.id)")
+                            }
+                        case .failure(let error):
+                            debugPrint("Cannot get guest session: \(error.localizedDescription)")
+                        }
+                    }
+                }
+                return
+            }
     }
 }

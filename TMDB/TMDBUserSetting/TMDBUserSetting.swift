@@ -15,6 +15,8 @@ protocol TMDBUserSettingProtocol {
     var languagesCode: [LanguageCode] { get }
     var movieGenres: [Genre] { get }
     var tvShowGenres: [Genre] { get }
+    var guestSession: GuestSession? { get set }
+    var apiKey: String { get }
     func getImageURL(from path: String) -> URL?
     func getYoutubeImageURL(key: String) -> URL?
     func getYoutubeVideoURL(key: String) -> URL?
@@ -23,6 +25,35 @@ protocol TMDBUserSettingProtocol {
 struct TMDBUserSetting: TMDBUserSettingProtocol {
     
     var userDefault: UserDefaults = UserDefaults.standard
+    
+    var apiKey: String {
+        return "6823a37cea296ab67c0a2a6ce3cb4ec5"
+    }
+
+    var guestSession: GuestSession? {
+        get {
+            guard let decodedData = userDefault.data(forKey: "guest_session") else {
+                return nil
+            }
+            
+            do {
+                return try JSONDecoder().decode(GuestSession.self, from: decodedData)
+            } catch let error {
+                debugPrint("Cannot retrieve guest session: \(error.localizedDescription)")
+            }
+            return nil
+        }
+        set {
+            do {
+                if let value = newValue {
+                    let encodedData = try JSONEncoder().encode(value)
+                    userDefault.set(encodedData, forKey: "guest_session")
+                }
+            } catch let error {
+                debugPrint("Cannot save guest session: \(error.localizedDescription)")
+            }
+        }
+    }
 
     var imageConfig: ImageConfigResult {
         return ImageConfigResult()

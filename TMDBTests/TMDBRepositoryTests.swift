@@ -22,7 +22,7 @@ class TMDBRepositoryTests: XCTestCase {
     
     override func setUp() {
         let service = TMDBServices(session: session, urlRequestBuilder: requestBuilder)
-        repository = TMDBRepository(services: service, localDataSource: localDataSource)
+        repository = TMDBRepository(services: service, localDataSource: localDataSource, userSetting: userSetting)
         
         stub(userSetting) { stub in
             when(stub).userDefault.get.thenReturn(userDefault)
@@ -2529,5 +2529,65 @@ class TMDBRepositoryTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
         verify(requestBuilder).getAllTVShowURLRequest(query: queryMatcher)
         verify(session).send(request: requestMatcher, responseType: any(TVShowResult.Type.self), completion: anyClosure())
+    }
+
+    // MARK: - guest session
+    func testGetGuestSessionRemotelySuccess() {
+        let request = TMDBURLRequestBuilder().getGuestSessionURLRequest()
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        let guestSession = GuestSession(success: true, id: "hello", expiration: "")
+        
+        stub(requestBuilder) { stub in
+            when(stub).getGuestSessionURLRequest().thenReturn(request)
+        }
+        
+        stub(userSetting) { stub in
+            when(stub).guestSession.get.thenReturn(nil)
+            when(stub).guestSession.set(any()).thenDoNothing()
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(GuestSession.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(guestSession))
+            }
+        }
+        
+        /*WHEN*/
+        
+        repository.getGuestSession()
+        
+        /*THEN*/
+        verify(requestBuilder).getGuestSessionURLRequest()
+        verify(session).send(request: requestMatcher, responseType: any(GuestSession.Type.self), completion: anyClosure())
+        verify(userSetting).guestSession.get()
+    }
+    
+    func testGetGuestSessionRemotelyfail() {
+        let request = TMDBURLRequestBuilder().getGuestSessionURLRequest()
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        stub(requestBuilder) { stub in
+            when(stub).getGuestSessionURLRequest().thenReturn(request)
+        }
+        
+        stub(userSetting) { stub in
+            when(stub).guestSession.get.thenReturn(nil)
+            when(stub).guestSession.set(any()).thenDoNothing()
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(GuestSession.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+        
+        /*WHEN*/
+        
+        repository.getGuestSession()
+        
+        /*THEN*/
+        verify(requestBuilder).getGuestSessionURLRequest()
+        verify(session).send(request: requestMatcher, responseType: any(GuestSession.Type.self), completion: anyClosure())
+        verify(userSetting).guestSession.get()
     }
 }

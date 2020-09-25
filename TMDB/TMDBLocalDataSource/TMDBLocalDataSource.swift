@@ -107,7 +107,7 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
             }
         }
 
-        movie?.recommendations?.movies.append(objectsIn: recommendMovies)
+        movie?.recommendations?.movies.append(objectsIn: saveMovies)
         movie?.recommendations?.page += 1
         try? realm.commitWrite()
     }

@@ -12,6 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    var repository: TMDBRepository = TMDBRepository.share
     var homeCoordinator: MainCoordinator?
     var movieCoordinator: MainCoordinator?
     var tvCoordinator: MainCoordinator?
@@ -73,6 +74,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController
         window = win
+
+        // get guest session for rating
+        repository.getGuestSession()
     }
 }
 

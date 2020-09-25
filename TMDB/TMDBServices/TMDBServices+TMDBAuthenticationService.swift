@@ -8,4 +8,9 @@
 
 import Foundation
 
-extension TMDBServices: A
+extension TMDBServices: TMDBAuthenticationService {
+    func getGuestSession(completion: @escaping (Result<GuestSession, Error>) -> Void) {
+        let request = urlRequestBuilder.getGuestSessionURLRequest()
+        session.send(request: request, responseType: GuestSession.self, completion: completion)
+    }
+}

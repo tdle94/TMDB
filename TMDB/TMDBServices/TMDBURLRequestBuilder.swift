@@ -48,11 +48,14 @@ protocol TMDBURLRequestBuilderProtocol {
 
     // MARK: - search
     func getMultiSearchURLRequest(query: String, language: String?, region: String?, page: Int) -> URLRequest
+
+    // MARK: - authentication
+    func getGuestSessionURLRequest() -> URLRequest
 }
 
 struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
-    let apiKey = "6823a37cea296ab67c0a2a6ce3cb4ec5"
+    let apiKey = TMDBUserSetting().apiKey
 
     // MARK: - tv shows
 
@@ -339,5 +342,10 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "include_adult", value: String(false))
         ]
         return buildURLRequest(path: "/3/search/multi", queryItems: queryItems)
+    }
+
+    // MARK: - authentication
+    func getGuestSessionURLRequest() -> URLRequest {
+        return buildURLRequest(path: "/3/authentication/guest_session/new", queryItems: nil)
     }
 }

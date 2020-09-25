@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol AuthenticationService {
-    func getGuestSession(apiKey: String)
+protocol TMDBAuthenticationService {
+    func getGuestSession(completion: @escaping (Result<GuestSession, Error>) -> Void)
 }

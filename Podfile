@@ -7,6 +7,8 @@ def testing_pods
   pod "Cuckoo"
   pod 'RealmSwift'
   pod 'SDWebImage'
+  pod 'Cosmos'
+  pod 'Toast-Swift'
 end
 
 target 'TMDB' do

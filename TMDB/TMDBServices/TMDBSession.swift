@@ -31,7 +31,7 @@ struct TMDBSession: TMDBSessionProtocol {
                 return
             }
 
-            guard let response = urlResponse as? HTTPURLResponse, response.statusCode == 200 else {
+            guard let response = urlResponse as? HTTPURLResponse, 200...299 ~= response.statusCode else {
                 completion(.failure(APIError.noURLReponse))
                 return
             }

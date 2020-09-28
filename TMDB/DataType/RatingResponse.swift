@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+struct RatingResponse: Decodable {
+    let status: Int
+    let message: String
+    
+    enum CodingKeys: String, CodingKey {
+        case status = "status_code"
+        case message = "status_message"
+    }
+}

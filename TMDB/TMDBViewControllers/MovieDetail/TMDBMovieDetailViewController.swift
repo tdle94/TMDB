@@ -8,11 +8,12 @@
 
 import Foundation
 import UIKit
+import Toast_Swift
 import SDWebImage.SDImageCache
 
 class TMDBMovieDetailViewController: UIViewController {
     // MARK: - coordinator
-    var coordinator: MainCoordinator?
+    var coordinator: Coordinator?
 
     // MARK: - properties
 
@@ -72,6 +73,7 @@ class TMDBMovieDetailViewController: UIViewController {
     @IBOutlet weak var budgetLabel: UILabel!
     @IBOutlet weak var revenueLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var ratingLabel: TMDBCircleUserRating!
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
         didSet {
             backdropImageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
@@ -195,8 +197,14 @@ class TMDBMovieDetailViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
         contentView.bringSubviewToFront(moviePosterImageView)
+        contentView.bringSubviewToFront(ratingLabel)
+
+        navigationItem.setRightBarButton(UIBarButtonItem(title: "Rate", image: UIImage(systemName: "star"),
+                                                         primaryAction: UIAction(title: "Rating", handler: { _ in
+            self.presentRatingVC()
+        }), menu: nil), animated: false)
         view.addSubview(loadingView)
-        scrollView.contentSize = UIScreen.main.bounds.size
+
         // movie detail
         presenter.getMovieDetail(movieId: movieId!)
     }
@@ -218,4 +226,18 @@ class TMDBMovieDetailViewController: UIViewController {
     @objc func refreshMovieDetail() {
         presenter.refreshMovieDetail(movieId: movieId!)
     }
+    
+    @objc func presentRatingVC() {
+        coordinator?.presentRating(id: self.movieId!, ratingType: .movie, notifyRating: self)
+    }
+}
+
+extension TMDBMovieDetailViewController: TMDBNotifyRating {
+    func notifyRating(message: String) {
+        view.makeToast(message)
+    }
+}
+
+protocol TMDBNotifyRating: NSObjectProtocol {
+    func notifyRating(message: String)
 }

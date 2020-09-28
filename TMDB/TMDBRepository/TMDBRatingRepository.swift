@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+protocol TMDBRatingRepository {
+    func postMovieRating(movieId: Int, rate: Double, completion: @escaping (Result<RatingResponse, Error>) -> Void)
+    func postTVShowRating(tvId: Int, rate: Double, completion: @escaping (Result<RatingResponse, Error>) -> Void)
+}

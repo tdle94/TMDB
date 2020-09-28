@@ -707,3 +707,31 @@ extension TMDBRepository: TMDBAuthenticationRepository {
             }
     }
 }
+
+extension TMDBRepository: TMDBRatingRepository {
+    func postMovieRating(movieId: Int, rate: Double, completion: @escaping (Result<RatingResponse, Error>) -> Void) {
+        services.postMovieRating(movieId: movieId, rate: rate) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let result):
+                    completion(.success(result))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    func postTVShowRating(tvId: Int, rate: Double, completion: @escaping (Result<RatingResponse, Error>) -> Void) {
+        services.postTVShowRating(tvId: tvId, rate: rate) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let result):
+                    completion(.success(result))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+}

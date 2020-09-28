@@ -1,42 +1,50 @@
 PODS:
+  - Cosmos (23.0.0)
   - Cuckoo (1.4.1):
     - Cuckoo/Swift (= 1.4.1)
   - Cuckoo/Swift (1.4.1)
   - Nimble (8.1.2)
   - Quick (3.0.0)
-  - Realm (5.4.1):
-    - Realm/Headers (= 5.4.1)
-  - Realm/Headers (5.4.1)
-  - RealmSwift (5.4.1):
-    - Realm (= 5.4.1)
+  - Realm (5.4.4):
+    - Realm/Headers (= 5.4.4)
+  - Realm/Headers (5.4.4)
+  - RealmSwift (5.4.4):
+    - Realm (= 5.4.4)
   - SDWebImage (5.9.1):
     - SDWebImage/Core (= 5.9.1)
   - SDWebImage/Core (5.9.1)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
+  - Cosmos
   - Cuckoo
   - Nimble
   - Quick
   - RealmSwift
   - SDWebImage
+  - Toast-Swift
 
 SPEC REPOS:
   trunk:
+    - Cosmos
     - Cuckoo
     - Nimble
     - Quick
     - Realm
     - RealmSwift
     - SDWebImage
+    - Toast-Swift
 
 SPEC CHECKSUMS:
+  Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
   Cuckoo: 4625f7f54d9bb880123270e8969898d6c1d036b5
   Nimble: 3864815b4703c7ebffba875973c70e854489fbae
   Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
-  Realm: 7e887608ef1de2d0c3a33dd9b1449e08fc9d9807
-  RealmSwift: ef998d9b678fd74e047c56ef4d99d9b77e87c1eb
+  Realm: b845bf406e03b9c52a53e0de2394480288aa532a
+  RealmSwift: b524ff07e4e92a34f4aecbe6ed1a613979a08bb9
   SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 9b867632f8b104eb81fca0624a0ba84f16d369e2
+PODFILE CHECKSUM: a09da6ff8bcd58e3799997bb20a07028479be574
 
 COCOAPODS: 1.9.1

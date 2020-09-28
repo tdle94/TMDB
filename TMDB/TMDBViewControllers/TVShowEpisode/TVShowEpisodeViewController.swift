@@ -17,7 +17,7 @@ class TMDBTVShowEpisodeViewController: UIViewController {
     var episodeNumber: Int?
 
     // MARK: - coordinator
-    var coordinate: MainCoordinator?
+    var coordinate: Coordinator?
 
     // MARK: - presentor
     lazy var presenter: TMDBTVShowEpisodePresenter = TMDBTVShowEpisodePresenter(delegate: self)

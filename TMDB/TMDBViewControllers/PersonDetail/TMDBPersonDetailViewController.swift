@@ -14,7 +14,7 @@ class TMDBPersonDetailViewController: UIViewController {
     var personId: Int?
     
     // MARK: - coordinate
-    var coordinate: MainCoordinator?
+    var coordinate: Coordinator?
 
     // MARK: - presentor
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()

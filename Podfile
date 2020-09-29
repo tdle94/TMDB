@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '13.5'
+platform :ios, '14.0'
 
 def testing_pods
   pod 'Quick'
@@ -7,12 +7,16 @@ def testing_pods
   pod "Cuckoo"
   pod 'RealmSwift'
   pod 'SDWebImage'
+  pod 'Cosmos'
+  pod 'Toast-Swift'
 end
 
 target 'TMDB' do
   use_frameworks!
   pod 'RealmSwift'
   pod 'SDWebImage'
+  pod 'Cosmos'
+  pod 'Toast-Swift'
 
   target 'TMDBTests' do
     inherit! :search_paths

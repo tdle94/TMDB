@@ -48,6 +48,7 @@ struct Constant {
         static let tmdbAllMovieVC = "TMDBAllMovieViewController"
         static let tmdbAllTVShowVC = "TMDBAllTVShowViewController"
         static let tmdbFilterNav = "TMDBFilterNavigation"
+        static let tmdbRateNav = "TMDBRateNavigationController"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)
@@ -56,5 +57,4 @@ struct Constant {
         static let backgroundColor = UIColor(displayP3Red: 235/255, green: 235/255, blue:  240/255, alpha: 1)
         static let tabBarSelectedTextColor = UIColor(displayP3Red: 231/255, green: 232/255, blue:  238/255, alpha: 1)
     }
-    static let imageLogo = "TMDB"
 }

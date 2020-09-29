@@ -19,7 +19,7 @@ protocol TMDBSearchProtocol: AnyObject {
 class TMDBSearchViewController: UIViewController {
     var repository: TMDBRepository = TMDBRepository.share
 
-    var coordinate: MainCoordinator?
+    var coordinate: Coordinator?
     
     var page: Int = 0
     

@@ -20,7 +20,7 @@ class TMDBHomeViewController: UIViewController {
     var dataSource: TMDBCollectionDataSource!
     
     // MARK: - coordinator
-    var coordinate: MainCoordinator?
+    var coordinate: Coordinator?
 
     // MARK: - ui
     @IBOutlet weak var collectionView: UICollectionView! {

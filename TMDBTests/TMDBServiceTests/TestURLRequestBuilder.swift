@@ -243,4 +243,18 @@ class TestURLRequestBuilder: XCTestCase {
         let urlMatcher = "https://api.themoviedb.org/3/authentication/guest_session/new?api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
         expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
     }
+
+    func testGetPostMovieRatingURL() {
+        let matchRequest = urlRequestBuilder.getPostMovieRatingURLRequest(movieId: 1, rate: 2)
+        let session = TMDBUserSetting().guestSession?.id ?? ""
+        let urlMatcher = "https://api.themoviedb.org/3/movie/1/rating?guest_session_id=\(session)&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
+
+    func testGetPostTVShowRatingURL() {
+        let matchRequest = urlRequestBuilder.getPostTVShowRatingURLRequest(tvId: 1, rate: 2)
+        let session = TMDBUserSetting().guestSession?.id ?? ""
+        let urlMatcher = "https://api.themoviedb.org/3/tv/1/rating?guest_session_id=\(session)&api_key=6823a37cea296ab67c0a2a6ce3cb4ec5"
+        expect(matchRequest.url?.absoluteString).to(equal(urlMatcher))
+    }
 }

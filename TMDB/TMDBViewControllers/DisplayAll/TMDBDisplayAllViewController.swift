@@ -14,7 +14,7 @@ class TMDBDisplayAllViewController: UIViewController, UICollectionViewDelegate, 
     lazy var presenter: TMDBAllPresenter = TMDBAllPresenter(delegate: self)
 
     // MARK: - coordinator
-    var coordinate: MainCoordinator?
+    var coordinate: Coordinator?
 
     // MARK: - data source
     lazy var allDataSource: TMDBCollectionDataSource = TMDBCollectionDataSource(cellIdentifier: Constant.Identifier.previewItem, collectionView: collectionView)

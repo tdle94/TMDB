@@ -183,4 +183,13 @@ struct MainCoordinator: Coordinator {
         filterVC?.filterChoice = choice
         navigationController.present(filterNav, animated: true)
     }
+
+    func presentRating(id: Int, ratingType: TMDBRatingViewController.RatingType, notifyRating: TMDBNotifyRating) {
+        let rateNav = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbRateNav) as! UINavigationController
+        let rateVC = rateNav.viewControllers.first as? TMDBRatingViewController
+        rateVC?.id = id
+        rateVC?.ratingType = ratingType
+        rateVC?.rating = notifyRating
+        navigationController.present(rateNav, animated: true)
+    }
 }

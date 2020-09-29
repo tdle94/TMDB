@@ -20,7 +20,7 @@ class TMDBTVDetailViewController: UIViewController {
     lazy var presenter: TMDBTVShowDetailPresenter = TMDBTVShowDetailPresenter(delegate: self)
 
     // MARK: - coordinate
-    var coordinate: MainCoordinator?
+    var coordinate: Coordinator?
 
     // MARK: - data source
 
@@ -199,6 +199,10 @@ class TMDBTVDetailViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = Constant.Color.backgroundColor
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor]
+        navigationItem.setRightBarButton(UIBarButtonItem(title: "Rate", image: UIImage(systemName: "star"),
+                                                         primaryAction: UIAction(title: "Rating", handler: { _ in
+            self.presentRatingVC()
+        }), menu: nil), animated: false)
         view.addSubview(loadingView)
         presenter.getTVShowDetail(tvShowId: tvId!)
     }
@@ -223,5 +227,15 @@ class TMDBTVDetailViewController: UIViewController {
     @IBAction func reviewButtonTap() {
         let reviews = presenter.repository.getTVShowReviews(from: tvId!)
         coordinate?.navigateToReview(reivew: reviews)
+    }
+    
+    @objc func presentRatingVC() {
+        coordinate?.presentRating(id: tvId!, ratingType: .movie, notifyRating: self)
+    }
+}
+
+extension TMDBTVDetailViewController: TMDBNotifyRating {
+    func notifyRating(message: String) {
+        view.makeToast(message)
     }
 }

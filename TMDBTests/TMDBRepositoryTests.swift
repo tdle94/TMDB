@@ -2537,6 +2537,7 @@ class TMDBRepositoryTests: XCTestCase {
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let guestSession = GuestSession(success: true, id: "hello", expiration: "")
         
+        /*GIVEN*/
         stub(requestBuilder) { stub in
             when(stub).getGuestSessionURLRequest().thenReturn(request)
         }
@@ -2566,6 +2567,7 @@ class TMDBRepositoryTests: XCTestCase {
         let request = TMDBURLRequestBuilder().getGuestSessionURLRequest()
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         
+        /*GIVEN*/
         stub(requestBuilder) { stub in
             when(stub).getGuestSessionURLRequest().thenReturn(request)
         }
@@ -2589,5 +2591,114 @@ class TMDBRepositoryTests: XCTestCase {
         verify(requestBuilder).getGuestSessionURLRequest()
         verify(session).send(request: requestMatcher, responseType: any(GuestSession.Type.self), completion: anyClosure())
         verify(userSetting).guestSession.get()
+    }
+    
+    // MARK: - rating
+    func testPostMovieRatingSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPostMovieRatingURLRequest(movieId: 1, rate: 2)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(requestBuilder) { stub in
+            when(stub).getPostMovieRatingURLRequest(movieId: 1, rate: 2).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(RatingResponse(status: 200, message: "")))
+            }
+        }
+        
+        /*WHEN*/
+        repository.postMovieRating(movieId: 1, rate: 2) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getPostMovieRatingURLRequest(movieId: 1, rate: 2)
+        verify(session).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure())
+    }
+    
+    func testPostMovieRatingFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPostMovieRatingURLRequest(movieId: 1, rate: 2)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(requestBuilder) { stub in
+            when(stub).getPostMovieRatingURLRequest(movieId: 1, rate: 2).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 500, userInfo: nil)))
+            }
+        }
+        
+        /*WHEN*/
+        repository.postMovieRating(movieId: 1, rate: 2) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getPostMovieRatingURLRequest(movieId: 1, rate: 2)
+        verify(session).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure())
+    }
+    
+    func testPostTVShowRatingSuccess() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPostTVShowRatingURLRequest(tvId: 1, rate: 2)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(requestBuilder) { stub in
+            when(stub).getPostTVShowRatingURLRequest(tvId: 1, rate: 2).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.success(RatingResponse(status: 200, message: "")))
+            }
+        }
+        
+        /*WHEN*/
+        repository.postTVShowRating(tvId: 1, rate: 2) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getPostTVShowRatingURLRequest(tvId: 1, rate: 2)
+        verify(session).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure())
+    }
+    
+    func testPostTVShowRatingFail() {
+        let expectation = self.expectation(description: "")
+        let request = TMDBURLRequestBuilder().getPostTVShowRatingURLRequest(tvId: 1, rate: 2)
+        let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
+        
+        /*GIVEN*/
+        stub(requestBuilder) { stub in
+            when(stub).getPostTVShowRatingURLRequest(tvId: 1, rate: 2).thenReturn(request)
+        }
+        
+        stub(session) { stub in
+            when(stub).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure()).then { implementation in
+                implementation.2(.failure(NSError(domain: "", code: 200, userInfo: nil)))
+            }
+        }
+        
+        /*WHEN*/
+        repository.postTVShowRating(tvId: 1, rate: 2) { _ in
+            expectation.fulfill()
+        }
+        
+        /*THEN*/
+        waitForExpectations(timeout: 5, handler: nil)
+        verify(requestBuilder).getPostTVShowRatingURLRequest(tvId: 1, rate: 2)
+        verify(session).send(request: requestMatcher, responseType: any(RatingResponse.Type.self), completion: anyClosure())
     }
 }

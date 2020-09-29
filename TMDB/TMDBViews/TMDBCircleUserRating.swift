@@ -76,6 +76,7 @@ class TMDBCircleUserRating: UILabel {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        backgroundColor = .clear
         partialCircleLayer.addSublayer(remainingCircleLayer)
         partialCircleLayer.insertSublayer(textLayer, above: remainingCircleLayer)
         layer.addSublayer(partialCircleLayer)

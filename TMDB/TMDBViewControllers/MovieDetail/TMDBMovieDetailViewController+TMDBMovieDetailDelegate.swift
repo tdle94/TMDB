@@ -20,6 +20,8 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         
         loadingView.removeFromSuperview()
 
+        ratingLabel.rating = movie.voteAverage
+
         getPosterImage(movie: movie)
         displayStatus(movie: movie)
         displayOriginalLanguage(movie: movie)
@@ -36,7 +38,6 @@ extension TMDBMovieDetailViewController: TMDBMovieDetailDelegate {
         displayTagLine(movie: movie)
         displayAvailableLanguageLabel(movie: movie)
         displayKeyword(movie: movie)
-        additionalInformationTableView.reloadData()
     }
     
     func displayMovieCasts(_ casts: [Cast]) {

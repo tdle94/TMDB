@@ -26,6 +26,7 @@ platform :ios do
   end
 
   before_all do
+    upadate_fastlane
     xcversion(version: $xcode_version)
   end
 end

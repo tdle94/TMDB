@@ -7,16 +7,17 @@
 //
 
 import UIKit
+import RealmSwift
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
     var repository: TMDBRepository = TMDBRepository.share
-    var homeCoordinator: MainCoordinator?
-    var movieCoordinator: MainCoordinator?
-    var tvCoordinator: MainCoordinator?
-    var peopleCoordinator: MainCoordinator?
+    var homeCoordinator: Coordinator?
+    var movieCoordinator: Coordinator?
+    var tvCoordinator: Coordinator?
+    var peopleCoordinator: Coordinator?
 
     let tabBarController = UITabBarController()
 
@@ -26,6 +27,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let win = UIWindow(windowScene: windowScene)
+        
+        let config = Realm.Configuration(schemaVersion: 1, migrationBlock: { migration, oldSchemaVersion in
+            if oldSchemaVersion < 1 {
+                
+            }
+        })
+        
+        Realm.Configuration.defaultConfiguration = config
+        _ = try! Realm()
 
         // set view controller
         let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome) as! TMDBHomeViewController

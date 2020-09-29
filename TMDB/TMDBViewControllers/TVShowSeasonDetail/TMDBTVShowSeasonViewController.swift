@@ -16,7 +16,7 @@ class TMDBTVShowSeasonViewController: UIViewController {
 
     var seasonNumber: Int?
     // MARK: - coordinate
-    var coordinate: MainCoordinator?
+    var coordinate: Coordinator?
 
     // MARK: - user setting
     var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()

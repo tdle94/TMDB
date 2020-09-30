@@ -30,6 +30,7 @@ class TMDBTVShowDetailPresenter {
         switch result {
         case .failure(let error):
             debugPrint(error)
+            self.tvShowDetailDelegate?.displayError(error)
         case .success(let tvShow):
             self.tvShowDetailDelegate?.displayTVShowDetail(tvShow: tvShow)
         }

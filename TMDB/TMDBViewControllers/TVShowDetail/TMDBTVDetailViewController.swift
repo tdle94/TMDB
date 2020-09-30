@@ -41,6 +41,7 @@ class TMDBTVDetailViewController: UIViewController {
     var d: UICollectionViewDiffableDataSource<Int, Movie>!
 
     // MARK: - ui
+    @IBOutlet weak var ratingLabel: TMDBCircleUserRating!
     @IBOutlet weak var keywordCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var overviewLabelTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var reviewButtonLeadingConstraint: NSLayoutConstraint!

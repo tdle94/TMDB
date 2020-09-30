@@ -23,6 +23,7 @@ class TMDBTVShowEpisodePresenter {
             switch result {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
+                self.tvShowEpisodeDelegate?.displayError(error)
             case .success(let episode):
                 self.tvShowEpisodeDelegate?.displayEpisode(episode: episode)
             }

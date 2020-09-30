@@ -15,6 +15,8 @@ extension TMDBTVDetailViewController: TMDBTVShowDetailDelegate {
 
         ratingLabel.rating = tvShow.voteAverage
 
+        scrollView.refreshControl?.endRefreshing()
+
         presenter.getBackdropImages(tvShowId: tvId!)
 
         displayPosterImageView(tvShow: tvShow)

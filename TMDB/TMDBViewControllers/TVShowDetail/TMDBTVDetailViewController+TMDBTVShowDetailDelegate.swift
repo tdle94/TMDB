@@ -12,6 +12,9 @@ import UIKit
 extension TMDBTVDetailViewController: TMDBTVShowDetailDelegate {
     func displayTVShowDetail(tvShow: TVShow) {
         loadingView.removeFromSuperview()
+
+        ratingLabel.rating = tvShow.voteAverage
+
         presenter.getBackdropImages(tvShowId: tvId!)
 
         displayPosterImageView(tvShow: tvShow)

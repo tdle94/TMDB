@@ -13,4 +13,5 @@ protocol TMDBTVShowEpisodeDelegate: NSObjectProtocol {
     func displayCasts(casts: [Cast])
     func displayCrews(crews: [Crew])
     func displayImages(images: [Images])
+    func displayError(_ error: Error)
 }

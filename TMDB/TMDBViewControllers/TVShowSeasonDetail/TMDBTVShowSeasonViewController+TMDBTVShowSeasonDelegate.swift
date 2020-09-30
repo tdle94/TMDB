@@ -124,4 +124,8 @@ extension TMDBTVShowSeasonViewController: TMDBTVShowSeasonDelegate {
         firstString.append(secondString)
         return firstString
     }
+
+    func displayError(_ error: Error) {
+        loadingView.showError(true)
+    }
 }

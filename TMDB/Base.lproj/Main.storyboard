@@ -1293,7 +1293,7 @@
                                                     <outlet property="delegate" destination="EsI-RD-jLx" id="v2J-2W-Uej"/>
                                                 </connections>
                                             </collectionView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GCN-n8-LGf">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GCN-n8-LGf" customClass="TMDBCircleUserRating" customModule="TMDB" customModuleProvider="target">
                                                 <rect key="frame" x="18" y="607.66666666666663" width="40" height="40"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
@@ -1416,6 +1416,7 @@
                         <outlet property="overviewLabel" destination="E3b-o5-OaQ" id="L79-0D-NJu"/>
                         <outlet property="overviewLabelTopConstraint" destination="b36-4y-i2p" id="tiO-8q-s7h"/>
                         <outlet property="posterImageView" destination="qpj-MJ-CdV" id="5gB-wV-USx"/>
+                        <outlet property="ratingLabel" destination="GCN-n8-LGf" id="ihN-hl-0W2"/>
                         <outlet property="reviewButton" destination="bwT-Nq-OtB" id="Sc6-KS-FE9"/>
                         <outlet property="reviewButtonLeadingConstraint" destination="2aV-dw-ozW" id="VMq-hP-L2E"/>
                         <outlet property="runtimeLabel" destination="Zon-H4-Zoo" id="sO6-oJ-pMU"/>

@@ -124,4 +124,8 @@ extension TMDBTVShowEpisodeViewController: TMDBTVShowEpisodeDelegate {
                                                                         NSAttributedString.Key.foregroundColor: UIColor.darkGray,
                                                                         NSAttributedString.Key.paragraphStyle: paragraphStyle])
     }
+
+    func displayError(_ error: Error) {
+        loadingView.showError(true)
+    }
 }

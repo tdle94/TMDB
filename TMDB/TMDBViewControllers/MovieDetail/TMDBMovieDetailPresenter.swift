@@ -28,6 +28,7 @@ class TMDBMovieDetailPresenter {
         switch result {
         case .failure(let error):
             debugPrint(error)
+            self.movieDetailDelegate?.displayError(error)
         case .success(let movie):
             self.movieDetailDelegate?.displayMovieDetail(movie)
         }

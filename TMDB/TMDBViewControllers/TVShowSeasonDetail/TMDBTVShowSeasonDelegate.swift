@@ -11,4 +11,5 @@ import Foundation
 protocol TMDBTVShowSeasonDelegate: NSObjectProtocol {
     func displaySeason(season: Season)
     func displayBackdropImage(backdropImages: [Images])
+    func displayError(_ error: Error)
 }

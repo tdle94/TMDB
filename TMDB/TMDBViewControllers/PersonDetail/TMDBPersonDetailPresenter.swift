@@ -23,6 +23,7 @@ class TMDBPersonDetailPresenter {
             switch result {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
+                self.personDetailDelegate?.displayError(error)
             case .success(let person):
                 self.personDetailDelegate?.displayPerson(person: person)
             }

@@ -358,7 +358,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     // MARK: - rating
     func getPostMovieRatingURLRequest(movieId: Int, rate: Double) -> URLRequest {
         let data = try! JSONSerialization.data(withJSONObject: ["value": rate], options: .fragmentsAllowed)
-        var request = buildURLRequest(path: "/3/movie/\(movieId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: guestSessionId?.id)])
+        var request = buildURLRequest(path: "/3/movie/\(movieId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: TMDBUserSetting().guestSession?.id)])
         request.setValue("application/json;charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
         request.httpMethod = "POST"
@@ -367,7 +367,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getPostTVShowRatingURLRequest(tvId: Int, rate: Double) -> URLRequest {
         let data = try! JSONSerialization.data(withJSONObject: ["value": rate], options: .fragmentsAllowed)
-        var request = buildURLRequest(path: "/3/tv/\(tvId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: guestSessionId?.id)])
+        var request = buildURLRequest(path: "/3/tv/\(tvId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: TMDBUserSetting().guestSession?.id)])
         request.setValue("application/json;charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
         request.httpMethod = "POST"

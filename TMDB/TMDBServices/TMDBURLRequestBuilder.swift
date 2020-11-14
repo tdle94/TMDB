@@ -59,9 +59,7 @@ protocol TMDBURLRequestBuilderProtocol {
 
 struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
-    let guestSessionId = TMDBUserSetting().guestSession
-
-    let apiKey = TMDBUserSetting().apiKey
+    let userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
     // MARK: - tv shows
 
@@ -225,7 +223,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         urlComponent.host = "api.themoviedb.org"
         urlComponent.path = path
         urlComponent.queryItems = queryItems ?? []
-        urlComponent.queryItems?.append(URLQueryItem(name: "api_key", value: apiKey))
+        urlComponent.queryItems?.append(URLQueryItem(name: "api_key", value: userSetting.apiKey))
         if let url = urlComponent.url {
             return URLRequest(url: url)
         }
@@ -358,7 +356,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     // MARK: - rating
     func getPostMovieRatingURLRequest(movieId: Int, rate: Double) -> URLRequest {
         let data = try! JSONSerialization.data(withJSONObject: ["value": rate], options: .fragmentsAllowed)
-        var request = buildURLRequest(path: "/3/movie/\(movieId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: TMDBUserSetting().guestSession?.id)])
+        var request = buildURLRequest(path: "/3/movie/\(movieId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: userSetting.guestSession?.id)])
         request.setValue("application/json;charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
         request.httpMethod = "POST"
@@ -367,7 +365,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
     func getPostTVShowRatingURLRequest(tvId: Int, rate: Double) -> URLRequest {
         let data = try! JSONSerialization.data(withJSONObject: ["value": rate], options: .fragmentsAllowed)
-        var request = buildURLRequest(path: "/3/tv/\(tvId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: TMDBUserSetting().guestSession?.id)])
+        var request = buildURLRequest(path: "/3/tv/\(tvId)/rating", queryItems: [URLQueryItem(name: "guest_session_id", value: userSetting.guestSession?.id)])
         request.setValue("application/json;charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
         request.httpMethod = "POST"

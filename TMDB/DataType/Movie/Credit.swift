@@ -24,7 +24,7 @@ class CreditResult: Object, Decodable {
         crew.append(objectsIn: try container.decode(List<Crew>.self, forKey: .crew))
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

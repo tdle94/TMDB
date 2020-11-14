@@ -138,7 +138,7 @@ class TVShow: Object, Decodable {
         }
     }
     
-    required init() {
+    required override init() {
         super.init()
     }
     
@@ -160,7 +160,7 @@ class TVKeywordResult: Object, Decodable {
         results.append(objectsIn: try container.decode(List<Keyword>.self, forKey: .results))
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -207,7 +207,7 @@ class Season: Object, Decodable {
         episodeCount = try container.decodeIfPresent(Int.self, forKey: .episodeCount) ?? episodes.count
     }
     
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -233,7 +233,7 @@ class Networks: Object, Decodable {
         logoPath = try container.decodeIfPresent(String.self, forKey: .logoPath) ?? ""
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -290,7 +290,7 @@ class Episode: Object, Decodable {
         }
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -316,7 +316,7 @@ class CreatedBy: Object, Decodable {
         creditId = try container.decode(String.self, forKey: .creditId)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

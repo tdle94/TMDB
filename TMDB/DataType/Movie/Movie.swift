@@ -115,7 +115,7 @@ class Movie: Object, Decodable {
         }
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
     
@@ -137,7 +137,7 @@ class ReleaseDateResults: Object, Decodable {
         results.append(objectsIn: try container.decode(List<ReleaseDateResult>.self, forKey: .results))
     }
     
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -158,7 +158,7 @@ class ReleaseDateResult: Object, Decodable {
         releaseDates.append(objectsIn: try container.decode(List<ReleaseDates>.self, forKey: .releaseDates))
     }
     
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -179,7 +179,7 @@ class ReleaseDates: Object, Decodable {
         releaseDate = try container.decode(String.self, forKey: .releaseDate)
     }
     
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -197,7 +197,7 @@ class KeywordResult: Object, Decodable {
         keywords.append(objectsIn: try container.decode(List<Keyword>.self, forKey: .keywords))
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -217,7 +217,7 @@ class Keyword: Object, Decodable {
         name = try container.decode(String.self, forKey: .name)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
     
@@ -247,7 +247,7 @@ class Collection: Object, Decodable {
         backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 
@@ -282,7 +282,7 @@ class SpokenLanguage: Object, Decodable {
         iso6391 = try container.decode(String.self, forKey: .iso6391)
     }
       
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -303,7 +303,7 @@ class ProductionCountry: Object, Decodable {
         ios31661 = try container.decode(String.self, forKey: .ios31661)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 
@@ -333,7 +333,7 @@ class ProductionCompany: Object, Decodable {
         originCountry = try container.decode(String.self, forKey: .originCountry)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 

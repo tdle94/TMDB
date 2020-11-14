@@ -32,7 +32,7 @@ class ImageResult: Object, Decodable {
         }
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

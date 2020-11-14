@@ -32,7 +32,7 @@ class PeopleResult: Object, Decodable {
         self.peoples.append(objectsIn: peoples)
     }
     
-    required init() {
+    required override init() {
         super.init()
     }
 }

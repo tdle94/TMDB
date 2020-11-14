@@ -68,7 +68,7 @@ class MultiSearch: Object, Decodable {
         name = try container.decodeIfPresent(String.self, forKey: .name)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

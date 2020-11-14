@@ -32,7 +32,7 @@ class TrendingResult: Object, Decodable {
         self.trending.append(objectsIn: trending)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -64,7 +64,7 @@ class Trending: Object, Decodable {
         }
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 

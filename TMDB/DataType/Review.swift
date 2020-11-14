@@ -31,7 +31,7 @@ class ReviewResult: Object, Decodable {
         reviews.append(objectsIn: try container.decode(List<Review>.self, forKey: .reviews))
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

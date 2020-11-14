@@ -22,7 +22,7 @@ class VideoResult: Object, Decodable {
         videos.append(objectsIn: try container.decode(List<Video>.self, forKey: .videos))
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

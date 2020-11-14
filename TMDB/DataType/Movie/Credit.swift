@@ -24,7 +24,7 @@ class CreditResult: Object, Decodable {
         crew.append(objectsIn: try container.decode(List<Crew>.self, forKey: .crew))
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -42,6 +42,20 @@ class Cast: Object, Decodable {
         case id, character, name, order
         case creditId = "credit_id"
         case profilePath = "profile_path"
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        character = try container.decodeIfPresent(String.self, forKey: .character) ?? ""
+        creditId = try container.decode(String.self, forKey: .creditId)
+        name = try container.decode(String.self, forKey: .name)
+        order = try container.decode(Int.self, forKey: .order)
+        profilePath = try container.decodeIfPresent(String.self, forKey: .profilePath)
+    }
+
+    required override init() {
+        super.init()
     }
 }
 

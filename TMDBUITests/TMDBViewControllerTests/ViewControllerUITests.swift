@@ -160,7 +160,7 @@ class ViewControllerUITests: XCTestCase {
             app.collectionViews.element(boundBy: 1).cells.firstMatch.tap()
             app.navigationBars.buttons.element(boundBy: 0).tap()
         }
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+
         tapPopularTVShow()
 
         app.navigationBars.buttons.element(boundBy: 0).tap()

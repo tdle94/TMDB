@@ -32,7 +32,7 @@ class TVShowResult: Object, Decodable {
         self.onTV.append(objectsIn: tvShows)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

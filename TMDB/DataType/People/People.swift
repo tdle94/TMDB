@@ -94,7 +94,7 @@ class People: Object, Decodable {
         return "id"
     }
     
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -121,7 +121,7 @@ class MovieCredit: Object, Decodable {
         cast.append(objectsIn: uniqueCasts)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -147,7 +147,7 @@ class TVCredit: Object, Decodable {
         cast.append(objectsIn: uniqueCasts)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -166,7 +166,7 @@ class ImageProfile: Object, Decodable {
         profiles.append(objectsIn: try container.decode(List<Images>.self, forKey: .profiles))
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -199,7 +199,7 @@ class Images: Object, Decodable {
         height = try container.decode(Int.self, forKey: .height)
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }
@@ -226,7 +226,7 @@ class KnownFor: Object, Decodable {
         }
     }
 
-    required init() {
+    required override init() {
         super.init()
     }
 }

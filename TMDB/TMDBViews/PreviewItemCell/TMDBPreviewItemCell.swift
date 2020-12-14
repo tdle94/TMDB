@@ -21,8 +21,16 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             imageView.roundImage()
         }
     }
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var title: UILabel! {
+        didSet {
+            title.font = UIFont(name: "Circular-Black", size: UIFont.systemFontSize)
+        }
+    }
+    @IBOutlet weak var subTitle: UILabel! {
+        didSet {
+            subTitle.font = UIFont(name: "Circular-Book", size: UIFont.systemFontSize)
+        }
+    }
 
     let userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 

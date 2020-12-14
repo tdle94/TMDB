@@ -35,7 +35,7 @@ class TMDBKeywordCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .darkGray
         label.textAlignment = .center
-        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!)
+        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.systemFontSize)!)
         label.adjustsFontForContentSizeCategory = true
         label.adjustsFontSizeToFitWidth = true
 

@@ -8,7 +8,6 @@
 
 import UIKit
 import RxSwift
-import ParallaxHeader
 import RxDataSources
 
 class MovieDetailView: UIViewController {
@@ -94,7 +93,6 @@ class MovieDetailView: UIViewController {
                     header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                              for: indexPath) as! TMDBCreditHeaderView
-                    print("what")
                     header
                         .segmentControl
                         .rx

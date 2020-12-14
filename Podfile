@@ -17,7 +17,6 @@ target 'TMDB' do
   pod 'SDWebImage'
   pod 'Cosmos'
   pod 'Toast-Swift'
-  pod 'ParallaxHeader'
   pod 'Swinject'
   pod 'RxSwift'
   pod 'RxCocoa'

@@ -6,10 +6,8 @@
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import SDWebImage
-import RealmSwift
 
 class TMDBImageCell: UICollectionViewCell {
     var imageView: UIImageView = UIImageView()

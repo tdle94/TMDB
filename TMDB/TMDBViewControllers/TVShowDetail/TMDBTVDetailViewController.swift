@@ -95,7 +95,7 @@ class TMDBTVDetailViewController: UIViewController {
     }
     @IBOutlet weak var videoCollectionView: UICollectionView! {
         didSet {
-            videoCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
+            //videoCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(fractionWidth: 0.5, fractionHeight: 0.5)
             videoCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             videoCollectionView.register(TMDBPreviewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.previewHeader)
 
@@ -112,7 +112,7 @@ class TMDBTVDetailViewController: UIViewController {
     }
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
         didSet {
-            keywordCollectionView.collectionViewLayout = TMDBKeywordLayout(delegate: self)
+            keywordCollectionView.collectionViewLayout = TMDBKeywordLayout()
             keywordCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
         }
     }
@@ -231,12 +231,6 @@ class TMDBTVDetailViewController: UIViewController {
     }
     
     @objc func presentRatingVC() {
-        coordinate?.presentRating(id: tvId!, ratingType: .movie, notifyRating: self)
-    }
-}
-
-extension TMDBTVDetailViewController: TMDBNotifyRating {
-    func notifyRating(message: String) {
-        view.makeToast(message)
+        
     }
 }

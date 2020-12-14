@@ -14,7 +14,7 @@
 "Popular" = "Popular";
 "Today" = "Today";
 "This Week" = "This Week";
-"Produce by" = "Produce by";
+"Produce By" = "Produce By";
 "Similar" = "Similar";
 "Recommend" = "Recommend";
 "Status" = "Status";
@@ -60,3 +60,6 @@
 "Genre" = "Genre";
 "Language" = "Language";
 "View all" =  "View all";
+"Produced In" = "Produce In";
+"Collection" = "Collection";
+"Homepage" = "Homepage";

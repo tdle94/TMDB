@@ -35,8 +35,10 @@ class TMDBKeywordCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .darkGray
         label.textAlignment = .center
-        label.font = UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)
-        
+        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)!)
+        label.adjustsFontForContentSizeCategory = true
+        label.adjustsFontSizeToFitWidth = true
+
         label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
     }

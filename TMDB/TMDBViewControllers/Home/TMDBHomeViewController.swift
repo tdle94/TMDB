@@ -73,9 +73,10 @@ class TMDBHomeViewController: UIViewController {
         configureLanguageAndRegion()
 
         presenter.getPopularMovie(page: 1)
-        presenter.getTrend(page: 1, time: .today)
-        presenter.getTopRatedMovie(page: 1)
-        presenter.getTopRatedTVShow(page: 1)
+        //coordinate?.navigateToMovieDetail(id: <#T##Int#>)
+//        presenter.getTrend(page: 1, time: .today)
+//        presenter.getTopRatedMovie(page: 1)
+//        presenter.getTopRatedTVShow(page: 1)
     }
 
     override func didReceiveMemoryWarning() {

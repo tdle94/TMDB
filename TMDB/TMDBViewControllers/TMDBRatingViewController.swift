@@ -17,8 +17,6 @@ class TMDBRatingViewController: UIViewController {
     var id: Int?
     var ratingType: RatingType = .movie
 
-    weak var rating: TMDBNotifyRating?
-
     enum RatingType {
         case movie
         case tvShow
@@ -28,11 +26,10 @@ class TMDBRatingViewController: UIViewController {
         switch result {
         case .success(let result):
             self.dismiss(animated: true) {
-                self.rating?.notifyRating(message: result.message)
+                
             }
         case .failure(let error):
             debugPrint(error)
-            self.view.makeToast(error.localizedDescription)
         }
     }
     

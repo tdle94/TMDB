@@ -20,25 +20,39 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let solidIndicator = UIView(frame: CGRect(x: 0, y: bounds.height/4, width: 5, height: bounds.height/2))
+        let solidIndicator = UIView()
         solidIndicator.backgroundColor = Constant.Color.tertiaryColor
-
+        
         segmentControl.selectedSegmentTintColor = Constant.Color.primaryColor
-        segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor], for: .selected)
-        segmentControl.addTarget(self, action: #selector(segmentControlAction(_:)), for: .valueChanged)
+        segmentControl.setTitleTextAttributes([
+                                                NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor,
+                                                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)
+                                                ], for: .selected)
+        segmentControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)], for: .normal)
+        
+        label.adjustsFontForContentSizeCategory = true
+        label.adjustsFontSizeToFitWidth = true
         
         addSubview(label)
         addSubview(segmentControl)
         addSubview(solidIndicator)
+        
+        solidIndicator.widthAnchor.constraint(equalToConstant: 5).isActive = true
+        solidIndicator.heightAnchor.constraint(equalToConstant: bounds.height - 10).isActive = true
+        solidIndicator.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        solidIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
         label.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
+        solidIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        label.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
+        label.heightAnchor.constraint(equalToConstant: bounds.height - 10).isActive = true
+
         segmentControl.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        segmentControl.heightAnchor.constraint(equalToConstant: bounds.height - 10).isActive = true
+
         addConstraint(NSLayoutConstraint(item: label,
                                          attribute: .trailing,
                                          relatedBy: .equal,

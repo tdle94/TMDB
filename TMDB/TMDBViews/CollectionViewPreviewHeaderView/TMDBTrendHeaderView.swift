@@ -12,7 +12,7 @@ import UIKit
 class TMDBTrendHeaderView: TMDBPreviewHeaderView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        label.text = NSLocalizedString("Trends", comment: "")
+        label.setHeader(title: NSLocalizedString("Trends", comment: ""))
         segmentControl.insertSegment(withTitle: NSLocalizedString("Today", comment: ""), at: 0, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("This Week", comment: ""), at: 1, animated: true)
         segmentControl.selectedSegmentIndex = 0

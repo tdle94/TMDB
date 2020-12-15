@@ -13,11 +13,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    var repository: TMDBRepository = TMDBRepository.share
+    var authentication: TMDBAuthenticationRepository!
     var homeCoordinator: Coordinator?
     var movieCoordinator: Coordinator?
     var tvCoordinator: Coordinator?
     var peopleCoordinator: Coordinator?
+    var defaultContainer: DefaultContainer = DefaultContainer()
+    var appCoordinator: AppCoordinator!
 
     let tabBarController = UITabBarController()
 
@@ -34,59 +36,37 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         })
         
+        appCoordinator = AppCoordinator(window: win, container: defaultContainer.container)
+        authentication = defaultContainer.container.resolve(TMDBAuthenticationRepository.self)
+        
         Realm.Configuration.defaultConfiguration = config
         _ = try! Realm()
-
-        // set view controller
-        let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbHome) as! TMDBHomeViewController
-        let movieVC = TMDBAllMovieViewController()
-        let tvVC = TMDBAllTVShowViewController()
-        let searchVC = TMDBSearchViewController()
+        let homeView = appCoordinator.homeView
+        homeView.delegate = appCoordinator
+        appCoordinator.currentView = homeView
 
         // set navigation controller
-        let homeNavController = UINavigationController(rootViewController: homeVC)
+        let homeNavController = UINavigationController(rootViewController: homeView)
         homeNavController.navigationBar.barTintColor = Constant.Color.primaryColor
         homeNavController.tabBarItem.title = NSLocalizedString("Home", comment: "")
         homeNavController.tabBarItem.image = UIImage(systemName: "house.fill")
         
-        homeVC.navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
-        homeVC.navigationItem.backBarButtonItem?.tintColor = Constant.Color.backgroundColor
-        
-        let movieNavController = UINavigationController(rootViewController: movieVC)
-        movieNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        movieNavController.tabBarItem.title = NSLocalizedString("Movies", comment: "")
-        movieNavController.tabBarItem.image = UIImage(systemName: "film.fill")
-
-        let tvNavController = UINavigationController(rootViewController: tvVC)
-        tvNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        tvNavController.tabBarItem.title = NSLocalizedString("TV Shows", comment: "")
-        tvNavController.tabBarItem.image = UIImage(systemName: "tv.fill")
-
-
-        let searchNavController = UINavigationController(rootViewController: searchVC)
-        searchNavController.navigationBar.barTintColor = Constant.Color.primaryColor
-        searchNavController.navigationBar.tintColor = Constant.Color.backgroundColor
-        searchNavController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
-        searchNavController.tabBarItem.title = NSLocalizedString("Search", comment: "")
-        
-        // set coordinators
-        searchVC.coordinate = MainCoordinator(navigationController: searchNavController)
-        homeVC.coordinate = MainCoordinator(navigationController: homeNavController)
-        movieVC.coordinate = MainCoordinator(navigationController: movieNavController)
-        tvVC.coordinate = MainCoordinator(navigationController: tvNavController)
+        homeView.navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        homeView.navigationItem.backBarButtonItem?.tintColor = Constant.Color.backgroundColor
         
         // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
         tabBarController.tabBar.unselectedItemTintColor = Constant.Color.secondaryColor
         tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
-        tabBarController.setViewControllers([homeNavController, movieNavController, tvNavController, searchNavController], animated: true)
+        tabBarController.setViewControllers([homeNavController], animated: true)
+        
 
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController
         window = win
 
         // get guest session for rating
-        repository.getGuestSession()
+        authentication.getGuestSession()
     }
 }
 

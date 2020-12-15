@@ -3,6 +3,7 @@ PODS:
   - Cuckoo (1.4.1):
     - Cuckoo/Swift (= 1.4.1)
   - Cuckoo/Swift (1.4.1)
+  - Differentiator (4.0.1)
   - Nimble (9.0.0)
   - Quick (3.0.0)
   - Realm (10.1.3):
@@ -10,9 +11,31 @@ PODS:
   - Realm/Headers (10.1.3)
   - RealmSwift (10.1.3):
     - Realm (= 10.1.3)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxDataSources (4.0.1):
+    - Differentiator (~> 4.0)
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
+  - RxSwiftExt (5.2.0):
+    - RxSwiftExt/Core (= 5.2.0)
+    - RxSwiftExt/RxCocoa (= 5.2.0)
+  - RxSwiftExt/Core (5.2.0):
+    - RxSwift (~> 5.0)
+  - RxSwiftExt/RxCocoa (5.2.0):
+    - RxCocoa (~> 5.0)
+    - RxSwiftExt/Core
+  - RxSwiftUtilities (2.2.0):
+    - RxCocoa (~> 5.1)
+    - RxSwift (~> 5.1)
   - SDWebImage (5.9.5):
     - SDWebImage/Core (= 5.9.5)
   - SDWebImage/Core (5.9.5)
+  - Swinject (2.7.1)
   - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
@@ -21,30 +44,52 @@ DEPENDENCIES:
   - Nimble
   - Quick
   - RealmSwift
+  - RxCocoa
+  - RxDataSources
+  - RxSwift
+  - RxSwiftExt
+  - RxSwiftUtilities
   - SDWebImage
+  - Swinject
   - Toast-Swift
 
 SPEC REPOS:
   trunk:
     - Cosmos
     - Cuckoo
+    - Differentiator
     - Nimble
     - Quick
     - Realm
     - RealmSwift
+    - RxCocoa
+    - RxDataSources
+    - RxRelay
+    - RxSwift
+    - RxSwiftExt
+    - RxSwiftUtilities
     - SDWebImage
+    - Swinject
     - Toast-Swift
 
 SPEC CHECKSUMS:
   Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
   Cuckoo: 4625f7f54d9bb880123270e8969898d6c1d036b5
+  Differentiator: 886080237d9f87f322641dedbc5be257061b0602
   Nimble: 3b4ec3fd40f1dc178058e0981107721c615643d8
   Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
   Realm: 072f4060c99150cb1d35e35ce1dd4dda7d9ddfed
   RealmSwift: 96f96feafee63186789419235d14857dae9004ae
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  RxSwiftExt: 4ca80336f43c28f11a2825cdd2fc61dd6c044697
+  RxSwiftUtilities: 59e2d82daf74b9962f732b09e6da85a26281cfc0
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
+  Swinject: ddf78b8486dd9b71a667b852cad919ab4484478e
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 0135e4c0358d849cd688de197dd1ddfd58892c86
+PODFILE CHECKSUM: dda12361a565168456c362e033aa7316089396a3
 
 COCOAPODS: 1.10.0

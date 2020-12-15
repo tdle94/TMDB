@@ -15,7 +15,7 @@
 "Today" = "今日";
 "This Week" = "今週";
 "Status" = "状態";
-"Produce by" = "生産";
+"Produce By" = "生産";
 "Similar" = "似ている";
 "Recommend" = "オススメ";
 "Original Language" = "元の言語";
@@ -60,3 +60,5 @@
 "Genre" = "ジャンル";
 "Language" = "言語";
 "View all" =  "すべてを見る";
+"Collection" = "コレクション";
+"Homepage" = "ホームページ";

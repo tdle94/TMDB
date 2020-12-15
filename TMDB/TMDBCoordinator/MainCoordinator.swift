@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import AVKit
+import Swinject
 
 struct MainCoordinator: Coordinator {
     var navigationController: UINavigationController
@@ -16,12 +17,7 @@ struct MainCoordinator: Coordinator {
     let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
 
     func navigateToMovieDetail(id: Int) {
-        let movieDetailVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbMovieDetail) as! TMDBMovieDetailViewController
-        movieDetailVC.movieId = id
-        movieDetailVC.coordinator = MainCoordinator(navigationController: navigationController)
-        movieDetailVC.navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
-        movieDetailVC.navigationItem.backBarButtonItem?.tintColor = Constant.Color.backgroundColor
-        navigationController.pushViewController(movieDetailVC, animated: true)
+        
     }
 
     func navigateToVideoPlayer(with videoURL: URL) {
@@ -184,12 +180,57 @@ struct MainCoordinator: Coordinator {
         navigationController.present(filterNav, animated: true)
     }
 
-    func presentRating(id: Int, ratingType: TMDBRatingViewController.RatingType, notifyRating: TMDBNotifyRating) {
-        let rateNav = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbRateNav) as! UINavigationController
-        let rateVC = rateNav.viewControllers.first as? TMDBRatingViewController
-        rateVC?.id = id
-        rateVC?.ratingType = ratingType
-        rateVC?.rating = notifyRating
-        navigationController.present(rateNav, animated: true)
+}
+
+protocol CommonNavigation: class {
+    func navigateBack()
+}
+
+protocol HomeViewDelegate: class {
+    func navigateToMovieDetail(movieId: Int)
+}
+
+protocol MovieDetailViewDelegate: CommonNavigation {
+    
+}
+
+class AppCoordinator {
+    let window: UIWindow
+    let container: Container
+    
+    var currentView: UIViewController?
+
+    var homeView: HomeView {
+        return container.resolve(HomeView.self)!
+    }
+    
+    var movieDetailView: MovieDetailView {
+        return container.resolve(MovieDetailView.self)!
+    }
+
+    init(window: UIWindow, container: Container) {
+        self.window = window
+        self.container = container
+    }
+
+    fileprivate func showMovieDetailView(movieId: Int) {
+        let view = movieDetailView
+        view.movieId = movieId
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
+    }
+}
+
+extension AppCoordinator: HomeViewDelegate {
+    func navigateToMovieDetail(movieId: Int) {
+        showMovieDetailView(movieId: movieId)
+    }
+}
+
+extension AppCoordinator: MovieDetailViewDelegate {
+    func navigateBack() {
+        currentView = currentView?.navigationController?.popViewController(animated: true)
+        currentView = currentView?.navigationController?.topViewController
     }
 }

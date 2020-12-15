@@ -21,14 +21,22 @@ class TMDBPreviewItemCell: UICollectionViewCell {
             imageView.roundImage()
         }
     }
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var title: UILabel! {
+        didSet {
+            title.font = UIFont(name: "Circular-Black", size: UIFont.systemFontSize)
+        }
+    }
+    @IBOutlet weak var subTitle: UILabel! {
+        didSet {
+            subTitle.font = UIFont(name: "Circular-Book", size: UIFont.systemFontSize)
+        }
+    }
 
     let userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        stackViewTopConstraint.constant = 0
+        stackViewTopConstraint.constant = 8
         imageView.image = nil
         imageView.isHidden = false
         ratingLabel.isHidden = true
@@ -52,19 +60,19 @@ extension TMDBPreviewItemCell: TMDBCellConfig {
         if let item = item as? Movie ?? (item as? Trending)?.movie {
             ratingLabel.isHidden = false
             ratingLabel.rating = item.voteAverage
-            stackViewTopConstraint.constant = 10
             title.text = item.originalTitle
             subTitle.text = item.releaseDate
             getImage(from: item.posterPath)
         } else if let item = item as? TVShow ?? (item as? Trending)?.tv {
             ratingLabel.isHidden = false
             ratingLabel.rating = item.voteAverage
-            stackViewTopConstraint.constant = 10
             title.text = item.originalName
             subTitle.text = item.firstAirDate
             getImage(from: item.posterPath)
         } else if let item = item as? People ?? (item as? Trending)?.people {
             title.text = item.name
+            ratingLabel.isHidden = false
+            ratingLabel.rating = item.popularity
             subTitle.text = item.knownForDepartment
             getImage(from: item.profilePath)
         } else if let item = item as? ProductionCompany {
@@ -82,12 +90,13 @@ extension TMDBPreviewItemCell: TMDBCellConfig {
             }
         } else if let item = item as? Cast {
             title.text = item.name
+            stackViewTopConstraint.constant = -8
             subTitle.text = item.character
             getImage(from: item.profilePath)
         } else if let item = item as? Crew {
             title.text = item.name
             subTitle.text = item.job
-            
+            stackViewTopConstraint.constant = -8
             getImage(from: item.profilePath)
         } else if let item = item as? Video, let url = userSetting.getYoutubeImageURL(key: item.key) {
             title.text = item.name

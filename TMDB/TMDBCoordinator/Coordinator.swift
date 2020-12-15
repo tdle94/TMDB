@@ -38,5 +38,4 @@ protocol Coordinator {
     func navigateToAllPopularPeople()
     func navigateToAllTrend(time: TrendingTime)
     func presentFilter(delegate: TMDBFilterDelegate, query: DiscoverQuery, choice: TMDBFilterViewController.FilterChoice)
-    func presentRating(id: Int, ratingType: TMDBRatingViewController.RatingType, notifyRating: TMDBNotifyRating)
 }

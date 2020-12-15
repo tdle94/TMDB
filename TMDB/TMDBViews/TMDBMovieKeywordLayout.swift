@@ -14,12 +14,16 @@ protocol TMDBKeywordLayoutDelegate: AnyObject {
 }
 
 class TMDBKeywordLayout: UICollectionViewLayout {
+    
+    var texts: [String] = [] {
+        didSet {
+            invalidateLayout()
+        }
+    }
 
     var layouts: [UICollectionViewLayoutAttributes] = []
 
     var numberOfLine: Int = 0
-
-    weak var delegate: TMDBKeywordLayoutDelegate?
 
     override var collectionViewContentSize: CGSize {
         let layoutHeight = CGFloat(layouts.first?.frame.height ?? 0)
@@ -27,15 +31,6 @@ class TMDBKeywordLayout: UICollectionViewLayout {
         let height = (CGFloat(numberOfLine) * layoutHeight + totalLine + layoutHeight + 1 )
         return CGSize(width: UIScreen.main.bounds.width - 18,
                       height: height)
-    }
-
-    init(delegate: TMDBKeywordLayoutDelegate) {
-        self.delegate = delegate
-        super.init()
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
     }
 
     override func prepare() {
@@ -68,9 +63,10 @@ extension TMDBKeywordLayout {
     }
 
     func creatLayoutAttribute(at index: Int) {
-        guard let size = delegate?.tagCellLayoutSize(layout: self, at: index) else { return }
+        let label = UILabel()
+        label.text = texts[index]
         let layout = UICollectionViewLayoutAttributes(forCellWith: IndexPath(row: index, section: 0))
-        layout.size = size
+        layout.size = label.intrinsicContentSize
         layouts.append(layout)
     }
 

@@ -17,15 +17,16 @@ target 'TMDB' do
   pod 'SDWebImage'
   pod 'Cosmos'
   pod 'Toast-Swift'
+  pod 'Swinject'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'RxSwiftExt'
+  pod 'RxSwiftUtilities'
+  pod 'RxDataSources'
 
   target 'TMDBTests' do
     inherit! :search_paths
     testing_pods
-  end
-  
-  target 'TMDBUITests' do
-      inherit! :search_paths
-      testing_pods
   end
 
 end

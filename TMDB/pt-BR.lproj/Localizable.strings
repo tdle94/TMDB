@@ -15,7 +15,7 @@
 "Today" = "Hoje";
 "This Week" = "Esta semana";
 "Status" = "Status";
-"Produce by" = "Produzir por";
+"Produce By" = "Produzir por";
 "Similar" = "Semelhante";
 "Recommend" = "Recomendar";
 "Original Language" = "Linguagem original";
@@ -60,3 +60,5 @@
 "Genre" = "Gênero";
 "Language" = "Língua";
 "View all" =  "Ver tudo";
+"Collection" = "Coleção";
+"Homepage" = "Pagina inicial";

@@ -20,6 +20,34 @@
                ReferencedContainer = "container:TMDB.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "342E66352489BB33003B5CB8"
+               BuildableName = "TMDBTests.xctest"
+               BlueprintName = "TMDBTests"
+               ReferencedContainer = "container:TMDB.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "34A0D0B524B3E60F00386945"
+               BuildableName = "TMDBUITests.xctest"
+               BlueprintName = "TMDBUITests"
+               ReferencedContainer = "container:TMDB.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -28,6 +56,16 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "342E66352489BB33003B5CB8"
+               BuildableName = "TMDBTests.xctest"
+               BlueprintName = "TMDBTests"
+               ReferencedContainer = "container:TMDB.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

@@ -28,10 +28,5 @@ target 'TMDB' do
     inherit! :search_paths
     testing_pods
   end
-  
-  target 'TMDBUITests' do
-      inherit! :search_paths
-      testing_pods
-  end
 
 end

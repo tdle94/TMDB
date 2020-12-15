@@ -149,7 +149,6 @@ class MovieDetailView: UIViewController {
     }
     @IBOutlet weak var reviewAndReleaseTableView: UITableView! {
         didSet {
-            reviewAndReleaseTableView.contentInset.left -= 15
             reviewAndReleaseTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
                                                forCellReuseIdentifier: Constant.Identifier.reviewCell)
         }

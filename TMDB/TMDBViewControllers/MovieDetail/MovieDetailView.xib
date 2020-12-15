@@ -145,7 +145,7 @@
                                     <collectionViewLayout key="collectionViewLayout" id="B93-il-Ptb" customClass="TMDBKeywordLayout" customModule="TMDB" customModuleProvider="target"/>
                                 </collectionView>
                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jcK-ex-7Yw">
-                                    <rect key="frame" x="20" y="647.33333333333337" width="388" height="80"/>
+                                    <rect key="frame" x="0.0" y="647.33333333333337" width="408" height="80"/>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="HZ2-JC-g8S"/>
@@ -275,7 +275,7 @@
                                 <constraint firstItem="k30-Dh-oWq" firstAttribute="top" secondItem="80X-Vc-mLz" secondAttribute="bottom" constant="15" id="xEg-gL-1fp"/>
                                 <constraint firstItem="DBC-o5-9Bb" firstAttribute="top" secondItem="Kcc-As-l5F" secondAttribute="bottom" constant="8" symbolic="YES" id="yvR-0f-on4"/>
                                 <constraint firstItem="KXV-AI-dx8" firstAttribute="leading" secondItem="gpp-DT-b0r" secondAttribute="leading" id="zVm-xo-SbC"/>
-                                <constraint firstItem="jcK-ex-7Yw" firstAttribute="leading" secondItem="fSe-m6-hYt" secondAttribute="leading" constant="20" symbolic="YES" id="znd-ge-6SZ"/>
+                                <constraint firstItem="jcK-ex-7Yw" firstAttribute="leading" secondItem="fSe-m6-hYt" secondAttribute="leading" id="znd-ge-6SZ"/>
                             </constraints>
                         </view>
                     </subviews>

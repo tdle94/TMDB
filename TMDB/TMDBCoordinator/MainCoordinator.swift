@@ -46,10 +46,7 @@ struct MainCoordinator: Coordinator {
     }
     
     func navigateToTVShowDetail(tvId: Int) {
-        let tvShowDetailVC = storyboard.instantiateViewController(identifier: Constant.ViewControllerIdentifier.tmdbTVDetailVC) as! TMDBTVDetailViewController
-        tvShowDetailVC.tvId = tvId
-        tvShowDetailVC.coordinate = MainCoordinator(navigationController: navigationController)
-        navigationController.pushViewController(tvShowDetailVC, animated: true)
+        
     }
     
     func navigateToTVShowSeasonDetail(tvId: Int, seasonNumber: Int) {
@@ -188,10 +185,15 @@ protocol CommonNavigation: class {
 
 protocol HomeViewDelegate: class {
     func navigateToMovieDetail(movieId: Int)
+    func navigateToTVShowDetail(tvShowId: Int)
 }
 
 protocol MovieDetailViewDelegate: CommonNavigation {
-    
+    // TODO: nav function
+}
+
+protocol TVShowDetailViewDelegate: CommonNavigation {
+    // TODO: nav function
 }
 
 class AppCoordinator {
@@ -207,6 +209,10 @@ class AppCoordinator {
     var movieDetailView: MovieDetailView {
         return container.resolve(MovieDetailView.self)!
     }
+    
+    var tvShowDetailView: TVShowDetailView {
+        return container.resolve(TVShowDetailView.self)!
+    }
 
     init(window: UIWindow, container: Container) {
         self.window = window
@@ -220,17 +226,35 @@ class AppCoordinator {
         currentView?.navigationController?.pushViewController(view, animated: true)
         currentView = view
     }
+    
+    fileprivate func showTVShowDetailView(tvShowId: Int) {
+        let view = tvShowDetailView
+        view.tvShowId = tvShowId
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
+    }
+    
+    func navigateBack() {
+        currentView = currentView?.navigationController?.popViewController(animated: true)
+        currentView = currentView?.navigationController?.topViewController
+    }
 }
 
 extension AppCoordinator: HomeViewDelegate {
     func navigateToMovieDetail(movieId: Int) {
         showMovieDetailView(movieId: movieId)
     }
+    
+    func navigateToTVShowDetail(tvShowId: Int) {
+        showTVShowDetailView(tvShowId: tvShowId)
+    }
 }
 
 extension AppCoordinator: MovieDetailViewDelegate {
-    func navigateBack() {
-        currentView = currentView?.navigationController?.popViewController(animated: true)
-        currentView = currentView?.navigationController?.topViewController
-    }
+    // TODO: nav function
+}
+
+extension AppCoordinator: TVShowDetailViewDelegate {
+    // TODO: nav function
 }

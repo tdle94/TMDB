@@ -46,12 +46,18 @@ class HomeView: UIViewController {
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularPreviewHeader)
             collectionView.register(TMDBMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
             collectionView.register(TMDBTVShowHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader)
+            
+            // item select
             collectionView.rx.modelSelected(CustomElementType.self).subscribe { item in
-                if let movie = item.element?.identity as? Movie {
+                if let movie = item.element?.identity as? Movie ?? (item.element?.identity as? Trending)?.movie {
                     self.delegate?.navigateToMovieDetail(movieId: movie.id)
+                } else if let tvShow = item.element?.identity as? TVShow ?? (item.element?.identity as? Trending)?.tv {
+                    self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
                 }
             }.disposed(by: rx.disposeBag)
+
             
+            // suplementary view
             dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 let header: TMDBPreviewHeaderView
                 
@@ -171,6 +177,8 @@ class HomeView: UIViewController {
         self.configureLanguageAndRegion()
         self.setupUIBinding()
 
+        //self.delegate?.navigateToTVShowDetail(tvShowId: 82856)
+        //self.delegate?.navigateToMovieDetail(movieId: 729648)
         self.viewModel.getPopularMovie()
         self.viewModel.getTrendingToday()
         self.viewModel.getTopRatedMovie()
@@ -191,61 +199,9 @@ class HomeView: UIViewController {
 
 extension HomeView {
     func setupUIBinding() {
-        
-        // initialize empty section
-        Observable.just(
-            [
-                .Popular(items: []),
-                .Trending(items: []),
-                .Movie(items: []),
-                .TVShow(items: [])
-            ]
-        )
-        .take(1)
-        .bind(to: collectionView.rx.items(dataSource: dataSource))
-        .disposed(by: rx.disposeBag)
-        
-        collectionView.dataSource = nil
-
         // collectionView data source binding
         viewModel
             .collectionViewSection
-            .map { sectionModels in
-                guard let section = sectionModels.first else {
-                    return []
-                }
-                
-                switch section {
-                case .Popular(items: _):
-                    return [
-                        section, // update section 0, everything else remain
-                        self.dataSource.sectionModels[1],
-                        self.dataSource.sectionModels[2],
-                        self.dataSource.sectionModels[3]
-                    ]
-                case .Trending(items: _):
-                    return [
-                        self.dataSource.sectionModels[0],
-                        section,    // update section 1, everything else remain
-                        self.dataSource.sectionModels[2],
-                        self.dataSource.sectionModels[3]
-                    ]
-                case .Movie(items: _):
-                    return [
-                        self.dataSource.sectionModels[0],
-                        self.dataSource.sectionModels[1],
-                        section, // update section 2, everything else remain
-                        self.dataSource.sectionModels[3]
-                    ]
-                case .TVShow(items: _):
-                    return [
-                        self.dataSource.sectionModels[0],
-                        self.dataSource.sectionModels[1],
-                        self.dataSource.sectionModels[2],
-                        section // update section 3, everything else remain
-                    ]
-                }
-            }
             .bind(to: collectionView.rx.items(dataSource: dataSource))
             .disposed(by: rx.disposeBag)
 

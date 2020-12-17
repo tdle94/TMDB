@@ -77,7 +77,7 @@ class TMDBFilterViewController: UITableViewController {
                     collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                     cell?.isSelected = true
                 }
-                cell?.configure(keyword: keyword)
+
                 return cell
             }
             
@@ -101,7 +101,7 @@ class TMDBFilterViewController: UITableViewController {
                     collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                     cell?.isSelected = true
                 }
-                cell?.configure(keyword: keyword)
+
                 return cell
             }
             var snapshot = genreDataSource.snapshot()
@@ -125,7 +125,7 @@ class TMDBFilterViewController: UITableViewController {
                     cell?.isSelected = true
                 }
 
-                cell?.configure(keyword: keyword)
+
                 return cell
             }
             var snapshot = languageDataSource.snapshot()

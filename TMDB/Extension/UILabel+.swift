@@ -8,14 +8,13 @@
 
 import UIKit
 
-extension UILabel {
-    func setAttributeText(title: String, subTitle: String? = nil) {
+struct TMDBLabel {
+    static func setAttributeText(title: String, subTitle: String? = nil) -> NSMutableAttributedString {
         guard let subTitle = subTitle else {
-            attributedText = NSMutableAttributedString(string: title, attributes: [
+            return NSMutableAttributedString(string: title, attributes: [
                 NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.systemFontSize)!),
                 NSAttributedString.Key.foregroundColor: UIColor.darkGray
             ])
-            return
         }
 
         let firstString = NSMutableAttributedString(string: "\(title): ", attributes: [
@@ -27,17 +26,20 @@ extension UILabel {
         ])
 
         firstString.append(secondString)
-        attributedText = firstString
+        return firstString
     }
     
-    func setAtributeParagraph(title: String, paragraph: String) {
+    static func setAtributeParagraph(title: String, paragraph: String) -> NSMutableAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
+        let headerStyle = NSMutableParagraphStyle()
+        
         paragraphStyle.lineSpacing = 3
+        headerStyle.lineSpacing = 6
 
         
         let first = NSMutableAttributedString(string: "\(title):\n", attributes: [
             NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!),
-            NSAttributedString.Key.paragraphStyle: paragraphStyle
+            NSAttributedString.Key.paragraphStyle: headerStyle
         ])
         
         let second = NSAttributedString(string: paragraph,
@@ -46,12 +48,18 @@ extension UILabel {
                                                      NSAttributedString.Key.paragraphStyle: paragraphStyle])
         
         first.append(second)
-        attributedText = first
+        return first
     }
     
-    func setHeader(title: String) {
-        attributedText = NSMutableAttributedString(string: title, attributes: [
+    static func setHeader(title: String) -> NSMutableAttributedString {
+        return NSMutableAttributedString(string: title, attributes: [
             NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!),
         ])
+    }
+}
+
+extension UILabel {
+    func setHeader(title: String) {
+        attributedText = TMDBLabel.setHeader(title: title)
     }
 }

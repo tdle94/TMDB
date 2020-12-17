@@ -41,19 +41,28 @@ extension DefaultContainer {
         }
         
         self.container.register(MovieDetailViewModelProtocol.self) { resolver in
-            MovieDetailViewModel(movieRepository: resolver.resolve(TMDBMovieRepository.self)!)
+            MovieDetailViewModel(movieRepository: resolver.resolve(TMDBMovieRepository.self)!,
+                                 userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
+
+        self.container.register(TVShowDetailViewModelProtocol.self) { resolver in
+            TVShowDetailViewModel(repository: resolver.resolve(TMDBTVShowRepository.self)!,
+                                  userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
     }
 
     func registerViews() {
         self.container.register(MovieDetailView.self) { resolver in
-            MovieDetailView(viewModel: resolver.resolve(MovieDetailViewModelProtocol.self)!,
-                            userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+            MovieDetailView(viewModel: resolver.resolve(MovieDetailViewModelProtocol.self)!)
         }
         
         self.container.register(HomeView.self) { resolver in
             HomeView(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!,
                      viewModel: resolver.resolve(HomeViewModelProtocol.self)!)
+        }
+
+        self.container.register(TVShowDetailView.self) { resolver in
+            TVShowDetailView(viewModel: resolver.resolve(TVShowDetailViewModelProtocol.self)!)
         }
     }
     

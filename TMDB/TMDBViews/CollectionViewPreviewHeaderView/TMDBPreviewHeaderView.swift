@@ -38,9 +38,11 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
         addSubview(solidIndicator)
         
         solidIndicator.widthAnchor.constraint(equalToConstant: 5).isActive = true
-        solidIndicator.heightAnchor.constraint(equalToConstant: bounds.height - 10).isActive = true
+        solidIndicator.heightAnchor.constraint(equalToConstant: bounds.height).isActive = true
         solidIndicator.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         solidIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        solidIndicator.transform = CGAffineTransform.init(scaleX: 1, y: 0.9)
 
         label.translatesAutoresizingMaskIntoConstraints = false
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
@@ -48,10 +50,10 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
         
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        label.heightAnchor.constraint(equalToConstant: bounds.height - 10).isActive = true
+        label.heightAnchor.constraint(equalToConstant: bounds.height).isActive = true
 
         segmentControl.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        segmentControl.heightAnchor.constraint(equalToConstant: bounds.height - 10).isActive = true
+        segmentControl.heightAnchor.constraint(equalToConstant: bounds.height).isActive = true
 
         addConstraint(NSLayoutConstraint(item: label,
                                          attribute: .trailing,

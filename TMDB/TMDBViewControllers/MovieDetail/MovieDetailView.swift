@@ -48,6 +48,7 @@ class MovieDetailView: UIViewController {
     private var movieLikeThisHeaderView: TMDBMovieLikeThisHeaderView?
     private var creditHeaderView: TMDBCreditHeaderView?
 
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var homepageLabel: UILabel!
     @IBOutlet weak var imdbLabel: UILabel!
     @IBOutlet weak var collectionNameLabel: UILabel!
@@ -76,7 +77,7 @@ class MovieDetailView: UIViewController {
             if UIDevice.current.userInterfaceIdiom == .pad {
                 creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.43)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             }
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBCreditHeaderView.self,
@@ -86,22 +87,21 @@ class MovieDetailView: UIViewController {
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                           withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
             dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
-                let header: TMDBPreviewHeaderView
-                
-                if indexPath.section == 0 {
-                    header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                             for: indexPath) as! TMDBCreditHeaderView
+                switch dataSource.sectionModels[indexPath.section] {
+                case .Credits(items: _):
+                    let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                                       for: indexPath) as! TMDBCreditHeaderView
                     if self.creditHeaderView == nil {
-                        header
+                        creditHeader
                             .segmentControl
                             .rx
-                            .selectedSegmentIndex
+                            .value
                             .changed
                             .subscribe { event in
                                 let index = Int(event.element!.description)
-                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
-                                
+                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
+
                                 if index == 0 {
                                     self.viewModel.getCasts(movieId: self.movieId!)
                                 } else {
@@ -109,37 +109,42 @@ class MovieDetailView: UIViewController {
                                 }
                             }
                             .disposed(by: self.rx.disposeBag)
+                        
+                        self.creditHeaderView = creditHeader
+                        
+                        return creditHeader
+                    } else {
+                        return self.creditHeaderView!
                     }
+                case .MoviesLikeThis(items: _):
+                    let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                                      withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
+                                                                                      for: indexPath) as! TMDBMovieLikeThisHeaderView
                     
-                    self.creditHeaderView = header as? TMDBCreditHeaderView
-                } else {
-                    header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
-                                                                             for: indexPath) as! TMDBMovieLikeThisHeaderView
                     if self.movieLikeThisHeaderView == nil {
-                        header
+                        movieHeader
                             .segmentControl
                             .rx
-                            .selectedSegmentIndex
+                            .value
                             .changed
                             .subscribe { event in
                                 let index = Int(event.element!.description)
+                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
                                 if index == 0 {
                                     self.viewModel.getSimilarMovies(movieId: self.movieId!)
                                 } else {
                                     self.viewModel.getRecommendMovies(movieId: self.movieId!)
                                 }
-                                
-                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: true)
                             }
                             .disposed(by: self.rx.disposeBag)
+                        
+                        self.movieLikeThisHeaderView = movieHeader
+                        return movieHeader
+                    } else {
+                        return self.movieLikeThisHeaderView!
                     }
-                    
-                    self.movieLikeThisHeaderView = header as? TMDBMovieLikeThisHeaderView
-                    
                 }
-                return header
             }
         }
     }
@@ -173,14 +178,37 @@ class MovieDetailView: UIViewController {
             scrollView.parallaxHeader.height = ceil(UIScreen.main.bounds.height / 2.7)
             scrollView.parallaxHeader.minimumHeight = 0
 
-            scrollView.rx.didEndDecelerating.asObservable().subscribe { _ in
-                if let id = self.movieId, self.scrollView.parallaxHeader.refreshControl.isRefreshing {
-                    self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: true)
-                    self.scrollView.parallaxHeader.refreshControl.beginRefreshing()
-                    self.viewModel.getImages(movieId: id)
-                    self.scrollView.parallaxHeader.refreshControl.endRefreshing()
+            // refresh movie detail
+            scrollView
+                .rx
+                .didEndDecelerating
+                .asObservable()
+                .subscribe { _ in
+                    if let id = self.movieId, self.scrollView.parallaxHeader.refreshControl.isRefreshing {
+                        // reset collection view to original form
+                        self.reviewAndReleaseTableView.dataSource = nil
+                        self.productionCompaniesCollectionView.dataSource = nil
+                        self.genreCollectionView.dataSource = nil
+                        
+                        self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: true)
+                        
+                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
+                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                        
+                        let creditHeader = self.creditCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader,
+                                                                                       at: IndexPath(row: 0, section: 0)) as? TMDBCreditHeaderView
+                        let moreLikeThisHeader = self.creditCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader,
+                                                                                             at: IndexPath(row: 0, section: 1)) as? TMDBMovieLikeThisHeaderView
+                        moreLikeThisHeader?.setup()
+                        creditHeader?.setup()
+
+                        // get movie detail
+                        self.scrollView.parallaxHeader.refreshControl.beginRefreshing()
+                        self.viewModel.getImages(movieId: id)
+                        self.viewModel.getMovieDetail(movieId: id)
+                    }
                 }
-            }.disposed(by: rx.disposeBag)
+                .disposed(by: rx.disposeBag)
         }
     }
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
@@ -236,6 +264,9 @@ extension MovieDetailView {
             .asObserver()
             .subscribe(
                 onNext: { result in
+                    if self.scrollView.parallaxHeader.refreshControl.isRefreshing {
+                        self.scrollView.parallaxHeader.refreshControl.endRefreshing()
+                    }
 
                     if let posterPath = result.posterPath, let url = self.viewModel.userSetting.getImageURL(from: posterPath) {
                         self.posterImageView.sd_setImage(with: url) { _, _, _, _ in
@@ -275,7 +306,9 @@ extension MovieDetailView {
                     
                 },
                 onError: { error in
-                
+                    if self.scrollView.parallaxHeader.refreshControl.isRefreshing {
+                        self.scrollView.parallaxHeader.refreshControl.endRefreshing()
+                    }
                 }).disposed(by: rx.disposeBag)
         // backdrop images binding
         viewModel
@@ -346,48 +379,33 @@ extension MovieDetailView {
 
         viewModel
             .credits
-            .map { sectionModels in
-                guard sectionModels.count == 1 else {
-                    if sectionModels[0].items.isEmpty, sectionModels[1].items.isEmpty {
-                        return []
-                    } else if sectionModels[0].items.isEmpty {
-                        self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.4, heightDimension: 0.9)
-                        return [sectionModels[1]]
-                    } else if sectionModels[1].items.isEmpty {
-                        self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.4, heightDimension: 0.9)
-                        return [sectionModels[0]]
-                    }
-                    return sectionModels
-                }
-
-                return sectionModels
-            }
             .bind(to: creditCollectionView.rx.items(dataSource: dataSource))
             .disposed(by: rx.disposeBag)
         
         creditCollectionView
             .rx
             .willDisplaySupplementaryView
-            .take(2)
             .subscribe { event in
+
                 if let header = event.element?.supplementaryView as? TMDBMovieLikeThisHeaderView {
-                    if !self.viewModel.isThereCast, !self.viewModel.isThereCrew {
-                        header.segmentControl.removeAllSegments()
-                    } else if !self.viewModel.isThereSimilarMovie {
+                    if !self.viewModel.isThereSimilarMovie {
                         header.segmentControl.removeSegment(at: 0, animated: false)
                         header.segmentControl.selectedSegmentIndex = 0
                     } else if !self.viewModel.isThereRecommendMovie {
                         header.segmentControl.removeSegment(at: 1, animated: false)
                     }
+                    
+                    self.viewModel.resetMovieHeaderState()
+
                 } else if let header = event.element?.supplementaryView as? TMDBCreditHeaderView {
-                    if !self.viewModel.isThereCast, !self.viewModel.isThereCrew {
-                        header.segmentControl.removeAllSegments()
-                    } else if !self.viewModel.isThereCast {
+                    if !self.viewModel.isThereCast {
                         header.segmentControl.removeSegment(at: 0, animated: false)
                         header.segmentControl.selectedSegmentIndex = 0
                     } else if !self.viewModel.isThereCrew {
                         header.segmentControl.removeSegment(at: 1, animated: false)
                     }
+                    
+                    self.viewModel.resetCreditHeaderState()
                 }
             }
             .disposed(by: rx.disposeBag)

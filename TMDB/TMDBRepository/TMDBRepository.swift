@@ -557,7 +557,7 @@ extension TMDBRepository: TMDBMovieRepository {
     }
 
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        guard let movie =  localDataSource.getMovie(id: movieId) else {
+        guard let movie = localDataSource.getMovie(id: movieId) else {
             completion(.failure(NSError(domain: "Cannot find movie \(movieId)", code: 400, userInfo: nil)))
             return
         }

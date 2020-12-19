@@ -27,11 +27,24 @@ protocol TVShowDetailViewModelProtocol {
     var homepage: PublishSubject<NSAttributedString> { get }
     var overview: PublishSubject<NSAttributedString> { get }
     var keywords: PublishSubject<[Keyword]> { get }
+    var credits: BehaviorSubject<[TVShowDetailModel]> { get }
+    
+    var isThereCast: Bool { get }
+    var isThereCrew: Bool { get }
+    var isThereSimilarTVShow: Bool { get }
+    var isThereRecommendTVShow: Bool { get }
     
     var userSetting: TMDBUserSettingProtocol { get }
      
     func getTVShowDetail(tvShowId: Int)
     func getImages(tvShowId: Int)
+    func getCasts(tvShowId: Int)
+    func getCrews(tvShowId: Int)
+    func getSimilars(tvShowId: Int)
+    func getRecommends(tvShowId: Int)
+    
+    func resetCreditHeaderState()
+    func resetMovieHeaderState()
 }
 
 class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
@@ -52,6 +65,37 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     var episodeRuntime: PublishSubject<NSAttributedString> = PublishSubject()
     var overview: PublishSubject<NSAttributedString> = PublishSubject()
     var keywords: PublishSubject<[Keyword]> = PublishSubject()
+    var credits: BehaviorSubject<[TVShowDetailModel]> = BehaviorSubject(value: [
+        .Credits(items: []),
+        .TVShowsLikeThis(items: [])
+    ])
+    
+    var isThereCast: Bool = true
+    var isThereCrew: Bool = true
+    var isThereSimilarTVShow: Bool = true
+    var isThereRecommendTVShow: Bool = true
+    
+    lazy var tvShowHandler: (Result<TVShowResult, Error>) -> Void = { result in
+        switch result {
+        case .success(let result):
+            guard let credits = try? self.credits.value().first else {
+                self.credits.onNext([.TVShowsLikeThis(items: result.onTV.map{ CustomElementType(identity: $0) })])
+                return
+            }
+            
+            switch credits {
+            case .Credits(items: _):
+                self.credits.onNext([
+                    credits,
+                    .TVShowsLikeThis(items: result.onTV.map{ CustomElementType(identity: $0) })
+                ])
+            case .TVShowsLikeThis(items: _):
+                self.credits.onNext([.TVShowsLikeThis(items: result.onTV.map{ CustomElementType(identity: $0) })])
+            }
+        case .failure(let error):
+            self.credits.onError(error)
+        }
+    }
 
     var userSetting: TMDBUserSettingProtocol
 
@@ -97,6 +141,40 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                                                                       subTitle: Array(result.episodeRunTime).map { String($0) }.joined(separator: ", ") + " min"))
                 self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
                                                                     paragraph: result.overview))
+                
+                var credits = Array(result.credits?.cast ?? List<Cast>()).map { CustomElementType(identity: $0) }
+                
+                if credits.isEmpty {
+                    credits = Array(result.credits?.crew ?? List<Crew>()).map { CustomElementType(identity: $0) }
+                }
+ 
+                
+                if result.credits?.cast.isEmpty ?? true {
+                    self.isThereCast = false
+                } else if result.credits?.crew.isEmpty ?? true {
+                    self.isThereCrew = false
+                }
+
+                let tvshowLikeThis = Array(result.similar?.onTV ?? result.recommendations?.onTV ?? List<TVShow>()).map { CustomElementType(identity: $0) }
+
+                if result.similar?.onTV.isEmpty ?? true {
+                    self.isThereSimilarTVShow = false
+                } else if result.recommendations?.onTV.isEmpty ?? true {
+                    self.isThereRecommendTVShow = false
+                }
+                
+                if credits.isEmpty && tvshowLikeThis.isEmpty {
+                    self.credits.onNext([])
+                } else if credits.isEmpty {
+                    self.credits.onNext([.TVShowsLikeThis(items: tvshowLikeThis)])
+                } else if tvshowLikeThis.isEmpty {
+                    self.credits.onNext([.Credits(items: credits)])
+                } else {
+                    self.credits.onNext([
+                        .Credits(items: credits),
+                        .TVShowsLikeThis(items: tvshowLikeThis)
+                    ])
+                }
             case .failure(let error):
                 self.tvShowDetail.onError(error)
             }
@@ -112,5 +190,57 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                 self.images.onError(error)
             }
         }
+    }
+    
+    func getCasts(tvShowId: Int) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let casts = self.repository.getTVShowCast(from: tvShowId).map { CustomElementType(identity: $0) }
+            
+            guard let tvShowLikeThis = try? self.credits.value().dropFirst() else {
+                self.credits.onNext([.Credits(items: casts)])
+                return
+            }
+            
+            self.credits.onNext([
+                .Credits(items: casts)
+            ] + tvShowLikeThis)
+        }
+    }
+
+    func getCrews(tvShowId: Int) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let crews = self.repository.getTVShowCrew(from: tvShowId).map { CustomElementType(identity: $0) }
+            
+            guard let tvShowLikeThis = try? self.credits.value().dropFirst() else {
+                self.credits.onNext([.Credits(items: crews)])
+                return
+            }
+            
+            self.credits.onNext([
+                .Credits(items: crews)
+            ] + tvShowLikeThis)
+        }
+    }
+
+    func getSimilars(tvShowId: Int) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.repository.getSimilarTVShows(from: tvShowId, page: 1, completion: self.tvShowHandler)
+        }
+    }
+
+    func getRecommends(tvShowId: Int) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.repository.getRecommendTVShows(from: tvShowId, page: 1, completion: self.tvShowHandler)
+        }
+    }
+    
+    func resetCreditHeaderState() {
+        isThereCrew = true
+        isThereCast = true
+    }
+
+    func resetMovieHeaderState() {
+        isThereRecommendTVShow = true
+        isThereSimilarTVShow = true
     }
 }

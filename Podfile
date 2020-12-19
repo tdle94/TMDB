@@ -7,8 +7,6 @@ def testing_pods
   pod "Cuckoo"
   pod 'RealmSwift'
   pod 'SDWebImage'
-  pod 'Cosmos'
-  pod 'Toast-Swift'
 end
 
 target 'TMDB' do
@@ -16,7 +14,6 @@ target 'TMDB' do
   pod 'RealmSwift'
   pod 'SDWebImage'
   pod 'Cosmos'
-  pod 'Toast-Swift'
   pod 'Swinject'
   pod 'RxSwift'
   pod 'RxCocoa'

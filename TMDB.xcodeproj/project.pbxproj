@@ -180,6 +180,7 @@
 		34D6138624E45933007961BC /* TMDBFooterLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D6138524E45933007961BC /* TMDBFooterLoadingView.swift */; };
 		34D6138824E459A1007961BC /* TMDBFooterLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34D6138724E459A1007961BC /* TMDBFooterLoadingView.xib */; };
 		34D6672724DC475F003A73BA /* TVShowEpisodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D6672624DC475F003A73BA /* TVShowEpisodeViewController.swift */; };
+		34D817BB258D2D97008EA1EE /* TVShowDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D817BA258D2D97008EA1EE /* TVShowDetailModel.swift */; };
 		34D9567724D469FB00A478E5 /* CountryCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D9567624D469FA00A478E5 /* CountryCode.swift */; };
 		34D9567924D46A1F00A478E5 /* CountryCode.json in Resources */ = {isa = PBXBuildFile; fileRef = 34D9567824D46A1E00A478E5 /* CountryCode.json */; };
 		34D9567D24D470F300A478E5 /* LanguageCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D9567C24D470F300A478E5 /* LanguageCode.swift */; };
@@ -401,6 +402,7 @@
 		34D6138524E45933007961BC /* TMDBFooterLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBFooterLoadingView.swift; sourceTree = "<group>"; };
 		34D6138724E459A1007961BC /* TMDBFooterLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TMDBFooterLoadingView.xib; sourceTree = "<group>"; };
 		34D6672624DC475F003A73BA /* TVShowEpisodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowEpisodeViewController.swift; sourceTree = "<group>"; };
+		34D817BA258D2D97008EA1EE /* TVShowDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailModel.swift; sourceTree = "<group>"; };
 		34D9567624D469FA00A478E5 /* CountryCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCode.swift; sourceTree = "<group>"; };
 		34D9567824D46A1E00A478E5 /* CountryCode.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CountryCode.json; sourceTree = "<group>"; };
 		34D9567C24D470F300A478E5 /* LanguageCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCode.swift; sourceTree = "<group>"; };
@@ -851,6 +853,7 @@
 				34C506342589108F00DE6928 /* TVShowDetailView.swift */,
 				34C506382589109E00DE6928 /* TVShowDetailView.xib */,
 				34C5063C2589160E00DE6928 /* TVShowDetailViewModel.swift */,
+				34D817BA258D2D97008EA1EE /* TVShowDetailModel.swift */,
 			);
 			path = TVShowDetail;
 			sourceTree = "<group>";
@@ -1242,6 +1245,7 @@
 				34C8CB6B24FC088000E6F081 /* TMDBAllTVShowAirTodayViewController.swift in Sources */,
 				347B8E9D24B2675E00A5E9AB /* TMDBMovieKeywordLayout.swift in Sources */,
 				347456FE24BEB35500487CB0 /* TMDBPersonDetailPresenter.swift in Sources */,
+				34D817BB258D2D97008EA1EE /* TVShowDetailModel.swift in Sources */,
 				342727F325840745003E0A61 /* UIScrollView+.swift in Sources */,
 				34E1E2A724F19E7800652463 /* TMDBTVShowEpisodeViewController+TMDBPreviewSegmentControl.swift in Sources */,
 				3494A6F124BA3EE800F098BF /* MultiSearch.swift in Sources */,

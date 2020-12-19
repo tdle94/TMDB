@@ -20,12 +20,12 @@ private let parallaxHeaderKVOContext = UnsafeMutableRawPointer.allocate(
 
 class ParallaxRefreshControl: UIRefreshControl {
     
-    let attrs: [NSAttributedString.Key : Any] = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 235/255, green: 235/255, blue:  240/255, alpha: 1),
-                                                 NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18)]
+    let attrs: [NSAttributedString.Key : Any] = [NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor,
+                                                 NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .headline)]
 
     override init() {
         super.init()
-        tintColor = UIColor(displayP3Red: 235/255, green: 235/255, blue:  240/255, alpha: 1)
+        tintColor = Constant.Color.backgroundColor
         attributedTitle = NSAttributedString(string: "release to update", attributes: attrs)
     }
     
@@ -142,17 +142,20 @@ public class CarouselView: UIView {
     public init(numberOfDot: Int) {
         self.numberOfDot = numberOfDot
         super.init(frame: .zero)
+        isUserInteractionEnabled = false
+        backgroundColor = .clear
         dotContainer.backgroundColor = .clear
+        dotContainer.isUserInteractionEnabled = true
     }
     
     public override func layoutSubviews() {
         if numberOfDot == 1 || !dotContainer.subviews.isEmpty {
             return
         }
-
+        let dotContainerMaxX:CGFloat = numberOfDot >= 4 ? 4.0 : CGFloat(numberOfDot)
         addSubview(dotContainer)
         dotContainer.translatesAutoresizingMaskIntoConstraints = false
-        dotContainer.widthAnchor.constraint(equalToConstant: distanceBetweenDot * 4).isActive = true
+        dotContainer.widthAnchor.constraint(equalToConstant: distanceBetweenDot * dotContainerMaxX ).isActive = true
         dotContainer.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat: "V:|-0.0@250-[v]-0.0@250-|",
@@ -206,9 +209,9 @@ public class CarouselView: UIView {
                 
                 let firstDotFrame = maxDots.first?.frame
             
-                UIView.animate(withDuration: 0.5) {
+                UIView.animate(withDuration: 0.3) {
                     self.maxDots.first?.transform = CGAffineTransform.init(scaleX: 0.65, y: 0.65)
-                    self.maxDots.first?.frame.origin.x -= self.distanceBetweenDot
+                    self.maxDots.first?.frame.origin.x -= self.distanceBetweenDot + 1
                 }
                 
                 for i in 1..<maxDots.count {
@@ -219,14 +222,14 @@ public class CarouselView: UIView {
                     maxDots[maxDots.count - 1] = dotContainer.subviews[maxDots.last!.index + 1] as! DotView
                 }
 
-                UIView.animate(withDuration: 0.5) {
+                UIView.animate(withDuration: 0.3) {
                     self.maxDots.first?.frame.origin.x = firstDotFrame?.origin.x ?? 0
                     self.maxDots[self.moveCnt - 1].transform = CGAffineTransform.init(scaleX: 1, y: 1)
                 }
                
 
                 for i in 1..<maxDots.count-1 {
-                    UIView.animate(withDuration: 0.5) {
+                    UIView.animate(withDuration: 0.3) {
                         self.maxDots[i].frame.origin.x = self.maxDots[i - 1].frame.maxX + self.distanceBetweenDot / 2
                     }
                 }
@@ -253,16 +256,16 @@ public class CarouselView: UIView {
                 maxDots[0] = dotContainer.subviews[maxDots.first!.index - 1] as! DotView
                 
                 for i in 0..<maxDots.count-1 {
-                    UIView.animate(withDuration: 0.5) {
+                    UIView.animate(withDuration: 0.3) {
                         self.maxDots[i].frame.origin.x = self.maxDots[i+1].frame.origin.x
                     }
                 }
                 
-                UIView.animate(withDuration: 0.5) {
+                UIView.animate(withDuration: 0.3) {
                     self.maxDots.last?.frame.origin.x += self.distanceBetweenDot
                     self.maxDots.last?.transform = CGAffineTransform.init(scaleX: 0.65, y: 0.65)
                     self.maxDots.first?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-                    self.maxDots.first?.frame.origin.x = firstDotFrame!.origin.x
+                    self.maxDots.first?.frame.origin.x = firstDotFrame?.origin.x ?? 0
                 }
 
             }
@@ -476,11 +479,11 @@ public class ParallaxHeader: NSObject {
         
         let metrics = [
             "lowPriority" : UILayoutPriority.defaultLow,
-            "height" : height
+            "height" : height - 44
             ] as [String : Any]
 
         contentView.addConstraints(
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|[v]-height@lowPriority-|",
+            NSLayoutConstraint.constraints(withVisualFormat: "V:|-44-[v]-height@lowPriority-|",
                                            options: NSLayoutConstraint.FormatOptions(rawValue: 0),
                                            metrics: metrics,
                                            views: binding)

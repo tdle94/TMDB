@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxDataSources
 
 class TVShowDetailView: UIViewController {
     var tvShowId: Int?
@@ -16,13 +17,24 @@ class TVShowDetailView: UIViewController {
     
     let viewModel: TVShowDetailViewModelProtocol
     
+    // MARK: - datasource
+    let dataSource: RxCollectionViewSectionedReloadDataSource<TVShowDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+        let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
+        cell?.configure(item: item.identity)
+        return cell as! UICollectionViewCell
+    })
+    
     // MARK: - constraint
     
     @IBOutlet weak var posterImageViewTop: NSLayoutConstraint!
     @IBOutlet weak var genreCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
     // MARK: - views
+    private var movieLikeThisHeaderView: TMDBMovieLikeThisHeaderView?
+    private var creditHeaderView: TMDBCreditHeaderView?
+
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var languagesLabel: UILabel!
     @IBOutlet weak var episodeRuntimeLabel: UILabel!
@@ -37,6 +49,84 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var ratingLabel: TMDBCircleUserRating!
     @IBOutlet weak var countriesLabel: UILabel!
+    @IBOutlet weak var creditCollectionView: UICollectionView! {
+        didSet {
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
+            } else {
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
+            }
+
+            creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            creditCollectionView.register(TMDBCreditHeaderView.self,
+                                          forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                          withReuseIdentifier: Constant.Identifier.previewHeader)
+            creditCollectionView.register(TMDBMovieLikeThisHeaderView.self,
+                                          forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                          withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
+            dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
+                switch dataSource.sectionModels[indexPath.section] {
+                case .Credits(items: _):
+                    let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                                       for: indexPath) as! TMDBCreditHeaderView
+                    
+                    if self.creditHeaderView == nil {
+                        creditHeader
+                            .segmentControl
+                            .rx
+                            .value
+                            .changed
+                            .subscribe { event in
+                                let index = Int(event.element!.description)
+                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
+
+                                if index == 0 {
+                                    self.viewModel.getCasts(tvShowId: self.tvShowId!)
+                                } else {
+                                    self.viewModel.getCrews(tvShowId: self.tvShowId!)
+                                }
+                            }
+                            .disposed(by: self.rx.disposeBag)
+                        
+                        self.creditHeaderView = creditHeader
+                        
+                        return creditHeader
+                    } else {
+                        return self.creditHeaderView!
+                    }
+                case .TVShowsLikeThis(items: _):
+                    let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                                      withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
+                                                                                      for: indexPath) as! TMDBMovieLikeThisHeaderView
+                    if self.movieLikeThisHeaderView == nil {
+                        movieHeader
+                            .segmentControl
+                            .rx
+                            .value
+                            .changed
+                            .subscribe { event in
+                                let index = Int(event.element!.description)
+                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
+
+                                if index == 0 {
+                                    self.viewModel.getSimilars(tvShowId: self.tvShowId!)
+                                } else {
+                                    self.viewModel.getRecommends(tvShowId: self.tvShowId!)
+                                }
+                            }
+                            .disposed(by: self.rx.disposeBag)
+                        
+                        self.movieLikeThisHeaderView = movieHeader
+                        
+                        return movieHeader
+                    } else {
+                        return self.movieLikeThisHeaderView!
+                    }
+                }
+            }
+        }
+    }
     @IBOutlet weak var reviewTableView: UITableView! {
         didSet {
             reviewTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
@@ -96,6 +186,12 @@ class TVShowDetailView: UIViewController {
             viewModel.getImages(tvShowId: id)
             viewModel.getTVShowDetail(tvShowId: id)
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        genreCollectionViewHeight.constant = genreCollectionView.collectionViewLayout.collectionViewContentSize.height
+        keywordCollectionViewHeight.constant = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
 
     required init?(coder: NSCoder) {
@@ -157,7 +253,6 @@ extension TVShowDetailView {
             .keywords
             .bind(to: keywordCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, keyword, cell in
                 (cell as? TMDBKeywordCell)?.configure(item: keyword)
-                self.keywordCollectionViewHeight.constant = self.keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
             }
             .disposed(by: rx.disposeBag)
 
@@ -195,21 +290,58 @@ extension TVShowDetailView {
                     .just(Array(tvShowDetail.genres))
                     .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, genre, cell in
                         (cell as? TMDBKeywordCell)?.configure(item: genre)
-                        self.genreCollectionViewHeight.constant = self.genreCollectionView.collectionViewLayout.collectionViewContentSize.height
                     }
                     .disposed(by: self.rx.disposeBag)
                 
                 
                 // review table
                 Observable<[String]>
-                    .just([NSLocalizedString("Review", comment: "")])
-                    .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { _, text, cell in
-                        cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.reviews?.reviews.count ?? 0))")
+                    .just([NSLocalizedString("Review", comment: ""), NSLocalizedString("Season", comment: "")])
+                    .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
+                        if index == 0 {
+                            cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.reviews?.reviews.count ?? 0))")
+                        }
+                        cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.numberOfSeasons))")
                     }
                     .disposed(by: self.rx.disposeBag)
             }
             .disposed(by: rx.disposeBag)
         
+        // credit binding
+        viewModel
+            .credits
+            .bind(to: creditCollectionView.rx.items(dataSource: dataSource))
+            .disposed(by: rx.disposeBag)
+        
+        creditCollectionView
+            .rx
+            .willDisplaySupplementaryView
+            .subscribe { event in
+                if let header = event.element?.supplementaryView as? TMDBMovieLikeThisHeaderView {
+                    if !self.viewModel.isThereSimilarTVShow {
+                        header.segmentControl.removeSegment(at: 0, animated: false)
+                        header.segmentControl.selectedSegmentIndex = 0
+                    } else if !self.viewModel.isThereRecommendTVShow {
+                        header.segmentControl.removeSegment(at: 1, animated: false)
+                    }
+                    
+                    self.viewModel.resetMovieHeaderState()
+
+                } else if let header = event.element?.supplementaryView as? TMDBCreditHeaderView {
+                    if !self.viewModel.isThereCast {
+                        header.segmentControl.removeSegment(at: 0, animated: false)
+                        header.segmentControl.selectedSegmentIndex = 0
+                    } else if !self.viewModel.isThereCrew {
+                        header.segmentControl.removeSegment(at: 1, animated: false)
+                    }
+                    
+                    self.viewModel.resetCreditHeaderState()
+                }
+            }
+            .disposed(by: rx.disposeBag)
+        
+        
+        // label binding
         viewModel
             .numberOfSeason
             .bind(to: numberOfSeasonLabel.rx.attributedText)

@@ -30,13 +30,11 @@ protocol MovieDetailViewModelProtocol {
     var budget: PublishSubject<NSAttributedString> { get }
     var revenue: PublishSubject<NSAttributedString> { get }
     var availableLanguage: PublishSubject<NSAttributedString> { get }
-    
     var productionCompanyCollectionViewHeight: PublishSubject<CGFloat> { get }
     var productionCompanyCollectionViewTop: PublishSubject<CGFloat> { get }
     var keywordCollectionViewTop: PublishSubject<CGFloat> { get }
     var keywordCollectionViewHeight: PublishSubject<CGFloat> { get }
     var runtimeAndReleaseDateTop: PublishSubject<CGFloat> { get }
-    
     
     var isThereSimilarMovie: Bool { get }
     var isThereRecommendMovie: Bool { get }
@@ -51,6 +49,8 @@ protocol MovieDetailViewModelProtocol {
     func getCrews(movieId: Int)
     func getSimilarMovies(movieId: Int)
     func getRecommendMovies(movieId: Int)
+    func resetCreditHeaderState()
+    func resetMovieHeaderState()
 }
 
 class MovieDetailViewModel: MovieDetailViewModelProtocol {
@@ -91,13 +91,24 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { result in
         switch result {
         case .success(let movieResult):
-            do {
+            guard let credit = try? self.credits.value().first else {
                 self.credits.onNext([
-                                      try self.credits.value().first!,
-                                      .MoviesLikeThis(items: Array(movieResult.movies).map { CustomElementType(identity: $0) })
-                                    ])
-            } catch let error {
-                debugPrint(error)
+                    .MoviesLikeThis(items: Array(movieResult.movies).map { CustomElementType(identity: $0) })
+                ])
+                return
+            }
+
+            switch credit {
+            case .Credits(items: _):
+                self.credits.onNext([
+                    credit,
+                    .MoviesLikeThis(items: Array(movieResult.movies).map { CustomElementType(identity: $0) })
+                ])
+            case .MoviesLikeThis(items: _):
+                self.credits.onNext([
+                    credit,
+                    .MoviesLikeThis(items: Array(movieResult.movies).map { CustomElementType(identity: $0) })
+                ])
             }
         case .failure(let error):
             self.credits.onError(error)
@@ -124,21 +135,20 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                 }
                 
                 // movie credit
-                var moviesLikeThisOne: [Movie] = []
                 
-                if movieDetailResult.similar?.movies.isEmpty ?? true && movieDetailResult.recommendations?.movies.isEmpty ?? true {
-                    self.isThereRecommendMovie = false
+                var moviesLikeThisOne = Array((movieDetailResult.similar?.movies ?? List<Movie>()).map { CustomElementType(identity: $0) })
+                
+                if moviesLikeThisOne.isEmpty {
                     self.isThereSimilarMovie = false
-                } else if movieDetailResult.similar?.movies.isEmpty ?? true {
-                    self.isThereSimilarMovie = false
-                    moviesLikeThisOne.append(contentsOf: Array(movieDetailResult.recommendations!.movies))
-                } else if movieDetailResult.recommendations?.movies.isEmpty ?? true {
-                    self.isThereRecommendMovie = false
-                    moviesLikeThisOne.append(contentsOf: Array(movieDetailResult.similar!.movies))
-                } else {
-                    moviesLikeThisOne.append(contentsOf: Array(movieDetailResult.similar!.movies))
+                    moviesLikeThisOne = Array((movieDetailResult.recommendations?.movies ?? List<Movie>()).map { CustomElementType(identity: $0) })
                 }
                 
+                if moviesLikeThisOne.isEmpty || (movieDetailResult.recommendations?.movies.isEmpty ?? true) {
+                    self.isThereRecommendMovie = false
+                }
+                
+                
+
                 var credits = Array(movieDetailResult.credits?.cast ?? List<Cast>()).map { CustomElementType(identity: $0) }
                 
                 if credits.isEmpty {
@@ -146,21 +156,33 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                     credits = Array(movieDetailResult.credits?.crew ?? List<Crew>()).map { CustomElementType(identity: $0) }
                 }
                 
-                if credits.isEmpty {
+                if credits.isEmpty || (movieDetailResult.credits?.crew.isEmpty ?? true) {
                     self.isThereCrew = false
                 }
-
-                self.credits.onNext([
-                    .Credits(items: credits),
-                    .MoviesLikeThis(items: moviesLikeThisOne.map { CustomElementType(identity: $0) }),
-                ])
+                
+                if moviesLikeThisOne.isEmpty,
+                   credits.isEmpty {
+                    self.credits.onNext([])
+                } else if moviesLikeThisOne.isEmpty {
+                    self.credits.onNext([.Credits(items: credits)])
+                } else if credits.isEmpty {
+                    self.credits.onNext([.MoviesLikeThis(items: moviesLikeThisOne)])
+                } else {
+                    self.credits.onNext([
+                        .Credits(items: credits),
+                        .MoviesLikeThis(items: moviesLikeThisOne),
+                    ])
+                }
                 
                 // label
                 self.status.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Status", comment: ""),
                                                               subTitle: movieDetailResult.status))
                 self.tagline.onNext(TMDBLabel.setAttributeText(title: movieDetailResult.tagline ?? ""))
-                self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB",
-                                                            subTitle: movieDetailResult.imdbId))
+                
+                if let imdbId = movieDetailResult.imdbId, !imdbId.isEmpty {
+                    self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB",
+                                                                subTitle: imdbId))
+                }
                 
                 if !movieDetailResult.productionCountries.isEmpty {
                     self.produceInCountries.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Produced In", comment: ""),
@@ -210,8 +232,12 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                                                               subTitle: "$\(numberFormatter.string(from: NSNumber(value: movieDetailResult.budget)) ?? "0.0")"))
                 self.revenue.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Revenue", comment: ""),
                                                                subTitle: "$\(numberFormatter.string(from: NSNumber(value: movieDetailResult.revenue)) ?? "0.0")"))
-                self.availableLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Available Lanuages", comment: ""),
-                                                                         subTitle: Array(movieDetailResult.spokenLanguages).map { $0.name }.joined(separator: ", ")))
+                
+                let availableLanguages = Array(movieDetailResult.spokenLanguages).map { $0.name }.joined(separator: ", ")
+                if !availableLanguages.isEmpty {
+                    self.availableLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Available Lanuages", comment: ""),
+                                                                             subTitle: availableLanguages))
+                }
             case .failure(let error):
                 self.movie.onError(error)
             }
@@ -231,27 +257,31 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     
     func getCasts(movieId: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            do {
+            guard let movieLikeThisModel = try? self.credits.value().dropFirst() else {
                 self.credits.onNext([
-                                        .Credits(items: self.repository.getMovieCast(from: movieId).map { CustomElementType(identity: $0) }),
-                                        try self.credits.value()[1],
-                                    ])
-            } catch let error {
-                debugPrint(error)
+                    .Credits(items: self.repository.getMovieCast(from: movieId).map { CustomElementType(identity: $0) })
+                ])
+                return
             }
+            
+            self.credits.onNext([
+                .Credits(items: self.repository.getMovieCast(from: movieId).map { CustomElementType(identity: $0) }),
+            ] + movieLikeThisModel)
         }
     }
     
     func getCrews(movieId: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            do  {
+            guard let movieLikeThisModel = try? self.credits.value().dropFirst() else {
                 self.credits.onNext([
-                                        .Credits(items: self.repository.getMovieCrew(from: movieId).map { CustomElementType(identity: $0) }),
-                                        try self.credits.value()[1],
-                                    ])
-            } catch let error {
-                debugPrint(error)
+                    .Credits(items: self.repository.getMovieCrew(from: movieId).map { CustomElementType(identity: $0) })
+                ])
+                return
             }
+
+            self.credits.onNext([
+                .Credits(items: self.repository.getMovieCrew(from: movieId).map { CustomElementType(identity: $0) }),
+            ] +  movieLikeThisModel)
         }
     }
     
@@ -265,5 +295,15 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.repository.getRecommendMovies(from: movieId, page: 1, completion: self.movieHandler)
         }
+    }
+    
+    func resetCreditHeaderState() {
+        isThereCast = true
+        isThereCrew = true
+    }
+
+    func resetMovieHeaderState() {
+        isThereRecommendMovie = true
+        isThereSimilarMovie = true
     }
 }

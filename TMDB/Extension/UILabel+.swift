@@ -53,7 +53,7 @@ struct TMDBLabel {
     
     static func setHeader(title: String) -> NSMutableAttributedString {
         return NSMutableAttributedString(string: title, attributes: [
-            NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!),
+            NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .title1).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!),
         ])
     }
 }

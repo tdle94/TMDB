@@ -36,7 +36,6 @@ PODS:
     - SDWebImage/Core (= 5.9.5)
   - SDWebImage/Core (5.9.5)
   - Swinject (2.7.1)
-  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - Cosmos
@@ -51,7 +50,6 @@ DEPENDENCIES:
   - RxSwiftUtilities
   - SDWebImage
   - Swinject
-  - Toast-Swift
 
 SPEC REPOS:
   trunk:
@@ -70,7 +68,6 @@ SPEC REPOS:
     - RxSwiftUtilities
     - SDWebImage
     - Swinject
-    - Toast-Swift
 
 SPEC CHECKSUMS:
   Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
@@ -88,8 +85,7 @@ SPEC CHECKSUMS:
   RxSwiftUtilities: 59e2d82daf74b9962f732b09e6da85a26281cfc0
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
   Swinject: ddf78b8486dd9b71a667b852cad919ab4484478e
-  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: dda12361a565168456c362e033aa7316089396a3
+PODFILE CHECKSUM: 43aacbad13918e220cb0d5112b84235416681628
 
 COCOAPODS: 1.10.0

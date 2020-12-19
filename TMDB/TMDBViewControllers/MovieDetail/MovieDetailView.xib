@@ -13,6 +13,7 @@
                 <outlet property="backdropImageCollectionView" destination="Trr-gK-CPG" id="xon-GS-wnY"/>
                 <outlet property="budgetLabel" destination="DBC-o5-9Bb" id="y2i-YY-8Ao"/>
                 <outlet property="collectionNameLabel" destination="fdy-hz-WAL" id="yYV-nc-zwH"/>
+                <outlet property="contentView" destination="fSe-m6-hYt" id="MFe-0N-JV0"/>
                 <outlet property="creditCollectionView" destination="rli-WZ-mRN" id="mPZ-WE-b3M"/>
                 <outlet property="creditCollectionViewHeight" destination="JF8-XR-wYe" id="jUn-tC-ltP"/>
                 <outlet property="genreCollectionView" destination="M2f-U7-vpL" id="6BW-EC-JTD"/>
@@ -51,7 +52,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fSe-m6-hYt">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="1455.3333333333333"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="1485.3333333333333"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Trr-gK-CPG">
                                     <rect key="frame" x="0.0" y="0.0" width="428" height="49"/>
@@ -64,7 +65,7 @@
                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </collectionViewFlowLayout>
                                 </collectionView>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="U7C-sZ-xb8">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="U7C-sZ-xb8">
                                     <rect key="frame" x="20" y="0.0" width="152" height="304"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="U7C-sZ-xb8" secondAttribute="height" multiplier="1:2" id="dYX-BO-k3L"/>
@@ -153,10 +154,10 @@
                                     </constraints>
                                 </tableView>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rli-WZ-mRN">
-                                    <rect key="frame" x="0.0" y="735.33333333333348" width="414" height="700"/>
+                                    <rect key="frame" x="0.0" y="735.33333333333348" width="414" height="750"/>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="700" id="JF8-XR-wYe"/>
+                                        <constraint firstAttribute="height" constant="750" id="JF8-XR-wYe"/>
                                     </constraints>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="B3g-6v-g7I">
                                         <size key="itemSize" width="128" height="128"/>
@@ -240,7 +241,7 @@
                                 <constraint firstItem="gpp-DT-b0r" firstAttribute="top" secondItem="M2f-U7-vpL" secondAttribute="bottom" constant="8" symbolic="YES" id="M4Q-ce-xb4"/>
                                 <constraint firstItem="pb4-en-0DY" firstAttribute="bottom" secondItem="U7C-sZ-xb8" secondAttribute="bottom" constant="21" id="MHq-Am-n6B"/>
                                 <constraint firstAttribute="trailing" secondItem="M2f-U7-vpL" secondAttribute="trailing" id="N8t-gg-E3f"/>
-                                <constraint firstAttribute="bottom" secondItem="rli-WZ-mRN" secondAttribute="bottom" priority="750" constant="20" symbolic="YES" id="NRC-B8-pKX"/>
+                                <constraint firstAttribute="bottom" secondItem="rli-WZ-mRN" secondAttribute="bottom" id="NRC-B8-pKX"/>
                                 <constraint firstItem="7BV-LI-8Sq" firstAttribute="leading" secondItem="fSe-m6-hYt" secondAttribute="leading" constant="180" id="NU4-oS-I6j"/>
                                 <constraint firstAttribute="trailing" secondItem="HzF-og-F9B" secondAttribute="trailing" constant="20" symbolic="YES" id="NxB-J8-K8H"/>
                                 <constraint firstItem="7BV-LI-8Sq" firstAttribute="top" secondItem="U7C-sZ-xb8" secondAttribute="top" id="OYH-ty-f0I"/>
@@ -301,6 +302,7 @@
         <designable name="pb4-en-0DY"/>
     </designables>
     <resources>
+        <image name="NoImage" width="450" height="450"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -20,6 +20,5 @@ class TMDBMovieHeaderView: TMDBPreviewHeaderView {
         segmentControl.insertSegment(withTitle: NSLocalizedString("Top Rated", comment: ""), at: 0, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("Now Playing", comment: ""), at: 1, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("Upcoming", comment: ""), at: 2, animated: true)
-        segmentControl.selectedSegmentIndex = 0
     }
 }

@@ -29,12 +29,9 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var posterImageViewTop: NSLayoutConstraint!
     @IBOutlet weak var genreCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
-    
     @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
-    // MARK: - views
-    private var movieLikeThisHeaderView: TMDBMovieLikeThisHeaderView?
-    private var creditHeaderView: TMDBCreditHeaderView?
 
+    // MARK: - views
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var languagesLabel: UILabel!
     @IBOutlet weak var episodeRuntimeLabel: UILabel!
@@ -71,12 +68,12 @@ class TVShowDetailView: UIViewController {
                                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                                        for: indexPath) as! TMDBCreditHeaderView
                     
-                    if self.creditHeaderView == nil {
+                    if creditHeader.segmentControl.selectedSegmentIndex == -1 {
+                        creditHeader.segmentControl.selectedSegmentIndex = 0
                         creditHeader
                             .segmentControl
                             .rx
                             .value
-                            .changed
                             .subscribe { event in
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
@@ -88,23 +85,19 @@ class TVShowDetailView: UIViewController {
                                 }
                             }
                             .disposed(by: self.rx.disposeBag)
-                        
-                        self.creditHeaderView = creditHeader
-                        
-                        return creditHeader
-                    } else {
-                        return self.creditHeaderView!
                     }
+                    
+                    return creditHeader
                 case .TVShowsLikeThis(items: _):
                     let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                       withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
                                                                                       for: indexPath) as! TMDBMovieLikeThisHeaderView
-                    if self.movieLikeThisHeaderView == nil {
+                    if movieHeader.segmentControl.selectedSegmentIndex == -1 {
+                        movieHeader.segmentControl.selectedSegmentIndex = 0
                         movieHeader
                             .segmentControl
                             .rx
                             .value
-                            .changed
                             .subscribe { event in
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
@@ -116,13 +109,9 @@ class TVShowDetailView: UIViewController {
                                 }
                             }
                             .disposed(by: self.rx.disposeBag)
-                        
-                        self.movieLikeThisHeaderView = movieHeader
-                        
-                        return movieHeader
-                    } else {
-                        return self.movieLikeThisHeaderView!
                     }
+                    
+                    return movieHeader
                 }
             }
         }

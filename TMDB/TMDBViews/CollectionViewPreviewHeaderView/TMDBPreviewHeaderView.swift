@@ -28,7 +28,10 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
                                                 NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor,
                                                 NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)
                                                 ], for: .selected)
-        segmentControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)], for: .normal)
+        segmentControl.setTitleTextAttributes([
+                                                NSAttributedString.Key.foregroundColor: UIColor.black,
+                                                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)],
+                                              for: .normal)
         
         label.adjustsFontForContentSizeCategory = true
         label.adjustsFontSizeToFitWidth = true

@@ -28,10 +28,6 @@ class HomeView: UIViewController {
     
 
     // MARK: - views
-    private var popularHeaderView: TMDBPopularHeaderView?
-    private var trendHeaderView: TMDBTrendHeaderView?
-    private var movieHeaderView: TMDBMovieHeaderView?
-    private var tvShowHeaderView: TMDBTVShowHeaderView?
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             if UIDevice.current.userInterfaceIdiom == .pad {
@@ -61,140 +57,21 @@ class HomeView: UIViewController {
             dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 switch dataSource.sectionModels[indexPath.section] {
                 case .Popular(items: _):
-                    let popularHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                        withReuseIdentifier: Constant.Identifier.popularPreviewHeader,
-                                                                                        for: indexPath) as! TMDBPopularHeaderView
-                    
-                    if self.popularHeaderView == nil {
-                        popularHeader
-                            .segmentControl
-                            .rx
-                            .value
-                            .changed
-                            .subscribe { event in
-                                guard let el = event.element, let segment = Int(el.description) else {
-                                    return
-                                }
-
-                                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
-
-                                if segment == 0 {
-                                   self.viewModel.getPopularMovie()
-                                } else if segment == 1 {
-                                    self.viewModel.getPopularTVShow()
-                                } else {
-                                    self.viewModel.getPopularPeople()
-                                }
-                            
-                            }.disposed(by: self.rx.disposeBag)
-                        
-                        self.popularHeaderView = popularHeader
-                        
-                        return popularHeader
-                    } else {
-                        return self.popularHeaderView!
-                    }
+                    return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                           withReuseIdentifier: Constant.Identifier.popularPreviewHeader,
+                                                                           for: indexPath) as! TMDBPopularHeaderView
                 case .Trending(items: _):
-                    let trendHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.trendPreviewHeader,
-                                                                             for: indexPath) as! TMDBTrendHeaderView
-                    if self.trendHeaderView == nil {
-                        trendHeader
-                            .segmentControl
-                            .rx
-                            .value
-                            .changed
-                            .subscribe { event in
-                                guard let el = event.element, let segment = Int(el.description) else {
-                                    return
-                                }
-                                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: true)
-
-                                if segment == 0 {
-                                    self.viewModel.getTrendingToday()
-                                } else {
-                                    self.viewModel.getTrendingThisWeek()
-                                }
-                            
-                            }
-                            .disposed(by: self.rx.disposeBag)
-                        
-                        self.trendHeaderView = trendHeader
-                        
-                        return trendHeader
-                    } else {
-                        return self.trendHeaderView!
-                    }
+                    return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                           withReuseIdentifier: Constant.Identifier.trendPreviewHeader,
+                                                                           for: indexPath) as! TMDBTrendHeaderView
                 case .Movie(items: _):
-                    let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
-                                                                             for: indexPath) as! TMDBMovieHeaderView
-                    
-                    if self.movieHeaderView == nil {
-                        movieHeader
-                            .segmentControl
-                            .rx
-                            .value
-                            .changed
-                            .subscribe { event in
-                                guard let el = event.element, let segment = Int(el.description) else {
-                                    return
-                                }
-                                
-                                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
-
-                                if segment == 0 {
-                                    self.viewModel.getTopRatedMovie()
-                                } else if segment == 1 {
-                                    self.viewModel.getNowPlayingMovie()
-                                } else {
-                                    self.viewModel.getUpcomingMovie()
-                                }
-                            
-                            }
-                            .disposed(by: self.rx.disposeBag)
-                        
-                        self.movieHeaderView = movieHeader
-                        
-                        return movieHeader
-                    } else {
-                        return self.movieHeaderView!
-                    }
+                    return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                           withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
+                                                                           for: indexPath) as! TMDBMovieHeaderView
                 case .TVShow(items: _):
-                    let tvShowHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader,
-                                                                             for: indexPath) as! TMDBTVShowHeaderView
-                    
-                    if self.tvShowHeaderView == nil {
-                        tvShowHeader
-                            .segmentControl
-                            .rx
-                            .value
-                            .changed
-                            .subscribe { event in
-                                guard let el = event.element, let segment = Int(el.description) else {
-                                    return
-                                }
-
-                                self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 3), at: .centeredHorizontally, animated: true)
-
-                                if segment == 0 {
-                                    self.viewModel.getTopRatedTVShow()
-                                } else if segment == 1 {
-                                    self.viewModel.getTVShowAiringToday()
-                                } else {
-                                    self.viewModel.getTVShowOnTheAir()
-                                }
-
-                            }
-                            .disposed(by: self.rx.disposeBag)
-                        
-                        self.tvShowHeaderView = tvShowHeader
-                        
-                        return tvShowHeader
-                    } else {
-                        return self.tvShowHeaderView!
-                    }
+                    return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                           withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader,
+                                                                           for: indexPath) as! TMDBTVShowHeaderView
                 }
             }
         }
@@ -212,22 +89,8 @@ class HomeView: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.configureLanguageAndRegion()
-        self.setupUIBinding()
-        //self.delegate?.navigateToTVShowDetail(tvShowId: 82856)
-        //self.delegate?.navigateToTVShowDetail(tvShowId: 82856)
-        //self.delegate?.navigateToMovieDetail(movieId: 737676)
-       // self.delegate?.navigateToMovieDetail(movieId: 715235)
-       // self.delegate?.navigateToMovieDetail(movieId: 628534)
-        //self.delegate?.navigateToMovieDetail(movieId: 661914)
-        //self.delegate?.navigateToMovieDetail(movieId: 732678)
-        //self.delegate?.navigateToTVShowDetail(tvShowId: 12301)
-        //self.delegate?.navigateToMovieDetail(movieId: 765123)
-        self.viewModel.getPopularMovie()
-        self.viewModel.getTrendingToday()
-        self.viewModel.getTopRatedMovie()
-        self.viewModel.getTopRatedTVShow()
+        configureLanguageAndRegion()
+        setupUIBinding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -248,6 +111,109 @@ extension HomeView {
         viewModel
             .collectionViewSection
             .bind(to: collectionView.rx.items(dataSource: dataSource))
+            .disposed(by: rx.disposeBag)
+        
+        collectionView
+            .rx
+            .willDisplaySupplementaryView
+            .subscribe { event in
+                guard let supplementaryView = event.element?.supplementaryView else {
+                    return
+                }
+
+                if let popularHeader = supplementaryView as? TMDBPopularHeaderView, popularHeader.segmentControl.selectedSegmentIndex == -1  {
+                    popularHeader.segmentControl.selectedSegmentIndex = 0
+                    popularHeader
+                        .segmentControl
+                        .rx
+                        .value
+                        .subscribe { event in
+                            guard let el = event.element, let segment = Int(el.description) else {
+                                return
+                            }
+
+                            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+
+                            if segment == 0 {
+                                self.viewModel.getPopularMovie()
+                            } else if segment == 1 {
+                                self.viewModel.getPopularTVShow()
+                            } else {
+                                self.viewModel.getPopularPeople()
+                            }
+                            
+                        }.disposed(by: self.rx.disposeBag)
+
+                } else if let trendingHeader = supplementaryView as? TMDBTrendHeaderView, trendingHeader.segmentControl.selectedSegmentIndex == -1 {
+                    trendingHeader.segmentControl.selectedSegmentIndex = 0
+                    trendingHeader
+                        .segmentControl
+                        .rx
+                        .value
+                        .subscribe { event in
+                            guard let el = event.element, let segment = Int(el.description) else {
+                                return
+                            }
+                            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: true)
+
+                            if segment == 0 {
+                                self.viewModel.getTrendingToday()
+                            } else {
+                                self.viewModel.getTrendingThisWeek()
+                            }
+                        
+                        }
+                        .disposed(by: self.rx.disposeBag)
+
+                } else if let movieHeader = supplementaryView as? TMDBMovieHeaderView, movieHeader.segmentControl.selectedSegmentIndex == -1 {
+                    movieHeader.segmentControl.selectedSegmentIndex = 0
+                    movieHeader
+                        .segmentControl
+                        .rx
+                        .value
+                        .subscribe { event in
+                            guard let el = event.element, let segment = Int(el.description) else {
+                                return
+                            }
+
+                            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
+
+                            if segment == 0 {
+                                self.viewModel.getTopRatedMovie()
+                            } else if segment == 1 {
+                                self.viewModel.getNowPlayingMovie()
+                            } else {
+                                self.viewModel.getUpcomingMovie()
+                            }
+                        
+                        }
+                        .disposed(by: self.rx.disposeBag)
+
+                } else if let tvShowHeader = supplementaryView as? TMDBTVShowHeaderView, tvShowHeader.segmentControl.selectedSegmentIndex == -1 {
+                    tvShowHeader.segmentControl.selectedSegmentIndex = 0
+                    tvShowHeader
+                        .segmentControl
+                        .rx
+                        .value
+                        .subscribe { event in
+                            guard let el = event.element, let segment = Int(el.description) else {
+                                return
+                            }
+
+                            self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 3), at: .centeredHorizontally, animated: true)
+
+                            if segment == 0 {
+                                self.viewModel.getTopRatedTVShow()
+                            } else if segment == 1 {
+                                self.viewModel.getTVShowAiringToday()
+                            } else {
+                                self.viewModel.getTVShowOnTheAir()
+                            }
+
+                        }
+                        .disposed(by: self.rx.disposeBag)
+                }
+            }
             .disposed(by: rx.disposeBag)
 
     }

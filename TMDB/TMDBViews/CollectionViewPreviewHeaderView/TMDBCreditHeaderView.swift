@@ -23,6 +23,5 @@ class TMDBCreditHeaderView: TMDBPreviewHeaderView {
         label.setHeader(title: NSLocalizedString("Credit", comment: ""))
         segmentControl.insertSegment(withTitle: NSLocalizedString("Cast", comment: ""), at: 0, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("Crew", comment: ""), at: 1, animated: true)
-        segmentControl.selectedSegmentIndex = 0
     }
 }

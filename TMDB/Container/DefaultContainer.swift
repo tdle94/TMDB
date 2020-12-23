@@ -64,6 +64,10 @@ extension DefaultContainer {
         self.container.register(TVShowDetailView.self) { resolver in
             TVShowDetailView(viewModel: resolver.resolve(TVShowDetailViewModelProtocol.self)!)
         }
+
+        self.container.register(TVShowListSeasonView.self) { resolver in
+            TVShowListSeasonView(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
     }
     
     func registerRepository() {

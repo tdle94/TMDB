@@ -45,16 +45,16 @@ extension TMDBCustomTableViewCell: TMDBCellConfig {
     func configure(item: Object) {
         var path: String?
         if let item = item as? MultiSearch {
-            label.text = item.originalTitle ?? item.originalName ?? item.name
-            subTitle.text = item.releaseDate ?? item.firstAirDate
+            label.setHeader(title: item.originalTitle ?? item.originalName ?? item.name ?? "")
+            subTitle.setAttributeText(title: item.releaseDate ?? item.firstAirDate ?? "")
             path = item.posterPath ?? item.profilePath
         } else if let item = item as? Season {
-            label.text = item.name
-            subTitle.text = item.overview
+            label.setHeader(title: item.name)
+            subTitle.setAttributeText(title: item.overview)
             path = item.posterPath
         } else if let item = item as? Episode {
-            label.text = item.name
-            subTitle.text = item.overview
+            label.setHeader(title: item.name)
+            subTitle.setAttributeText(title: item.overview)
             path = item.stillPath
         }
         

@@ -16,6 +16,7 @@ extension UINavigationController {
     }
     
     func resetNavBar() {
+        navigationBar.barTintColor = Constant.Color.primaryColor
         navigationBar.setBackgroundImage(nil, for: .default)
         navigationBar.shadowImage = nil
         navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor ]

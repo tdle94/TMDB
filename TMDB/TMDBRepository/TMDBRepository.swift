@@ -434,6 +434,10 @@ extension TMDBRepository: TMDBTVShowRepository {
         }
         return Array(guestStars)
     }
+    
+    func getTVShowSeaons(from tvShowId: Int) -> [Season] {
+        return Array(localDataSource.getTVShowSeasons(tvShowId: tvShowId))
+    }
 }
 
 extension TMDBRepository: TMDBMovieRepository {

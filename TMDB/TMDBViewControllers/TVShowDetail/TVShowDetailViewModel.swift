@@ -42,6 +42,7 @@ protocol TVShowDetailViewModelProtocol {
     func getCrews(tvShowId: Int)
     func getSimilars(tvShowId: Int)
     func getRecommends(tvShowId: Int)
+    func getTVShowSeasons(tvShowId: Int) -> [Season]
     
     func resetCreditHeaderState()
     func resetMovieHeaderState()
@@ -232,6 +233,10 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.repository.getRecommendTVShows(from: tvShowId, page: 1, completion: self.tvShowHandler)
         }
+    }
+    
+    func getTVShowSeasons(tvShowId: Int) -> [Season] {
+        return repository.getTVShowSeaons(from: tvShowId)
     }
     
     func resetCreditHeaderState() {

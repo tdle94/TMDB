@@ -13,7 +13,7 @@ import RxDataSources
 class TVShowDetailView: UIViewController {
     var tvShowId: Int?
     
-    var delegate: TVShowDetailViewDelegate?
+    weak var delegate: TVShowDetailViewDelegate?
     
     let viewModel: TVShowDetailViewModelProtocol
     
@@ -129,6 +129,20 @@ class TVShowDetailView: UIViewController {
         didSet {
             reviewTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
                                      forCellReuseIdentifier: Constant.Identifier.reviewCell)
+            reviewTableView
+                .rx
+                .itemSelected
+                .subscribe { event in
+                    guard let indexPath = event.element else {
+                        return
+                    }
+                    
+                    if indexPath.row == 1 {
+                        self.delegate?.navigateToListSeason(season: self.viewModel.getTVShowSeasons(tvShowId: self.tvShowId!))
+                    }
+                }
+                .disposed(by: rx.disposeBag)
+
         }
     }
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
@@ -172,6 +186,18 @@ class TVShowDetailView: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavBar()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
+                                      navigationController: navigationController)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.resetNavBar()
+        scrollView.setForegroundColor(alpha: 1, navigationController: navigationController)
     }
     
     override func viewDidLoad() {

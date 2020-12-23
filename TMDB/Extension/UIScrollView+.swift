@@ -9,6 +9,32 @@
 import UIKit
 
 extension UIScrollView {
+    
+    func getCurrentAlpha(safeAreaInsetTop: CGFloat, navigationController: UINavigationController?) -> CGFloat {
+        let originalYOffset = self.parallaxHeader.originalYOffset
+        let offset = self.contentOffset.y
+        let navBarFromScrollViewOffset = safeAreaInsetTop + (navigationController?.navigationBar.frame.maxY ?? 0)
+        let alpha = 1 - (abs(offset) - navBarFromScrollViewOffset) / (abs(originalYOffset) - navBarFromScrollViewOffset)
+        
+        return alpha
+    }
+    
+    func setToPreviousAlpha(safeAreaInsetTop: CGFloat, navigationController: UINavigationController?) {
+        let alpha = getCurrentAlpha(safeAreaInsetTop: safeAreaInsetTop, navigationController: navigationController)
+        setForegroundColor(alpha: alpha, navigationController: navigationController)
+    }
+
+    func setForegroundColor(alpha: CGFloat, navigationController: UINavigationController?) {
+        let color = Constant.Color.primaryColor.withAlphaComponent(alpha)
+        let image = UIImage.imageFromColor(color: color)
+        
+        navigationController?.navigationBar.setBackgroundImage(image, for: .default)
+        navigationController?.navigationBar.shadowImage = image
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor.withAlphaComponent(alpha)
+        ]
+    }
+    
     func animateNavBar(safeAreaInsetTop: CGFloat, navigationController: UINavigationController?) {
         rx.didScroll.subscribe { _ in
             guard self.contentOffset.y < 0 else {

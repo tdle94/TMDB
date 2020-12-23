@@ -62,4 +62,8 @@ extension UILabel {
     func setHeader(title: String) {
         attributedText = TMDBLabel.setHeader(title: title)
     }
+    
+    func setAttributeText(title: String) {
+        attributedText = TMDBLabel.setAttributeText(title: title)
+    }
 }

@@ -193,6 +193,10 @@ protocol MovieDetailViewDelegate: CommonNavigation {
 }
 
 protocol TVShowDetailViewDelegate: CommonNavigation {
+    func navigateToListSeason(season: [Season])
+}
+
+protocol ListSeasonViewDelegate: CommonNavigation {
     // TODO: nav function
 }
 
@@ -213,6 +217,10 @@ class AppCoordinator {
     var tvShowDetailView: TVShowDetailView {
         return container.resolve(TVShowDetailView.self)!
     }
+    
+    var listSeasonView: TVShowListSeasonView {
+        return container.resolve(TVShowListSeasonView.self)!
+    }
 
     init(window: UIWindow, container: Container) {
         self.window = window
@@ -230,6 +238,14 @@ class AppCoordinator {
     fileprivate func showTVShowDetailView(tvShowId: Int) {
         let view = tvShowDetailView
         view.tvShowId = tvShowId
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
+    }
+    
+    fileprivate func showListSeason(season: [Season]) {
+        let view = listSeasonView
+        view.season = season
         view.delegate = self
         currentView?.navigationController?.pushViewController(view, animated: true)
         currentView = view
@@ -256,5 +272,11 @@ extension AppCoordinator: MovieDetailViewDelegate {
 }
 
 extension AppCoordinator: TVShowDetailViewDelegate {
-    // TODO: nav function
+    func navigateToListSeason(season: [Season]) {
+        showListSeason(season: season)
+    }
+}
+
+extension AppCoordinator: ListSeasonViewDelegate {
+    
 }

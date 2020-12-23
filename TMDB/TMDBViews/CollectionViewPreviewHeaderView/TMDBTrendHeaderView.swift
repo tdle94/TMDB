@@ -15,7 +15,6 @@ class TMDBTrendHeaderView: TMDBPreviewHeaderView {
         label.setHeader(title: NSLocalizedString("Trends", comment: ""))
         segmentControl.insertSegment(withTitle: NSLocalizedString("Today", comment: ""), at: 0, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("This Week", comment: ""), at: 1, animated: true)
-        segmentControl.selectedSegmentIndex = 0
     }
     
     required init?(coder: NSCoder) {

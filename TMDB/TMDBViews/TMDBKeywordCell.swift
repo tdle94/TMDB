@@ -6,10 +6,10 @@
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 
-import Foundation
+import RealmSwift
 import UIKit
 
-class TMDBKeywordCell: UICollectionViewCell {
+class TMDBKeywordCell: UICollectionViewCell, TMDBCellConfig {
     let label = UILabel(frame: .zero)
 
     override var isSelected: Bool {
@@ -46,8 +46,12 @@ class TMDBKeywordCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-
-    func configure(keyword: Keyword) {
-        label.text = keyword.name
+    
+    func configure(item: Object) {
+        if let keyword = item as? Keyword {
+            label.text = keyword.name
+        } else if let genre = item as? Genre {
+            label.text = genre.name
+        }
     }
 }

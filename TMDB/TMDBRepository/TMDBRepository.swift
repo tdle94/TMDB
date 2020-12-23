@@ -246,7 +246,7 @@ extension TMDBRepository: TMDBTVShowRepository {
             return
         }
         
-        guard let similarTVShow = tvShow.similar else {
+        guard let similarTVShow = tvShow.similar, !similarTVShow.onTV.isEmpty else {
             completion(.failure(NSError(domain: "tv show \(tvShowId) does not have similar", code: 400, userInfo: nil)))
             return
         }
@@ -285,7 +285,7 @@ extension TMDBRepository: TMDBTVShowRepository {
             return
         }
         
-        guard let recommendTVShow = tvShow.recommendations else {
+        guard let recommendTVShow = tvShow.recommendations, !recommendTVShow.onTV.isEmpty else {
             completion(.failure(NSError(domain: "tv show \(tvShowId) does not have recommendation", code: 400, userInfo: nil)))
             return
         }
@@ -557,12 +557,12 @@ extension TMDBRepository: TMDBMovieRepository {
     }
 
     func getSimilarMovies(from movieId: Int, page: Int, completion: @escaping (Result<MovieResult, Error>) -> Void) {
-        guard let movie =  localDataSource.getMovie(id: movieId) else {
+        guard let movie = localDataSource.getMovie(id: movieId) else {
             completion(.failure(NSError(domain: "Cannot find movie \(movieId)", code: 400, userInfo: nil)))
             return
         }
         
-        guard let similarMovie = movie.similar else {
+        guard let similarMovie = movie.similar, !similarMovie.movies.isEmpty else {
             completion(.failure(NSError(domain: "movie \(movieId) does not have similar", code: 400, userInfo: nil)))
             return
         }
@@ -601,7 +601,7 @@ extension TMDBRepository: TMDBMovieRepository {
             return
         }
 
-        guard let recommendMovie = movie.recommendations else {
+        guard let recommendMovie = movie.recommendations, !recommendMovie.movies.isEmpty else {
             completion(.failure(NSError(domain: "movie \(movieId) does not have recommendations", code: 400, userInfo: nil)))
             return
         }

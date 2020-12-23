@@ -60,7 +60,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
         tabBarController.setViewControllers([homeNavController], animated: true)
         
-
+        tabBarController
+            .rx
+            .didSelect
+            .subscribe { event in
+                guard let navController = event.element as? UINavigationController else {
+                    return
+                }
+                
+                if let homeview = navController.viewControllers.first as? HomeView {
+                    self.appCoordinator.currentView = homeview
+                }
+            }
+            .disposed(by: rx.disposeBag)
         win.makeKeyAndVisible()
         win.rootViewController = tabBarController
         window = win

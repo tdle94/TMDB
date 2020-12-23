@@ -31,9 +31,9 @@ struct CollectionViewLayout {
 
     static func customLayout(
                              widthDimension: CGFloat = 0.4,
-                             heightDimension: CGFloat = 0.4) -> UICollectionViewLayout {
+                             heightDimension: CGFloat = 0.43) -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
-            var headerHeight: CGFloat = 44
+            var headerHeight: CGFloat = 34
             
             if UIDevice.current.userInterfaceIdiom == .pad {
                 headerHeight = 54
@@ -46,7 +46,7 @@ struct CollectionViewLayout {
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(headerHeight))
             let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
 
-            group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 10)
+            group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 10)
 
             let section = NSCollectionLayoutSection(group: group)
 

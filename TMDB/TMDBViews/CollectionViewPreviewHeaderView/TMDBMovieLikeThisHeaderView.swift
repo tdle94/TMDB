@@ -15,6 +15,11 @@ class TMDBMovieLikeThisHeaderView: TMDBPreviewHeaderView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.setup()
+    }
+    
+    func setup() {
+        segmentControl.removeAllSegments()
         label.setHeader(title: NSLocalizedString("More", comment: ""))
         segmentControl.insertSegment(withTitle: NSLocalizedString("Similar", comment: ""), at: 0, animated: true)
         segmentControl.insertSegment(withTitle: NSLocalizedString("Recommend", comment: ""), at: 1, animated: true)

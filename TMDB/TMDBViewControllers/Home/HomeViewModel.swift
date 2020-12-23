@@ -11,7 +11,7 @@ import RealmSwift
 
 protocol HomeViewModelProtocol {
     
-    var collectionViewSection: PublishSubject<[HomeModel]> { get }
+    var collectionViewSection: BehaviorSubject<[HomeModel]> { get }
     
     var movieRepository: TMDBMovieRepository { get }
     var tvShowRepository: TMDBTVShowRepository { get }
@@ -33,7 +33,12 @@ protocol HomeViewModelProtocol {
 
 class HomeViewModel: HomeViewModelProtocol {
 
-    var collectionViewSection: PublishSubject<[HomeModel]> = PublishSubject()
+    var collectionViewSection: BehaviorSubject<[HomeModel]> = BehaviorSubject(value: [
+        .Popular(items: []),
+        .Trending(items: []),
+        .Movie(items: []),
+        .TVShow(items: [])
+    ])
 
     var movieRepository: TMDBMovieRepository
     var tvShowRepository: TMDBTVShowRepository
@@ -44,7 +49,11 @@ class HomeViewModel: HomeViewModelProtocol {
         switch result {
         case .success(let movieResult):
             let items = Array(movieResult.movies).map { CustomElementType(identity: $0) }
-            self.collectionViewSection.onNext([.Movie(items: items)])
+            let firstTwo = Array((try! self.collectionViewSection.value().dropLast(2)))
+            let last = try! self.collectionViewSection.value().last!
+
+            self.collectionViewSection
+                .onNext(firstTwo + [.Movie(items: items), last])
         case .failure(let error):
             self.collectionViewSection.onError(error)
         }
@@ -54,7 +63,10 @@ class HomeViewModel: HomeViewModelProtocol {
         switch result {
         case .success(let tvShowResult):
             let items = Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
-            self.collectionViewSection.onNext([.TVShow(items: items)])
+            let firstThree = Array(try! self.collectionViewSection.value().dropLast())
+            
+            self.collectionViewSection
+                .onNext(firstThree + [.TVShow(items: items)])
         case .failure(let error):
             self.collectionViewSection.onError(error)
         }
@@ -64,7 +76,10 @@ class HomeViewModel: HomeViewModelProtocol {
         switch result {
         case .success(let trendResult):
             let items = Array(trendResult.trending).map { CustomElementType(identity: $0) }
-            self.collectionViewSection.onNext([.Trending(items: items)])
+            let first = try! self.collectionViewSection.value().first!
+            let lastTwo = Array(try! self.collectionViewSection.value().dropFirst(2))
+            
+            self.collectionViewSection.onNext([first, .Trending(items: items)] + lastTwo)
         case .failure(let error):
             self.collectionViewSection.onError(error)
         }
@@ -86,7 +101,9 @@ class HomeViewModel: HomeViewModelProtocol {
             switch result {
             case .success(let movieResult):
                 let items = Array(movieResult.movies).map { CustomElementType(identity: $0) }
-                self.collectionViewSection.onNext([.Popular(items: items)])
+                let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
+                
+                self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
                 self.collectionViewSection.onError(error)
             }
@@ -98,7 +115,8 @@ class HomeViewModel: HomeViewModelProtocol {
             switch result {
             case .success(let tvShowResult):
                 let items = Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
-                self.collectionViewSection.onNext([.Popular(items: items)])
+                let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
+                self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
                 self.collectionViewSection.onError(error)
             }
@@ -110,7 +128,9 @@ class HomeViewModel: HomeViewModelProtocol {
             switch result {
             case .success(let peopleResult):
                 let items = Array(peopleResult.peoples).map { CustomElementType(identity: $0) }
-                self.collectionViewSection.onNext([.Popular(items: items)])
+                let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
+                
+                self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
                 self.collectionViewSection.onError(error)
             }

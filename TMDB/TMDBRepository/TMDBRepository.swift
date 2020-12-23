@@ -246,7 +246,7 @@ extension TMDBRepository: TMDBTVShowRepository {
             return
         }
         
-        guard let similarTVShow = tvShow.similar else {
+        guard let similarTVShow = tvShow.similar, similarTVShow.totalResults > 0 else {
             completion(.failure(NSError(domain: "tv show \(tvShowId) does not have similar", code: 400, userInfo: nil)))
             return
         }
@@ -285,7 +285,7 @@ extension TMDBRepository: TMDBTVShowRepository {
             return
         }
         
-        guard let recommendTVShow = tvShow.recommendations else {
+        guard let recommendTVShow = tvShow.recommendations, recommendTVShow.totalResults > 0 else {
             completion(.failure(NSError(domain: "tv show \(tvShowId) does not have recommendation", code: 400, userInfo: nil)))
             return
         }
@@ -562,7 +562,7 @@ extension TMDBRepository: TMDBMovieRepository {
             return
         }
         
-        guard let similarMovie = movie.similar else {
+        guard let similarMovie = movie.similar, similarMovie.totalResults > 0 else {
             completion(.failure(NSError(domain: "movie \(movieId) does not have similar", code: 400, userInfo: nil)))
             return
         }
@@ -570,7 +570,7 @@ extension TMDBRepository: TMDBMovieRepository {
         // get from cache
         if page <= similarMovie.page {
             let from = 20 * (page - 1)
-            let to = page == similarMovie.page ? similarMovie.movies.count - 1 : (20 * page) - 1
+            let to = page == similarMovie.page ? similarMovie.totalResults - 1 : (20 * page) - 1
             let result = MovieResult()
             result.movies.append(objectsIn: similarMovie.movies[from...to])
             result.totalResults = similarMovie.movies.count
@@ -601,14 +601,14 @@ extension TMDBRepository: TMDBMovieRepository {
             return
         }
 
-        guard let recommendMovie = movie.recommendations else {
+        guard let recommendMovie = movie.recommendations, recommendMovie.totalResults > 0 else {
             completion(.failure(NSError(domain: "movie \(movieId) does not have recommendations", code: 400, userInfo: nil)))
             return
         }
         // get from cache
         if page <= recommendMovie.page {
             let from = 20 * (page - 1)
-            let to = page == recommendMovie.page ? recommendMovie.movies.count - 1 : (20 * page) - 1
+            let to = page == recommendMovie.page ? recommendMovie.totalResults - 1 : (20 * page) - 1
             let result = MovieResult()
             result.movies.append(objectsIn: recommendMovie.movies[from...to])
             result.totalResults = recommendMovie.movies.count

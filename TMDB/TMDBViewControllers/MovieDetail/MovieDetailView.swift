@@ -45,6 +45,9 @@ class MovieDetailView: UIViewController {
     @IBOutlet weak var keywordCollectionViewTop: NSLayoutConstraint!
     
     // MARK: - views
+    private var movieHeader: TMDBMovieLikeThisHeaderView?
+    private var creditHeader: TMDBCreditHeaderView?
+
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var homepageLabel: UILabel!
     @IBOutlet weak var imdbLabel: UILabel!
@@ -89,12 +92,14 @@ class MovieDetailView: UIViewController {
                     let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                                        for: indexPath) as! TMDBCreditHeaderView
-                    if creditHeader.segmentControl.selectedSegmentIndex == -1 {
-                        creditHeader.segmentControl.selectedSegmentIndex = 0
+                    if self.creditHeader == nil {
+                        self.creditHeader = creditHeader
+                        
                         creditHeader
                             .segmentControl
                             .rx
                             .value
+                            .changed
                             .subscribe { event in
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
@@ -114,12 +119,15 @@ class MovieDetailView: UIViewController {
                                                                                       withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
                                                                                       for: indexPath) as! TMDBMovieLikeThisHeaderView
                     
-                    if movieHeader.segmentControl.selectedSegmentIndex == -1 {
-                        movieHeader.segmentControl.selectedSegmentIndex = 0
+                    if self.movieHeader == nil {
+                        
+                        self.movieHeader = movieHeader
+                        
                         movieHeader
                             .segmentControl
                             .rx
                             .value
+                            .changed
                             .subscribe { event in
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
@@ -368,6 +376,7 @@ extension MovieDetailView {
 
         viewModel
             .credits
+            .catchErrorJustReturn(dataSource.sectionModels)
             .bind(to: creditCollectionView.rx.items(dataSource: dataSource))
             .disposed(by: rx.disposeBag)
         

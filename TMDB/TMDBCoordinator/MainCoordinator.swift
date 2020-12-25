@@ -18,11 +18,12 @@ protocol HomeViewDelegate: class {
 }
 
 protocol MovieDetailViewDelegate: CommonNavigation {
-    // TODO: nav function
+    func navigateToMovieDetail(movieId: Int)
 }
 
 protocol TVShowDetailViewDelegate: CommonNavigation {
     func navigateToListSeason(season: [Season], tvShowId: Int)
+    func navigateToTVShowDetail(tvShowId: Int)
 }
 
 protocol ListSeasonViewDelegate: CommonNavigation {
@@ -104,7 +105,7 @@ class AppCoordinator {
     }
 }
 
-extension AppCoordinator: HomeViewDelegate {
+extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate {
     func navigateToMovieDetail(movieId: Int) {
         showMovieDetailView(movieId: movieId)
     }
@@ -114,10 +115,6 @@ extension AppCoordinator: HomeViewDelegate {
     }
 }
 
-extension AppCoordinator: MovieDetailViewDelegate {
-    // TODO: nav function
-}
-
 extension AppCoordinator: TVShowDetailViewDelegate {
     func navigateToListSeason(season: [Season], tvShowId: Int) {
         showListSeason(season: season, tvShowId: tvShowId)
@@ -125,7 +122,6 @@ extension AppCoordinator: TVShowDetailViewDelegate {
 }
 
 extension AppCoordinator: ListSeasonViewDelegate {
-    
     func navigateToSeasonDetail(season: Season, tvShowId: Int) {
         showSeasonDetaiL(season: season, tvShowId: tvShowId)
     }

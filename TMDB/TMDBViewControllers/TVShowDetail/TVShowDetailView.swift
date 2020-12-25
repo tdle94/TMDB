@@ -32,9 +32,6 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
 
     // MARK: - views
-    private var movieHeader: TMDBMovieLikeThisHeaderView?
-    private var creditHeader: TMDBCreditHeaderView?
-
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var languagesLabel: UILabel!
     @IBOutlet weak var episodeRuntimeLabel: UILabel!
@@ -54,7 +51,7 @@ class TVShowDetailView: UIViewController {
             if UIDevice.current.userInterfaceIdiom == .pad {
                 creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.45)
             }
 
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
@@ -71,10 +68,8 @@ class TVShowDetailView: UIViewController {
                                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                                        for: indexPath) as! TMDBCreditHeaderView
                     
-                    if self.creditHeader == nil {
-                        
-                        self.creditHeader = creditHeader
-                        
+                    if creditHeader.segmentControl.selectedSegmentIndex == -1 {
+                        creditHeader.segmentControl.selectedSegmentIndex = 0
                         creditHeader
                             .segmentControl
                             .rx
@@ -84,7 +79,7 @@ class TVShowDetailView: UIViewController {
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
-                                if index == 0 {
+                                if index == 0, creditHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Cast", comment: "") {
                                     self.viewModel.getCasts(tvShowId: self.tvShowId!)
                                 } else {
                                     self.viewModel.getCrews(tvShowId: self.tvShowId!)
@@ -98,10 +93,8 @@ class TVShowDetailView: UIViewController {
                     let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                       withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
                                                                                       for: indexPath) as! TMDBMovieLikeThisHeaderView
-                    if self.movieHeader == nil {
-    
-                        self.movieHeader = movieHeader
-                        
+                    if movieHeader.segmentControl.selectedSegmentIndex == -1 {
+                        movieHeader.segmentControl.selectedSegmentIndex = 0
                         movieHeader
                             .segmentControl
                             .rx
@@ -111,7 +104,7 @@ class TVShowDetailView: UIViewController {
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
-                                if index == 0 {
+                                if index == 0, movieHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Similar", comment: "") {
                                     self.viewModel.getSimilars(tvShowId: self.tvShowId!)
                                 } else {
                                     self.viewModel.getRecommends(tvShowId: self.tvShowId!)
@@ -217,6 +210,11 @@ class TVShowDetailView: UIViewController {
         super.viewDidLayoutSubviews()
         genreCollectionViewHeight.constant = genreCollectionView.collectionViewLayout.collectionViewContentSize.height
         keywordCollectionViewHeight.constant = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
+        creditCollectionViewHeight.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
+        
+        genreCollectionView.layoutIfNeeded()
+        keywordCollectionView.layoutIfNeeded()
+        creditCollectionView.layoutIfNeeded()
     }
 
     required init?(coder: NSCoder) {
@@ -362,6 +360,16 @@ extension TVShowDetailView {
                     }
                     
                     self.viewModel.resetCreditHeaderState()
+                }
+            }
+            .disposed(by: rx.disposeBag)
+        
+        creditCollectionView
+            .rx
+            .modelSelected(CustomElementType.self)
+            .subscribe { event in
+                if let tvShow = event.element?.identity as? TVShow {
+                    self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
                 }
             }
             .disposed(by: rx.disposeBag)

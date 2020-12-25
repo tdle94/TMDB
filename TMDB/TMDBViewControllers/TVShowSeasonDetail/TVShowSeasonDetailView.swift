@@ -37,7 +37,6 @@ class TVShowSeasonDetailView: UIViewController {
     @IBOutlet weak var episodeTableViewHeight: NSLayoutConstraint!
     
     // MARK: - views
-    private var creditHeader: TMDBCreditHeaderView?
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var overviewLabel: UILabel!
@@ -61,7 +60,8 @@ class TVShowSeasonDetailView: UIViewController {
                                                                                    withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                                    for: indexPath) as! TMDBCreditHeaderView
                 
-                if self.creditHeader == nil {
+                if creditHeader.segmentControl.selectedSegmentIndex == -1 {
+                    creditHeader.segmentControl.selectedSegmentIndex = 0
                     creditHeader
                         .segmentControl
                         .rx
@@ -74,15 +74,13 @@ class TVShowSeasonDetailView: UIViewController {
                             
                             self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
 
-                            if index == 0 {
+                            if index == 0, creditHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Cast", comment: "") {
                                 self.viewModel.getSeasonCasts(tvShowId: self.tvShowId!, seasonNumber: self.season!.number)
                             } else {
                                 self.viewModel.getSeasonCrews(tvShowId: self.tvShowId!, seasonNumber: self.season!.number)
                             }
                         }
                         .disposed(by: self.rx.disposeBag)
-                    
-                    self.creditHeader = creditHeader
                 }
                 
                 return creditHeader

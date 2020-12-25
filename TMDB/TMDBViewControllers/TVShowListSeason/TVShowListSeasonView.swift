@@ -11,11 +11,11 @@ import RxSwift
 
 class TVShowListSeasonView: UIViewController {
     
-    var season: [Season] = []
+    var seasons: [Season] = []
+    
+    var tvShowId: Int?
     
     weak var delegate: ListSeasonViewDelegate?
-    
-    var userSetting: TMDBUserSettingProtocol
     
     // MARK: - views
     @IBOutlet weak var seasonTableView: UITableView! {
@@ -23,12 +23,11 @@ class TVShowListSeasonView: UIViewController {
             seasonTableView.register(UINib(nibName: String(describing: TMDBCustomTableViewCell.self), bundle: nil),
                                      forCellReuseIdentifier: Constant.Identifier.tvShowSeasonCell)
             seasonTableView.tableFooterView = UIView()
-            seasonTableView.rowHeight = 211
+            seasonTableView.rowHeight = 150
         }
     }
     
-    init(userSetting: TMDBUserSettingProtocol) {
-        self.userSetting = userSetting
+    init() {
         super.init(nibName: String(describing: TVShowListSeasonView.self), bundle: nil)
     }
     
@@ -47,6 +46,11 @@ class TVShowListSeasonView: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.resetNavBar()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.resetNavBar()
+    }
 }
 
 extension TVShowListSeasonView {
@@ -63,10 +67,24 @@ extension TVShowListSeasonView {
         
         // table view binding
         Observable<[Season]>
-            .just(season)
+            .just(seasons)
             .bind(to: seasonTableView.rx.items(cellIdentifier: Constant.Identifier.tvShowSeasonCell)) { index, season, cell in
                 (cell as? TMDBCustomTableViewCell)?.configure(item: season)
-                cell.layoutIfNeeded()
+            }
+            .disposed(by: rx.disposeBag)
+        
+        seasonTableView
+            .rx
+            .itemSelected
+            .subscribe { event in
+                guard
+                    let indexPath = event.element,
+                    let id = self.tvShowId
+                else {
+                    return
+                }
+                
+                self.delegate?.navigateToSeasonDetail(season: self.seasons[indexPath.row], tvShowId: id)
             }
             .disposed(by: rx.disposeBag)
             

@@ -199,8 +199,10 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                                                                     subTitle: homepage))
                 }
                 
-                self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
-                                                                    paragraph: movieDetailResult.overview ?? ""))
+                if let overview = movieDetailResult.overview, !overview.isEmpty {
+                    self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
+                                                                        paragraph: overview))
+                }
                 
                 self.title.onNext(TMDBLabel.setHeader(title: movieDetailResult.title))
                 

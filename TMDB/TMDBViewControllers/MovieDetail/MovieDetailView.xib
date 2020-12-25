@@ -26,7 +26,7 @@
                 <outlet property="originalLanguageLabel" destination="Kcc-As-l5F" id="FaO-Go-Ejy"/>
                 <outlet property="overviewLabel" destination="k30-Dh-oWq" id="q7n-4a-n2e"/>
                 <outlet property="posterImageView" destination="U7C-sZ-xb8" id="LRr-Lq-jor"/>
-                <outlet property="posterImageViewTop" destination="qOI-2n-JEu" id="KMS-Vm-m48"/>
+                <outlet property="posterImageViewTop" destination="qOI-2n-JEu" id="Jbx-wn-9hG"/>
                 <outlet property="produceInCountriesLabel" destination="xAJ-kx-bkb" id="TlS-z2-Or2"/>
                 <outlet property="productionCompaniesCollectionView" destination="80X-Vc-mLz" id="KJr-LN-3Ia"/>
                 <outlet property="productionCompanyCollectionViewHeight" destination="csp-ld-Y0K" id="gIE-oK-CDo"/>
@@ -84,7 +84,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DBC-o5-9Bb">
-                                    <rect key="frame" x="180" y="56.666666666666664" width="214" height="20.333333333333336"/>
+                                    <rect key="frame" x="180" y="56.666666666666671" width="214" height="20.333333333333336"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -96,7 +96,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fzz-uf-eA1">
-                                    <rect key="frame" x="180" y="113.33333333333333" width="214" height="0.0"/>
+                                    <rect key="frame" x="180" y="113.33333333333334" width="214" height="0.0"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -167,7 +167,7 @@
                                     </collectionViewFlowLayout>
                                 </collectionView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xAJ-kx-bkb">
-                                    <rect key="frame" x="180" y="121.33333333333333" width="214" height="0.0"/>
+                                    <rect key="frame" x="180" y="121.33333333333334" width="214" height="0.0"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>

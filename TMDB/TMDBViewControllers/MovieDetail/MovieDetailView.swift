@@ -408,6 +408,16 @@ extension MovieDetailView {
             }
             .disposed(by: rx.disposeBag)
         
+        creditCollectionView
+            .rx
+            .modelSelected(CustomElementType.self)
+            .subscribe { item in
+                if let movie = item.element?.identity as? Movie {
+                    self.delegate?.navigateToMovieDetail(movieId: movie.id)
+                }
+            }
+            .disposed(by: rx.disposeBag)
+        
         // bind label
         viewModel
             .status

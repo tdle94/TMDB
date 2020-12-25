@@ -36,7 +36,6 @@ class HomeView: UIViewController {
                 collectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             }
 
-            collectionView.register(TMDBViewAllCell.self, forCellWithReuseIdentifier: Constant.Identifier.displayAllCell)
             collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendPreviewHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularPreviewHeader)
@@ -93,6 +92,9 @@ class HomeView: UIViewController {
         setupUIBinding()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.resetNavBar()
+    }
 }
 
 extension HomeView {

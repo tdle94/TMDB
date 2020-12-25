@@ -30,5 +30,7 @@ protocol TMDBTVShowRepository {
     func getTVShowAiringToday(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
     func getTopRatedTVShow(page: Int, completion: @escaping (Result<TVShowResult, Error>) -> Void)
     func getAllTVShow(query: DiscoverQuery, completion: @escaping (Result<TVShowResult, Error>) -> Void)
-    func getTVShowSeaons(from tvShowId: Int) -> [Season]
+    func getTVShowSeasons(from tvShowId: Int) -> [Season]
+    func getTVShowSeasonCasts(from tvShowId: Int, seasonNumber: Int) -> [Cast]
+    func getTVShowSeasonCrews(from tvShowId: Int, seasonNumber: Int) -> [Crew]
 }

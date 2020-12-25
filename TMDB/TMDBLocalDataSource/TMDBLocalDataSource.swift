@@ -29,6 +29,8 @@ protocol TMDBLocalDataSourceProtocol {
     func saveTVShowEpisode(tvShowId: Int, seasonNumber: Int, episode: Episode)
     func saveTVShowSeasonImage(_ seasonImage: ImageResult, to tvShowId: Int, seasonNumber: Int)
     func saveTVShowEpisodeImage(_ seasonImage: ImageResult, to tvShowId: Int, seasonNumber: Int, episodeNumber: Int)
+    func getTVShowSeasonCasts(from tvShowId: Int, seasonNumber: Int) -> List<Cast>
+    func getTVShowSeasonCrews(from tvShowId: Int, seasonNumber: Int) -> List<Crew>
     // people
     func getPerson(id: Int) -> People?
     func savePerson(_ person: People)
@@ -229,6 +231,16 @@ class TMDBLocalDataSource: TMDBLocalDataSourceProtocol {
         let tvShow = getTVShow(id: tvShowId)
         let season = tvShow?.seasons ?? List<Season>()
         return season
+    }
+    
+    func getTVShowSeasonCasts(from tvShowId: Int, seasonNumber: Int) -> List<Cast> {
+        let tvShow = getTVShow(id: tvShowId)
+        return tvShow?.seasons.first(where: { $0.number == seasonNumber })?.credits?.cast ?? List<Cast>()
+    }
+    
+    func getTVShowSeasonCrews(from tvShowId: Int, seasonNumber: Int) -> List<Crew> {
+        let tvShow = getTVShow(id: tvShowId)
+        return tvShow?.seasons.first(where: { $0.number == seasonNumber })?.credits?.crew ?? List<Crew>()
     }
 
     // MARK: - people

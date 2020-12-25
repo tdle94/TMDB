@@ -11,7 +11,7 @@ import RealmSwift
 
 protocol TVShowDetailViewModelProtocol {
     var repository: TMDBTVShowRepository { get }
-    var images: PublishSubject<[Images]> { get }
+    var backdropImages: PublishSubject<[Images]> { get }
     var tvShowDetail: PublishSubject<TVShow> { get }
     var numberOfEpisode: PublishSubject<NSAttributedString> { get }
     var numberOfSeason: PublishSubject<NSAttributedString> { get }
@@ -50,7 +50,7 @@ protocol TVShowDetailViewModelProtocol {
 
 class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     var repository: TMDBTVShowRepository
-    var images: PublishSubject<[Images]> = PublishSubject()
+    var backdropImages: PublishSubject<[Images]> = PublishSubject()
     var tvShowDetail: PublishSubject<TVShow> = PublishSubject()
     var numberOfEpisode: PublishSubject<NSAttributedString> = PublishSubject()
     var numberOfSeason: PublishSubject<NSAttributedString> = PublishSubject()
@@ -186,9 +186,9 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         repository.getTVShowImages(from: tvShowId) { result in
             switch result {
             case .success(let result):
-                self.images.onNext(Array(result.backdrops))
+                self.backdropImages.onNext(Array(result.backdrops))
             case .failure(let error):
-                self.images.onError(error)
+                self.backdropImages.onError(error)
             }
         }
     }
@@ -236,7 +236,7 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     }
     
     func getTVShowSeasons(tvShowId: Int) -> [Season] {
-        return repository.getTVShowSeaons(from: tvShowId)
+        return repository.getTVShowSeasons(from: tvShowId)
     }
     
     func resetCreditHeaderState() {

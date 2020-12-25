@@ -28,7 +28,7 @@
                 <outlet property="originalLanguageLabel" destination="BdA-Dv-irA" id="jff-WU-ezK"/>
                 <outlet property="overviewLabel" destination="50I-bI-Lfk" id="cuH-G8-Uqb"/>
                 <outlet property="posterImage" destination="ewl-mK-ZTv" id="P9N-Dn-vyZ"/>
-                <outlet property="posterImageViewTop" destination="MBU-U6-Cej" id="ozL-H1-KS7"/>
+                <outlet property="posterImageViewTop" destination="MBU-U6-Cej" id="cSf-Lm-8YI"/>
                 <outlet property="ratingLabel" destination="EHd-2I-U7r" id="NbO-BQ-Iis"/>
                 <outlet property="reviewTableView" destination="ux7-ub-mzE" id="Ylo-ID-Red"/>
                 <outlet property="scrollView" destination="7YV-dq-NsC" id="r8f-TM-SYp"/>
@@ -169,7 +169,7 @@
                                         <constraint firstAttribute="height" constant="80" id="Y28-Ja-cFy"/>
                                     </constraints>
                                 </tableView>
-                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xaH-2W-AUT">
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xaH-2W-AUT">
                                     <rect key="frame" x="0.0" y="591.5" width="414" height="750"/>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
                                     <constraints>

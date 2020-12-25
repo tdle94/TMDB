@@ -176,7 +176,9 @@ extension TMDBRepository: TMDBTVShowRepository {
 
     func getTVShowSeasonImage(from tvShowId: Int, seasonNumber: Int, completion: @escaping (Result<ImageResult, Error>) -> Void) {
         if let imageResult = localDataSource.getTVShowSeason(tvShowId: tvShowId, seasonNumber: seasonNumber)?.images {
-            completion(.success(imageResult))
+            DispatchQueue.main.async {
+                completion(.success(imageResult))
+            }
             return
         }
 
@@ -223,7 +225,9 @@ extension TMDBRepository: TMDBTVShowRepository {
             season.credits != nil,
             season.videos != nil
         {
-            completion(.success(season))
+            DispatchQueue.main.async {
+                completion(.success(season))
+            }
             return
         }
 
@@ -435,8 +439,16 @@ extension TMDBRepository: TMDBTVShowRepository {
         return Array(guestStars)
     }
     
-    func getTVShowSeaons(from tvShowId: Int) -> [Season] {
+    func getTVShowSeasons(from tvShowId: Int) -> [Season] {
         return Array(localDataSource.getTVShowSeasons(tvShowId: tvShowId))
+    }
+    
+    func getTVShowSeasonCasts(from tvShowId: Int, seasonNumber: Int) -> [Cast] {
+        return Array(localDataSource.getTVShowSeasonCasts(from: tvShowId, seasonNumber: seasonNumber))
+    }
+
+    func getTVShowSeasonCrews(from tvShowId: Int, seasonNumber: Int) -> [Crew] {
+        return Array(localDataSource.getTVShowSeasonCrews(from: tvShowId, seasonNumber: seasonNumber))
     }
 }
 

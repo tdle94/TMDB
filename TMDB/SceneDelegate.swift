@@ -14,10 +14,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     var authentication: TMDBAuthenticationRepository!
-    var homeCoordinator: Coordinator?
-    var movieCoordinator: Coordinator?
-    var tvCoordinator: Coordinator?
-    var peopleCoordinator: Coordinator?
     var defaultContainer: DefaultContainer = DefaultContainer()
     var appCoordinator: AppCoordinator!
 
@@ -64,12 +60,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .rx
             .didSelect
             .subscribe { event in
-                guard let navController = event.element as? UINavigationController else {
-                    return
-                }
-                
-                if let homeview = navController.viewControllers.first as? HomeView {
-                    self.appCoordinator.currentView = homeview
+                if self.tabBarController.selectedIndex == 0 {
+                    self.appCoordinator.currentView = homeView
                 }
             }
             .disposed(by: rx.disposeBag)

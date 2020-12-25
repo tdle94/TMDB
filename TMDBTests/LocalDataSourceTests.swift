@@ -304,6 +304,34 @@ class LocalDataSourceTests: QuickSpec {
                 localDataSource.saveTVShow(tvShow)
                 localDataSource.saveTVShowEpisodeImage(ImageResult(), to: 1, seasonNumber: 1, episodeNumber: 1)
             }
+            
+            it("get tv show season, casts & crews") {
+                let tvShow = TVShow()
+                let season = Season()
+                let credit = CreditResult()
+                
+                season.number = 1
+                season.id = 1
+                
+                
+                credit.cast.append(Cast())
+                credit.crew.append(Crew())
+                
+                season.credits = credit
+                
+                tvShow.seasons.append(season)
+                tvShow.id = 1
+                
+                expect(localDataSource.getTVShowSeasonCasts(from: 1, seasonNumber: 1).count).to(equal(0))
+                expect(localDataSource.getTVShowSeasonCrews(from: 1, seasonNumber: 1).count).to(equal(0))
+                expect(localDataSource.getTVShowSeasons(tvShowId: 1).count).to(equal(0))
+                
+                localDataSource.saveTVShow(tvShow)
+                
+                expect(localDataSource.getTVShowSeasons(tvShowId: 1).count).to(equal(1))
+                expect(localDataSource.getTVShowSeasonCasts(from: 1, seasonNumber: 1).count).to(equal(1))
+                expect(localDataSource.getTVShowSeasonCrews(from: 1, seasonNumber: 1).count).to(equal(1))
+            }
         }
     }
 }

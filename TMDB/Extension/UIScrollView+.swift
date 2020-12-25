@@ -20,6 +20,10 @@ extension UIScrollView {
     }
     
     func setToPreviousAlpha(safeAreaInsetTop: CGFloat, navigationController: UINavigationController?) {
+        guard self.contentOffset.y < 0 else {
+            setForegroundColor(alpha: 1, navigationController: navigationController)
+            return
+        }
         let alpha = getCurrentAlpha(safeAreaInsetTop: safeAreaInsetTop, navigationController: navigationController)
         setForegroundColor(alpha: alpha, navigationController: navigationController)
     }

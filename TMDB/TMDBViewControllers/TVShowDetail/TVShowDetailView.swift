@@ -133,12 +133,13 @@ class TVShowDetailView: UIViewController {
                 .rx
                 .itemSelected
                 .subscribe { event in
-                    guard let indexPath = event.element else {
+                    guard let indexPath = event.element, let id = self.tvShowId else {
                         return
                     }
                     
                     if indexPath.row == 1 {
-                        self.delegate?.navigateToListSeason(season: self.viewModel.getTVShowSeasons(tvShowId: self.tvShowId!))
+                        self.delegate?.navigateToListSeason(season: self.viewModel.getTVShowSeasons(tvShowId: self.tvShowId!),
+                                                            tvShowId: id)
                     }
                 }
                 .disposed(by: rx.disposeBag)
@@ -248,14 +249,14 @@ extension TVShowDetailView {
         
         // backdrop images binding
         viewModel
-            .images
+            .backdropImages
             .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { _, image, cell in
                 (cell as? TMDBBackdropImageCell)?.configure(item: image)
             }
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .images
+            .backdropImages
             .subscribe { event in
                 self.scrollView.parallaxHeader.carouselView = CarouselView(numberOfDot: event.element?.count ?? 0)
             }

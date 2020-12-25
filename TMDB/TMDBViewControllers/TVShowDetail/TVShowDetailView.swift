@@ -366,6 +366,16 @@ extension TVShowDetailView {
             }
             .disposed(by: rx.disposeBag)
         
+        creditCollectionView
+            .rx
+            .modelSelected(CustomElementType.self)
+            .subscribe { event in
+                if let tvShow = event.element?.identity as? TVShow {
+                    self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
+                }
+            }
+            .disposed(by: rx.disposeBag)
+        
         
         // label binding
         viewModel

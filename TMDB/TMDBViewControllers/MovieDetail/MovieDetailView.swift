@@ -45,9 +45,6 @@ class MovieDetailView: UIViewController {
     @IBOutlet weak var keywordCollectionViewTop: NSLayoutConstraint!
     
     // MARK: - views
-    private var movieHeader: TMDBMovieLikeThisHeaderView?
-    private var creditHeader: TMDBCreditHeaderView?
-
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var homepageLabel: UILabel!
     @IBOutlet weak var imdbLabel: UILabel!
@@ -77,7 +74,7 @@ class MovieDetailView: UIViewController {
             if UIDevice.current.userInterfaceIdiom == .pad {
                 creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.45)
             }
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBCreditHeaderView.self,
@@ -92,9 +89,8 @@ class MovieDetailView: UIViewController {
                     let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                                        for: indexPath) as! TMDBCreditHeaderView
-                    if self.creditHeader == nil {
-                        self.creditHeader = creditHeader
-                        
+                    if creditHeader.segmentControl.selectedSegmentIndex == -1 {
+                        creditHeader.segmentControl.selectedSegmentIndex = 0
                         creditHeader
                             .segmentControl
                             .rx
@@ -104,7 +100,7 @@ class MovieDetailView: UIViewController {
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
-                                if index == 0 {
+                                if index == 0, creditHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Cast", comment: "") {
                                     self.viewModel.getCasts(movieId: self.movieId!)
                                 } else {
                                     self.viewModel.getCrews(movieId: self.movieId!)
@@ -119,9 +115,9 @@ class MovieDetailView: UIViewController {
                                                                                       withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
                                                                                       for: indexPath) as! TMDBMovieLikeThisHeaderView
                     
-                    if self.movieHeader == nil {
+                    if movieHeader.segmentControl.selectedSegmentIndex == -1 {
                         
-                        self.movieHeader = movieHeader
+                        movieHeader.segmentControl.selectedSegmentIndex = 0
                         
                         movieHeader
                             .segmentControl
@@ -132,7 +128,7 @@ class MovieDetailView: UIViewController {
                                 let index = Int(event.element!.description)
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
-                                if index == 0 {
+                                if index == 0, movieHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Similar", comment: "") {
                                     self.viewModel.getSimilarMovies(movieId: self.movieId!)
                                 } else {
                                     self.viewModel.getRecommendMovies(movieId: self.movieId!)
@@ -234,10 +230,27 @@ class MovieDetailView: UIViewController {
         navigationController?.setNavBar()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
+                                      navigationController: navigationController)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.resetNavBar()
+        scrollView.setForegroundColor(alpha: 1, navigationController: navigationController)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         keywordCollectionViewHeight.constant = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
         genreCollectionViewHeight.constant = genreCollectionView.collectionViewLayout.collectionViewContentSize.height
+        creditCollectionViewHeight.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
+        
+        keywordCollectionView.layoutIfNeeded()
+        genreCollectionView.layoutIfNeeded()
+        creditCollectionView.layoutIfNeeded()
     }
 }
 

@@ -29,14 +29,14 @@ class MultiSearch: Object, Decodable {
     dynamic var posterPath: String?
     
     // for movie
-    dynamic var  originalTitle: String?
-    dynamic var  releaseDate: String?
+    dynamic var originalTitle: String?
+    dynamic var releaseDate: String?
     // for tv
-    dynamic var  originalName: String?
-    dynamic var  firstAirDate: String?
+    dynamic var originalName: String?
+    dynamic var firstAirDate: String?
     // for people
-    dynamic var  name: String?
-    dynamic var  profilePath: String?
+    dynamic var name: String?
+    dynamic var profilePath: String?
     
     enum CodingKeys: String, CodingKey {
         case id, name

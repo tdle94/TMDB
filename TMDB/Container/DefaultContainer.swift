@@ -54,6 +54,10 @@ extension DefaultContainer {
             TVShowSeasonDetailViewModel(repository: resolver.resolve(TMDBTVShowRepository.self)!,
                                         userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
+        
+        self.container.register(SearchViewViewModelProtocol.self) { resolver in
+            SearchViewViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
+        }
     }
 
     func registerViews() {
@@ -76,6 +80,15 @@ extension DefaultContainer {
         
         self.container.register(TVShowSeasonDetailView.self) { resolver in
             TVShowSeasonDetailView(viewModel: resolver.resolve(TVShowSeasonDetailViewModelProtocol.self)!)
+        }
+        
+        self.container.register(SearchResultView.self) { resolver in
+            SearchResultView(nibName: String(describing: SearchResultView.self), bundle: nil)
+        }
+
+        self.container.register(SearchView.self) { resolver in
+            SearchView(searchController: UISearchController(searchResultsController: resolver.resolve(SearchResultView.self)!),
+                       viewModel: resolver.resolve(SearchViewViewModelProtocol.self)!)
         }
     }
     
@@ -110,6 +123,13 @@ extension DefaultContainer {
         }
         
         self.container.register(TMDBPeopleRepository.self) { resolver in
+            TMDBRepository(services: TMDBServices(session: resolver.resolve(TMDBSessionProtocol.self)!,
+                                                  urlRequestBuilder: resolver.resolve(TMDBURLRequestBuilderProtocol.self)!),
+                           localDataSource: resolver.resolve(TMDBLocalDataSourceProtocol.self)!,
+                           userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
+        
+        self.container.register(TMDBSearchRepository.self) { resolver in
             TMDBRepository(services: TMDBServices(session: resolver.resolve(TMDBSessionProtocol.self)!,
                                                   urlRequestBuilder: resolver.resolve(TMDBURLRequestBuilderProtocol.self)!),
                            localDataSource: resolver.resolve(TMDBLocalDataSourceProtocol.self)!,

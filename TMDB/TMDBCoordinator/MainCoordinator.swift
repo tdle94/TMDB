@@ -34,6 +34,11 @@ protocol SeasonDetailViewDelegate: CommonNavigation {
     // TODO: nav function
 }
 
+protocol SearchViewDelegate: class {
+    func navigateToMovieDetail(movieId: Int)
+    func navigateToTVShowDetail(tvShowId: Int)
+}
+
 class AppCoordinator {
     let window: UIWindow
     let container: Container
@@ -58,6 +63,10 @@ class AppCoordinator {
     
     var seasonDetailView: TVShowSeasonDetailView {
         return container.resolve(TVShowSeasonDetailView.self)!
+    }
+    
+    var searchView: SearchView {
+        return container.resolve(SearchView.self)!
     }
 
     init(window: UIWindow, container: Container) {
@@ -105,7 +114,7 @@ class AppCoordinator {
     }
 }
 
-extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate {
+extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, SearchViewDelegate {
     func navigateToMovieDetail(movieId: Int) {
         showMovieDetailView(movieId: movieId)
     }

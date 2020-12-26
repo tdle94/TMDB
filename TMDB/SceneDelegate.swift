@@ -50,11 +50,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         homeView.navigationItem.backBarButtonItem = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
         homeView.navigationItem.backBarButtonItem?.tintColor = Constant.Color.backgroundColor
         
+        
+        let searchView = appCoordinator.searchView
+        searchView.delegate = appCoordinator
+        
+        let searchNavController = UINavigationController(rootViewController: searchView)
+        searchNavController.navigationBar.barTintColor = Constant.Color.primaryColor
+        searchNavController.tabBarItem.title = NSLocalizedString("Search", comment: "")
+        searchNavController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+        
         // set tabbar controller
         tabBarController.tabBar.barTintColor = Constant.Color.primaryColor
         tabBarController.tabBar.unselectedItemTintColor = Constant.Color.secondaryColor
         tabBarController.tabBar.tintColor = Constant.Color.tabBarSelectedTextColor
-        tabBarController.setViewControllers([homeNavController], animated: true)
+        tabBarController.setViewControllers([homeNavController, searchNavController], animated: true)
         
         tabBarController
             .rx
@@ -62,6 +71,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .subscribe { event in
                 if self.tabBarController.selectedIndex == 0 {
                     self.appCoordinator.currentView = homeView
+                } else if self.tabBarController.selectedIndex == 1 {
+                    self.appCoordinator.currentView = searchView
                 }
             }
             .disposed(by: rx.disposeBag)

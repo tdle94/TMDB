@@ -114,6 +114,8 @@ extension SearchView {
                                 self.delegate?.navigateToMovieDetail(movieId: item.id)
                             } else if item.mediaType == "tv" {
                                 self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
+                            } else if item.mediaType == "person" {
+                                self.delegate?.navigateToPersonDetail(personId: item.id)
                             }
                         } catch let error {
                             debugPrint("Problem selecting search result: \(error.localizedDescription)")

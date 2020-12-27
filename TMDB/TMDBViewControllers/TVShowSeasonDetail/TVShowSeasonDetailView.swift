@@ -35,6 +35,7 @@ class TVShowSeasonDetailView: UIViewController {
     // MARK: - constraint
     @IBOutlet weak var posterImageViewTop: NSLayoutConstraint!
     @IBOutlet weak var episodeTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
     
     // MARK: - views
 
@@ -235,6 +236,7 @@ extension TVShowSeasonDetailView {
                 
                 if !self.viewModel.isThereCast {
                     creditHeader.segmentControl.removeSegment(at: 0, animated: false)
+                    creditHeader.segmentControl.selectedSegmentIndex = 0
                 } else if !self.viewModel.isThereCrew {
                     creditHeader.segmentControl.removeSegment(at: 1, animated: false)
                 }
@@ -242,7 +244,16 @@ extension TVShowSeasonDetailView {
                 self.viewModel.resetCreditHeaderState()
             }
             .disposed(by: rx.disposeBag)
-        // bind credit collection view
+
+        viewModel
+            .credit
+            .subscribe { event in
+                if event.element?.isEmpty ?? true {
+                    self.creditCollectionViewHeight.constant = 0
+                }
+            }
+            .disposed(by: rx.disposeBag)
+        
         viewModel
             .credit
             .bind(to: creditCollectionView.rx.items(dataSource: dataSource))

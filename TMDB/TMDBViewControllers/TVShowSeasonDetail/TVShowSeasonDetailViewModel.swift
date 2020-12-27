@@ -76,7 +76,7 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
                 self.title.onNext(TMDBLabel.setHeader(title: season.name))
 
                 if season.credits?.cast.isEmpty ?? true, season.credits?.crew.isEmpty ?? true {
-                    self.credit.onNext([.Credits(items: [])])
+                    self.credit.onNext([])
                     self.isThereCrew = false
                     self.isThereCast = false
                 } else if season.credits?.cast.isEmpty ?? true {

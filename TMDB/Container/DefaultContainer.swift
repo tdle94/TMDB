@@ -58,6 +58,11 @@ extension DefaultContainer {
         self.container.register(SearchViewViewModelProtocol.self) { resolver in
             SearchViewViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
         }
+        
+        self.container.register(PersonDetailViewModelProtocol.self) { resolver in
+            PersonDetailViewModel(repository: resolver.resolve(TMDBPeopleRepository.self)!,
+                                  userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
     }
 
     func registerViews() {
@@ -89,6 +94,10 @@ extension DefaultContainer {
         self.container.register(SearchView.self) { resolver in
             SearchView(searchController: UISearchController(searchResultsController: resolver.resolve(SearchResultView.self)!),
                        viewModel: resolver.resolve(SearchViewViewModelProtocol.self)!)
+        }
+        
+        self.container.register(PersonDetailView.self) { resolver in
+            PersonDetailView(viewModel: resolver.resolve(PersonDetailViewModelProtocol.self)!)
         }
     }
     

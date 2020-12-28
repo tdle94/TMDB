@@ -22,6 +22,9 @@ protocol PersonDetailViewModelProtocol {
     var alias: PublishSubject<NSAttributedString> { get }
     var biography: PublishSubject<NSAttributedString> { get }
     var credits: BehaviorSubject<[PersonDetailModel]> { get }
+    
+    var isThereMovie: Bool { get }
+    var isThereTVShow: Bool { get }
      
     var userSetting: TMDBUserSettingProtocol { get }
     var repository: TMDBPeopleRepository { get }
@@ -29,6 +32,7 @@ protocol PersonDetailViewModelProtocol {
     func getPersonDetail(id: Int)
     func getMoviesAppearIn(personId: Int)
     func getTVShowsAppearIn(personId: Int)
+    func resetCreditHeaderState()
 }
 
 class PersonDetailViewModel: PersonDetailViewModelProtocol {
@@ -44,6 +48,9 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
     var alias: PublishSubject<NSAttributedString> = PublishSubject()
     var biography: PublishSubject<NSAttributedString> = PublishSubject()
     var credits: BehaviorSubject<[PersonDetailModel]> = BehaviorSubject(value: [])
+    
+    var isThereMovie: Bool = true
+    var isThereTVShow: Bool = true
 
     var userSetting: TMDBUserSettingProtocol
     var repository: TMDBPeopleRepository
@@ -97,12 +104,16 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
                 }
 
                 if personResult.movieCredits?.cast.isEmpty ?? true, personResult.tvCredits?.cast.isEmpty ?? true {
+                    self.isThereMovie = false
+                    self.isThereTVShow = false
                     self.credits.onNext([])
                 } else if personResult.movieCredits?.cast.isEmpty ?? true {
+                    self.isThereMovie = false
                     self.credits.onNext([
                         .Credits(items: personResult.tvCredits!.cast.map { CustomElementType(identity: $0) } ),
                     ])
                 } else if personResult.tvCredits?.cast.isEmpty ?? true {
+                    self.isThereTVShow = false
                     self.credits.onNext([
                         .Credits(items: personResult.movieCredits!.cast.map { CustomElementType(identity: $0) } ),
                     ])
@@ -139,5 +150,10 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
             let tvshows = self.repository.getTVCredits(from: personId)
             self.credits.onNext([.Credits(items: tvshows.map { CustomElementType(identity: $0) })])
         }
+    }
+    
+    func resetCreditHeaderState() {
+        self.isThereMovie = true
+        self.isThereTVShow = true
     }
 }

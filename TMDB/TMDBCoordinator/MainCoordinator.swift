@@ -15,14 +15,22 @@ protocol CommonNavigation: class {
 protocol HomeViewDelegate: class {
     func navigateToMovieDetail(movieId: Int)
     func navigateToTVShowDetail(tvShowId: Int)
+    func navigateToPersonDetail(personId: Int)
 }
 
 protocol MovieDetailViewDelegate: CommonNavigation {
     func navigateToMovieDetail(movieId: Int)
+    func navigateToPersonDetail(personId: Int)
 }
 
 protocol TVShowDetailViewDelegate: CommonNavigation {
     func navigateToListSeason(season: [Season], tvShowId: Int)
+    func navigateToTVShowDetail(tvShowId: Int)
+    func navigateToPersonDetail(personId: Int)
+}
+
+protocol PersonDetailViewDelegate: CommonNavigation {
+    func navigateToMovieDetail(movieId: Int)
     func navigateToTVShowDetail(tvShowId: Int)
 }
 
@@ -37,6 +45,7 @@ protocol SeasonDetailViewDelegate: CommonNavigation {
 protocol SearchViewDelegate: class {
     func navigateToMovieDetail(movieId: Int)
     func navigateToTVShowDetail(tvShowId: Int)
+    func navigateToPersonDetail(personId: Int)
 }
 
 class AppCoordinator {
@@ -55,6 +64,10 @@ class AppCoordinator {
     
     var tvShowDetailView: TVShowDetailView {
         return container.resolve(TVShowDetailView.self)!
+    }
+    
+    var personDetailView: PersonDetailView {
+        return container.resolve(PersonDetailView.self)!
     }
     
     var listSeasonView: TVShowListSeasonView {
@@ -90,6 +103,14 @@ class AppCoordinator {
         currentView = view
     }
     
+    fileprivate func showPersonDetail(personId: Int) {
+        let view = personDetailView
+        view.id = personId
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
+    }
+    
     fileprivate func showListSeason(season: [Season], tvShowId: Int) {
         let view = listSeasonView
         view.seasons = season
@@ -114,7 +135,11 @@ class AppCoordinator {
     }
 }
 
-extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, SearchViewDelegate {
+extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate {
+    func navigateToPersonDetail(personId: Int) {
+        showPersonDetail(personId: personId)
+    }
+
     func navigateToMovieDetail(movieId: Int) {
         showMovieDetailView(movieId: movieId)
     }

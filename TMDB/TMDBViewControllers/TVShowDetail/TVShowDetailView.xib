@@ -46,7 +46,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3cK-Ts-ShR">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="1341.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="1361.5"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Q5a-HV-UwT">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="184"/>
@@ -198,7 +198,7 @@
                                 <constraint firstItem="eHC-zL-xtP" firstAttribute="leading" secondItem="3cK-Ts-ShR" secondAttribute="leading" constant="184" id="4Tr-Pm-leu"/>
                                 <constraint firstItem="ux7-ub-mzE" firstAttribute="top" secondItem="zPZ-lL-IJT" secondAttribute="bottom" constant="8" symbolic="YES" id="8Ef-TC-6Ji"/>
                                 <constraint firstItem="stm-nL-XWR" firstAttribute="top" secondItem="Obh-FX-xGv" secondAttribute="bottom" constant="8" symbolic="YES" id="8c4-Nt-hp5"/>
-                                <constraint firstAttribute="bottom" secondItem="xaH-2W-AUT" secondAttribute="bottom" id="8tE-Bk-LHs"/>
+                                <constraint firstAttribute="bottom" secondItem="xaH-2W-AUT" secondAttribute="bottom" constant="20" symbolic="YES" id="8tE-Bk-LHs"/>
                                 <constraint firstItem="r9a-qu-5YO" firstAttribute="leading" secondItem="BdA-Dv-irA" secondAttribute="leading" id="905-Fo-4On"/>
                                 <constraint firstItem="cDJ-2b-nY3" firstAttribute="leading" secondItem="VXb-UJ-r0D" secondAttribute="leading" id="9az-zW-YsW"/>
                                 <constraint firstItem="VXb-UJ-r0D" firstAttribute="top" secondItem="r9a-qu-5YO" secondAttribute="bottom" constant="8" symbolic="YES" id="9qE-Hs-pBx"/>

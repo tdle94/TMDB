@@ -43,13 +43,18 @@ class HomeView: UIViewController {
             collectionView.register(TMDBTVShowHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader)
             
             // item select
-            collectionView.rx.modelSelected(CustomElementType.self).subscribe { item in
-                if let movie = item.element?.identity as? Movie ?? (item.element?.identity as? Trending)?.movie {
-                    self.delegate?.navigateToMovieDetail(movieId: movie.id)
-                } else if let tvShow = item.element?.identity as? TVShow ?? (item.element?.identity as? Trending)?.tv {
-                    self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
+            collectionView
+                .rx
+                .modelSelected(CustomElementType.self).subscribe { item in
+                    if let movie = item.element?.identity as? Movie ?? (item.element?.identity as? Trending)?.movie {
+                        self.delegate?.navigateToMovieDetail(movieId: movie.id)
+                    } else if let tvShow = item.element?.identity as? TVShow ?? (item.element?.identity as? Trending)?.tv {
+                        self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
+                    } else if let person = item.element?.identity as? People ?? (item.element?.identity as? Trending)?.people {
+                        self.delegate?.navigateToPersonDetail(personId: person.id)
+                    }
                 }
-            }.disposed(by: rx.disposeBag)
+                .disposed(by: rx.disposeBag)
 
             
             // suplementary view
@@ -90,6 +95,8 @@ class HomeView: UIViewController {
         super.viewDidLoad()
         configureLanguageAndRegion()
         setupUIBinding()
+        //delegate?.navigateToPersonDetail(personId: 62)
+        //delegate?.navigateToTVShowDetail(tvShowId: 27023)
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -12,6 +12,7 @@
                 <outlet property="airDateLabel" destination="jrH-aq-joq" id="U0x-cZ-Vo3"/>
                 <outlet property="backdropImageCollectionView" destination="pTx-sg-4g4" id="OJ5-Md-eZ8"/>
                 <outlet property="creditCollectionView" destination="e98-I8-ikW" id="9dX-mv-U1R"/>
+                <outlet property="creditCollectionViewHeight" destination="BwK-EQ-Kft" id="K4s-sL-KVf"/>
                 <outlet property="episodeTableView" destination="nif-Dg-Ucg" id="U3n-qE-bq0"/>
                 <outlet property="episodeTableViewHeight" destination="jfJ-mj-dEl" id="OP0-v5-wce"/>
                 <outlet property="numberOfEpisodeLabel" destination="7TM-n5-a2y" id="Gvd-43-3WI"/>

@@ -23,7 +23,7 @@ class People: Object, Decodable {
     dynamic var gender: Int = 0
     dynamic var biography: String = ""
     dynamic var placeOfBirth: String?
-    dynamic var imdbId: String = ""
+    dynamic var imdbId: String?
     dynamic var homepage: String?
     dynamic var movieCredits: MovieCredit?
     dynamic var tvCredits: TVCredit?
@@ -56,6 +56,7 @@ class People: Object, Decodable {
         images = try container.decodeIfPresent(ImageProfile.self, forKey: .images)
         movieCredits = try container.decodeIfPresent(MovieCredit.self, forKey: .movieCredits)
         tvCredits = try container.decodeIfPresent(TVCredit.self, forKey: .tvCredits)
+        imdbId = try container.decodeIfPresent(String.self, forKey: .imdbId)
 
         if container.contains(.birthday) {
             birthday = try container.decodeIfPresent(String.self, forKey: .birthday)
@@ -79,10 +80,6 @@ class People: Object, Decodable {
 
         if container.contains(.placeOfBirth) {
             placeOfBirth = try container.decodeIfPresent(String.self, forKey: .placeOfBirth)
-        }
-
-        if container.contains(.imdbId) {
-            imdbId = try container.decode(String.self, forKey: .imdbId)
         }
 
         if container.contains(.knownFor) {

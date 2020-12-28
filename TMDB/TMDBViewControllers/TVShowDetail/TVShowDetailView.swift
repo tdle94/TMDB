@@ -210,11 +210,10 @@ class TVShowDetailView: UIViewController {
         super.viewDidLayoutSubviews()
         genreCollectionViewHeight.constant = genreCollectionView.collectionViewLayout.collectionViewContentSize.height
         keywordCollectionViewHeight.constant = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
-        creditCollectionViewHeight.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
         
         genreCollectionView.layoutIfNeeded()
         keywordCollectionView.layoutIfNeeded()
-        creditCollectionView.layoutIfNeeded()
+        scrollView.layoutIfNeeded()
     }
 
     required init?(coder: NSCoder) {
@@ -293,6 +292,7 @@ extension TVShowDetailView {
         // tvshow detail binding
         viewModel
             .tvShowDetail
+            .observeOn(MainScheduler.asyncInstance)
             .subscribe { event in
                 guard let tvShowDetail = event.element else {
                     return
@@ -336,11 +336,25 @@ extension TVShowDetailView {
             .catchErrorJustReturn(dataSource.sectionModels)
             .bind(to: creditCollectionView.rx.items(dataSource: dataSource))
             .disposed(by: rx.disposeBag)
-        
+
         creditCollectionView
             .rx
             .willDisplaySupplementaryView
+            .observeOn(MainScheduler.asyncInstance)
             .subscribe { event in
+
+                if !self.viewModel.isThereCast, !self.viewModel.isThereCrew {
+                    self.viewModel.resetCreditHeaderState()
+                    self.creditCollectionViewHeight.constant /= 2
+                    self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
+                }
+                
+                if !self.viewModel.isThereSimilarTVShow, !self.viewModel.isThereRecommendTVShow {
+                    self.viewModel.resetMovieHeaderState()
+                    self.creditCollectionViewHeight.constant /= 2
+                    self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
+                }
+                
                 if let header = event.element?.supplementaryView as? TMDBMovieLikeThisHeaderView {
                     if !self.viewModel.isThereSimilarTVShow {
                         header.segmentControl.removeSegment(at: 0, animated: false)
@@ -370,6 +384,10 @@ extension TVShowDetailView {
             .subscribe { event in
                 if let tvShow = event.element?.identity as? TVShow {
                     self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
+                } else if let cast = event.element?.identity as? Cast {
+                    self.delegate?.navigateToPersonDetail(personId: cast.id)
+                } else if let crew = event.element?.identity as? Crew {
+                    self.delegate?.navigateToPersonDetail(personId: crew.id)
                 }
             }
             .disposed(by: rx.disposeBag)

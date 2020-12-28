@@ -85,7 +85,7 @@ class PersonDetailView: UIViewController {
                             
                             self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                             
-                            if index == 0 {
+                            if index == 0, header.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Movies", comment: "") {
                                 self.viewModel.getMoviesAppearIn(personId: personId)
                             } else {
                                 self.viewModel.getTVShowsAppearIn(personId: personId)
@@ -243,12 +243,6 @@ extension PersonDetailView {
             .willDisplaySupplementaryView
             .observeOn(MainScheduler.asyncInstance)
             .subscribe { event in
-                if !self.viewModel.isThereMovie, !self.viewModel.isThereTVShow {
-                    self.viewModel.resetCreditHeaderState()
-                    self.creditCollectionViewHeight.constant = 0
-                }
-                
-                
                 if let header = event.element?.supplementaryView as? TMDBPersonCreditHeaderView {
                     if !self.viewModel.isThereMovie {
                         header.segmentControl.removeSegment(at: 0, animated: false)

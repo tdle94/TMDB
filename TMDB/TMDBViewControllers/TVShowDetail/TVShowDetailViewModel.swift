@@ -148,11 +148,12 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                 if credits.isEmpty {
                     credits = Array(result.credits?.crew ?? List<Crew>()).map { CustomElementType(identity: $0) }
                 }
- 
                 
                 if result.credits?.cast.isEmpty ?? true {
                     self.isThereCast = false
-                } else if result.credits?.crew.isEmpty ?? true {
+                }
+                
+                if result.credits?.crew.isEmpty ?? true {
                     self.isThereCrew = false
                 }
 
@@ -160,7 +161,9 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
                 if result.similar?.onTV.isEmpty ?? true {
                     self.isThereSimilarTVShow = false
-                } else if result.recommendations?.onTV.isEmpty ?? true {
+                }
+                
+                if result.recommendations?.onTV.isEmpty ?? true {
                     self.isThereRecommendTVShow = false
                 }
                 

@@ -116,6 +116,11 @@
 		34A31D19248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A31D18248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift */; };
 		34A31D1E248C96AF00D56C10 /* TMDBServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A31D1D248C96AF00D56C10 /* TMDBServices.swift */; };
 		34A970E1256C2D30001AB626 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A970E0256C2D30001AB626 /* MovieDetailViewModel.swift */; };
+		34AD7A632597CF8C005BFAF0 /* PersonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7A622597CF8C005BFAF0 /* PersonDetailView.swift */; };
+		34AD7A692597CF95005BFAF0 /* PersonDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34AD7A682597CF95005BFAF0 /* PersonDetailView.xib */; };
+		34AD7A6D2597D36C005BFAF0 /* PersonDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7A6C2597D36C005BFAF0 /* PersonDetailViewModel.swift */; };
+		34AD7A712598115D005BFAF0 /* PersonDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7A702598115D005BFAF0 /* PersonDetailModel.swift */; };
+		34AD7A7525982342005BFAF0 /* TMDBPersonCreditHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7A7425982342005BFAF0 /* TMDBPersonCreditHeaderView.swift */; };
 		34AD7CD824AA513A004A7C0A /* TMDBPreviewItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34AD7CD724AA513A004A7C0A /* TMDBPreviewItemCell.xib */; };
 		34AD7CDA24AA5177004A7C0A /* TMDBCircleUserRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7CD924AA5176004A7C0A /* TMDBCircleUserRating.swift */; };
 		34AD7CDC24AA6674004A7C0A /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7CDB24AA6674004A7C0A /* Review.swift */; };
@@ -295,6 +300,11 @@
 		34A38FAC24A2DDD300D3D2CE /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		34A38FAD24A2DDD300D3D2CE /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A970E0256C2D30001AB626 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
+		34AD7A622597CF8C005BFAF0 /* PersonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDetailView.swift; sourceTree = "<group>"; };
+		34AD7A682597CF95005BFAF0 /* PersonDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonDetailView.xib; sourceTree = "<group>"; };
+		34AD7A6C2597D36C005BFAF0 /* PersonDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDetailViewModel.swift; sourceTree = "<group>"; };
+		34AD7A702598115D005BFAF0 /* PersonDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDetailModel.swift; sourceTree = "<group>"; };
+		34AD7A7425982342005BFAF0 /* TMDBPersonCreditHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBPersonCreditHeaderView.swift; sourceTree = "<group>"; };
 		34AD7CD724AA513A004A7C0A /* TMDBPreviewItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TMDBPreviewItemCell.xib; sourceTree = "<group>"; };
 		34AD7CD924AA5176004A7C0A /* TMDBCircleUserRating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBCircleUserRating.swift; sourceTree = "<group>"; };
 		34AD7CDB24AA6674004A7C0A /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
@@ -653,9 +663,21 @@
 			path = DataType;
 			sourceTree = "<group>";
 		};
+		34AD7A612597CF7D005BFAF0 /* PersonDetail */ = {
+			isa = PBXGroup;
+			children = (
+				34AD7A622597CF8C005BFAF0 /* PersonDetailView.swift */,
+				34AD7A682597CF95005BFAF0 /* PersonDetailView.xib */,
+				34AD7A6C2597D36C005BFAF0 /* PersonDetailViewModel.swift */,
+				34AD7A702598115D005BFAF0 /* PersonDetailModel.swift */,
+			);
+			path = PersonDetail;
+			sourceTree = "<group>";
+		};
 		34CB50032490375E00E9B5CF /* TMDBViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				34AD7A612597CF7D005BFAF0 /* PersonDetail */,
 				34932FAF2596A1F700C1420D /* Search */,
 				3469A14E2593C71700B09721 /* TVShowListSeason */,
 				34D6672224DC45B8003A73BA /* TVShowSeasonDetail */,
@@ -788,6 +810,7 @@
 				34C9215624E2075E0043E6F5 /* TMDBTVShowHeaderView.swift */,
 				3458D3072582D56E008E1594 /* TMDBCreditHeaderView.swift */,
 				3458D31B25830F6E008E1594 /* TMDBMovieLikeThisHeaderView.swift */,
+				34AD7A7425982342005BFAF0 /* TMDBPersonCreditHeaderView.swift */,
 			);
 			path = CollectionViewPreviewHeaderView;
 			sourceTree = "<group>";
@@ -917,6 +940,7 @@
 				34AD7CD824AA513A004A7C0A /* TMDBPreviewItemCell.xib in Resources */,
 				347520B82490932B000ABA00 /* Localizable.strings in Resources */,
 				342E66302489BB33003B5CB8 /* LaunchScreen.storyboard in Resources */,
+				34AD7A692597CF95005BFAF0 /* PersonDetailView.xib in Resources */,
 				34CB501624904E0000E9B5CF /* InfoPlist.strings in Resources */,
 				34932FBB2596A4CC00C1420D /* SearchResultView.xib in Resources */,
 				34932FC62596ACFF00C1420D /* SearchView.xib in Resources */,
@@ -1053,6 +1077,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34722C9E24E0640E008D58F6 /* TMDBBackdropImageCell.swift in Sources */,
+				34AD7A712598115D005BFAF0 /* PersonDetailModel.swift in Sources */,
 				34D3E7E3248D3524000F5D83 /* MovieResult.swift in Sources */,
 				3469A1782594107000B09721 /* TVShowSeasonDetailViewModel.swift in Sources */,
 				34D9567724D469FB00A478E5 /* CountryCode.swift in Sources */,
@@ -1083,6 +1108,7 @@
 				34CB501324903EC800E9B5CF /* Constant.swift in Sources */,
 				34932FB12596A20C00C1420D /* SearchView.swift in Sources */,
 				3470E7E224A82A1E00579E7B /* Credit.swift in Sources */,
+				34AD7A632597CF8C005BFAF0 /* PersonDetailView.swift in Sources */,
 				341BA39F24CFAB8E002A915B /* TMDBTVShowRepository.swift in Sources */,
 				348F63732491D57F00245BE6 /* TMDBLocalDataSource.swift in Sources */,
 				341BA39D24CFAB8E002A915B /* TMDBTrendingRepository.swift in Sources */,
@@ -1099,6 +1125,7 @@
 				3498A9FE24BBB85A0080399A /* TMDBCustomTableViewCell.swift in Sources */,
 				34A31D15248C7CCC00D56C10 /* TMDBSession.swift in Sources */,
 				34AD7CDA24AA5177004A7C0A /* TMDBCircleUserRating.swift in Sources */,
+				34AD7A6D2597D36C005BFAF0 /* PersonDetailViewModel.swift in Sources */,
 				34D6138624E45933007961BC /* TMDBFooterLoadingView.swift in Sources */,
 				3458D31225830513008E1594 /* UINavigationController+.swift in Sources */,
 				34BB777D2572F91D00D8709B /* HomeModel.swift in Sources */,
@@ -1121,6 +1148,7 @@
 				342727E32583E2FA003E0A61 /* TMDBProductionCompanyCell.swift in Sources */,
 				348F636B2491C96600245BE6 /* TMDBRepository.swift in Sources */,
 				3475FE8E24CF77C4005B3337 /* TMDBLoadingView.swift in Sources */,
+				34AD7A7525982342005BFAF0 /* TMDBPersonCreditHeaderView.swift in Sources */,
 				3458D3172583052C008E1594 /* UINavigationItem+.swift in Sources */,
 				349601FF25635FCD007F0B27 /* NSObject+Rx.swift in Sources */,
 				34995AF324968C340088576B /* TMDBURLSessionDataTaskProtocol.swift in Sources */,

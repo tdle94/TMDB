@@ -70,3 +70,8 @@
 "Countries" = "Países";
 "Episode Runtime" = "Tempo de execução do episódio";
 "Air On" = "Ar Ligado";
+"Birthday" = "Aniversário";
+"Deathday" = "Dia da morte";
+"Gender" = "Gênero";
+"Occupation" = "Ocupação";
+"Aliases" = "Apelido";

@@ -96,7 +96,7 @@ class HomeView: UIViewController {
         configureLanguageAndRegion()
         setupUIBinding()
         //delegate?.navigateToPersonDetail(personId: 62)
-        //delegate?.navigateToTVShowDetail(tvShowId: 27023)
+        //delegate?.navigateToTVShowDetail(tvShowId: 107775)
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -157,13 +157,14 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                     self.isThereCrew = false
                 }
 
-                let tvshowLikeThis = Array(result.similar?.onTV ?? result.recommendations?.onTV ?? List<TVShow>()).map { CustomElementType(identity: $0) }
+                var tvshowLikeThis = Array(result.similar?.onTV ?? List<TVShow>()).map { CustomElementType(identity: $0) }
 
-                if result.similar?.onTV.isEmpty ?? true {
+                if tvshowLikeThis.isEmpty {
                     self.isThereSimilarTVShow = false
+                    tvshowLikeThis = Array(result.recommendations?.onTV ?? List<TVShow>()).map { CustomElementType(identity: $0) }
                 }
                 
-                if result.recommendations?.onTV.isEmpty ?? true {
+                if tvshowLikeThis.isEmpty {
                     self.isThereRecommendTVShow = false
                 }
                 

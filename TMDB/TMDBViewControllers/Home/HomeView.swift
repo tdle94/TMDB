@@ -95,7 +95,7 @@ class HomeView: UIViewController {
         super.viewDidLoad()
         configureLanguageAndRegion()
         setupUIBinding()
-        //delegate?.navigateToPersonDetail(personId: 62)
+        delegate?.navigateToPersonDetail(personId: 59586)
         //delegate?.navigateToTVShowDetail(tvShowId: 107775)
     }
     
@@ -134,7 +134,7 @@ extension HomeView {
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
-                                self.viewModel.getPopularMovie()
+                              //  self.viewModel.getPopularMovie()
                             } else if segment == 1 {
                                 self.viewModel.getPopularTVShow()
                             } else {
@@ -156,7 +156,7 @@ extension HomeView {
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
-                                self.viewModel.getTrendingToday()
+                               // self.viewModel.getTrendingToday()
                             } else {
                                 self.viewModel.getTrendingThisWeek()
                             }
@@ -178,7 +178,7 @@ extension HomeView {
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
-                                self.viewModel.getTopRatedMovie()
+                               // self.viewModel.getTopRatedMovie()
                             } else if segment == 1 {
                                 self.viewModel.getNowPlayingMovie()
                             } else {
@@ -202,7 +202,7 @@ extension HomeView {
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 3), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
-                                self.viewModel.getTopRatedTVShow()
+                               // self.viewModel.getTopRatedTVShow()
                             } else if segment == 1 {
                                 self.viewModel.getTVShowAiringToday()
                             } else {

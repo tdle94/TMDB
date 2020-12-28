@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 import RxDataSources
 
 class PersonDetailView: UIViewController {
@@ -84,7 +85,7 @@ class PersonDetailView: UIViewController {
                             
                             self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                             
-                            if index == 0 {
+                            if index == 0, header.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Movies", comment: "") {
                                 self.viewModel.getMoviesAppearIn(personId: personId)
                             } else {
                                 self.viewModel.getTVShowsAppearIn(personId: personId)
@@ -152,8 +153,6 @@ class PersonDetailView: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        creditCollectionViewHeight.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
-        creditCollectionView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
     }
 }
@@ -237,6 +236,24 @@ extension PersonDetailView {
         viewModel
             .credits
             .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
+            .disposed(by: rx.disposeBag)
+        
+        creditCollectionView
+            .rx
+            .willDisplaySupplementaryView
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe { event in
+                if let header = event.element?.supplementaryView as? TMDBPersonCreditHeaderView {
+                    if !self.viewModel.isThereMovie {
+                        header.segmentControl.removeSegment(at: 0, animated: false)
+                        header.segmentControl.selectedSegmentIndex = 0
+                    } else if !self.viewModel.isThereTVShow {
+                        header.segmentControl.removeSegment(at: 1, animated: false)
+                    }
+                    
+                    self.viewModel.resetCreditHeaderState()
+                }
+            }
             .disposed(by: rx.disposeBag)
         
         // bind label

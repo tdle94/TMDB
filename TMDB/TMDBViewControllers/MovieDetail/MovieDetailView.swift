@@ -246,11 +246,10 @@ class MovieDetailView: UIViewController {
         super.viewDidLayoutSubviews()
         keywordCollectionViewHeight.constant = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
         genreCollectionViewHeight.constant = genreCollectionView.collectionViewLayout.collectionViewContentSize.height
-        creditCollectionViewHeight.constant = creditCollectionView.collectionViewLayout.collectionViewContentSize.height
         
         keywordCollectionView.layoutIfNeeded()
         genreCollectionView.layoutIfNeeded()
-        creditCollectionView.layoutIfNeeded()
+        scrollView.layoutIfNeeded()
     }
 }
 
@@ -264,14 +263,20 @@ extension MovieDetailView {
     
     func setupBinding() {
         // left bar button item
-        navigationItem.leftBarButtonItem?.rx.tap.subscribe { _ in
-            self.delegate?.navigateBack()
-        }.disposed(by: rx.disposeBag)
+        navigationItem
+            .leftBarButtonItem?
+            .rx
+            .tap
+            .subscribe { _ in
+                self.delegate?.navigateBack()
+            }
+            .disposed(by: rx.disposeBag)
 
         // movie detail binding
         viewModel
             .movie
             .asObserver()
+            .observeOn(MainScheduler.asyncInstance)
             .subscribe(
                 onNext: { result in
                     if self.scrollView.parallaxHeader.refreshControl.isRefreshing {
@@ -309,6 +314,7 @@ extension MovieDetailView {
                     
                     Observable<[Genre]>
                         .just(Array(result.genres))
+                        .observeOn(MainScheduler.asyncInstance)
                         .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { index, genre, cell in
                             (cell as? TMDBKeywordCell)?.configure(item: genre)
                         }
@@ -331,10 +337,7 @@ extension MovieDetailView {
         viewModel
             .images
             .subscribe { event in
-                guard let images = event.element else {
-                    return
-                }
-                self.scrollView.parallaxHeader.carouselView = CarouselView(numberOfDot: images.count)
+                self.scrollView.parallaxHeader.carouselView = CarouselView(numberOfDot: event.element?.count ?? 0)
             }
             .disposed(by: rx.disposeBag)
         
@@ -396,7 +399,20 @@ extension MovieDetailView {
         creditCollectionView
             .rx
             .willDisplaySupplementaryView
+            .observeOn(MainScheduler.asyncInstance)
             .subscribe { event in
+                
+                if !self.viewModel.isThereSimilarMovie, !self.viewModel.isThereRecommendMovie {
+                    self.viewModel.resetMovieHeaderState()
+                    self.creditCollectionViewHeight.constant /= 2
+                    self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
+                }
+                
+                if !self.viewModel.isThereCast, !self.viewModel.isThereCrew {
+                    self.viewModel.resetCreditHeaderState()
+                    self.creditCollectionViewHeight.constant /= 2
+                    self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
+                }
 
                 if let header = event.element?.supplementaryView as? TMDBMovieLikeThisHeaderView {
                     if !self.viewModel.isThereSimilarMovie {
@@ -427,6 +443,10 @@ extension MovieDetailView {
             .subscribe { item in
                 if let movie = item.element?.identity as? Movie {
                     self.delegate?.navigateToMovieDetail(movieId: movie.id)
+                } else if let cast = item.element?.identity as? Cast {
+                    self.delegate?.navigateToPersonDetail(personId: cast.id)
+                } else if let crew = item.element?.identity as? Crew {
+                    self.delegate?.navigateToPersonDetail(personId: crew.id)
                 }
             }
             .disposed(by: rx.disposeBag)

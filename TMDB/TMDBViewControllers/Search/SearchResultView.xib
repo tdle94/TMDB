@@ -8,16 +8,38 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchResultView" customModule="TMDB" customModuleProvider="target">
             <connections>
-                <outlet property="searchResultTableView" destination="Z63-9e-wM6" id="xg3-Rf-A8T"/>
-                <outlet property="view" destination="Z63-9e-wM6" id="8yg-Gw-sTH"/>
+                <outlet property="filterButtonView" destination="U08-2q-fRq" id="7Uo-1r-xiB"/>
+                <outlet property="searchResultTableView" destination="NKN-u0-ri2" id="cRo-z5-kh8"/>
+                <outlet property="view" destination="BFa-34-muW" id="yN7-FM-zzk"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="scrollableAxes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" id="Z63-9e-wM6">
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="BFa-34-muW">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
-            <point key="canvasLocation" x="-1206" y="65"/>
-        </tableView>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NKN-u0-ri2">
+                    <rect key="frame" x="0.0" y="133.5" width="414" height="762.5"/>
+                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                    <viewLayoutGuide key="contentLayoutGuide" id="7Ol-j4-nKM"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="Ae2-er-mYA"/>
+                </tableView>
+                <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U08-2q-fRq" customClass="FilterButtonView" customModule="TMDB" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="100" width="414" height="33.5"/>
+                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="U08-2q-fRq" secondAttribute="trailing" id="1wv-f9-bgw"/>
+                <constraint firstAttribute="trailing" secondItem="NKN-u0-ri2" secondAttribute="trailing" id="IvI-FV-LrP"/>
+                <constraint firstItem="NKN-u0-ri2" firstAttribute="leading" secondItem="BFa-34-muW" secondAttribute="leading" id="OXn-Ey-ccW"/>
+                <constraint firstItem="U08-2q-fRq" firstAttribute="leading" secondItem="BFa-34-muW" secondAttribute="leading" id="Q47-lA-dpT"/>
+                <constraint firstItem="NKN-u0-ri2" firstAttribute="bottom" secondItem="BFa-34-muW" secondAttribute="bottom" id="RD3-Hf-bbw"/>
+                <constraint firstItem="U08-2q-fRq" firstAttribute="top" secondItem="BFa-34-muW" secondAttribute="top" constant="100" id="Yci-wL-R4Q"/>
+                <constraint firstItem="NKN-u0-ri2" firstAttribute="top" secondItem="U08-2q-fRq" secondAttribute="bottom" id="gmw-ds-dhV"/>
+            </constraints>
+            <point key="canvasLocation" x="-1750.7246376811595" y="77.678571428571431"/>
+        </view>
     </objects>
 </document>

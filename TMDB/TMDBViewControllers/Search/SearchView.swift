@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxOptional
 
 class SearchView: UIViewController {
     
@@ -70,7 +71,7 @@ extension SearchView {
                 // bind search result to tableview
                 self.viewModel
                     .searchResult
-                    .catchErrorJustReturn([])
+                    .filterNil()
                     .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.searchResultCell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
@@ -109,13 +110,14 @@ extension SearchView {
                         }
                         
                         do {
-                            let item = try self.viewModel.searchResult.value()[row]
-                            if item.mediaType == "movie" {
-                                self.delegate?.navigateToMovieDetail(movieId: item.id)
-                            } else if item.mediaType == "tv" {
-                                self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
-                            } else if item.mediaType == "person" {
-                                self.delegate?.navigateToPersonDetail(personId: item.id)
+                            if let item = try self.viewModel.searchResult.value()?[row] {
+                                if item.mediaType == "movie" {
+                                    self.delegate?.navigateToMovieDetail(movieId: item.id)
+                                } else if item.mediaType == "tv" {
+                                    self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
+                                } else if item.mediaType == "person" {
+                                    self.delegate?.navigateToPersonDetail(personId: item.id)
+                                }
                             }
                         } catch let error {
                             debugPrint("Problem selecting search result: \(error.localizedDescription)")
@@ -212,13 +214,11 @@ extension SearchView {
                 self.searchResult?.footerLoadIndicatorView.stopAnimating()
                 self.searchResult?.loadBackgroundView.stopAnimating()
                 self.searchResult?.filterButtonView.isHidden = false
-                if searchResult.isEmpty {
+                if searchResult?.isEmpty ?? false {
                     self.searchResult?.showEmptyLabel(message: NSLocalizedString("No item found", comment: ""))
+                } else if searchResult == nil {
+                    self.searchResult?.showEmptyLabel(message: "Error getting search result")
                 }
-            }, onError: { error in
-                self.searchResult?.footerLoadIndicatorView.stopAnimating()
-                self.searchResult?.loadBackgroundView.stopAnimating()
-                self.searchResult?.showEmptyLabel(message: "Error getting search result")
             })
             .disposed(by: rx.disposeBag)
     }

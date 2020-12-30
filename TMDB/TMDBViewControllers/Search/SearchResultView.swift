@@ -31,11 +31,8 @@ class SearchResultView: UIViewController {
             
             loadBackgroundView.startAnimating()
             
-            let backgroundView = UIView(frame: CGRect(x: searchResultTableView.frame.midX,
-                                                      y: searchResultTableView.frame.midY,
-                                                      width: searchResultTableView.frame.width,
-                                                      height: 50))
-            
+            let backgroundView = UIView()
+
             backgroundView.addSubview(loadBackgroundView)
             backgroundView.addSubview(emptyLabel)
             

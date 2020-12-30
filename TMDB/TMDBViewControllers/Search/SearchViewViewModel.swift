@@ -11,7 +11,7 @@ protocol SearchViewViewModelProtocol {
     var repository: TMDBSearchRepository { get }
     var page: Int { get }
     var totalPages: Int { get }
-    var searchResult: BehaviorSubject<[MultiSearch]> { get }
+    var searchResult: BehaviorSubject<[MultiSearch]?> { get }
     var oldSearchText: String { get }
     
     func search(text: String)
@@ -33,7 +33,7 @@ class SearchViewViewModel: SearchViewViewModelProtocol {
     var page: Int = 0
     var totalPages: Int = 0
     var oldSearchText: String = ""
-    var searchResult: BehaviorSubject<[MultiSearch]> = BehaviorSubject(value: [])
+    var searchResult: BehaviorSubject<[MultiSearch]?> = BehaviorSubject(value: [])
     var oldSearchResult: [MultiSearch] = []
 
     init(repository: TMDBSearchRepository) {
@@ -89,7 +89,7 @@ class SearchViewViewModel: SearchViewViewModelProtocol {
                 self.oldSearchText = text
             case .failure(let error):
                 debugPrint("Error getting search result: \(error.localizedDescription)")
-                self.searchResult.onError(error)
+                self.searchResult.onNext(nil)
             }
             
         }

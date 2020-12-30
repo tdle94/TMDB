@@ -20,6 +20,7 @@ target 'TMDB' do
   pod 'RxSwiftExt'
   pod 'RxSwiftUtilities'
   pod 'RxDataSources'
+  pod 'RxOptional'
 
   target 'TMDBTests' do
     inherit! :search_paths

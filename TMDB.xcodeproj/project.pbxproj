@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1AB83123CAE63E26B23DDBDE /* Pods_TMDBTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B41A74E181C39A017A655C /* Pods_TMDBTests.framework */; };
+		34083FA4259A78D000372058 /* FilterButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34083FA3259A78D000372058 /* FilterButtonView.swift */; };
 		340CA6DE248DAC4C00E5A72D /* TrendingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340CA6DD248DAC4C00E5A72D /* TrendingResult.swift */; };
 		341BA39D24CFAB8E002A915B /* TMDBTrendingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341BA39824CFAB8D002A915B /* TMDBTrendingRepository.swift */; };
 		341BA39E24CFAB8E002A915B /* TMDBPeopleRepsoitory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341BA39924CFAB8D002A915B /* TMDBPeopleRepsoitory.swift */; };
@@ -179,6 +180,7 @@
 
 /* Begin PBXFileReference section */
 		170017F6FC2619B4BABD180B /* Pods-TMDB.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TMDB.debug.xcconfig"; path = "Target Support Files/Pods-TMDB/Pods-TMDB.debug.xcconfig"; sourceTree = "<group>"; };
+		34083FA3259A78D000372058 /* FilterButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButtonView.swift; sourceTree = "<group>"; };
 		340CA6DD248DAC4C00E5A72D /* TrendingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingResult.swift; sourceTree = "<group>"; };
 		341BA39824CFAB8D002A915B /* TMDBTrendingRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBTrendingRepository.swift; sourceTree = "<group>"; };
 		341BA39924CFAB8D002A915B /* TMDBPeopleRepsoitory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBPeopleRepsoitory.swift; sourceTree = "<group>"; };
@@ -711,6 +713,7 @@
 				3488663C24A67B3D00E205FA /* CollectionViewLayout.swift */,
 				348CF3A3258299F8007D1EF4 /* BasicDisclosureIndicatorTableViewCell.xib */,
 				3480AF582588092F008F65FA /* ParallaxHeader.swift */,
+				34083FA3259A78D000372058 /* FilterButtonView.swift */,
 			);
 			path = TMDBViews;
 			sourceTree = "<group>";
@@ -1145,6 +1148,7 @@
 				349A22E924B7F60900939367 /* TMDBReviewCell.swift in Sources */,
 				3486E3B324AF82AA002D0F60 /* TMDBPreviewItemCell.swift in Sources */,
 				343CC9DE2498245600FEC4F6 /* TMDBImageService.swift in Sources */,
+				34083FA4259A78D000372058 /* FilterButtonView.swift in Sources */,
 				342727E32583E2FA003E0A61 /* TMDBProductionCompanyCell.swift in Sources */,
 				348F636B2491C96600245BE6 /* TMDBRepository.swift in Sources */,
 				3475FE8E24CF77C4005B3337 /* TMDBLoadingView.swift in Sources */,

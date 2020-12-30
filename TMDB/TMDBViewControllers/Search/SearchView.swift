@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxOptional
 
 class SearchView: UIViewController {
     
@@ -41,6 +42,9 @@ class SearchView: UIViewController {
         searchController.searchBar.placeholder = NSLocalizedString("Search Bar", comment: "")
         (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.textColor = Constant.Color.backgroundColor
         searchController.searchBar.tintColor = Constant.Color.backgroundColor
+        searchController.searchBar.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal),
+                                            for: .search,
+                                            state: .normal)
         setupBinding()
     }
 
@@ -64,11 +68,10 @@ extension SearchView {
                     return
                 }
                 
-                searchResult.searchResultTableView.dataSource = nil
-                
                 // bind search result to tableview
                 self.viewModel
                     .searchResult
+                    .filterNil()
                     .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.searchResultCell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
@@ -81,20 +84,18 @@ extension SearchView {
                     .didScroll
                     .asDriver()
                     .drive(onNext: { _ in
-                        let maxY = searchResult.searchResultTableView.contentOffset.y + searchResult.searchResultTableView.frame.height - 50
+                        let maxY = searchResult.searchResultTableView.contentOffset.y + searchResult.searchResultTableView.frame.height
                         let indexPath = searchResult.searchResultTableView.indexPathForRow(at: CGPoint(x: 0, y: maxY))
 
                         if
                             let text = self.searchController.searchBar.text,
                             indexPath?.row == searchResult.searchResultTableView.numberOfRows(inSection: 0) - 1,
-                            !searchResult.loadingIndicatorView.isAnimating {
+                            !searchResult.footerLoadIndicatorView.isAnimating {
 
-                            searchResult.loadingIndicatorView.startAnimating()
+                            searchResult.footerLoadIndicatorView.startAnimating()
                             self.viewModel.search(text: text)
 
                         }
-
-
                     })
                     .disposed(by: self.rx.disposeBag)
                 
@@ -109,18 +110,63 @@ extension SearchView {
                         }
                         
                         do {
-                            let item = try self.viewModel.searchResult.value()[row]
-                            if item.mediaType == "movie" {
-                                self.delegate?.navigateToMovieDetail(movieId: item.id)
-                            } else if item.mediaType == "tv" {
-                                self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
-                            } else if item.mediaType == "person" {
-                                self.delegate?.navigateToPersonDetail(personId: item.id)
+                            if let item = try self.viewModel.searchResult.value()?[row] {
+                                if item.mediaType == "movie" {
+                                    self.delegate?.navigateToMovieDetail(movieId: item.id)
+                                } else if item.mediaType == "tv" {
+                                    self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
+                                } else if item.mediaType == "person" {
+                                    self.delegate?.navigateToPersonDetail(personId: item.id)
+                                }
                             }
                         } catch let error {
                             debugPrint("Problem selecting search result: \(error.localizedDescription)")
                         }
                     }
+                    .disposed(by: self.rx.disposeBag)
+                
+                // bind filter button
+                searchResult
+                    .filterButtonView
+                    .movieButton
+                    .rx
+                    .tap
+                    .subscribe { _ in
+                        self.viewModel.filter(search: .movie)
+                    }
+                    .disposed(by: self.rx.disposeBag)
+                
+                
+                searchResult
+                    .filterButtonView
+                    .tvShowButton
+                    .rx
+                    .tap
+                    .subscribe { _ in
+                        self.viewModel.filter(search: .tv)
+                    }
+                    .disposed(by: self.rx.disposeBag)
+                
+                searchResult
+                    .filterButtonView
+                    .peopleButton
+                    .rx
+                    .tap
+                    .subscribe { _ in
+                        self.viewModel.filter(search: .person)
+                    }
+                    .disposed(by: self.rx.disposeBag)
+                
+                searchResult
+                    .searchResultTableView
+                    .rx
+                    .willBeginDragging
+                    .asDriver()
+                    .drive(onNext: {
+                        if self.searchController.searchBar.isFirstResponder {
+                            self.searchController.searchBar.resignFirstResponder()
+                        }
+                    })
                     .disposed(by: self.rx.disposeBag)
                 
             })
@@ -149,37 +195,31 @@ extension SearchView {
             .rx
             .text
             .orEmpty
-            .debounce(DispatchTimeInterval.seconds(1), scheduler: MainScheduler.instance)
-            .filter { !$0.isEmpty }
+            .throttle(.seconds(1), latest: true, scheduler: MainScheduler.instance)
+            .filter { !$0.isEmpty && !$0.trimmingCharacters(in: .whitespaces).isEmpty && !$0.last!.isWhitespace && !$0.first!.isWhitespace }
             .distinctUntilChanged()
-            .subscribe { query in
-                guard
-                    let text = query.element?.identity,
-                    !text.isEmpty
-                else {
-                    return
-                }
-
-                self.search(text: text)
-            }
-            .disposed(by: rx.disposeBag)
-        
-        // reset search property when tap cancel
-        searchController
-            .searchBar
-            .rx
-            .cancelButtonClicked
-            .subscribe { _ in
-                self.viewModel.resetSearch()
-            }
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { query in
+                self.search(text: query.identity)
+            })
             .disposed(by: rx.disposeBag)
 
         // stop loading indicator in tableview's footer view
+
         viewModel
             .searchResult
-            .subscribe { _ in
-                self.searchResult?.loadingIndicatorView.stopAnimating()
-            }
+            .skip(1)
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe(onNext: { searchResult in
+                self.searchResult?.footerLoadIndicatorView.stopAnimating()
+                self.searchResult?.loadBackgroundView.stopAnimating()
+                self.searchResult?.filterButtonView.isHidden = false
+                if searchResult?.isEmpty ?? false {
+                    self.searchResult?.showEmptyLabel(message: NSLocalizedString("No item found", comment: ""))
+                } else if searchResult == nil {
+                    self.searchResult?.showEmptyLabel(message: "Error getting search result")
+                }
+            })
             .disposed(by: rx.disposeBag)
     }
     
@@ -189,10 +229,13 @@ extension SearchView {
             self.searchResult?.searchResultTableView.numberOfRows(inSection: 0) != 0 {
             
             self.searchResult?.searchResultTableView.scrollToRow(at: IndexPath(row: 0, section: 0),
-                                                                 at: .top,
+                                                                 at: .bottom,
                                                                  animated: true)
         }
 
+        self.searchResult?.loadBackgroundView.startAnimating()
+        self.searchResult?.filterButtonView.isHidden = true
+        self.searchResult?.emptyLabel.isHidden = true
         self.viewModel.search(text: text)
     }
 }

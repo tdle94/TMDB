@@ -6,6 +6,7 @@
 //  Copyright © 2020 Tuyen Le. All rights reserved.
 //
 import RxSwift
+import NotificationBannerSwift
 
 protocol SearchViewViewModelProtocol {
     var repository: TMDBSearchRepository { get }
@@ -50,13 +51,6 @@ class SearchViewViewModel: SearchViewViewModelProtocol {
         }
         
         if newPage > totalPages, totalPages != 0 {
-            do {
-                let previousSearchResults = try self.searchResult.value()
-                self.searchResult.onNext(previousSearchResults)
-            } catch let error {
-                debugPrint("Error getting previous search result when there is no new page: \(error.localizedDescription)")
-                self.searchResult.onError(error)
-            }
             return
         }
 
@@ -64,32 +58,32 @@ class SearchViewViewModel: SearchViewViewModelProtocol {
             switch result {
             case .success(let searchResult):
                 if text == self.oldSearchText {
-
-                    var newSearchResults = self.oldSearchResult + searchResult.results
-
-                    self.oldSearchResult = newSearchResults
-
-                    if self.searchType != .none {
-                        newSearchResults = newSearchResults.filter { $0.mediaType == self.searchType.rawValue }
-                    }
-
-                    self.searchResult.onNext(newSearchResults)
-                    
+                    self.oldSearchResult = self.oldSearchResult + searchResult.results
                 } else {
                     self.oldSearchResult = searchResult.results
-                    if self.searchType == .none {
-                        self.searchResult.onNext(searchResult.results)
-                    } else {
-                        self.searchResult.onNext(searchResult.results.filter { $0.mediaType == self.searchType.rawValue })
-                    }
                 }
+                
+                if self.searchType != .none {
+                    self.searchResult.onNext(self.oldSearchResult.filter { $0.mediaType == self.searchType.rawValue })
+                } else {
+                    self.searchResult.onNext(self.oldSearchResult)
+                }
+                
                 
                 self.page = newPage
                 self.totalPages = searchResult.totalPages
                 self.oldSearchText = text
             case .failure(let error):
                 debugPrint("Error getting search result: \(error.localizedDescription)")
-                self.searchResult.onNext(nil)
+                StatusBarNotificationBanner(title: "Fail getting search", style: .danger).show(queuePosition: .back,
+                                                                                               bannerPosition: .top,
+                                                                                               queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
+                let previousSearchResults = try! self.searchResult.value()
+                if !(previousSearchResults?.isEmpty ?? true) {
+                    self.searchResult.onNext(previousSearchResults)
+                } else {
+                    self.searchResult.onNext(nil)
+                }
             }
             
         }

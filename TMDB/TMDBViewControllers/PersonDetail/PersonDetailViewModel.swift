@@ -8,6 +8,7 @@
 
 import RxSwift
 import RealmSwift
+import NotificationBannerSwift
 
 protocol PersonDetailViewModelProtocol {
     var profileCollectionImages: PublishSubject<[Images]> { get }
@@ -132,7 +133,10 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
                 
                 self.profileCollectionImages.onNext(Array(personResult.images?.profiles ?? List<Images>()))
             case .failure(let error):
-                self.personDetail.onError(error)
+                debugPrint("Error getting season detail \(id): \(error.localizedDescription)")
+                StatusBarNotificationBanner(title: "Fail getting person detail", style: .danger).show(queuePosition: .back,
+                                                                                                      bannerPosition: .top,
+                                                                                                      queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
     }

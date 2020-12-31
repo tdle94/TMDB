@@ -9,6 +9,7 @@
 import RxSwift
 import RealmSwift
 import Foundation
+import NotificationBannerSwift
 
 protocol MovieDetailViewModelProtocol {
     var repository: TMDBMovieRepository { get }
@@ -111,7 +112,10 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                 ])
             }
         case .failure(let error):
-            self.credits.onError(error)
+            debugPrint("Error getting similar movies: \(error.localizedDescription)")
+            StatusBarNotificationBanner(title: "Fail getting popular people", style: .danger).show(queuePosition: .back,
+                                                                                                   bannerPosition: .top,
+                                                                                                   queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
         }
     }
     
@@ -241,7 +245,10 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                                                                              subTitle: availableLanguages))
                 }
             case .failure(let error):
-                self.movie.onError(error)
+                debugPrint("Error getting movie detail \(movieId): \(error.localizedDescription)")
+                StatusBarNotificationBanner(title: "Fail getting popular people", style: .danger).show(queuePosition: .back,
+                                                                                                       bannerPosition: .top,
+                                                                                                       queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
     }
@@ -252,7 +259,7 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
             case .success(let imageResult):
                 self.images.onNext(Array(imageResult.backdrops))
             case .failure(let error):
-                self.images.onError(error)
+                debugPrint("Error getting movie images \(movieId): \(error.localizedDescription)")
             }
         }
     }

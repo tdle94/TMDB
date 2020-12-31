@@ -8,6 +8,7 @@
 
 import RxSwift
 import RealmSwift
+import NotificationBannerSwift
 
 protocol TVShowDetailViewModelProtocol {
     var repository: TMDBTVShowRepository { get }
@@ -94,7 +95,10 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                 self.credits.onNext([.TVShowsLikeThis(items: result.onTV.map{ CustomElementType(identity: $0) })])
             }
         case .failure(let error):
-            self.credits.onError(error)
+            debugPrint("Error getting similar tvshow: \(error.localizedDescription)")
+            StatusBarNotificationBanner(title: "Fail getting similar tvshow", style: .danger).show(queuePosition: .back,
+                                                                                                   bannerPosition: .top,
+                                                                                                   queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
         }
     }
 
@@ -181,7 +185,10 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                     ])
                 }
             case .failure(let error):
-                self.tvShowDetail.onError(error)
+                debugPrint("Error getting tvshow detail \(tvShowId): \(error.localizedDescription)")
+                StatusBarNotificationBanner(title: "Fail getting popular people", style: .danger).show(queuePosition: .back,
+                                                                                                       bannerPosition: .top,
+                                                                                                       queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
     }
@@ -192,7 +199,7 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
             case .success(let result):
                 self.backdropImages.onNext(Array(result.backdrops))
             case .failure(let error):
-                self.backdropImages.onError(error)
+                debugPrint("Error getting tvshow detail: \(error.localizedDescription)")
             }
         }
     }

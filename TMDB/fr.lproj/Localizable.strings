@@ -76,3 +76,4 @@
 "Occupation" = "Occupation";
 "Aliases" = "Alias";
 "No item found" = "Aucun article trouvé";
+"Error getting search result" = "Erreur lors de l'obtention du résultat de la recherche";

@@ -29,8 +29,6 @@ class SearchResultView: UIViewController {
             
             searchResultTableView.tableFooterView?.addSubview(footerLoadIndicatorView)
             
-            loadBackgroundView.startAnimating()
-            
             let backgroundView = UIView()
 
             backgroundView.addSubview(loadBackgroundView)

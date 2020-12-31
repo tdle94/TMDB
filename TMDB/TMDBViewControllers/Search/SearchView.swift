@@ -72,6 +72,7 @@ extension SearchView {
                 self.viewModel
                     .searchResult
                     .filterNil()
+                    .filterEmpty()
                     .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.searchResultCell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
@@ -217,7 +218,7 @@ extension SearchView {
                 if searchResult?.isEmpty ?? false {
                     self.searchResult?.showEmptyLabel(message: NSLocalizedString("No item found", comment: ""))
                 } else if searchResult == nil {
-                    self.searchResult?.showEmptyLabel(message: "Error getting search result")
+                    self.searchResult?.showEmptyLabel(message: NSLocalizedString("Error getting search result", comment: ""))
                 }
             })
             .disposed(by: rx.disposeBag)

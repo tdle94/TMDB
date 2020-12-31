@@ -8,7 +8,7 @@
 
 import RxSwift
 import RealmSwift
-import Realm
+import NotificationBannerSwift
 
 protocol TVShowSeasonDetailViewModelProtocol {
     var userSetting: TMDBUserSettingProtocol { get }
@@ -90,7 +90,10 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
                 }
 
             case .failure(let error):
-                self.season.onError(error)
+                debugPrint("Error getting season detail \(tvShowId): \(error.localizedDescription)")
+                StatusBarNotificationBanner(title: "Fail getting tv show season detail", style: .danger).show(queuePosition: .back,
+                                                                                                              bannerPosition: .top,
+                                                                                                              queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
         
@@ -100,7 +103,7 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
                 let images = imageResult.backdrops.isEmpty ? imageResult.posters : imageResult.backdrops
                 self.backdropImages.onNext(Array(images))
             case .failure(let error):
-                self.backdropImages.onError(error)
+                debugPrint("Error getting season images: \(error.localizedDescription)")
             }
         }
     }

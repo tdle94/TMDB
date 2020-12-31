@@ -76,3 +76,4 @@
 "Occupation" = "職業";
 "Aliases" = "エイリアス";
 "No item found" = "アイテムが見つかりません";
+"Error getting search result" = "検索結果の取得中にエラーが発生しました";

@@ -8,6 +8,7 @@
 
 import RxSwift
 import RealmSwift
+import NotificationBannerSwift
 
 protocol HomeViewModelProtocol {
     
@@ -55,7 +56,11 @@ class HomeViewModel: HomeViewModelProtocol {
             self.collectionViewSection
                 .onNext(firstTwo + [.Movie(items: items), last])
         case .failure(let error):
-            self.collectionViewSection.onError(error)
+            debugPrint("Error getting movie: \(error.localizedDescription)")
+            StatusBarNotificationBanner(title: "Fail getting movie", style: .danger).show(queuePosition: .back,
+                                                                                          bannerPosition: .top,
+                                                                                          queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
+            self.collectionViewSection.onNext(try! self.collectionViewSection.value())
         }
     }
     
@@ -68,7 +73,11 @@ class HomeViewModel: HomeViewModelProtocol {
             self.collectionViewSection
                 .onNext(firstThree + [.TVShow(items: items)])
         case .failure(let error):
-            self.collectionViewSection.onError(error)
+            debugPrint("Error getting tvshow: \(error.localizedDescription)")
+            StatusBarNotificationBanner(title: "Fail getting tvshow", style: .danger).show(queuePosition: .back,
+                                                                                           bannerPosition: .top,
+                                                                                           queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
+            self.collectionViewSection.onNext(try! self.collectionViewSection.value())
         }
     }
     
@@ -81,7 +90,11 @@ class HomeViewModel: HomeViewModelProtocol {
             
             self.collectionViewSection.onNext([first, .Trending(items: items)] + lastTwo)
         case .failure(let error):
-            self.collectionViewSection.onError(error)
+            debugPrint("Error getting trending: \(error.localizedDescription)")
+            StatusBarNotificationBanner(title: "Fail getting trend", style: .danger).show(queuePosition: .back,
+                                                                                          bannerPosition: .top,
+                                                                                          queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
+            self.collectionViewSection.onNext(try! self.collectionViewSection.value())
         }
     }
     
@@ -105,7 +118,11 @@ class HomeViewModel: HomeViewModelProtocol {
                 
                 self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
-                self.collectionViewSection.onError(error)
+                debugPrint("Error getting populuar movie: \(error.localizedDescription)")
+                StatusBarNotificationBanner(title: "Fail getting popular movie", style: .danger).show(queuePosition: .back,
+                                                                                                      bannerPosition: .top,
+                                                                                                      queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
+                self.collectionViewSection.onNext(try! self.collectionViewSection.value())
             }
         }
     }
@@ -118,7 +135,11 @@ class HomeViewModel: HomeViewModelProtocol {
                 let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
                 self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
-                self.collectionViewSection.onError(error)
+                debugPrint("Error getting populuar tvshow: \(error.localizedDescription)")
+                StatusBarNotificationBanner(title: "Fail getting popular tv show", style: .danger).show(queuePosition: .back,
+                                                                                                        bannerPosition: .top,
+                                                                                                        queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
+                self.collectionViewSection.onNext(try! self.collectionViewSection.value())
             }
         }
     }
@@ -132,7 +153,11 @@ class HomeViewModel: HomeViewModelProtocol {
                 
                 self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
-                self.collectionViewSection.onError(error)
+                debugPrint("Error getting populuar people: \(error.localizedDescription)")
+                StatusBarNotificationBanner(title: "Fail getting popular people", style: .danger).show(queuePosition: .back,
+                                                                                                       bannerPosition: .top,
+                                                                                                       queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
+                self.collectionViewSection.onNext(try! self.collectionViewSection.value())
             }
         }
     }

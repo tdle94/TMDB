@@ -203,7 +203,7 @@ extension HomeView {
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 3), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
-                                //self.viewModel.getTopRatedTVShow()
+                                self.viewModel.getTopRatedTVShow()
                             } else if segment == 1 {
                                 self.viewModel.getTVShowAiringToday()
                             } else {

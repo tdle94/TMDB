@@ -50,6 +50,7 @@ protocol MovieDetailViewModelProtocol {
     func getCrews(movieId: Int)
     func getSimilarMovies(movieId: Int)
     func getRecommendMovies(movieId: Int)
+    func getReviews(movieId: Int) -> [Review]
     func resetCreditHeaderState()
     func resetMovieHeaderState()
 }
@@ -304,6 +305,10 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.repository.getRecommendMovies(from: movieId, page: 1, completion: self.movieHandler)
         }
+    }
+    
+    func getReviews(movieId: Int) -> [Review] {
+        self.repository.getMovieReview(from: movieId)
     }
     
     func resetCreditHeaderState() {

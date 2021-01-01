@@ -129,8 +129,10 @@ class TVShowDetailView: UIViewController {
                     guard let indexPath = event.element, let id = self.tvShowId else {
                         return
                     }
-                    
-                    if indexPath.row == 1 {
+
+                    if indexPath.row == 0 {
+                        self.delegate?.navigateToReview(reviews: self.viewModel.getTVShowReview(tvShowId: self.tvShowId!))
+                    } else {
                         self.delegate?.navigateToListSeason(season: self.viewModel.getTVShowSeasons(tvShowId: self.tvShowId!),
                                                             tvShowId: id)
                     }

@@ -10,17 +10,22 @@ import RxSwift
 
 protocol ReleaseDateViewModelProtocol {
     var repository: TMDBMovieRepository { get }
-    var releaseDates: PublishSubject<[ReleaseDateResult]> { get }
+    var releaseDates: BehaviorSubject<[ReleaseDateResult]> { get }
     
     func getReleaseDates(movieId: Int)
+    func filter(query country: String)
+    func resetFilter()
 }
 
 class ReleaseDateViewModel: ReleaseDateViewModelProtocol {
-    var releaseDates: PublishSubject<[ReleaseDateResult]> = PublishSubject()
+    var releaseDates: BehaviorSubject<[ReleaseDateResult]> = BehaviorSubject(value: [])
+    var saveReleaseDates: [ReleaseDateResult] = []
     
     var delegate: CommonNavigation?
 
     var repository: TMDBMovieRepository
+    
+    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
     
     init(repository: TMDBMovieRepository) {
         self.repository = repository
@@ -28,9 +33,27 @@ class ReleaseDateViewModel: ReleaseDateViewModelProtocol {
     
     func getReleaseDates(movieId: Int) {
         if let releaseDate = repository.getMovieReleaseDates(from: movieId) {
-            releaseDates.onNext(Array(releaseDate.results))
+            saveReleaseDates = Array(releaseDate.results)
+            releaseDates.onNext(saveReleaseDates)
         } else {
+            saveReleaseDates = []
             releaseDates.onNext([])
         }
+    }
+
+    func filter(query country: String) {
+            
+        let searchCountryCode = userSetting.countriesCode.filter { $0.name.lowercased().contains(country.lowercased()) }
+        var searchCountriesReleaseDatesResult: [ReleaseDateResult] = []
+            
+        for releaseDate in saveReleaseDates where searchCountryCode.contains(where: { $0.iso31661 == releaseDate.iso31661 }) {
+            searchCountriesReleaseDatesResult.append(releaseDate)
+        }
+            
+        self.releaseDates.onNext(searchCountriesReleaseDatesResult)
+    }
+    
+    func resetFilter() {
+        self.releaseDates.onNext(saveReleaseDates)
     }
 }

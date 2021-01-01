@@ -10,16 +10,23 @@ import UIKit
 
 class ReleaseDateView: UIViewController {
     var movieId: Int?
-    
+
     var viewModel: ReleaseDateViewModelProtocol
-    
+
     weak var delegate: CommonNavigation?
-    
+
     // MARK: - views
+    let emptyLabel = UILabel()
     @IBOutlet weak var releaseDateTableView: UITableView! {
         didSet {
             releaseDateTableView.rowHeight = 80
+            releaseDateTableView.tableFooterView = UIView()
+            releaseDateTableView.backgroundColor = Constant.Color.backgroundColor
             releaseDateTableView.register(UINib(nibName: "TMDBCustomTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.releaseDateCell)
+            
+            emptyLabel.setHeader(title: "No results")
+            emptyLabel.textAlignment = .center
+            releaseDateTableView.backgroundView = emptyLabel
         }
     }
     
@@ -36,6 +43,17 @@ class ReleaseDateView: UIViewController {
     // MARK:  - overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.searchController = UISearchController(searchResultsController: nil)
+        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.searchController?.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController?.searchBar.tintColor = Constant.Color.backgroundColor
+        navigationItem.searchController?.searchBar.backgroundColor = Constant.Color.primaryColor
+        navigationItem.searchController?.searchBar.placeholder = NSLocalizedString("Country", comment: "")
+        (navigationItem.searchController?.searchBar.value(forKey: "searchField") as? UITextField)?.textColor = Constant.Color.backgroundColor
+        navigationItem.searchController?.searchBar.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal),
+                                                           for: .search,
+                                                           state: .normal)
+        
         setupBinding()
         title = NSLocalizedString("Release Date", comment: "")
         if let id = movieId {
@@ -48,6 +66,32 @@ extension ReleaseDateView {
     func setupBinding() {
         navigationController?.resetNavBar()
         navigationItem.setBackArrowIcon()
+        
+        // bind search bar
+        navigationItem
+            .searchController?
+            .searchBar
+            .rx
+            .text
+            .orEmpty
+            .filter { !$0.isEmpty && !$0.trimmingCharacters(in: .whitespaces).isEmpty && !$0.last!.isWhitespace && !$0.first!.isWhitespace }
+            .distinctUntilChanged()
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { query in
+                self.viewModel.filter(query: query)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        navigationItem
+            .searchController?
+            .searchBar
+            .rx
+            .cancelButtonClicked
+            .asDriver()
+            .drive(onNext: { _ in
+                self.viewModel.resetFilter()
+            })
+            .disposed(by: rx.disposeBag)
 
         // left bar button item
         navigationItem
@@ -64,6 +108,14 @@ extension ReleaseDateView {
             .bind(to: releaseDateTableView.rx.items(cellIdentifier: Constant.Identifier.releaseDateCell)) { index, releaseDate, cell in
                 (cell as? TMDBCustomTableViewCell)?.configure(item: releaseDate)
             }
+            .disposed(by: rx.disposeBag)
+        
+        viewModel
+            .releaseDates
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { releaseDates in
+                self.emptyLabel.isHidden = !releaseDates.isEmpty
+            })
             .disposed(by: rx.disposeBag)
     }
 }

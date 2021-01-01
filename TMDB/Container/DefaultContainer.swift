@@ -63,6 +63,10 @@ extension DefaultContainer {
             PersonDetailViewModel(repository: resolver.resolve(TMDBPeopleRepository.self)!,
                                   userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
+        
+        self.container.register(ReleaseDateViewModelProtocol.self) { resolver in
+            ReleaseDateViewModel(repository: resolver.resolve(TMDBMovieRepository.self)!)
+        }
     }
 
     func registerViews() {
@@ -98,6 +102,10 @@ extension DefaultContainer {
         
         self.container.register(PersonDetailView.self) { resolver in
             PersonDetailView(viewModel: resolver.resolve(PersonDetailViewModelProtocol.self)!)
+        }
+
+        self.container.register(ReleaseDateView.self) { resolver in
+            ReleaseDateView(viewModel: resolver.resolve(ReleaseDateViewModelProtocol.self)!)
         }
     }
     

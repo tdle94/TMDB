@@ -386,7 +386,7 @@ extension MovieDetailView {
             .asDriver()
             .drive(onNext: { indexPath in
                 if indexPath.row == 0 {
-                    // TODO
+                    self.delegate?.navigateToReview(reviews: self.viewModel.getReviews(movieId: self.movieId!))
                 } else {
                     self.delegate?.navigateToReleaseDate(movieId: self.movieId!)
                 }

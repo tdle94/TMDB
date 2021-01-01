@@ -56,6 +56,14 @@ extension TMDBCustomTableViewCell: TMDBCellConfig {
             label.setHeader(title: item.name)
             subTitle.setAttributeText(title: item.overview)
             path = item.stillPath
+        } else if let item = item as? ReleaseDateResult {
+            accessoryType = .none
+            let country = userSetting.countriesCode.first(where: { $0.iso31661 == item.iso31661 })?.name ?? ""
+            label.setHeader(title: item.releaseDates.first?.releaseDate ?? "")
+            subTitle.setAttributeText(title: item.releaseDates.first?.certification ?? "")
+            _imageView.image = UIImage(named: "CountryFlags/\(country)")
+            _imageView.sd_imageIndicator = nil
+            return
         }
         
         if let path = path {

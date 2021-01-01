@@ -21,6 +21,7 @@ protocol HomeViewDelegate: class {
 protocol MovieDetailViewDelegate: CommonNavigation {
     func navigateToMovieDetail(movieId: Int)
     func navigateToPersonDetail(personId: Int)
+    func navigateToReleaseDate(movieId: Int)
 }
 
 protocol TVShowDetailViewDelegate: CommonNavigation {
@@ -39,7 +40,7 @@ protocol ListSeasonViewDelegate: CommonNavigation {
 }
 
 protocol SeasonDetailViewDelegate: CommonNavigation {
-    // TODO: nav function
+    func navigateToPersonDetail(personId: Int)
 }
 
 protocol SearchViewDelegate: class {
@@ -80,6 +81,10 @@ class AppCoordinator {
     
     var searchView: SearchView {
         return container.resolve(SearchView.self)!
+    }
+    
+    var releaseDateView: ReleaseDateView {
+        return container.resolve(ReleaseDateView.self)!
     }
 
     init(window: UIWindow, container: Container) {
@@ -129,13 +134,21 @@ class AppCoordinator {
         currentView = view
     }
     
+    fileprivate func showReleaseDate(movieId: Int) {
+        let view = releaseDateView
+        view.movieId = movieId
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
+    }
+    
     func navigateBack() {
         currentView = currentView?.navigationController?.popViewController(animated: true)
         currentView = currentView?.navigationController?.topViewController
     }
 }
 
-extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate {
+extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate, SeasonDetailViewDelegate {
     func navigateToPersonDetail(personId: Int) {
         showPersonDetail(personId: personId)
     }
@@ -146,6 +159,10 @@ extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetai
     
     func navigateToTVShowDetail(tvShowId: Int) {
         showTVShowDetailView(tvShowId: tvShowId)
+    }
+    
+    func navigateToReleaseDate(movieId: Int) {
+        showReleaseDate(movieId: movieId)
     }
 }
 
@@ -159,8 +176,4 @@ extension AppCoordinator: ListSeasonViewDelegate {
     func navigateToSeasonDetail(season: Season, tvShowId: Int) {
         showSeasonDetaiL(season: season, tvShowId: tvShowId)
     }
-}
-
-extension AppCoordinator: SeasonDetailViewDelegate {
-    // TODO: nav function
 }

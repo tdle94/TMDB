@@ -56,6 +56,17 @@ class TVShowSeasonDetailView: UIViewController {
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                           withReuseIdentifier: Constant.Identifier.previewHeader)
             
+            creditCollectionView
+                .rx
+                .modelSelected(CustomElementType.self)
+                .asDriver()
+                .drive(onNext: { item in
+                    if let id = (item.identity as? Cast)?.id ?? (item.identity as? Crew)?.id  {
+                        self.delegate?.navigateToPersonDetail(personId: id)
+                    }
+                })
+                .disposed(by: rx.disposeBag)
+            
             dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                    withReuseIdentifier: Constant.Identifier.previewHeader,

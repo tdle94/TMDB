@@ -383,9 +383,14 @@ extension MovieDetailView {
         reviewAndReleaseTableView
             .rx
             .itemSelected
-            .subscribe { indexPath in
-                // TODO: navigate to either review or release view controller
-            }
+            .asDriver()
+            .drive(onNext: { indexPath in
+                if indexPath.row == 0 {
+                    // TODO
+                } else {
+                    self.delegate?.navigateToReleaseDate(movieId: self.movieId!)
+                }
+            })
             .disposed(by: rx.disposeBag)
         
         // bind credit collection view

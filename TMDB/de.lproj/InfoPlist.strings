@@ -1,9 +1,0 @@
-/* 
-  InfoPlist.strings
-  TMDB
-
-  Created by Tuyen Le on 6/9/20.
-  Copyright © 2020 Tuyen Le. All rights reserved.
-*/
-
-NSLocationWhenInUseUsageDescription = "Wir verwenden Ihren Standort, um den entsprechenden Film in Ihrer Region zu erhalten";

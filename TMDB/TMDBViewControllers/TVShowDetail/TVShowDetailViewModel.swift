@@ -44,6 +44,7 @@ protocol TVShowDetailViewModelProtocol {
     func getSimilars(tvShowId: Int)
     func getRecommends(tvShowId: Int)
     func getTVShowSeasons(tvShowId: Int) -> [Season]
+    func getTVShowReview(tvShowId: Int) -> [Review]
     
     func resetCreditHeaderState()
     func resetMovieHeaderState()
@@ -248,6 +249,10 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     
     func getTVShowSeasons(tvShowId: Int) -> [Season] {
         return repository.getTVShowSeasons(from: tvShowId)
+    }
+    
+    func getTVShowReview(tvShowId: Int) -> [Review] {
+        return repository.getTVShowReviews(from: tvShowId)
     }
     
     func resetCreditHeaderState() {

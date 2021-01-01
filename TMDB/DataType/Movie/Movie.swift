@@ -156,6 +156,9 @@ class ReleaseDateResult: Object, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         iso31661 = try container.decode(String.self, forKey: .iso31661)
         releaseDates.append(objectsIn: try container.decode(List<ReleaseDates>.self, forKey: .releaseDates))
+        for releaseDate in releaseDates {
+            releaseDate.releaseDate = String(releaseDate.releaseDate.split(separator: "T").first ?? Substring(releaseDate.releaseDate))
+        }
     }
     
     required override init() {

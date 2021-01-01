@@ -29,6 +29,7 @@ protocol TVShowDetailViewDelegate: CommonNavigation {
     func navigateToListSeason(season: [Season], tvShowId: Int)
     func navigateToTVShowDetail(tvShowId: Int)
     func navigateToPersonDetail(personId: Int)
+    func navigateToReview(reviews: [Review])
 }
 
 protocol PersonDetailViewDelegate: CommonNavigation {

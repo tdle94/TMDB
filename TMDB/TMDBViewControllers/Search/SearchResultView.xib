@@ -19,14 +19,17 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NKN-u0-ri2">
-                    <rect key="frame" x="0.0" y="133.5" width="414" height="762.5"/>
+                    <rect key="frame" x="0.0" y="140" width="414" height="756"/>
                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                     <viewLayoutGuide key="contentLayoutGuide" id="7Ol-j4-nKM"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="Ae2-er-mYA"/>
                 </tableView>
                 <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U08-2q-fRq" customClass="FilterButtonView" customModule="TMDB" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="100" width="414" height="33.5"/>
+                    <rect key="frame" x="0.0" y="100" width="414" height="40"/>
                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="JTU-45-9iq"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>

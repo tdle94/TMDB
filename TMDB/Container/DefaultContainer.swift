@@ -107,6 +107,10 @@ extension DefaultContainer {
         self.container.register(ReleaseDateView.self) { resolver in
             ReleaseDateView(viewModel: resolver.resolve(ReleaseDateViewModelProtocol.self)!)
         }
+        
+        self.container.register(ReviewView.self) { resolver in
+            ReviewView()
+        }
     }
     
     func registerRepository() {

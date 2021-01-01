@@ -22,6 +22,7 @@ protocol MovieDetailViewDelegate: CommonNavigation {
     func navigateToMovieDetail(movieId: Int)
     func navigateToPersonDetail(personId: Int)
     func navigateToReleaseDate(movieId: Int)
+    func navigateToReview(reviews: [Review])
 }
 
 protocol TVShowDetailViewDelegate: CommonNavigation {
@@ -86,6 +87,10 @@ class AppCoordinator {
     var releaseDateView: ReleaseDateView {
         return container.resolve(ReleaseDateView.self)!
     }
+    
+    var reviewView: ReviewView {
+        return container.resolve(ReviewView.self)!
+    }
 
     init(window: UIWindow, container: Container) {
         self.window = window
@@ -142,6 +147,14 @@ class AppCoordinator {
         currentView = view
     }
     
+    fileprivate func showReview(reviews: [Review]) {
+        let view = reviewView
+        view.reviews = reviews
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
+    }
+    
     func navigateBack() {
         currentView = currentView?.navigationController?.popViewController(animated: true)
         currentView = currentView?.navigationController?.topViewController
@@ -163,6 +176,10 @@ extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetai
     
     func navigateToReleaseDate(movieId: Int) {
         showReleaseDate(movieId: movieId)
+    }
+    
+    func navigateToReview(reviews: [Review]) {
+        showReview(reviews: reviews)
     }
 }
 

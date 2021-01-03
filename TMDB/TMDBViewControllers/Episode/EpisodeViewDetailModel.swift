@@ -10,21 +10,26 @@ import RxSwift
 import RxDataSources
 import RealmSwift
 
-protocol EpisodeViewModelProtocol {
+protocol EpisodeDetailViewModelProtocol {
     var images: PublishSubject<[Images]> { get }
-    var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var credits: BehaviorSubject<[EpisodeDetailModel]> { get }
     
     var userSetting: TMDBUserSettingProtocol { get }
     var repository: TMDBTVShowRepository { get }
     
+    var isThereGuestStar: Bool { get }
+    
     func getImages(tvShowId: Int, seasonNumber: Int, episodeNumber: Int)
-    func getCast(tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Cast]
-    func getCrew(tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Crew]
+    func getGuestStar(tvShowId: Int, seasonNumber: Int, episodeNumber: Int)
+    
+    func resetGuestStarHeaderState()
 }
 
-class EpisodeViewModel: EpisodeViewModelProtocol {
+class EpisodeDetailViewModel: EpisodeDetailViewModelProtocol {
     var images: PublishSubject<[Images]> = PublishSubject()
-    var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var credits: BehaviorSubject<[EpisodeDetailModel]> = BehaviorSubject(value: [])
+    
+    var isThereGuestStar: Bool = true
     
     var userSetting: TMDBUserSettingProtocol
     
@@ -50,15 +55,19 @@ class EpisodeViewModel: EpisodeViewModelProtocol {
         }
     }
     
-    func getCast(tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Cast] {
-        repository.getTVShowEpisodeCast(from: tvShowId,
-                                        seasonNumber: seasonNumber,
-                                        episodeNumber: episodeNumber)
+    func getGuestStar(tvShowId: Int, seasonNumber: Int, episodeNumber: Int) {
+        let guestStar = repository.getTVShowEpisodeGuestStar(from: tvShowId,
+                                                             seasonNumber: seasonNumber,
+                                                             episodeNumber: episodeNumber)
+        
+        if guestStar.isEmpty {
+            isThereGuestStar = false
+        }
+
+        credits.onNext([.Credits(items: guestStar.map { CustomElementType(identity: $0) })])
     }
     
-    func getCrew(tvShowId: Int, seasonNumber: Int, episodeNumber: Int) -> [Crew] {
-        repository.getTVShowEpisodeCrew(from: tvShowId,
-                                        seasonNumber: seasonNumber,
-                                        episodeNumber: episodeNumber)
+    func resetGuestStarHeaderState() {
+        isThereGuestStar = true
     }
 }

@@ -9,11 +9,11 @@
 import RealmSwift
 import RxDataSources
 
-enum EpisodeModel {
+enum EpisodeDetailModel {
     case Credits(items: [CustomElementType])
 }
 
-extension EpisodeModel: AnimatableSectionModelType {
+extension EpisodeDetailModel: AnimatableSectionModelType {
     typealias Item = CustomElementType
     
     typealias Identity = Int
@@ -22,6 +22,7 @@ extension EpisodeModel: AnimatableSectionModelType {
         switch self {
         case .Credits(items: let items):
             return items.hashValue
+        }
     }
         
     var items: [CustomElementType] {
@@ -31,16 +32,11 @@ extension EpisodeModel: AnimatableSectionModelType {
         }
     }
         
-    init(original: TVShowDetailModel, items: [CustomElementType]) {
+    init(original: EpisodeDetailModel, items: [CustomElementType]) {
         switch original {
         case .Credits(items: let items):
             self = .Credits(items: items)
         }
     }
 }
-
-
-
-
-
 

@@ -7,15 +7,17 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EpisodeView" customModule="TMDB" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EpisodeDetailView" customModule="TMDB" customModuleProvider="target">
             <connections>
                 <outlet property="airDateLabel" destination="he4-yz-g01" id="Ezp-is-w6F"/>
                 <outlet property="creditCollectionView" destination="MbG-zw-CmE" id="b6J-Nq-Qd9"/>
+                <outlet property="creditCollectionViewHeight" destination="Txa-N1-fO3" id="0Pj-QH-GhL"/>
                 <outlet property="imageCollectionView" destination="ENC-Z9-JK7" id="zK3-mU-yDD"/>
                 <outlet property="overviewLabel" destination="6g0-ff-NUz" id="rNF-qT-tN8"/>
                 <outlet property="posterImage" destination="kQe-sd-Afe" id="EdQ-1N-n0C"/>
+                <outlet property="posterImageTop" destination="YhI-es-Qht" id="z9G-oR-uwn"/>
                 <outlet property="ratingLabel" destination="c2W-tI-9Co" id="AQ4-Ly-r9i"/>
-                <outlet property="scrollView" destination="Sgu-bp-gol" id="T7b-2y-TOE"/>
+                <outlet property="scrollView" destination="Sgu-bp-gol" id="HYC-tT-hxT"/>
                 <outlet property="titleLabel" destination="QYb-te-38o" id="E4G-Cv-FUy"/>
                 <outlet property="view" destination="Xha-8a-ji0" id="FK8-2c-2Yh"/>
             </connections>
@@ -29,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ASH-1q-asC">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="779.5"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ENC-Z9-JK7">
                                     <rect key="frame" x="0.0" y="-9" width="414" height="177"/>
@@ -70,8 +72,11 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="MbG-zw-CmE">
-                                    <rect key="frame" x="0.0" y="384.5" width="414" height="491.5"/>
+                                    <rect key="frame" x="0.0" y="384.5" width="414" height="375"/>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="375" id="Txa-N1-fO3"/>
+                                    </constraints>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="emy-4v-So6">
                                         <size key="itemSize" width="128" height="128"/>
                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -86,7 +91,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="c2W-tI-9Co" firstAttribute="leading" secondItem="kQe-sd-Afe" secondAttribute="leading" id="2fv-Ed-ZqF"/>
                                 <constraint firstItem="QYb-te-38o" firstAttribute="leading" secondItem="ASH-1q-asC" secondAttribute="leading" constant="20" symbolic="YES" id="381-Q4-J0P"/>
@@ -108,6 +113,7 @@
                             </constraints>
                         </view>
                     </subviews>
+                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="ASH-1q-asC" firstAttribute="top" secondItem="Sgu-bp-gol" secondAttribute="top" id="ZLn-8Q-cxN"/>
                         <constraint firstItem="ASH-1q-asC" firstAttribute="leading" secondItem="Sgu-bp-gol" secondAttribute="leading" id="iJG-F7-dPJ"/>
@@ -116,7 +122,7 @@
                     </constraints>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="ASH-1q-asC" firstAttribute="height" secondItem="Xha-8a-ji0" secondAttribute="height" priority="250" id="76f-ew-k3x"/>
                 <constraint firstItem="Sgu-bp-gol" firstAttribute="leading" secondItem="Xha-8a-ji0" secondAttribute="leading" id="7Gt-e0-2gV"/>

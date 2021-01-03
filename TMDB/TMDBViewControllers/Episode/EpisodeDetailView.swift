@@ -7,15 +7,27 @@
 //
 
 import UIKit
+import RxDataSources
 
-class EpisodeView: UIViewController {
+class EpisodeDetailView: UIViewController {
     var episode: Episode?
     
     var tvShowId: Int?
     
-    var viewModel: EpisodeViewModelProtocol
+    var viewModel: EpisodeDetailViewModelProtocol
     
-    weak var delegate: CommonNavigation?
+    weak var delegate: EpisodeViewDelegate?
+    
+    // MARK: - constraint
+    @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var posterImageTop: NSLayoutConstraint!
+    
+    // MARK: - data source
+    let creditDataSource: RxCollectionViewSectionedReloadDataSource<EpisodeDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+        let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
+        cell?.configure(item: item.identity)
+        return cell as! UICollectionViewCell
+    })
     
     // MARK: - views
     @IBOutlet weak var overviewLabel: UILabel!
@@ -47,19 +59,38 @@ class EpisodeView: UIViewController {
             if UIDevice.current.userInterfaceIdiom == .pad {
                 creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.45)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
             }
 
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
-            creditCollectionView.register(TMDBCreditHeaderView.self,
+            creditCollectionView.register(TMDBGuestStarHeaderView.self,
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                           withReuseIdentifier: Constant.Identifier.previewHeader)
+            
+            creditCollectionView
+                .rx
+                .modelSelected(CustomElementType.self)
+                .asDriver()
+                .drive(onNext: { item in
+                    if let person = item.identity as? Cast {
+                        self.delegate?.navigateToPersonDetail(personId: person.id)
+                    }
+                })
+                .disposed(by: rx.disposeBag)
+                
+            
+            creditDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                       for: indexPath) as! TMDBGuestStarHeaderView
+                    
+            }
         }
     }
     // MARK: - init
-    init(viewModel: EpisodeViewModelProtocol) {
+    init(viewModel: EpisodeDetailViewModelProtocol) {
         self.viewModel = viewModel
-        super.init(nibName: String(describing: EpisodeView.self), bundle: nil)
+        super.init(nibName: String(describing: EpisodeDetailView.self), bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -83,6 +114,8 @@ class EpisodeView: UIViewController {
             if let path = episode.stillPath, let url = viewModel.userSetting.getImageURL(from: path) {
                 posterImage.sd_setImage(with: url)
             }
+            
+            viewModel.getGuestStar(tvShowId: id, seasonNumber: episode.seasonNumber, episodeNumber: episode.episodeNumber)
             viewModel.getImages(tvShowId: id, seasonNumber: episode.seasonNumber, episodeNumber: episode.episodeNumber)
         }
     }
@@ -91,10 +124,20 @@ class EpisodeView: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.resetNavBar()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.setNavBar()
+        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
+                                      navigationController: navigationController)
+    }
 }
 
-extension EpisodeView {
+extension EpisodeDetailView {
     func setupBinding() {
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            posterImageTop.constant += scrollView.contentOffset.y/4
+        }
+
         scrollView.animateNavBar(safeAreaInsetTop: view.safeAreaInsets.top,
                                  navigationController: navigationController)
 
@@ -133,5 +176,24 @@ extension EpisodeView {
                 self.scrollView.parallaxHeader.carouselView?.selectDot(at: index)
             }
             .disposed(by: rx.disposeBag)
+        
+        viewModel
+            .credits
+            .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
+            .disposed(by: rx.disposeBag)
+        
+        creditCollectionView
+            .rx
+            .willDisplaySupplementaryView
+            .asDriver()
+            .drive(onNext: { event in
+                if !self.viewModel.isThereGuestStar {
+                    (event.supplementaryView as? TMDBGuestStarHeaderView)?.segmentControl.removeSegment(at: 0, animated: false)
+                    self.viewModel.resetGuestStarHeaderState()
+                    self.creditCollectionView.removeFromSuperview()
+                }
+            })
+            .disposed(by: rx.disposeBag)
+            
     }
 }

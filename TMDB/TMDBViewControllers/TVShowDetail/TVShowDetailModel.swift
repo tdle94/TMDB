@@ -46,8 +46,3 @@ extension TVShowDetailModel: AnimatableSectionModelType {
         }
     }
 }
-
-
-
-
-

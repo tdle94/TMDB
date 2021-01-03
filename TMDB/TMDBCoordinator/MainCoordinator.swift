@@ -43,11 +43,16 @@ protocol ListSeasonViewDelegate: CommonNavigation {
 
 protocol SeasonDetailViewDelegate: CommonNavigation {
     func navigateToPersonDetail(personId: Int)
+    func navigateToEpisodeDetail(episode: Episode, tvShowId: Int)
 }
 
 protocol SearchViewDelegate: class {
     func navigateToMovieDetail(movieId: Int)
     func navigateToTVShowDetail(tvShowId: Int)
+    func navigateToPersonDetail(personId: Int)
+}
+
+protocol EpisodeViewDelegate: CommonNavigation {
     func navigateToPersonDetail(personId: Int)
 }
 
@@ -91,6 +96,10 @@ class AppCoordinator {
     
     var reviewView: ReviewView {
         return container.resolve(ReviewView.self)!
+    }
+    
+    var episodeView: EpisodeDetailView {
+        return container.resolve(EpisodeDetailView.self)!
     }
 
     init(window: UIWindow, container: Container) {
@@ -156,13 +165,22 @@ class AppCoordinator {
         currentView = view
     }
     
+    fileprivate func showEpisode(episode: Episode, tvShowId: Int) {
+        let view = episodeView
+        view.episode = episode
+        view.tvShowId = tvShowId
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
+    }
+    
     func navigateBack() {
         currentView = currentView?.navigationController?.popViewController(animated: true)
         currentView = currentView?.navigationController?.topViewController
     }
 }
 
-extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate, SeasonDetailViewDelegate {
+extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate, SeasonDetailViewDelegate, EpisodeViewDelegate {
     func navigateToPersonDetail(personId: Int) {
         showPersonDetail(personId: personId)
     }
@@ -181,6 +199,10 @@ extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetai
     
     func navigateToReview(reviews: [Review]) {
         showReview(reviews: reviews)
+    }
+    
+    func navigateToEpisodeDetail(episode: Episode, tvShowId: Int) {
+        showEpisode(episode: episode, tvShowId: tvShowId)
     }
 }
 

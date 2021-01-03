@@ -12,7 +12,7 @@ import RxOptional
 
 class SearchView: UIViewController {
     
-    var viewModel: SearchViewViewModelProtocol
+    var viewModel: SearchViewModelProtocol
     
     weak var delegate: SearchViewDelegate?
     
@@ -22,7 +22,7 @@ class SearchView: UIViewController {
     private var searchResult: SearchResultView?
     
     // MARK: - init
-    init(searchController: UISearchController, viewModel: SearchViewViewModelProtocol) {
+    init(searchController: UISearchController, viewModel: SearchViewModelProtocol) {
         self.viewModel = viewModel
         self.searchController = searchController
         self.searchResult = searchController.searchResultsController as? SearchResultView

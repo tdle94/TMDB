@@ -215,7 +215,6 @@ class TVShowDetailView: UIViewController {
         
         genreCollectionView.layoutIfNeeded()
         keywordCollectionView.layoutIfNeeded()
-        scrollView.layoutIfNeeded()
     }
 
     required init?(coder: NSCoder) {

@@ -215,6 +215,7 @@ class TVShowDetailView: UIViewController {
         
         genreCollectionView.layoutIfNeeded()
         keywordCollectionView.layoutIfNeeded()
+        creditCollectionView.layoutIfNeeded()
     }
 
     required init?(coder: NSCoder) {

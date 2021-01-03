@@ -249,6 +249,7 @@ class MovieDetailView: UIViewController {
         
         keywordCollectionView.layoutIfNeeded()
         genreCollectionView.layoutIfNeeded()
+        creditCollectionView.layoutIfNeeded()
     }
 }
 

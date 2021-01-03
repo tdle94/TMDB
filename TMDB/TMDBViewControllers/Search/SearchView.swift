@@ -67,6 +67,8 @@ extension SearchView {
                 guard let searchResult = self.searchResult else {
                     return
                 }
+
+                self.searchResult?.filterButtonViewTop.constant = self.navigationController?.navigationBar.frame.midY ?? 0
                 
                 // bind search result to tableview
                 self.viewModel

@@ -150,11 +150,6 @@ class PersonDetailView: UIViewController {
         scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
                                       navigationController: navigationController)
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        scrollView.layoutIfNeeded()
-    }
 }
 
 extension PersonDetailView {

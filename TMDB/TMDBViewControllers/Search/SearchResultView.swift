@@ -9,6 +9,10 @@
 import UIKit
 
 class SearchResultView: UIViewController {
+    // MARK: - constraints
+    @IBOutlet weak var filterButtonViewTop: NSLayoutConstraint!
+    
+    // MARK: - views
     let footerLoadIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(style: .medium)
 
     let loadBackgroundView = UIActivityIndicatorView(style: .medium)

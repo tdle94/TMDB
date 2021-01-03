@@ -249,7 +249,6 @@ class MovieDetailView: UIViewController {
         
         keywordCollectionView.layoutIfNeeded()
         genreCollectionView.layoutIfNeeded()
-        scrollView.layoutIfNeeded()
     }
 }
 

@@ -150,6 +150,10 @@ class PersonDetailView: UIViewController {
         scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
                                       navigationController: navigationController)
     }
+    
+    override func viewDidLayoutSubviews() {
+        creditCollectionView.layoutIfNeeded()
+    }
 }
 
 extension PersonDetailView {

@@ -1,20 +1,19 @@
 //
-//  TVShowDetailModel.swift
+//  EpisodeDetailViewModel.swift
 //  TMDB
 //
-//  Created by Tuyen Le on 12/18/20.
-//  Copyright © 2020 Tuyen Le. All rights reserved.
+//  Created by Tuyen Le on 1/2/21.
+//  Copyright © 2021 Tuyen Le. All rights reserved.
 //
 
 import RealmSwift
 import RxDataSources
 
-enum TVShowDetailModel {
+enum EpisodeDetailModel {
     case Credits(items: [CustomElementType])
-    case TVShowsLikeThis(items: [CustomElementType])
 }
 
-extension TVShowDetailModel: AnimatableSectionModelType {
+extension EpisodeDetailModel: AnimatableSectionModelType {
     typealias Item = CustomElementType
     
     typealias Identity = Int
@@ -23,8 +22,6 @@ extension TVShowDetailModel: AnimatableSectionModelType {
         switch self {
         case .Credits(items: let items):
             return items.hashValue
-        case .TVShowsLikeThis(items: let items):
-            return items.hashValue
         }
     }
         
@@ -32,17 +29,14 @@ extension TVShowDetailModel: AnimatableSectionModelType {
         switch self {
         case .Credits(items: let items):
             return items
-        case .TVShowsLikeThis(items: let items):
-            return items
         }
     }
         
-    init(original: TVShowDetailModel, items: [CustomElementType]) {
+    init(original: EpisodeDetailModel, items: [CustomElementType]) {
         switch original {
         case .Credits(items: let items):
             self = .Credits(items: items)
-        case .TVShowsLikeThis(items: let items):
-            self = .TVShowsLikeThis(items: items)
         }
     }
 }
+

@@ -8,7 +8,7 @@
 import RxSwift
 import NotificationBannerSwift
 
-protocol SearchViewViewModelProtocol {
+protocol SearchViewModelProtocol {
     var repository: TMDBSearchRepository { get }
     var page: Int { get }
     var totalPages: Int { get }
@@ -19,7 +19,7 @@ protocol SearchViewViewModelProtocol {
     func filter(search type: SearchViewViewModel.SearchType)
 }
 
-class SearchViewViewModel: SearchViewViewModelProtocol {
+class SearchViewViewModel: SearchViewModelProtocol {
     
     enum SearchType: String {
         case movie = "movie"

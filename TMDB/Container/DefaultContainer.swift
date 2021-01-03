@@ -55,7 +55,7 @@ extension DefaultContainer {
                                         userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
         
-        self.container.register(SearchViewViewModelProtocol.self) { resolver in
+        self.container.register(SearchViewModelProtocol.self) { resolver in
             SearchViewViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
         }
         
@@ -66,6 +66,11 @@ extension DefaultContainer {
         
         self.container.register(ReleaseDateViewModelProtocol.self) { resolver in
             ReleaseDateViewModel(repository: resolver.resolve(TMDBMovieRepository.self)!)
+        }
+        
+        self.container.register(EpisodeDetailViewModelProtocol.self) { resolver in
+            EpisodeDetailViewModel(repository: resolver.resolve(TMDBTVShowRepository.self)!,
+                                   userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
     }
 
@@ -97,7 +102,7 @@ extension DefaultContainer {
 
         self.container.register(SearchView.self) { resolver in
             SearchView(searchController: UISearchController(searchResultsController: resolver.resolve(SearchResultView.self)!),
-                       viewModel: resolver.resolve(SearchViewViewModelProtocol.self)!)
+                       viewModel: resolver.resolve(SearchViewModelProtocol.self)!)
         }
         
         self.container.register(PersonDetailView.self) { resolver in
@@ -110,6 +115,10 @@ extension DefaultContainer {
         
         self.container.register(ReviewView.self) { resolver in
             ReviewView()
+        }
+        
+        self.container.register(EpisodeDetailView.self) { resolver in
+            EpisodeDetailView(viewModel: resolver.resolve(EpisodeDetailViewModelProtocol.self)!)
         }
     }
     

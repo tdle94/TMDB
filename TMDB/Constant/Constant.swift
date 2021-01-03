@@ -30,26 +30,6 @@ struct Constant {
         static let tvShowEpisodeCell = "TVShowEpisodeCell"
         static let displayAllCell = "DisplayAll"
     }
-    struct ViewControllerIdentifier {
-        static let tmdbSearchResultViewController = "TMDBSearchResultViewController"
-        static let tmdbSearchController = "TMDBCountrySearchResultController"
-        static let tmdbCountry = "TMDBCountryViewController"
-        static let tmdbHome = "TMDBHomeViewController"
-        static let tmdbCountryNavigation = "TMDBCountrySettingNavigation"
-        static let tmdbLanguageNavigation = "TMDBLanguageSettingNavigation"
-        static let tmdbMovieDetail = "TMDBMovieDetailViewController"
-        static let tmdbVideoPlayer = "TMDBVideoPlayerViewController"
-        static let tmdbReviewVC = "TMDBReivewTableViewController"
-        static let tmdbPersonDetailVC = "TMDBPersonDetailViewController"
-        static let tmdbCompleteReleaseDateTableVC = "TMDBCompleteReleaseDateTableViewController"
-        static let tmdbTVDetailVC = "TMDBTVDetailViewController"
-        static let tmdbTVShowSeasonVC = "TMDBTVShowSeasonViewController"
-        static let tmdbTVShowEpisodeVC = "TMDBTVShowEpisodeViewController"
-        static let tmdbAllMovieVC = "TMDBAllMovieViewController"
-        static let tmdbAllTVShowVC = "TMDBAllTVShowViewController"
-        static let tmdbFilterNav = "TMDBFilterNavigation"
-        static let tmdbRateNav = "TMDBRateNavigationController"
-    }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)
         static let secondaryColor = UIColor(displayP3Red: 1/255, green: 180/255, blue: 228/255, alpha: 1)

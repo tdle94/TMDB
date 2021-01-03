@@ -100,8 +100,7 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
         repository.getTVShowSeasonImage(from: tvShowId, seasonNumber: seasonNumber) { result in
             switch result {
             case .success(let imageResult):
-                let images = imageResult.backdrops.isEmpty ? imageResult.posters : imageResult.backdrops
-                self.backdropImages.onNext(Array(images))
+                self.backdropImages.onNext(Array(imageResult.backdrops) + Array(imageResult.posters) + Array(imageResult.stills))
             case .failure(let error):
                 debugPrint("Error getting season images: \(error.localizedDescription)")
             }

@@ -114,6 +114,16 @@ class TVShowSeasonDetailView: UIViewController {
             episodeDataSource.titleForHeaderInSection = { dataSource, index in
                 return NSLocalizedString("Episode", comment: "")
             }
+            
+            episodeTableView
+                .rx
+                .itemSelected
+                .asDriver()
+                .drive(onNext: { indexPath in
+                    self.delegate?.navigateToEpisodeDetail(episode: self.episodeDataSource.sectionModels.first!.items[indexPath.row],
+                                                           tvShowId: self.tvShowId!)
+                })
+                .disposed(by: rx.disposeBag)
         }
     }
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
@@ -147,6 +157,8 @@ class TVShowSeasonDetailView: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         navigationController?.setNavBar()
+        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
+                                      navigationController: navigationController)
     }
     
     override func viewDidLayoutSubviews() {

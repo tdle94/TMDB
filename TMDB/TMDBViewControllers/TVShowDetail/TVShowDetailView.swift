@@ -325,8 +325,9 @@ extension TVShowDetailView {
                     .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
                         if index == 0 {
                             cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.reviews?.reviews.count ?? 0))")
+                        } else {
+                            cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.numberOfSeasons))")
                         }
-                        cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.numberOfSeasons))")
                     }
                     .disposed(by: self.rx.disposeBag)
             }

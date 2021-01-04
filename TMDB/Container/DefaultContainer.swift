@@ -56,7 +56,7 @@ extension DefaultContainer {
         }
         
         self.container.register(SearchViewModelProtocol.self) { resolver in
-            SearchViewViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
+            SearchViewViewModel(searchRepository: resolver.resolve(TMDBSearchRepository.self)!)
         }
         
         self.container.register(PersonDetailViewModelProtocol.self) { resolver in
@@ -71,6 +71,11 @@ extension DefaultContainer {
         self.container.register(EpisodeDetailViewModelProtocol.self) { resolver in
             EpisodeDetailViewModel(repository: resolver.resolve(TMDBTVShowRepository.self)!,
                                    userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
+        
+        self.container.register(DiscoveryViewModelProtocol.self) { resolver in
+            DiscoveryViewModel(movieRepository: resolver.resolve(TMDBMovieRepository.self)!,
+                               tvShowRepository: resolver.resolve(TMDBTVShowRepository.self)!)
         }
     }
 
@@ -102,7 +107,8 @@ extension DefaultContainer {
 
         self.container.register(SearchView.self) { resolver in
             SearchView(searchController: UISearchController(searchResultsController: resolver.resolve(SearchResultView.self)!),
-                       viewModel: resolver.resolve(SearchViewModelProtocol.self)!)
+                       searchViewModel: resolver.resolve(SearchViewModelProtocol.self)!,
+                       discoveryViewModel: resolver.resolve(DiscoveryViewModelProtocol.self)!)
         }
         
         self.container.register(PersonDetailView.self) { resolver in

@@ -64,36 +64,6 @@ class SearchView: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         navigationController?.resetNavBar()
-        if searchResult?.searchResultTableView == nil {
-            Observable<[Int]>
-                .just([0,1])
-                .bind(to: discoveryCollectionView.rx.items(cellIdentifier: Constant.Identifier.displayAllCell)) { section, _, cell  in
-
-                    let discoverCell = cell as! DiscoverCollectionViewCell
-                    
-                    if discoverCell.entityCollectionView.numberOfItems(inSection: 0) != 0 {
-                        return
-                    }
-
-                    if section == 0 {
-                        self.discoveryViewModel
-                            .getAllMovie(query: DiscoverQuery(page: 1))
-                            .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, movie, itemCell in
-                                (itemCell as? TMDBPreviewItemCell)?.configure(item: movie)
-                            }
-                            .disposed(by: self.rx.disposeBag)
-
-                    } else if section == 1 {
-                        self.discoveryViewModel
-                            .getAllTVShow(query: DiscoverQuery(page: 1))
-                            .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, tvShow, itemCell in
-                                (itemCell as? TMDBPreviewItemCell)?.configure(item: tvShow)
-                            }
-                            .disposed(by: self.rx.disposeBag)
-                    }
-                }
-                .disposed(by: rx.disposeBag)
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,6 +73,34 @@ class SearchView: UIViewController {
 
 extension SearchView {
     func setupBinding() {
+        Observable<[Int]>
+            .just([0,1])
+            .bind(to: discoveryCollectionView.rx.items(cellIdentifier: Constant.Identifier.displayAllCell)) { section, _, cell  in
+
+                let discoverCell = cell as! DiscoverCollectionViewCell
+                
+                if discoverCell.entityCollectionView.numberOfItems(inSection: 0) != 0 {
+                    return
+                }
+
+                if section == 0 {
+                    self.discoveryViewModel
+                        .getAllMovie(query: DiscoverQuery(page: 1))
+                        .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, movie, itemCell in
+                            (itemCell as? TMDBPreviewItemCell)?.configure(item: movie)
+                        }
+                        .disposed(by: self.rx.disposeBag)
+
+                } else if section == 1 {
+                    self.discoveryViewModel
+                        .getAllTVShow(query: DiscoverQuery(page: 1))
+                        .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, tvShow, itemCell in
+                            (itemCell as? TMDBPreviewItemCell)?.configure(item: tvShow)
+                        }
+                        .disposed(by: self.rx.disposeBag)
+                }
+            }
+            .disposed(by: rx.disposeBag)
         searchController
             .rx
             .willPresent
@@ -117,7 +115,6 @@ extension SearchView {
                 self.searchViewModel
                     .searchResult
                     .filterNil()
-                    .filterEmpty()
                     .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.searchResultCell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
@@ -150,25 +147,18 @@ extension SearchView {
                     .searchResultTableView
                     .rx
                     .itemSelected
-                    .subscribe { event in
-                        guard let row = event.element?.row else {
-                            return
-                        }
-                        
-                        do {
-                            if let item = try self.searchViewModel.searchResult.value()?[row] {
-                                if item.mediaType == "movie" {
-                                    self.delegate?.navigateToMovieDetail(movieId: item.id)
-                                } else if item.mediaType == "tv" {
-                                    self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
-                                } else if item.mediaType == "person" {
-                                    self.delegate?.navigateToPersonDetail(personId: item.id)
-                                }
+                    .asDriver()
+                    .drive(onNext: { indexPath in
+                        if let item = try! self.searchViewModel.searchResult.value()?[indexPath.row] {
+                            if item.mediaType == "movie" {
+                                self.delegate?.navigateToMovieDetail(movieId: item.id)
+                            } else if item.mediaType == "tv" {
+                                self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
+                            } else if item.mediaType == "person" {
+                                self.delegate?.navigateToPersonDetail(personId: item.id)
                             }
-                        } catch let error {
-                            debugPrint("Problem selecting search result: \(error.localizedDescription)")
                         }
-                    }
+                    })
                     .disposed(by: self.rx.disposeBag)
                 
                 // bind filter button

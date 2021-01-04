@@ -6,4 +6,15 @@
 //  Copyright © 2021 Tuyen Le. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import RxSwift
+
+class DiscoverCollectionViewCell: UICollectionViewCell {
+    @IBOutlet weak var entityCollectionView: UICollectionView! {
+        didSet {
+            entityCollectionView.collectionViewLayout = CollectionViewLayout.discoveryEntityLayout()
+            entityCollectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
+                                          forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+        }
+    }
+}

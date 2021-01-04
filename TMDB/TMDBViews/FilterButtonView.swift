@@ -14,7 +14,7 @@ class FilterButtonView: UIView {
     private(set) var tvShowButton: UIButton = UIButton()
     private(set) var peopleButton: UIButton = UIButton()
     
-    private lazy var indicatorLayer: CALayer = {
+    fileprivate lazy var indicatorLayer: CALayer = {
         let layer = CALayer()
         layer.backgroundColor = Constant.Color.primaryColor.cgColor
         layer.borderWidth = 3
@@ -40,10 +40,6 @@ class FilterButtonView: UIView {
     }
     
     func setup() {
-        movieButton.setTitle("Movies", for: .normal)
-        tvShowButton.setTitle("TV Shows", for: .normal)
-        peopleButton.setTitle("People", for: .normal)
-        
         movieButton.setAttributedTitle(TMDBLabel.setHeader(title: NSLocalizedString("Movies", comment: "")), for: .normal)
         tvShowButton.setAttributedTitle(TMDBLabel.setHeader(title: NSLocalizedString("TVShows", comment: "")), for: .normal)
         peopleButton.setAttributedTitle(TMDBLabel.setHeader(title: NSLocalizedString("People", comment: "")), for: .normal)
@@ -53,7 +49,7 @@ class FilterButtonView: UIView {
         setBindingToIndicateSelectedButton()
     }
     
-    private func setBindingToIndicateSelectedButton() {
+    fileprivate func setBindingToIndicateSelectedButton() {
         movieButton
             .rx
             .tap
@@ -114,7 +110,7 @@ class FilterButtonView: UIView {
         layer.addSublayer(bottomLine)
     }
     
-    private func setButtonsConstraint() {
+    fileprivate func setButtonsConstraint() {
         addSubview(movieButton)
         addSubview(tvShowButton)
         addSubview(peopleButton)
@@ -146,6 +142,10 @@ class FilterButtonView: UIView {
                                            views: ["v": peopleButton])
         )
         
+        setHorizontalConstraint()
+    }
+    
+    fileprivate func setHorizontalConstraint() {
         // horizontal
         addConstraints(
             NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[tvShowButton(width@1000)]-0-[movieButton(width@1000)]-0-[peopleButton(width@750)]-0-|",
@@ -157,5 +157,73 @@ class FilterButtonView: UIView {
                                                 "peopleButton": peopleButton
                                            ])
         )
+    }
+}
+
+@IBDesignable
+class DiscoveryFilterButtonView: FilterButtonView {
+    override func setBindingToIndicateSelectedButton() {
+        movieButton
+            .rx
+            .tap
+            .subscribe { _ in
+                guard !self.movieButton.isSelected else {
+                    return
+                }
+
+                self.indicatorLayer.removeFromSuperlayer()
+                self.indicatorLayer.frame.size.width = self.movieButton.frame.width
+
+                self.movieButton.layer.addSublayer(self.indicatorLayer)
+                
+                self.tvShowButton.isSelected = false
+                self.movieButton.isSelected = true
+            }
+            .disposed(by: rx.disposeBag)
+        
+        tvShowButton
+            .rx
+            .tap
+            .subscribe { _ in
+                guard !self.tvShowButton.isSelected else {
+                    return
+                }
+
+                self.indicatorLayer.removeFromSuperlayer()
+                self.indicatorLayer.frame.size.width = self.tvShowButton.frame.width
+
+                self.tvShowButton.layer.addSublayer(self.indicatorLayer)
+                
+                self.movieButton.isSelected = false
+                self.tvShowButton.isSelected = true
+            }
+            .disposed(by: rx.disposeBag)
+    }
+    
+    override func setHorizontalConstraint() {
+        peopleButton.removeFromSuperview()
+        // horizontal
+        addConstraints(
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[movieButton(width@1000)]-0-[tvShowButton(width@750)]-0-|",
+                                           options: NSLayoutConstraint.FormatOptions(rawValue: 0),
+                                           metrics: ["width":  UIScreen.main.bounds.width/2], // divide 3 buttons with equal width
+                                           views: [
+                                                "tvShowButton": tvShowButton,
+                                                "movieButton": movieButton
+                                           ])
+        )
+        
+        movieButton.layoutIfNeeded()
+        indicatorLayer.frame.size.width = self.movieButton.frame.width
+        movieButton.layer.addSublayer(self.indicatorLayer)
+        movieButton.isSelected = true
+    }
+    
+    func select(at: Int) {
+        if at == 0 {
+            tvShowButton.sendActions(for: .touchUpInside)
+        } else {
+            movieButton.sendActions(for: .touchUpInside)
+        }
     }
 }

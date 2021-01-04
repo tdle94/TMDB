@@ -22,7 +22,8 @@ class SearchView: UIViewController {
     var searchController: UISearchController
     
     private var searchResult: SearchResultView?
-    
+
+    @IBOutlet weak var discoveryChoiceView: DiscoveryFilterButtonView!
     @IBOutlet weak var discoveryCollectionView: UICollectionView! {
         didSet {
             discoveryCollectionView.collectionViewLayout = CollectionViewLayout.discoveryLayout()
@@ -73,6 +74,7 @@ class SearchView: UIViewController {
 
 extension SearchView {
     func setupBinding() {
+        // bind discover collection view
         Observable<[Int]>
             .just([0,1])
             .bind(to: discoveryCollectionView.rx.items(cellIdentifier: Constant.Identifier.displayAllCell)) { section, _, cell  in
@@ -101,6 +103,42 @@ extension SearchView {
                 }
             }
             .disposed(by: rx.disposeBag)
+
+        discoveryCollectionView
+            .rx
+            .didEndDisplayingCell
+            .asDriver()
+            .drive(onNext: { event in
+                self.discoveryChoiceView.select(at: event.at.row)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // bind discover choice button view
+        discoveryChoiceView
+            .movieButton
+            .rx
+            .tap
+            .asDriver()
+            .drive(onNext: {
+                self.discoveryCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0),
+                                                          at: .centeredHorizontally,
+                                                          animated: true)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        discoveryChoiceView
+            .tvShowButton
+            .rx
+            .tap
+            .asDriver()
+            .drive(onNext: {
+                self.discoveryCollectionView.scrollToItem(at: IndexPath(row: 1, section: 0),
+                                                          at: .centeredHorizontally,
+                                                          animated: true)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // bind when search controller is presented once
         searchController
             .rx
             .willPresent

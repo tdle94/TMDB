@@ -9,6 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchView" customModule="TMDB" customModuleProvider="target">
             <connections>
+                <outlet property="discoveryChoiceView" destination="fOj-mo-uU8" id="an1-m9-h1V"/>
                 <outlet property="discoveryCollectionView" destination="SMU-Fo-jea" id="nWE-4a-vu7"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Vur-i9-sPf"/>
             </connections>
@@ -19,7 +20,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="SMU-Fo-jea">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <rect key="frame" x="0.0" y="84" width="414" height="778"/>
                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ied-EX-xrr">
                         <size key="itemSize" width="128" height="128"/>
@@ -28,14 +29,24 @@
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fOj-mo-uU8" customClass="DiscoveryFilterButtonView" customModule="TMDB" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="44" width="414" height="40"/>
+                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="FdO-rA-cr0"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="E15-Nf-3J0"/>
             <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="SMU-Fo-jea" firstAttribute="bottom" secondItem="E15-Nf-3J0" secondAttribute="bottom" id="Dm1-7L-vjR"/>
+                <constraint firstItem="fOj-mo-uU8" firstAttribute="leading" secondItem="E15-Nf-3J0" secondAttribute="leading" id="EsY-W8-0Nc"/>
                 <constraint firstItem="SMU-Fo-jea" firstAttribute="leading" secondItem="E15-Nf-3J0" secondAttribute="leading" id="IbS-di-ZmA"/>
-                <constraint firstItem="SMU-Fo-jea" firstAttribute="top" secondItem="E15-Nf-3J0" secondAttribute="top" id="aR4-ts-0HW"/>
+                <constraint firstItem="E15-Nf-3J0" firstAttribute="trailing" secondItem="fOj-mo-uU8" secondAttribute="trailing" id="RF4-xT-PxJ"/>
+                <constraint firstItem="E15-Nf-3J0" firstAttribute="top" secondItem="fOj-mo-uU8" secondAttribute="top" id="eKK-jj-jFH"/>
                 <constraint firstItem="E15-Nf-3J0" firstAttribute="trailing" secondItem="SMU-Fo-jea" secondAttribute="trailing" id="mq4-T0-Dt3"/>
+                <constraint firstItem="SMU-Fo-jea" firstAttribute="top" secondItem="fOj-mo-uU8" secondAttribute="bottom" id="rwr-b4-ILa"/>
             </constraints>
             <point key="canvasLocation" x="137.68115942028987" y="71.651785714285708"/>
         </view>

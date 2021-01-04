@@ -36,7 +36,8 @@ class HomeView: UIViewController {
                 collectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             }
 
-            collectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            collectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
+                                    forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendPreviewHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularPreviewHeader)
             collectionView.register(TMDBMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moviePreviewHeader)

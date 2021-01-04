@@ -3,44 +3,46 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchResultView" customModule="TMDB" customModuleProvider="target">
             <connections>
-                <outlet property="filterButtonView" destination="U08-2q-fRq" id="7Uo-1r-xiB"/>
-                <outlet property="filterButtonViewTop" destination="Yci-wL-R4Q" id="IbX-CC-hGJ"/>
+                <outlet property="filterButtonView" destination="U08-2q-fRq" id="g6N-a8-dPO"/>
+                <outlet property="filterButtonViewTop" destination="Map-Xm-9YU" id="lNc-sd-14x"/>
                 <outlet property="searchResultTableView" destination="NKN-u0-ri2" id="cRo-z5-kh8"/>
                 <outlet property="view" destination="BFa-34-muW" id="yN7-FM-zzk"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="BFa-34-muW">
+        <view contentMode="scaleToFill" id="BFa-34-muW">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NKN-u0-ri2">
-                    <rect key="frame" x="0.0" y="40" width="414" height="856"/>
+                    <rect key="frame" x="0.0" y="84" width="414" height="812"/>
                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                     <viewLayoutGuide key="contentLayoutGuide" id="7Ol-j4-nKM"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="Ae2-er-mYA"/>
                 </tableView>
                 <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U08-2q-fRq" customClass="FilterButtonView" customModule="TMDB" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="40"/>
                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="JTU-45-9iq"/>
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="XRP-Jz-CIP"/>
             <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="U08-2q-fRq" secondAttribute="trailing" id="1wv-f9-bgw"/>
                 <constraint firstAttribute="trailing" secondItem="NKN-u0-ri2" secondAttribute="trailing" id="IvI-FV-LrP"/>
+                <constraint firstItem="XRP-Jz-CIP" firstAttribute="top" secondItem="U08-2q-fRq" secondAttribute="top" id="Map-Xm-9YU"/>
                 <constraint firstItem="NKN-u0-ri2" firstAttribute="leading" secondItem="BFa-34-muW" secondAttribute="leading" id="OXn-Ey-ccW"/>
                 <constraint firstItem="U08-2q-fRq" firstAttribute="leading" secondItem="BFa-34-muW" secondAttribute="leading" id="Q47-lA-dpT"/>
                 <constraint firstItem="NKN-u0-ri2" firstAttribute="bottom" secondItem="BFa-34-muW" secondAttribute="bottom" id="RD3-Hf-bbw"/>
-                <constraint firstItem="U08-2q-fRq" firstAttribute="top" secondItem="BFa-34-muW" secondAttribute="top" id="Yci-wL-R4Q"/>
                 <constraint firstItem="NKN-u0-ri2" firstAttribute="top" secondItem="U08-2q-fRq" secondAttribute="bottom" id="gmw-ds-dhV"/>
             </constraints>
             <point key="canvasLocation" x="-1750.7246376811595" y="77.678571428571431"/>

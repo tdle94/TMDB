@@ -12,7 +12,9 @@ import RxOptional
 
 class SearchView: UIViewController {
     
-    var viewModel: SearchViewModelProtocol
+    var searchViewModel: SearchViewModelProtocol
+    
+    var discoveryViewModel: DiscoveryViewModelProtocol
     
     weak var delegate: SearchViewDelegate?
     
@@ -21,9 +23,20 @@ class SearchView: UIViewController {
     
     private var searchResult: SearchResultView?
     
+    @IBOutlet weak var discoveryCollectionView: UICollectionView! {
+        didSet {
+            discoveryCollectionView.collectionViewLayout = CollectionViewLayout.discoveryLayout()
+            discoveryCollectionView.register(UINib(nibName: String(describing: DiscoverCollectionViewCell.self), bundle: nil),
+                                             forCellWithReuseIdentifier: Constant.Identifier.displayAllCell)
+        }
+    }
+    
     // MARK: - init
-    init(searchController: UISearchController, viewModel: SearchViewModelProtocol) {
-        self.viewModel = viewModel
+    init(searchController: UISearchController,
+         searchViewModel: SearchViewModelProtocol,
+         discoveryViewModel: DiscoveryViewModelProtocol) {
+        self.searchViewModel = searchViewModel
+        self.discoveryViewModel = discoveryViewModel
         self.searchController = searchController
         self.searchResult = searchController.searchResultsController as? SearchResultView
         super.init(nibName: String(describing: SearchView.self), bundle: nil)
@@ -37,27 +50,57 @@ class SearchView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constant.Color.backgroundColor
-        navigationItem.searchController = searchController
-        title = NSLocalizedString("Search", comment: "")
         searchController.searchBar.placeholder = NSLocalizedString("Search Bar", comment: "")
         (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.textColor = Constant.Color.backgroundColor
         searchController.searchBar.tintColor = Constant.Color.backgroundColor
+        searchController.hidesNavigationBarDuringPresentation = false
+        definesPresentationContext = true
         searchController.searchBar.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal),
                                             for: .search,
                                             state: .normal)
+        navigationItem.titleView = searchController.searchBar
         setupBinding()
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.searchController.searchBar.becomeFirstResponder()
         navigationController?.resetNavBar()
-        navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.black ]
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.resetNavBar()
     }
 }
 
 extension SearchView {
     func setupBinding() {
+        Observable<[Int]>
+            .just([0,1])
+            .bind(to: discoveryCollectionView.rx.items(cellIdentifier: Constant.Identifier.displayAllCell)) { section, _, cell  in
+
+                let discoverCell = cell as! DiscoverCollectionViewCell
+                
+                if discoverCell.entityCollectionView.numberOfItems(inSection: 0) != 0 {
+                    return
+                }
+
+                if section == 0 {
+                    self.discoveryViewModel
+                        .getAllMovie(query: DiscoverQuery(page: 1))
+                        .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, movie, itemCell in
+                            (itemCell as? TMDBPreviewItemCell)?.configure(item: movie)
+                        }
+                        .disposed(by: self.rx.disposeBag)
+
+                } else if section == 1 {
+                    self.discoveryViewModel
+                        .getAllTVShow(query: DiscoverQuery(page: 1))
+                        .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, tvShow, itemCell in
+                            (itemCell as? TMDBPreviewItemCell)?.configure(item: tvShow)
+                        }
+                        .disposed(by: self.rx.disposeBag)
+                }
+            }
+            .disposed(by: rx.disposeBag)
         searchController
             .rx
             .willPresent
@@ -67,14 +110,11 @@ extension SearchView {
                 guard let searchResult = self.searchResult else {
                     return
                 }
-
-                self.searchResult?.filterButtonViewTop.constant = self.navigationController?.navigationBar.frame.midY ?? 0
                 
                 // bind search result to tableview
-                self.viewModel
+                self.searchViewModel
                     .searchResult
                     .filterNil()
-                    .filterEmpty()
                     .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.searchResultCell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
@@ -96,7 +136,7 @@ extension SearchView {
                             !searchResult.footerLoadIndicatorView.isAnimating {
 
                             searchResult.footerLoadIndicatorView.startAnimating()
-                            self.viewModel.search(text: text)
+                            self.searchViewModel.search(text: text)
 
                         }
                     })
@@ -107,25 +147,18 @@ extension SearchView {
                     .searchResultTableView
                     .rx
                     .itemSelected
-                    .subscribe { event in
-                        guard let row = event.element?.row else {
-                            return
-                        }
-                        
-                        do {
-                            if let item = try self.viewModel.searchResult.value()?[row] {
-                                if item.mediaType == "movie" {
-                                    self.delegate?.navigateToMovieDetail(movieId: item.id)
-                                } else if item.mediaType == "tv" {
-                                    self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
-                                } else if item.mediaType == "person" {
-                                    self.delegate?.navigateToPersonDetail(personId: item.id)
-                                }
+                    .asDriver()
+                    .drive(onNext: { indexPath in
+                        if let item = try! self.searchViewModel.searchResult.value()?[indexPath.row] {
+                            if item.mediaType == "movie" {
+                                self.delegate?.navigateToMovieDetail(movieId: item.id)
+                            } else if item.mediaType == "tv" {
+                                self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
+                            } else if item.mediaType == "person" {
+                                self.delegate?.navigateToPersonDetail(personId: item.id)
                             }
-                        } catch let error {
-                            debugPrint("Problem selecting search result: \(error.localizedDescription)")
                         }
-                    }
+                    })
                     .disposed(by: self.rx.disposeBag)
                 
                 // bind filter button
@@ -135,7 +168,7 @@ extension SearchView {
                     .rx
                     .tap
                     .subscribe { _ in
-                        self.viewModel.filter(search: .movie)
+                        self.searchViewModel.filter(search: .movie)
                     }
                     .disposed(by: self.rx.disposeBag)
                 
@@ -146,7 +179,7 @@ extension SearchView {
                     .rx
                     .tap
                     .subscribe { _ in
-                        self.viewModel.filter(search: .tv)
+                        self.searchViewModel.filter(search: .tv)
                     }
                     .disposed(by: self.rx.disposeBag)
                 
@@ -156,7 +189,7 @@ extension SearchView {
                     .rx
                     .tap
                     .subscribe { _ in
-                        self.viewModel.filter(search: .person)
+                        self.searchViewModel.filter(search: .person)
                     }
                     .disposed(by: self.rx.disposeBag)
                 
@@ -209,7 +242,7 @@ extension SearchView {
 
         // stop loading indicator in tableview's footer view
 
-        viewModel
+        searchViewModel
             .searchResult
             .skip(1)
             .observeOn(MainScheduler.asyncInstance)
@@ -239,6 +272,6 @@ extension SearchView {
         self.searchResult?.loadBackgroundView.startAnimating()
         self.searchResult?.filterButtonView.isHidden = true
         self.searchResult?.emptyLabel.isHidden = true
-        self.viewModel.search(text: text)
+        self.searchViewModel.search(text: text)
     }
 }

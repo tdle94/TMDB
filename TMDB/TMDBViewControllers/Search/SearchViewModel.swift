@@ -9,7 +9,7 @@ import RxSwift
 import NotificationBannerSwift
 
 protocol SearchViewModelProtocol {
-    var repository: TMDBSearchRepository { get }
+    var searchRepository: TMDBSearchRepository { get }
     var page: Int { get }
     var totalPages: Int { get }
     var searchResult: BehaviorSubject<[MultiSearch]?> { get }
@@ -30,15 +30,15 @@ class SearchViewViewModel: SearchViewModelProtocol {
     
     var searchType: SearchType = .none
     
-    var repository: TMDBSearchRepository
+    var searchRepository: TMDBSearchRepository
     var page: Int = 0
     var totalPages: Int = 0
     var oldSearchText: String = ""
     var searchResult: BehaviorSubject<[MultiSearch]?> = BehaviorSubject(value: [])
     var oldSearchResult: [MultiSearch] = []
 
-    init(repository: TMDBSearchRepository) {
-        self.repository = repository
+    init(searchRepository: TMDBSearchRepository) {
+        self.searchRepository = searchRepository
     }
     
     func search(text: String) {
@@ -54,7 +54,7 @@ class SearchViewViewModel: SearchViewModelProtocol {
             return
         }
 
-        repository.multiSearch(query: text, page: newPage) { result in
+        searchRepository.multiSearch(query: text, page: newPage) { result in
             switch result {
             case .success(let searchResult):
                 if text == self.oldSearchText {

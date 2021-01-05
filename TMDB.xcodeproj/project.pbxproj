@@ -121,6 +121,8 @@
 		34A31D19248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A31D18248C7EAF00D56C10 /* TMDBURLRequestBuilder.swift */; };
 		34A31D1E248C96AF00D56C10 /* TMDBServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A31D1D248C96AF00D56C10 /* TMDBServices.swift */; };
 		34A5844525A3786700768B78 /* DiscoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5844425A3786700768B78 /* DiscoveryViewModel.swift */; };
+		34A5845525A3F37700768B78 /* LoadingIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34A5845425A3F37700768B78 /* LoadingIndicatorView.xib */; };
+		34A5845925A3FBDC00768B78 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A5845825A3FBDC00768B78 /* LoadingIndicatorView.swift */; };
 		34A970E1256C2D30001AB626 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A970E0256C2D30001AB626 /* MovieDetailViewModel.swift */; };
 		34AD7A632597CF8C005BFAF0 /* PersonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AD7A622597CF8C005BFAF0 /* PersonDetailView.swift */; };
 		34AD7A692597CF95005BFAF0 /* PersonDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34AD7A682597CF95005BFAF0 /* PersonDetailView.xib */; };
@@ -311,6 +313,8 @@
 		34A38FAB24A2DD7700D3D2CE /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A38FAD24A2DDD300D3D2CE /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A5844425A3786700768B78 /* DiscoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewModel.swift; sourceTree = "<group>"; };
+		34A5845425A3F37700768B78 /* LoadingIndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorView.xib; sourceTree = "<group>"; };
+		34A5845825A3FBDC00768B78 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
 		34A970E0256C2D30001AB626 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
 		34AD7A622597CF8C005BFAF0 /* PersonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDetailView.swift; sourceTree = "<group>"; };
 		34AD7A682597CF95005BFAF0 /* PersonDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonDetailView.xib; sourceTree = "<group>"; };
@@ -738,6 +742,8 @@
 				34083FA3259A78D000372058 /* FilterButtonView.swift */,
 				3493569025A2735300CF24F0 /* DiscoverCollectionViewCell.swift */,
 				3493569425A2737600CF24F0 /* DiscoverCollectionViewCell.xib */,
+				34A5845425A3F37700768B78 /* LoadingIndicatorView.xib */,
+				34A5845825A3FBDC00768B78 /* LoadingIndicatorView.swift */,
 			);
 			path = TMDBViews;
 			sourceTree = "<group>";
@@ -990,6 +996,7 @@
 				34F6AA5B24A4124E000DC080 /* lineto-circular-pro-bold.ttf in Resources */,
 				34C506392589109E00DE6928 /* TVShowDetailView.xib in Resources */,
 				3469A1702594062500B09721 /* TVShowSeasonDetailView.xib in Resources */,
+				34A5845525A3F37700768B78 /* LoadingIndicatorView.xib in Resources */,
 				34EB35AE259FFCE8008A748A /* EpisodeDetailView.xib in Resources */,
 				3499B50624F2F32F00AC2196 /* MovieGenres.json in Resources */,
 				342E662D2489BB33003B5CB8 /* Assets.xcassets in Resources */,
@@ -1210,6 +1217,7 @@
 				3496E2F52561E94400F999C9 /* HomeViewModel.swift in Sources */,
 				340CA6DE248DAC4C00E5A72D /* TrendingResult.swift in Sources */,
 				342E66262489BB33003B5CB8 /* SceneDelegate.swift in Sources */,
+				34A5845925A3FBDC00768B78 /* LoadingIndicatorView.swift in Sources */,
 				34B2F8DC259FB27000FCA244 /* ReviewView.swift in Sources */,
 				3480AF592588092F008F65FA /* ParallaxHeader.swift in Sources */,
 				3488663F24A67B3D00E205FA /* CollectionViewLayout.swift in Sources */,

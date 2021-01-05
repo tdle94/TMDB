@@ -29,6 +29,7 @@ struct Constant {
         static let tvShowSeasonCell = "TVShowSeasonCell"
         static let tvShowEpisodeCell = "TVShowEpisodeCell"
         static let displayAllCell = "DisplayAll"
+        static let loading = "LoadingCell"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

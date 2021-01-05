@@ -79,9 +79,15 @@ struct CollectionViewLayout {
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.4))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
             
+            let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
+            let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize,
+                                                                            elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
+
+            
             group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0)
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 0)
+            section.boundarySupplementaryItems = [sectionFooter]
             return section
         }
     }

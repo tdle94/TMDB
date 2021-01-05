@@ -28,6 +28,8 @@ protocol TVShowDetailViewModelProtocol {
     var homepage: PublishSubject<NSAttributedString> { get }
     var overview: PublishSubject<NSAttributedString> { get }
     var keywords: PublishSubject<[Keyword]> { get }
+    var genres: PublishSubject<[Genre]> { get }
+    var reviewAndEpisode: PublishSubject<[String]> { get }
     var credits: BehaviorSubject<[TVShowDetailModel]> { get }
     
     var isThereCast: Bool { get }
@@ -68,6 +70,8 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     var episodeRuntime: PublishSubject<NSAttributedString> = PublishSubject()
     var overview: PublishSubject<NSAttributedString> = PublishSubject()
     var keywords: PublishSubject<[Keyword]> = PublishSubject()
+    var genres: PublishSubject<[Genre]> = PublishSubject()
+    var reviewAndEpisode: PublishSubject<[String]> = PublishSubject()
     var credits: BehaviorSubject<[TVShowDetailModel]> = BehaviorSubject(value: [
         .Credits(items: []),
         .TVShowsLikeThis(items: [])
@@ -116,9 +120,16 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
             case .success(let result):
                 self.tvShowDetail.onNext(result)
                 self.keywords.onNext(Array(result.keywords?.results ?? List<Keyword>()))
-
-                if !result.homepage.isEmpty {
+                self.genres.onNext(Array(result.genres))
+                self.reviewAndEpisode.onNext([NSLocalizedString("Review", comment: "") + " (\(result.reviews?.reviews.count ?? 0))",
+                                              NSLocalizedString("Season", comment: "") + " (\(result.numberOfSeasons))" ])
+                if result.homepage.isNotEmpty {
                     self.homepage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Homepage", comment: ""), subTitle: result.homepage))
+                }
+                
+                if result.overview.isNotEmpty {
+                    self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
+                                                                        paragraph: result.overview))
                 }
                 
                 self.numberOfEpisode.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Number Of Episode", comment: ""),
@@ -145,8 +156,6 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                 
                 self.episodeRuntime.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Episode Runtime", comment: ""),
                                                                       subTitle: Array(result.episodeRunTime).map { String($0) }.joined(separator: ", ") + " min"))
-                self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
-                                                                    paragraph: result.overview))
                 
                 var credits = Array(result.credits?.cast ?? List<Cast>()).map { CustomElementType(identity: $0) }
                 
@@ -169,7 +178,7 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                     tvshowLikeThis = Array(result.recommendations?.onTV ?? List<TVShow>()).map { CustomElementType(identity: $0) }
                 }
                 
-                if tvshowLikeThis.isEmpty {
+                if tvshowLikeThis.isEmpty || result.recommendations?.onTV.isEmpty ?? true {
                     self.isThereRecommendTVShow = false
                 }
                 

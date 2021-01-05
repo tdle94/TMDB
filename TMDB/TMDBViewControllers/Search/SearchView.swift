@@ -78,27 +78,104 @@ extension SearchView {
         Observable<[Int]>
             .just([0,1])
             .bind(to: discoveryCollectionView.rx.items(cellIdentifier: Constant.Identifier.displayAllCell)) { section, _, cell  in
-
                 let discoverCell = cell as! DiscoverCollectionViewCell
                 
                 if discoverCell.entityCollectionView.numberOfItems(inSection: 0) != 0 {
+                    // only allow to load first time
                     return
                 }
 
                 if section == 0 {
+                    // get first page initially
+                    self.discoveryViewModel.getAllMovie(query: DiscoverQuery(), nextPage: false)
+                    
+                    
+                    // bind inner collection view
                     self.discoveryViewModel
-                        .getAllMovie(query: DiscoverQuery(page: 1))
-                        .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, movie, itemCell in
-                            (itemCell as? TMDBPreviewItemCell)?.configure(item: movie)
+                        .movie
+                        .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.movieDataSource))
+                        .disposed(by: self.rx.disposeBag)
+                    
+                    self.discoveryViewModel
+                        .movie
+                        .subscribe { _ in
+                            discoverCell.movieLoadingIndicatorView?.loadingIndicator.stopAnimating()
                         }
+                        .disposed(by: self.rx.disposeBag)
+                    
+                    discoverCell
+                        .entityCollectionView
+                        .rx
+                        .itemSelected
+                        .asDriver()
+                        .drive(onNext: { indexPath in
+                            if let movieId = discoverCell.movieDataSource.sectionModels.first?.items[indexPath.row].id {
+                                self.delegate?.navigateToMovieDetail(movieId: movieId)
+                            }
+                        })
+                        .disposed(by: self.rx.disposeBag)
+                    
+                    // paginate, when user scroll to bottom of collectionview
+                    discoverCell
+                        .entityCollectionView
+                        .rx
+                        .didEndDecelerating
+                        .asDriver()
+                        .drive(onNext: {
+
+                            let bottomEdge = discoverCell.entityCollectionView.contentOffset.y + discoverCell.entityCollectionView.frame.size.height
+
+                            if bottomEdge >= discoverCell.entityCollectionView.contentSize.height, !(discoverCell.movieLoadingIndicatorView?.loadingIndicator.isAnimating ?? true) {
+                                discoverCell.movieLoadingIndicatorView?.loadingIndicator.startAnimating()
+                                self.discoveryViewModel.getAllMovie(query: DiscoverQuery(), nextPage: true)
+                            }
+                        })
                         .disposed(by: self.rx.disposeBag)
 
                 } else if section == 1 {
+                    // get first page initially
+                    self.discoveryViewModel.getAllTVShow(query: DiscoverQuery(), nextPage: false)
+                    
+                    // bind inner collection view
                     self.discoveryViewModel
-                        .getAllTVShow(query: DiscoverQuery(page: 1))
-                        .bind(to: discoverCell.entityCollectionView.rx.items(cellIdentifier: Constant.Identifier.previewItem)) { _, tvShow, itemCell in
-                            (itemCell as? TMDBPreviewItemCell)?.configure(item: tvShow)
+                        .tvShow
+                        .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.tvShowDataSource))
+                        .disposed(by: self.rx.disposeBag)
+                    
+                    self.discoveryViewModel
+                        .tvShow
+                        .subscribe { _ in
+                            discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.stopAnimating()
                         }
+                        .disposed(by: self.rx.disposeBag)
+                    
+                    discoverCell
+                        .entityCollectionView
+                        .rx
+                        .itemSelected
+                        .asDriver()
+                        .drive(onNext: { indexPath in
+                            if let tvShowId = discoverCell.tvShowDataSource.sectionModels.first?.items[indexPath.row].id {
+                                self.delegate?.navigateToTVShowDetail(tvShowId: tvShowId)
+                            }
+                        })
+                        .disposed(by: self.rx.disposeBag)
+      
+                    
+                    // paginate, when user scroll to bottom of collectionview
+                    discoverCell
+                        .entityCollectionView
+                        .rx
+                        .didEndDecelerating
+                        .asDriver()
+                        .drive(onNext: {
+                            let bottomEdge = discoverCell.entityCollectionView.contentOffset.y + discoverCell.entityCollectionView.frame.size.height
+                            
+                            if bottomEdge >= discoverCell.entityCollectionView.contentSize.height, !(discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.isAnimating ?? true) {
+                                discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.startAnimating()
+                                self.discoveryViewModel.getAllTVShow(query: DiscoverQuery(), nextPage: true)
+                            }
+                        })
                         .disposed(by: self.rx.disposeBag)
                 }
             }

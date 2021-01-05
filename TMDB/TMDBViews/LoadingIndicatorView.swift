@@ -6,4 +6,8 @@
 //  Copyright © 2021 Tuyen Le. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class LoadingIndicatorView: UICollectionReusableView {
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+}

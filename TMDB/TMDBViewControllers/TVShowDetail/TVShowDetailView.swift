@@ -314,11 +314,7 @@ extension TVShowDetailView {
         viewModel
             .reviewAndEpisode
             .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
-                if index == 0 {
-                    cell.textLabel?.setHeader(title: text)
-                } else {
-                    cell.textLabel?.setHeader(title: text)
-                }
+                cell.textLabel?.setHeader(title: text)
             }
             .disposed(by: self.rx.disposeBag)
         

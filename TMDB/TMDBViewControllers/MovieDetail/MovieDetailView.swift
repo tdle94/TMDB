@@ -178,10 +178,6 @@ class MovieDetailView: UIViewController {
                 .asObservable()
                 .subscribe { _ in
                     if let id = self.movieId, self.scrollView.parallaxHeader.refreshControl.isRefreshing {
-                        // reset collection view to original form
-                        self.reviewAndReleaseTableView.dataSource = nil
-                        self.productionCompaniesCollectionView.dataSource = nil
-                        self.genreCollectionView.dataSource = nil
                         
                         self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: true)
                         
@@ -290,35 +286,8 @@ extension MovieDetailView {
                         }
                     }
 
-                    (self.genreCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = Array(result.genres).map { $0.name }
-
                     self.ratingLabel.rating = result.voteAverage
                     self.title = result.title
-                    
-                    Observable<[String]>
-                        .just([
-                                NSLocalizedString("Review (\(result.reviews?.reviews.count ?? 0))", comment: ""),
-                                NSLocalizedString("Release Date (\(result.releaseDates?.results.count ?? 0))", comment: "")
-                        ])
-                        .bind(to: self.reviewAndReleaseTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
-                            cell.textLabel?.setHeader(title: text)
-                        }
-                        .disposed(by: self.rx.disposeBag)
-
-                    Observable<[ProductionCompany]>
-                        .just(Array(result.productionCompanies).filter { $0.logoPath != nil })
-                        .bind(to: self.productionCompaniesCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { index, productionCompany, cell in
-                            (cell as? TMDBProductionCompanyCell)?.configure(item: productionCompany)
-                        }
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    Observable<[Genre]>
-                        .just(Array(result.genres))
-                        .observeOn(MainScheduler.asyncInstance)
-                        .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { index, genre, cell in
-                            (cell as? TMDBKeywordCell)?.configure(item: genre)
-                        }
-                        .disposed(by: self.rx.disposeBag)
                     
                 },
                 onError: { error in
@@ -356,6 +325,38 @@ extension MovieDetailView {
             }
             .disposed(by: rx.disposeBag)
         
+        // bind release and review tableview
+        viewModel
+            .reviewAndRelease
+            .bind(to: self.reviewAndReleaseTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
+                cell.textLabel?.setHeader(title: text)
+            }
+            .disposed(by: self.rx.disposeBag)
+        
+        // bind production companies
+        viewModel
+            .productionCompanies
+            .bind(to: self.productionCompaniesCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { index, productionCompany, cell in
+                (cell as? TMDBProductionCompanyCell)?.configure(item: productionCompany)
+            }
+            .disposed(by: self.rx.disposeBag)
+        
+        // genres collectionView binding
+        viewModel
+            .genres
+            .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { index, genre, cell in
+                (cell as? TMDBKeywordCell)?.configure(item: genre)
+            }
+            .disposed(by: self.rx.disposeBag)
+        
+        viewModel
+            .genres
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { genres in
+                (self.genreCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = genres.map { $0.name }
+            })
+            .disposed(by: rx.disposeBag)
+        
         // keyword collectionView binding
         viewModel
             .keywords
@@ -366,16 +367,10 @@ extension MovieDetailView {
         
         viewModel
             .keywords
-            .asObserver()
-            .subscribe { event in
-                guard let keywords = event.element,
-                      let layout = self.keywordCollectionView.collectionViewLayout as? TMDBKeywordLayout
-                else {
-                    return
-                }
-
-                layout.texts = Array(keywords).map { $0.name }
-            }
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { keywords in
+                (self.keywordCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = keywords.map { $0.name }
+            })
             .disposed(by: rx.disposeBag)
         
         // bind review and release tableview

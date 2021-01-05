@@ -16,6 +16,9 @@ protocol MovieDetailViewModelProtocol {
     var movie: PublishSubject<Movie> { get }
     var images: PublishSubject<[Images]> { get }
     var keywords: PublishSubject<[Keyword]> { get }
+    var genres: PublishSubject<[Genre]> { get }
+    var productionCompanies: PublishSubject<[ProductionCompany]> { get }
+    var reviewAndRelease: PublishSubject<[String]> { get }
     var credits: BehaviorSubject<[MovieDetailModel]> { get }
     
     var status: PublishSubject<NSAttributedString> { get }
@@ -60,6 +63,9 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     var movie: PublishSubject<Movie> = PublishSubject()
     var images: PublishSubject<[Images]> = PublishSubject()
     var keywords: PublishSubject<[Keyword]> = PublishSubject()
+    var genres: PublishSubject<[Genre]> = PublishSubject()
+    var productionCompanies: PublishSubject<[ProductionCompany]> = PublishSubject()
+    var reviewAndRelease: PublishSubject<[String]> = PublishSubject()
     var credits: BehaviorSubject<[MovieDetailModel]> = BehaviorSubject(value: [.Credits(items: []),
                                                                                .MoviesLikeThis(items: [])])
     
@@ -131,6 +137,12 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
             case .success(let movieDetailResult):
                 self.movie.onNext(movieDetailResult)
                 self.keywords.onNext(Array(movieDetailResult.keywords?.keywords ?? List<Keyword>()))
+                self.genres.onNext(Array(movieDetailResult.genres))
+                self.productionCompanies.onNext(Array(movieDetailResult.productionCompanies).filter { $0.logoPath?.isNotEmpty ?? false } )
+                self.reviewAndRelease.onNext([
+                    NSLocalizedString("Review (\(movieDetailResult.reviews?.reviews.count ?? 0))", comment: ""),
+                    NSLocalizedString("Release Date (\(movieDetailResult.releaseDates?.results.count ?? 0))", comment: "")
+                ])
 
                 // keyword
                 if movieDetailResult.keywords?.keywords.isEmpty ?? true {

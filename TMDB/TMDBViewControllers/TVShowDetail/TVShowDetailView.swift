@@ -307,30 +307,35 @@ extension TVShowDetailView {
                 
                 self.ratingLabel.rating = tvShowDetail.voteAverage
                 self.title = tvShowDetail.name
-
-                (self.genreCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = Array(tvShowDetail.genres).map { $0.name }
-
-                // genre collection view
-                Observable<[Genre]>
-                    .just(Array(tvShowDetail.genres))
-                    .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, genre, cell in
-                        (cell as? TMDBKeywordCell)?.configure(item: genre)
-                    }
-                    .disposed(by: self.rx.disposeBag)
-                
-                
-                // review table
-                Observable<[String]>
-                    .just([NSLocalizedString("Review", comment: ""), NSLocalizedString("Season", comment: "")])
-                    .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
-                        if index == 0 {
-                            cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.reviews?.reviews.count ?? 0))")
-                        } else {
-                            cell.textLabel?.setHeader(title: text + " (\(tvShowDetail.numberOfSeasons))")
-                        }
-                    }
-                    .disposed(by: self.rx.disposeBag)
             }
+            .disposed(by: rx.disposeBag)
+        
+        // review and season table binding
+        viewModel
+            .reviewAndEpisode
+            .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
+                if index == 0 {
+                    cell.textLabel?.setHeader(title: text)
+                } else {
+                    cell.textLabel?.setHeader(title: text)
+                }
+            }
+            .disposed(by: self.rx.disposeBag)
+        
+        // genre collection view binding
+        viewModel
+            .genres
+            .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, genre, cell in
+                (cell as? TMDBKeywordCell)?.configure(item: genre)
+            }
+            .disposed(by: self.rx.disposeBag)
+        
+        viewModel
+            .genres
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { genres in
+                (self.genreCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = genres.map { $0.name }
+            })
             .disposed(by: rx.disposeBag)
         
         // credit binding

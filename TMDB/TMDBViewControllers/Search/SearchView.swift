@@ -93,14 +93,17 @@ extension SearchView {
                     // bind inner collection view
                     self.discoveryViewModel
                         .movie
+                        .filterNil()
                         .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.movieDataSource))
                         .disposed(by: self.rx.disposeBag)
                     
                     self.discoveryViewModel
                         .movie
-                        .subscribe { _ in
-                            discoverCell.movieLoadingIndicatorView?.loadingIndicator.stopAnimating()
-                        }
+                        .asDriver(onErrorJustReturn: nil)
+                        .drive(onNext: { result in
+                            discoverCell.errorLabel.isHidden = result != nil
+                            discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.stopAnimating()
+                        })
                         .disposed(by: self.rx.disposeBag)
                     
                     discoverCell
@@ -139,14 +142,17 @@ extension SearchView {
                     // bind inner collection view
                     self.discoveryViewModel
                         .tvShow
+                        .filterNil()
                         .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.tvShowDataSource))
                         .disposed(by: self.rx.disposeBag)
                     
                     self.discoveryViewModel
                         .tvShow
-                        .subscribe { _ in
+                        .asDriver(onErrorJustReturn: nil)
+                        .drive(onNext: { result in
+                            discoverCell.errorLabel.isHidden = result != nil
                             discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.stopAnimating()
-                        }
+                        })
                         .disposed(by: self.rx.disposeBag)
                     
                     discoverCell

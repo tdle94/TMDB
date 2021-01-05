@@ -14,8 +14,8 @@ protocol DiscoveryViewModelProtocol {
     var movieRepository: TMDBMovieRepository { get }
     var tvShowRepository: TMDBTVShowRepository { get }
     
-    var movie: BehaviorSubject<[SectionModel<String, Movie>]> { get }
-    var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]> { get }
+    var movie: BehaviorSubject<[SectionModel<String, Movie>]?> { get }
+    var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]?> { get }
 
     func getAllMovie(query: DiscoverQuery, nextPage: Bool)
     func getAllTVShow(query: DiscoverQuery, nextPage: Bool)
@@ -25,8 +25,8 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
     var movieRepository: TMDBMovieRepository
     var tvShowRepository: TMDBTVShowRepository
     
-    var movie: BehaviorSubject<[SectionModel<String, Movie>]> = BehaviorSubject(value: [])
-    var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]> = BehaviorSubject(value: [])
+    var movie: BehaviorSubject<[SectionModel<String, Movie>]?> = BehaviorSubject(value: [])
+    var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]?> = BehaviorSubject(value: [])
     
     private var movieResult: MovieResult = MovieResult()
     
@@ -56,7 +56,11 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
                 
                 self.movie.onNext([.init(model: "Movie", items: Array(self.movieResult.movies))])
             case .failure(let error):
-                debugPrint(error.localizedDescription)
+                debugPrint("Error getting discovery movies: ", error.localizedDescription)
+                self.movie.onNext(nil)
+                StatusBarNotificationBanner(title: "Fail getting movies", style: .danger).show(queuePosition: .back,
+                                                                                                              bannerPosition: .top,
+                                                                                                              queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
     }
@@ -81,7 +85,11 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
 
                 self.tvShow.onNext([.init(model: "TVShow", items: Array(self.tvShowResult.onTV))])
             case .failure(let error):
-                debugPrint(error.localizedDescription)
+                debugPrint("Error getting discovery tvshow: ", error.localizedDescription)
+                self.movie.onNext(nil)
+                StatusBarNotificationBanner(title: "Fail getting tv show", style: .danger).show(queuePosition: .back,
+                                                                                                              bannerPosition: .top,
+                                                                                                              queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
     }

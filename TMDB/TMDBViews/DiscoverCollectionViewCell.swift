@@ -27,12 +27,22 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
         return cell
     })
     
+    let errorLabel = UILabel()
+
     weak var movieLoadingIndicatorView: LoadingIndicatorView?
     
     weak var tvShowLoadingIndicatorView: LoadingIndicatorView?
     
     @IBOutlet weak var entityCollectionView: UICollectionView! {
         didSet {
+            entityCollectionView.backgroundView = UIView()
+            entityCollectionView.backgroundView?.addSubview(errorLabel)
+
+            errorLabel.translatesAutoresizingMaskIntoConstraints = false
+            errorLabel.setHeader(title: NSLocalizedString("Error getting search resul", comment: ""))
+            errorLabel.centerXAnchor.constraint(equalTo: entityCollectionView.backgroundView!.centerXAnchor).isActive = true
+            errorLabel.centerYAnchor.constraint(equalTo: entityCollectionView.backgroundView!.centerYAnchor).isActive = true
+            
             entityCollectionView.collectionViewLayout = CollectionViewLayout.discoveryEntityLayout()
             entityCollectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
                                           forCellWithReuseIdentifier: Constant.Identifier.previewItem)

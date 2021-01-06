@@ -51,6 +51,7 @@ class SearchViewViewModel: SearchViewModelProtocol {
         }
         
         if newPage > totalPages, totalPages != 0 {
+            self.searchResult.onNext(nil)
             return
         }
 

@@ -207,6 +207,8 @@ class MovieDetailView: UIViewController {
         }
     }
     
+    // MARK: - override
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setLoveIcon()
@@ -221,21 +223,16 @@ class MovieDetailView: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavBar()
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.resetNavBar()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
-                                      navigationController: navigationController)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.resetNavBar()
-        scrollView.setForegroundColor(alpha: 1, navigationController: navigationController)
+        if !isMovingToParent {
+            scrollView.setToPreviousAlpha(navigationController: navigationController)
+        } else {
+            navigationController?.setNavBar()
+        }
     }
     
     override func viewDidLayoutSubviews() {

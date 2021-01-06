@@ -9,9 +9,12 @@
 import UIKit
 
 extension UINavigationController {
-    func setNavBar() {
-        navigationBar.setBackgroundImage(.init(), for: .default)
-        navigationBar.shadowImage = .init()
+    func setNavBar(withAlphaComponent: CGFloat = 0.0) {
+        let color = Constant.Color.primaryColor.withAlphaComponent(withAlphaComponent)
+        let image = UIImage.imageFromColor(color: color)
+
+        navigationBar.setBackgroundImage(image, for: .default)
+        navigationBar.shadowImage = image
         navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.clear ]
     }
     

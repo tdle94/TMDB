@@ -140,15 +140,16 @@ class PersonDetailView: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavBar()
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.resetNavBar()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
-                                      navigationController: navigationController)
+        if !isMovingToParent {
+            scrollView.setToPreviousAlpha(navigationController: navigationController)
+        } else {
+            navigationController?.setNavBar()
+        }
     }
     
     override func viewDidLayoutSubviews() {

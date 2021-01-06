@@ -155,10 +155,16 @@ class TVShowSeasonDetailView: UIViewController {
         setupViewLayout()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.resetNavBar()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
-        navigationController?.setNavBar()
-        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
-                                      navigationController: navigationController)
+        if !isMovingToParent {
+            scrollView.setToPreviousAlpha(navigationController: navigationController)
+        } else {
+            navigationController?.setNavBar()
+        }
     }
     
     override func viewDidLayoutSubviews() {

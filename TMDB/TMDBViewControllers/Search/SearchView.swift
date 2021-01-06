@@ -102,7 +102,7 @@ extension SearchView {
                         .asDriver(onErrorJustReturn: nil)
                         .drive(onNext: { result in
                             discoverCell.errorLabel.isHidden = result != nil
-                            discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.stopAnimating()
+                            discoverCell.movieLoadingIndicatorView?.loadingIndicator.stopAnimating()
                         })
                         .disposed(by: self.rx.disposeBag)
                     

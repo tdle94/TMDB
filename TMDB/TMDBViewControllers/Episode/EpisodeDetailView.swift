@@ -87,6 +87,7 @@ class EpisodeDetailView: UIViewController {
             }
         }
     }
+
     // MARK: - init
     init(viewModel: EpisodeDetailViewModelProtocol) {
         self.viewModel = viewModel
@@ -101,7 +102,7 @@ class EpisodeDetailView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setBackArrowIcon()
-        navigationController?.setNavBar()
+
         setupBinding()
 
         if let episode = self.episode, let id = self.tvShowId {
@@ -121,14 +122,15 @@ class EpisodeDetailView: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         navigationController?.resetNavBar()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        navigationController?.setNavBar()
-        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
-                                      navigationController: navigationController)
+        if !isMovingToParent {
+            scrollView.setToPreviousAlpha(navigationController: navigationController)
+        } else {
+            navigationController?.setNavBar()
+        }
     }
 }
 

@@ -50,6 +50,7 @@ class ReleaseDateView: UIViewController {
         navigationItem.searchController?.searchBar.backgroundColor = Constant.Color.primaryColor
         navigationItem.searchController?.searchBar.placeholder = NSLocalizedString("Country", comment: "")
         (navigationItem.searchController?.searchBar.value(forKey: "searchField") as? UITextField)?.textColor = Constant.Color.backgroundColor
+        (navigationItem.searchController?.searchBar.value(forKey: "searchField") as? UITextField)?.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Country", comment: ""), attributes: [ NSAttributedString.Key.foregroundColor : Constant.Color.backgroundColor ])
         navigationItem.searchController?.searchBar.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal),
                                                            for: .search,
                                                            state: .normal)
@@ -59,6 +60,15 @@ class ReleaseDateView: UIViewController {
         if let id = movieId {
             viewModel.getReleaseDates(movieId: id)
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavBar(withAlphaComponent: 1)
+        navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor ]
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.resetNavBar()
     }
 }
 

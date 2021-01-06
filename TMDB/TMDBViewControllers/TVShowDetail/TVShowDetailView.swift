@@ -174,26 +174,24 @@ class TVShowDetailView: UIViewController {
         }
     }
     
+    // MARK: - init
     init(viewModel: TVShowDetailViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: String(describing: TVShowDetailView.self), bundle: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavBar()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        scrollView.setToPreviousAlpha(safeAreaInsetTop: view.safeAreaInsets.top,
-                                      navigationController: navigationController)
-    }
-    
+    // MARK: - override
+
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         navigationController?.resetNavBar()
-        scrollView.setForegroundColor(alpha: 1, navigationController: navigationController)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        if !isMovingToParent {
+            scrollView.setToPreviousAlpha(navigationController: navigationController)
+        } else {
+            navigationController?.setNavBar()
+        }
     }
     
     override func viewDidLoad() {

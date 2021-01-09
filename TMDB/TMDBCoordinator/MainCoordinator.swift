@@ -50,6 +50,11 @@ protocol SearchViewDelegate: class {
     func navigateToMovieDetail(movieId: Int)
     func navigateToTVShowDetail(tvShowId: Int)
     func navigateToPersonDetail(personId: Int)
+    func presentFilterView(applyFilter: ApplyFilterDelegate)
+}
+
+protocol FilterViewDelegate: class {
+    func navigateToYearView(applyYear: ApplyYearProtocol)
 }
 
 protocol EpisodeViewDelegate: CommonNavigation {
@@ -100,6 +105,14 @@ class AppCoordinator {
     
     var episodeView: EpisodeDetailView {
         return container.resolve(EpisodeDetailView.self)!
+    }
+
+    var filterView: FilterView {
+        return container.resolve(FilterView.self)!
+    }
+    
+    var yearView: YearView {
+        return container.resolve(YearView.self)!
     }
 
     init(window: UIWindow, container: Container) {
@@ -173,6 +186,21 @@ class AppCoordinator {
         currentView?.navigationController?.pushViewController(view, animated: true)
         currentView = view
     }
+
+    fileprivate func showFilterView(applyFilter: ApplyFilterDelegate) {
+        let view = filterView
+        view.applyFilterDelegate = applyFilter
+        view.delegate = self
+        currentView?.navigationController?.present(UINavigationController(rootViewController: view), animated: true)
+    }
+    
+    fileprivate func showYearView(applyYear: ApplyYearProtocol) {
+        let view = yearView
+        view.applyYearDelegate = applyYear
+        ((currentView?.navigationController?.presentedViewController as? UINavigationController)?
+            .viewControllers.first as? FilterView)?
+            .navigationController?.pushViewController(view, animated: true)
+    }
     
     func navigateBack() {
         currentView = currentView?.navigationController?.popViewController(animated: true)
@@ -204,6 +232,10 @@ extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetai
     func navigateToEpisodeDetail(episode: Episode, tvShowId: Int) {
         showEpisode(episode: episode, tvShowId: tvShowId)
     }
+    
+    func presentFilterView(applyFilter: ApplyFilterDelegate) {
+        showFilterView(applyFilter: applyFilter)
+    }
 }
 
 extension AppCoordinator: TVShowDetailViewDelegate {
@@ -215,5 +247,11 @@ extension AppCoordinator: TVShowDetailViewDelegate {
 extension AppCoordinator: ListSeasonViewDelegate {
     func navigateToSeasonDetail(season: Season, tvShowId: Int) {
         showSeasonDetaiL(season: season, tvShowId: tvShowId)
+    }
+}
+
+extension AppCoordinator: FilterViewDelegate {
+    func navigateToYearView(applyYear: ApplyYearProtocol) {
+        showYearView(applyYear: applyYear)
     }
 }

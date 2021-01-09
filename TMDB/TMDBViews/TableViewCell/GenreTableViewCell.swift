@@ -58,8 +58,18 @@ class GenreTableViewCell: UITableViewCell {
 
             Observable<[Genre]>
                 .just(genres)
-                .bind(to: genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, genre, cell in
+                .bind(to: genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, genre, cell in
+                    let shouldSelect = viewModel.applyFilterQuery.withGenres?.components(separatedBy: ",").contains(String(genre.id)) ?? false
+
                     (cell as? TMDBKeywordCell)?.configure(item: genre)
+
+                    cell.isSelected = shouldSelect
+
+                    if shouldSelect {
+                        self.genreCollectionView.selectItem(at: IndexPath(row: row, section: 0),
+                                                            animated: false,
+                                                            scrollPosition: [])
+                    }
                 }
                 .disposed(by: rx.disposeBag)
         }

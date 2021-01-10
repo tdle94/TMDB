@@ -79,20 +79,26 @@ class SearchView: UIViewController {
 }
 
 extension SearchView: ApplyFilterDelegate {
+    var visibleRow: Int? {
+        return discoveryCollectionView.indexPathsForVisibleItems.first?.row
+    }
+
     var query: DiscoverQuery {
-        return discoveryCollectionView.indexPathsForVisibleItems.first?.row == 0 ? discoveryViewModel.movieQuery : discoveryViewModel.tvShowQuery
+        return visibleRow == 0 ? discoveryViewModel.movieQuery : discoveryViewModel.tvShowQuery
     }
 
     func applyFilter(query: DiscoverQuery) {
-        guard let indexPath = discoveryCollectionView.indexPathsForVisibleItems.first else {
+        guard let row = visibleRow else {
             return
         }
+
+        let indexPath = IndexPath(row: row, section: 0)
 
         (discoveryCollectionView.cellForItem(at: indexPath) as? DiscoverCollectionViewCell)?.entityCollectionView.scrollToItem(at: indexPath,
                                                                                                                                at: .bottom,
                                                                                                                                animated: true)
         
-        if indexPath.row == 0 {
+        if row == 0 {
             discoveryViewModel.applyMovieFilter(query: query)
         } else {
             discoveryViewModel.applyTVShowFilter(query: query)

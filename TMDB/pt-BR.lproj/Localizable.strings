@@ -78,8 +78,10 @@
 "Aliases" = "Apelido";
 "No item found" = "Nenhum item encontrado";
 "Error getting search result" = "Erro ao obter o resultado da pesquisa";
-"Popularity" = "Popularity";
-"Rating Average" = "Rating Average";
-"Most Rate" = "Most Rate";
-"Genres" = "Genres";
-"Any" = "Any";
+"Popularity" = "Popularidade";
+"Rating Average" = "Avaliação Média";
+"Most Rate" = "Maior taxa";
+"Genres" = "Gêneros";
+"Any" = "Qualquer";
+"Descending" = "descendente";
+"Ascending" = "Ascendente";

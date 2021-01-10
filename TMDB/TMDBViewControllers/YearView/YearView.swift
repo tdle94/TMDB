@@ -55,10 +55,12 @@ class YearView: UIViewController {
         navigationItem.setRightBarButton(doneBarButton, animated: true)
         navigationItem.setLeftBarButton(cancelBarButton, animated: true)
         setupBinding()
-        
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
         if let selectedIndexPath = self.selectedIndexPath {
             selectedYear = years[selectedIndexPath.row]
-            yearTableView.selectRow(at: selectedIndexPath, animated: true, scrollPosition: .bottom)
+            yearTableView.selectRow(at: selectedIndexPath, animated: true, scrollPosition: .middle)
         }
     }
 }

@@ -32,8 +32,8 @@ class FilterView: UIViewController {
     weak var delegate: FilterViewDelegate?
 
     // MARK: - views
-    let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: nil, action: nil)
-    let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
+    let doneBarButton = UIBarButtonItem(title: NSLocalizedString("Done", comment: ""), style: .done, target: nil, action: nil)
+    let cancelBarButton = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: ""), style: .plain, target: nil, action: nil)
 
     @IBOutlet weak var filterTableView: UITableView! {
         didSet {
@@ -178,7 +178,7 @@ extension FilterView: UITableViewDataSource {
         if indexPath.section < 4 {
             return UITableView.automaticDimension
         }
-        return 163
+        return applyFilterDelegate?.visibleRow == 0 ? 165 : 138
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -201,7 +201,8 @@ extension FilterView: UITableViewDataSource {
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.genreCell, for: indexPath) as! GenreTableViewCell
-        cell.setup(viewModel: viewModel, mediaType: .movie, selection: { genreId, isSelected in
+        let mediaType = applyFilterDelegate?.visibleRow == 0 ? GenreTableViewCell.MediaType.movie : GenreTableViewCell.MediaType.tvShow
+        cell.setup(viewModel: viewModel, mediaType: mediaType, selection: { genreId, isSelected in
             self.viewModel.handleGenre(id: genreId, isSelected: isSelected)
             self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.applyFilterQuery
         })
@@ -211,13 +212,13 @@ extension FilterView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Popularity"
+            return NSLocalizedString("Popularity", comment: "")
         } else if section == 1 {
-            return "Rating Average"
+            return NSLocalizedString("Rating Average", comment: "")
         } else if section == 2 {
-            return "Most Rate"
+            return NSLocalizedString("Most Rate", comment: "")
         }
-        return "Genres"
+        return NSLocalizedString("Genres", comment: "")
     }
     
 }

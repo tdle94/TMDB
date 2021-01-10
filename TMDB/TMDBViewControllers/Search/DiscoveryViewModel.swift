@@ -28,6 +28,7 @@ protocol DiscoveryViewModelProtocol {
 }
 
 protocol ApplyFilterDelegate: class {
+    var visibleRow: Int? { get }
     var query: DiscoverQuery { get }
 
     func applyFilter(query: DiscoverQuery)

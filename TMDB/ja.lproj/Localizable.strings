@@ -78,3 +78,8 @@
 "Aliases" = "エイリアス";
 "No item found" = "アイテムが見つかりません";
 "Error getting search result" = "検索結果の取得中にエラーが発生しました";
+"Popularity" = "Popularity";
+"Rating Average" = "Rating Average";
+"Most Rate" = "Most Rate";
+"Genres" = "Genres";
+"Any" = "Any";

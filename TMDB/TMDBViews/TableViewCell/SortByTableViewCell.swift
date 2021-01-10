@@ -21,33 +21,28 @@ class SortByTableViewCell: UITableViewCell {
     
     func setup(at indexPath: IndexPath, tableView: UITableView, filter: DiscoverQuery) {
         
+        var selectedIndexPath: IndexPath?
+        
         switch filter.sortBy {
         case .popularity(let order):
-            if indexPath.section == 0, indexPath.row == 0, order == .ascending {
-                isSelected = true
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-            } else if indexPath.section == 0, indexPath.row == 1, order == .descending {
-                isSelected = true
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            if indexPath.section == 0 && indexPath.row == 0 && order == .ascending || indexPath.section == 0 && indexPath.row == 1 && order == .descending {
+                selectedIndexPath = indexPath
             }
         case .voteAverage(let order):
-            if indexPath.section == 1, indexPath.row == 0, order == .ascending {
-                isSelected = true
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-            } else if indexPath.section == 1, indexPath.row == 1, order == .descending {
-                isSelected = true
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            if indexPath.section == 1 && indexPath.row == 0 && order == .ascending || indexPath.section == 1 && indexPath.row == 1 && order == .descending {
+               selectedIndexPath = indexPath
             }
         case .voteCount(let order):
-            if indexPath.section == 2, indexPath.row == 0, order == .ascending {
-                isSelected = true
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-            } else if indexPath.section == 2, indexPath.row == 1, order == .descending {
-                isSelected = true
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            if indexPath.section == 2 && indexPath.row == 0 && order == .ascending || indexPath.section == 2 && indexPath.row == 1 && order == .descending {
+                selectedIndexPath = indexPath
             }
         case .none:
             break
+        }
+        
+        if selectedIndexPath != nil {
+            isSelected = true
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
 
         if indexPath.row == 0 {

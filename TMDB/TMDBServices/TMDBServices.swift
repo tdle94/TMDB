@@ -14,26 +14,34 @@ struct TMDBServices {
 }
 
 // Use for movie and tv show discovery api
-struct DiscoverQuery {
-    enum SortBy {
-        enum popularity: String {
-            case ascending = "popularity.asc"
-            case descending = "popularity.desc"
-        }
-        enum voteAverage: String {
-            case ascending = "vote_average.asc"
-            case descending = "vote_average.dsc"
-        }
-        enum voteCount: String {
-            case ascending = "vote_count.asc"
-            case descending = "vote_count.desc"
-        }
+struct DiscoverQuery: Equatable {
+
+    enum SortBy: Equatable {
+        case popularity(order: Popularity)
+        case voteAverage(order: VoteAverage)
+        case voteCount(order: VoteCount)
+        case none
+    }
+
+    enum Popularity: String {
+        case ascending = "popularity.asc"
+        case descending = "popularity.desc"
+    }
+
+    enum VoteAverage: String {
+        case ascending = "vote_average.asc"
+        case descending = "vote_average.dsc"
+    }
+
+    enum VoteCount: String {
+        case ascending = "vote_count.asc"
+        case descending = "vote_count.desc"
     }
     
     var page: Int = 1
     var language: String?
     var region: String?
-    var sortBy: SortBy?
+    var sortBy: SortBy = SortBy.none
     var certificationCountry: String?
     var certification: String?
     var includeVideo: Bool?
@@ -43,4 +51,21 @@ struct DiscoverQuery {
     var withGenres: String?
     var withKeyword: String?
     var withOriginalLanguage: String?
+    
+    static func == (lhs: DiscoverQuery, rhs: DiscoverQuery) -> Bool {
+        return
+            lhs.sortBy == rhs.sortBy &&
+            lhs.page == rhs.page &&
+            lhs.language == rhs.language &&
+            lhs.region == rhs.region &&
+            lhs.certificationCountry == rhs.certificationCountry &&
+            lhs.certification == rhs.certification &&
+            lhs.includeVideo == rhs.includeVideo &&
+            lhs.primaryReleaseYear == rhs.primaryReleaseYear &&
+            lhs.year == rhs.year &&
+            lhs.withPeople == rhs.withPeople &&
+            lhs.withGenres == rhs.withGenres &&
+            lhs.withKeyword == rhs.withKeyword &&
+            lhs.withOriginalLanguage == rhs.withOriginalLanguage
+    }
 }

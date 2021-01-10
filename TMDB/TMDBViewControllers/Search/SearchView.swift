@@ -22,6 +22,8 @@ class SearchView: UIViewController {
     var searchController: UISearchController
     
     private var searchResult: SearchResultView?
+    
+    var filterBarButton = UIBarButtonItem(title: "Filter", style: .plain, target: nil, action: nil)
 
     @IBOutlet weak var discoveryChoiceView: DiscoveryFilterButtonView!
     @IBOutlet weak var discoveryCollectionView: UICollectionView! {
@@ -61,6 +63,9 @@ class SearchView: UIViewController {
                                             for: .search,
                                             state: .normal)
         navigationItem.titleView = searchController.searchBar
+
+        filterBarButton.tintColor = Constant.Color.backgroundColor
+        navigationItem.setRightBarButton(filterBarButton,animated: true)
         setupBinding()
     }
 
@@ -73,8 +78,47 @@ class SearchView: UIViewController {
     }
 }
 
+extension SearchView: ApplyFilterDelegate {
+    var visibleRow: Int? {
+        return discoveryCollectionView.indexPathsForVisibleItems.first?.row
+    }
+
+    var query: DiscoverQuery {
+        return visibleRow == 0 ? discoveryViewModel.movieQuery : discoveryViewModel.tvShowQuery
+    }
+
+    func applyFilter(query: DiscoverQuery) {
+        guard let row = visibleRow else {
+            return
+        }
+
+        let indexPath = IndexPath(row: row, section: 0)
+
+        (discoveryCollectionView.cellForItem(at: indexPath) as? DiscoverCollectionViewCell)?.entityCollectionView.scrollToItem(at: indexPath,
+                                                                                                                               at: .bottom,
+                                                                                                                               animated: true)
+        
+        if row == 0 {
+            discoveryViewModel.applyMovieFilter(query: query)
+        } else {
+            discoveryViewModel.applyTVShowFilter(query: query)
+        }
+
+    }
+}
+
 extension SearchView {
     func setupBinding() {
+        // bind filter bar button
+        filterBarButton
+            .rx
+            .tap
+            .asDriver()
+            .drive(onNext: { _ in
+                self.delegate?.presentFilterView(applyFilter: self)
+            })
+            .disposed(by: rx.disposeBag)
+
         // bind discover collection view
         Observable<[Int]>
             .just([0,1])
@@ -88,7 +132,7 @@ extension SearchView {
 
                 if section == 0 {
                     // get first page initially
-                    self.discoveryViewModel.getAllMovie(query: DiscoverQuery(), nextPage: false)
+                    self.discoveryViewModel.getAllMovie(nextPage: false)
                     
                     
                     // bind inner collection view
@@ -131,14 +175,14 @@ extension SearchView {
 
                             if bottomEdge >= discoverCell.entityCollectionView.contentSize.height, !(discoverCell.movieLoadingIndicatorView?.loadingIndicator.isAnimating ?? true) {
                                 discoverCell.movieLoadingIndicatorView?.loadingIndicator.startAnimating()
-                                self.discoveryViewModel.getAllMovie(query: DiscoverQuery(), nextPage: true)
+                                self.discoveryViewModel.getAllMovie(nextPage: true)
                             }
                         })
                         .disposed(by: self.rx.disposeBag)
 
                 } else if section == 1 {
                     // get first page initially
-                    self.discoveryViewModel.getAllTVShow(query: DiscoverQuery(), nextPage: false)
+                    self.discoveryViewModel.getAllTVShow(nextPage: false)
                     
                     // bind inner collection view
                     self.discoveryViewModel
@@ -180,7 +224,7 @@ extension SearchView {
                             
                             if bottomEdge >= discoverCell.entityCollectionView.contentSize.height, !(discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.isAnimating ?? true) {
                                 discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.startAnimating()
-                                self.discoveryViewModel.getAllTVShow(query: DiscoverQuery(), nextPage: true)
+                                self.discoveryViewModel.getAllTVShow(nextPage: true)
                             }
                         })
                         .disposed(by: self.rx.disposeBag)
@@ -330,24 +374,51 @@ extension SearchView {
             })
             .disposed(by: rx.disposeBag)
         
-        // search when user tap search button
+        // bind search controller
+        searchController
+            .searchBar
+            .rx
+            .textDidBeginEditing
+            .asDriver()
+            .drive(onNext: {
+                self.filterBarButton.isEnabled = false
+            })
+            .disposed(by: rx.disposeBag)
+        
+        searchController
+            .searchBar
+            .rx
+            .cancelButtonClicked
+            .asDriver()
+            .drive(onNext: {
+                self.filterBarButton.isEnabled = true
+            })
+            .disposed(by: rx.disposeBag)
+        
+        searchController
+            .rx
+            .didDismiss
+            .subscribe { _ in
+                self.filterBarButton.isEnabled = true
+            }
+            .disposed(by: rx.disposeBag)
+        
         searchController
             .searchBar
             .rx
             .searchButtonClicked
-            .subscribe { _ in
+            .asDriver()
+            .drive(onNext: {
                 guard
                     let text = self.searchController.searchBar.text,
                     !text.isEmpty
                 else {
                     return
                 }
-
                 self.search(text: text)
-            }
+            })
             .disposed(by: rx.disposeBag)
         
-        // search when user is typing in searchbar
         searchController
             .searchBar
             .rx

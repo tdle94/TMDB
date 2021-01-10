@@ -77,6 +77,10 @@ extension DefaultContainer {
             DiscoveryViewModel(movieRepository: resolver.resolve(TMDBMovieRepository.self)!,
                                tvShowRepository: resolver.resolve(TMDBTVShowRepository.self)!)
         }
+        
+        self.container.register(FilterViewModelProtocol.self) { resolver in
+            FilterViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
     }
 
     func registerViews() {
@@ -125,6 +129,14 @@ extension DefaultContainer {
         
         self.container.register(EpisodeDetailView.self) { resolver in
             EpisodeDetailView(viewModel: resolver.resolve(EpisodeDetailViewModelProtocol.self)!)
+        }
+        
+        self.container.register(FilterView.self) { resolver in
+            FilterView(viewModel: resolver.resolve(FilterViewModelProtocol.self)!)
+        }
+        
+        self.container.register(YearView.self) { resolver in
+            YearView()
         }
     }
     

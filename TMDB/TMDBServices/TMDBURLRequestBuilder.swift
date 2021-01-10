@@ -81,7 +81,18 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         }
         
         if let primaryReleaseYear = query.primaryReleaseYear {
-            queryItems.append(URLQueryItem(name: "primary_release_year", value: String(primaryReleaseYear)))
+            queryItems.append(URLQueryItem(name: "first_air_date_year", value: String(primaryReleaseYear)))
+        }
+
+        switch query.sortBy {
+        case .popularity(let order):
+            queryItems.append(URLQueryItem(name: "sort_by", value: order.rawValue))
+        case .voteAverage(let order):
+            queryItems.append(URLQueryItem(name: "sort_by", value: order.rawValue))
+        case .voteCount(let order):
+            queryItems.append(URLQueryItem(name: "sort_by", value: order.rawValue))
+        default:
+            break
         }
 
         return buildURLRequest(path: "/3/discover/tv", queryItems: queryItems)
@@ -171,7 +182,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         return buildURLRequest(path: "/3/tv/\(tvShowId)/images", queryItems: nil)
     }
 
-    // MARK: - peopele
+    // MARK: - people
 
     func getPopularPeopleURLRequest(page: Int, language: String?) -> URLRequest {
         let queryItems = [
@@ -256,6 +267,17 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
         if let primaryReleaseYear = query.primaryReleaseYear {
             queryItems.append(URLQueryItem(name: "primary_release_year", value: String(primaryReleaseYear)))
+        }
+        
+        switch query.sortBy {
+        case .popularity(let order):
+            queryItems.append(URLQueryItem(name: "sort_by", value: order.rawValue))
+        case .voteAverage(let order):
+            queryItems.append(URLQueryItem(name: "sort_by", value: order.rawValue))
+        case .voteCount(let order):
+            queryItems.append(URLQueryItem(name: "sort_by", value: order.rawValue))
+        default:
+            break
         }
 
         return buildURLRequest(path: "/3/discover/movie", queryItems: queryItems)

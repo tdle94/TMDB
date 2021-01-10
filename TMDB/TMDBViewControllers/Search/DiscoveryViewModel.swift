@@ -16,9 +16,22 @@ protocol DiscoveryViewModelProtocol {
     
     var movie: BehaviorSubject<[SectionModel<String, Movie>]?> { get }
     var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]?> { get }
+    
+    var movieQuery: DiscoverQuery { get }
+    var tvShowQuery: DiscoverQuery { get }
 
-    func getAllMovie(query: DiscoverQuery, nextPage: Bool)
-    func getAllTVShow(query: DiscoverQuery, nextPage: Bool)
+    func getAllMovie(nextPage: Bool)
+    func getAllTVShow(nextPage: Bool)
+    
+    func applyMovieFilter(query: DiscoverQuery)
+    func applyTVShowFilter(query: DiscoverQuery)
+}
+
+protocol ApplyFilterDelegate: class {
+    var visibleRow: Int? { get }
+    var query: DiscoverQuery { get }
+
+    func applyFilter(query: DiscoverQuery)
 }
 
 class DiscoveryViewModel: DiscoveryViewModelProtocol {
@@ -28,6 +41,9 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
     var movie: BehaviorSubject<[SectionModel<String, Movie>]?> = BehaviorSubject(value: [])
     var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]?> = BehaviorSubject(value: [])
     
+    var movieQuery: DiscoverQuery = DiscoverQuery()
+    var tvShowQuery: DiscoverQuery = DiscoverQuery()
+
     private var movieResult: MovieResult = MovieResult()
     
     private var tvShowResult: TVShowResult = TVShowResult()
@@ -37,19 +53,21 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         self.tvShowRepository = tvShowRepository
     }
 
-    func getAllMovie(query: DiscoverQuery, nextPage: Bool) {
-        var modifyQuery = query
+    func getAllMovie(nextPage: Bool) {
+        
+        var query = movieQuery
         
         if nextPage {
-            self.movieResult.page += 1
-            modifyQuery.page = self.movieResult.page
+            query.page += 1
         }
 
-        self.movieRepository.getAllMovie(query: modifyQuery) { result in
+        self.movieRepository.getAllMovie(query: query) { result in
             switch result {
             case .success(let movieResult):
                 if nextPage {
                     self.movieResult.movies.append(objectsIn: movieResult.movies)
+                    self.movieResult.page += 1
+                    self.movieQuery.page += 1
                 } else {
                     self.movieResult = movieResult
                 }
@@ -65,20 +83,22 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         }
     }
 
-    func getAllTVShow(query: DiscoverQuery, nextPage: Bool) {
-        var modifyQuery = query
+    func getAllTVShow(nextPage: Bool) {
+        
+        var query = tvShowQuery
         
         if nextPage {
-            self.tvShowResult.page += 1
-            modifyQuery.page = self.tvShowResult.page
+            query.page += 1
         }
         
-        self.tvShowRepository.getAllTVShow(query: modifyQuery) { result in
+        self.tvShowRepository.getAllTVShow(query: query) { result in
             switch result {
             case .success(let tvShowResult):
                 
                 if nextPage {
                     self.tvShowResult.onTV.append(objectsIn: tvShowResult.onTV)
+                    self.tvShowResult.page += 1
+                    self.tvShowQuery.page += 1
                 } else {
                     self.tvShowResult = tvShowResult
                 }
@@ -92,5 +112,19 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
                                                                                                               queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
+    }
+    
+    func applyMovieFilter(query: DiscoverQuery) {
+        movieQuery = query
+        movie.onNext([])
+
+        getAllMovie(nextPage: false)
+    }
+
+    func applyTVShowFilter(query: DiscoverQuery) {
+        tvShowQuery = query
+        tvShow.onNext([])
+        
+        getAllTVShow(nextPage: false)
     }
 }

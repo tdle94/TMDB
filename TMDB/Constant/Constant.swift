@@ -31,7 +31,7 @@ struct Constant {
         static let displayAllCell = "DisplayAll"
         static let loading = "LoadingCell"
         static let sortByCell = "SortByCell"
-        static let yearCell = "YearCell"
+        static let cell = "Cell"
         static let genreCell = "GenreCell"
     }
     struct Color {

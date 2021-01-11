@@ -10,11 +10,11 @@ import UIKit
 import RxSwift
 import RxDataSources
 
-protocol ApplyYearProtocol: class {
-    var selectedYear: Int? { get }
+protocol ApplyProtocol: class {
+    var currentApplyQuery: DiscoverQuery { get }
 
     func apply(year: String?)
-    func cancel()
+    func apply(keywords: String?)
 }
 
 class FilterView: UIViewController {
@@ -43,7 +43,7 @@ class FilterView: UIViewController {
             filterTableView.register(UINib(nibName: String(describing: GenreTableViewCell.self), bundle: nil),
                                      forCellReuseIdentifier: Constant.Identifier.genreCell)
             filterTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
-                                     forCellReuseIdentifier: Constant.Identifier.yearCell)
+                                     forCellReuseIdentifier: Constant.Identifier.cell)
             filterTableView.tableFooterView = UIView()
         }
     }
@@ -94,30 +94,46 @@ extension FilterView {
     }
 }
 
-extension FilterView: ApplyYearProtocol {
+extension FilterView: ApplyProtocol {
     
-    var selectedYear: Int? {
-        return viewModel.applyFilterQuery.primaryReleaseYear
+    var currentApplyQuery: DiscoverQuery {
+        viewModel.applyFilterQuery
+    }
+
+    func apply(keywords: String?) {
+        let detailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 4))?.detailTextLabel
+         
+        viewModel.applyFilterQuery.withKeyword = keywords
+        doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+
+        if let numberOfSelectedKeywords = keywords?.components(separatedBy: ",").count {
+            detailTextLabel?.setHeader(title: String(numberOfSelectedKeywords))
+        } else {
+            detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
+        }
+        
+        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 4)], with: .none)
     }
     
     func apply(year: String?) {
-        filterTableView.reloadSections(IndexSet(0...2), with: .none)
-        filterTableView.cellForRow(at: IndexPath(row: 0, section: 3))?.detailTextLabel?.setHeader(title: year == nil ? "Any" : year!)
+        let detailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 3))?.detailTextLabel
+
         viewModel.applyFilterQuery.primaryReleaseYear = year == nil ? nil : Int(year!)
         doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
-    }
 
-    func cancel() {
-        filterTableView.reloadSections(IndexSet(0...2), with: .none)
+        detailTextLabel?.setHeader(title: year ?? NSLocalizedString("Any", comment: ""))
+        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
     }
 }
 
 extension FilterView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section < 3 else {
+            tableView.deselectRow(at: indexPath, animated: false)
             if indexPath.section == 3 {
-                tableView.deselectRow(at: indexPath, animated: false)
-                delegate?.navigateToYearView(applyYear: self)
+                delegate?.navigateToYearView(apply: self)
+            } else if indexPath.section == 4 {
+                delegate?.navigateToKeywordView(apply: self)
             }
             return
         }
@@ -136,7 +152,7 @@ extension FilterView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
 
         tableView.indexPathsForSelectedRows?.forEach { selectedIndexPath in
-            if selectedIndexPath.section < 3, selectedIndexPath != indexPath {
+            if indexPath.section < 3, selectedIndexPath.section < 3, selectedIndexPath != indexPath {
                 tableView.cellForRow(at: selectedIndexPath)?.isSelected = false
                 tableView.deselectRow(at: selectedIndexPath, animated: false)
             }
@@ -147,6 +163,7 @@ extension FilterView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard indexPath.section < 3 else {
+            tableView.cellForRow(at: indexPath)?.isSelected = false
             return
         }
 
@@ -171,11 +188,11 @@ extension FilterView: UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 6
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section < 4 {
+        if indexPath.section < 5 {
             return UITableView.automaticDimension
         }
         return applyFilterDelegate?.visibleRow == 0 ? 165 : 138
@@ -189,13 +206,23 @@ extension FilterView: UITableViewDataSource {
 
             return cell
         } else if indexPath.section == 3 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.yearCell, for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
             if let year = viewModel.applyFilterQuery.primaryReleaseYear {
                 cell.detailTextLabel?.setHeader(title: String(year))
             } else {
-                cell.detailTextLabel?.setHeader(title: "Any")
+                cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
             }
-            cell.textLabel?.setHeader(title: "Year")
+            cell.textLabel?.setHeader(title: NSLocalizedString("Year", comment: ""))
+
+            return cell
+        } else if indexPath.section == 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
+            if let keywords = viewModel.applyFilterQuery.withKeyword {
+                cell.detailTextLabel?.setHeader(title: String(keywords.components(separatedBy: ",").count))
+            } else {
+                cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
+            }
+            cell.textLabel?.setHeader(title: NSLocalizedString("Keyword", comment: ""))
 
             return cell
         }
@@ -217,8 +244,10 @@ extension FilterView: UITableViewDataSource {
             return NSLocalizedString("Rating Average", comment: "")
         } else if section == 2 {
             return NSLocalizedString("Most Rate", comment: "")
+        } else if section == 5 {
+            return NSLocalizedString("Genres", comment: "")
         }
-        return NSLocalizedString("Genres", comment: "")
+        return ""
     }
     
 }

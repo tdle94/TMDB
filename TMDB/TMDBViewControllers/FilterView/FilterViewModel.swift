@@ -19,13 +19,7 @@ protocol FilterViewModelProtocol {
 class FilterViewModel: FilterViewModelProtocol {
     var userSetting: TMDBUserSettingProtocol
     
-    var applyFilterQuery: DiscoverQuery = DiscoverQuery() {
-        didSet {
-            if let genres = applyFilterQuery.withGenres, selectedGenreId.isEmpty, genres.isNotEmpty {
-                selectedGenreId = genres.components(separatedBy: ",").map { Int($0)! }
-            }
-        }
-    }
+    var applyFilterQuery: DiscoverQuery = DiscoverQuery()
     
     private var selectedGenreId: [Int] = []
     
@@ -60,17 +54,19 @@ class FilterViewModel: FilterViewModelProtocol {
     }
     
     func handleGenre(id: Int, isSelected: Bool) {
-        if applyFilterQuery.withGenres == nil {
-            applyFilterQuery.withGenres = ""
+        guard var genres = applyFilterQuery.withGenres else {
+            applyFilterQuery.withGenres = "\(id)"
+            return
         }
 
         if isSelected {
-            selectedGenreId.append(id)
+            genres += ",\(id)"
+            applyFilterQuery.withGenres = genres
         } else {
-            selectedGenreId.removeAll(where: { $0 == id })
+            var modifiedGenres = genres.components(separatedBy: ",")
+            modifiedGenres.removeAll(where: { $0 == String(id) })
+            applyFilterQuery.withGenres = modifiedGenres.joined(separator: ",")
         }
-        
-        applyFilterQuery.withGenres = selectedGenreId.map { String($0) }.joined(separator: ",")
 
         if applyFilterQuery.withGenres?.isEmpty ?? false {
             applyFilterQuery.withGenres = nil

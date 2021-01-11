@@ -14,10 +14,10 @@ class YearView: UIViewController {
 
     var selectedYear: String?
 
-    weak var applyYearDelegate: ApplyYearProtocol? {
+    weak var applyDelegate: ApplyProtocol? {
         didSet {
             if
-                let year = applyYearDelegate?.selectedYear,
+                let year = applyDelegate?.currentApplyQuery.primaryReleaseYear,
                 let row = years.firstIndex(of: String(year)) {
                 
                 selectedIndexPath = IndexPath(row: row, section: 0)
@@ -41,7 +41,7 @@ class YearView: UIViewController {
     @IBOutlet weak var yearTableView: UITableView! {
         didSet {
             yearTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil),
-                                   forCellReuseIdentifier: Constant.Identifier.yearCell)
+                                   forCellReuseIdentifier: Constant.Identifier.cell)
             yearTableView.delegate = self
         }
     }
@@ -52,6 +52,7 @@ class YearView: UIViewController {
         doneBarButton.tintColor = Constant.Color.backgroundColor
         cancelBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.isEnabled = false
+        title = NSLocalizedString("Year", comment: "")
         navigationItem.setRightBarButton(doneBarButton, animated: true)
         navigationItem.setLeftBarButton(cancelBarButton, animated: true)
         setupBinding()
@@ -70,7 +71,7 @@ extension YearView: UITableViewDelegate {
         if let selectedIndexPath = self.selectedIndexPath, indexPath == selectedIndexPath {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
             
-            if self.applyYearDelegate?.selectedYear == Int(years[indexPath.row]) {
+            if applyDelegate?.currentApplyQuery.primaryReleaseYear == Int(years[indexPath.row]) {
                 doneBarButton.isEnabled = true
             }
             
@@ -85,7 +86,7 @@ extension YearView {
     func setupBinding() {
         Observable<[String]>
             .just(years)
-            .bind(to: yearTableView.rx.items(cellIdentifier: Constant.Identifier.yearCell)) { row, year, cell in
+            .bind(to: yearTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { row, year, cell in
                 if let selectedIndexPath = self.selectedIndexPath {
                     cell.accessoryType = row != selectedIndexPath.row ? .none : .checkmark
                 }
@@ -99,7 +100,7 @@ extension YearView {
             .asDriver()
             .drive(onNext: { indexPath in
                 self.yearTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-                self.doneBarButton.isEnabled = self.applyYearDelegate?.selectedYear != Int(self.years[indexPath.row])
+                self.doneBarButton.isEnabled = self.applyDelegate?.currentApplyQuery.primaryReleaseYear != Int(self.years[indexPath.row])
                 self.selectedIndexPath = indexPath
             })
             .disposed(by: rx.disposeBag)
@@ -111,7 +112,7 @@ extension YearView {
             .asDriver()
             .drive(onNext: { indexPath in
                 self.yearTableView.cellForRow(at: indexPath)?.accessoryType = .none
-                self.doneBarButton.isEnabled = self.applyYearDelegate?.selectedYear != Int(self.years[indexPath.row])
+                self.doneBarButton.isEnabled = self.applyDelegate?.currentApplyQuery.primaryReleaseYear != Int(self.years[indexPath.row])
                 self.selectedIndexPath = nil
             })
             .disposed(by: rx.disposeBag)
@@ -122,9 +123,9 @@ extension YearView {
             .asDriver()
             .drive(onNext: {
                 if let indexPath = self.selectedIndexPath {
-                    self.applyYearDelegate?.apply(year: self.years[indexPath.row])
+                    self.applyDelegate?.apply(year: self.years[indexPath.row])
                 } else {
-                    self.applyYearDelegate?.apply(year: nil)
+                    self.applyDelegate?.apply(year: nil)
                 }
                 self.navigationController?.popViewController(animated: true)
             })
@@ -135,7 +136,6 @@ extension YearView {
             .tap
             .asDriver()
             .drive(onNext: {
-                self.applyYearDelegate?.cancel()
                 self.navigationController?.popViewController(animated: true)
             })
             .disposed(by: rx.disposeBag)

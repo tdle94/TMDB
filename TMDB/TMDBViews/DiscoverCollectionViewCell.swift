@@ -39,7 +39,7 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
             entityCollectionView.backgroundView?.addSubview(errorLabel)
 
             errorLabel.translatesAutoresizingMaskIntoConstraints = false
-            errorLabel.setHeader(title: NSLocalizedString("Error getting search resul", comment: ""))
+            errorLabel.setHeader(title: NSLocalizedString("Error getting search result", comment: ""))
             errorLabel.centerXAnchor.constraint(equalTo: entityCollectionView.backgroundView!.centerXAnchor).isActive = true
             errorLabel.centerYAnchor.constraint(equalTo: entityCollectionView.backgroundView!.centerYAnchor).isActive = true
             

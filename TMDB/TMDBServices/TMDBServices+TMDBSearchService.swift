@@ -13,4 +13,9 @@ extension TMDBServices: TMDBSearchService {
         let request = urlRequestBuilder.getMultiSearchURLRequest(query: query, language: NSLocale.current.languageCode, region: NSLocale.current.regionCode, page: page)
         session.send(request: request, responseType: MultiSearchResult.self, completion: completion)
     }
+    
+    func searchKeyword(query: String, page: Int, completion: @escaping (Result<KeywordSearchResult, Error>) -> Void) {
+        let request = urlRequestBuilder.getSearchKeywordURLRequest(query: query, page: page)
+        session.send(request: request, responseType: KeywordSearchResult.self, completion: completion)
+    }
 }

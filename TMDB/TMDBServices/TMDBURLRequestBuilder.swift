@@ -48,6 +48,7 @@ protocol TMDBURLRequestBuilderProtocol {
 
     // MARK: - search
     func getMultiSearchURLRequest(query: String, language: String?, region: String?, page: Int) -> URLRequest
+    func getSearchKeywordURLRequest(query: String, page: Int) -> URLRequest
 
     // MARK: - authentication
     func getGuestSessionURLRequest() -> URLRequest
@@ -368,6 +369,14 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "include_adult", value: String(false))
         ]
         return buildURLRequest(path: "/3/search/multi", queryItems: queryItems)
+    }
+    
+    func getSearchKeywordURLRequest(query: String, page: Int = 1) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "page", value: String(page))
+        ]
+        return buildURLRequest(path: "/3/search/keyword", queryItems: queryItems)
     }
 
     // MARK: - authentication

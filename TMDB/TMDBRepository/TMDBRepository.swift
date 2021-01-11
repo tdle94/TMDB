@@ -86,6 +86,19 @@ extension TMDBRepository: TMDBSearchRepository {
             }
         }
     }
+
+    func searchKeyword(query: String, page: Int = 1, completion: @escaping (Result<KeywordSearchResult, Error>) -> Void) {
+        services.searchKeyword(query: query, page: page) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let keywordSearchResult):
+                    completion(.success(keywordSearchResult))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
 }
 
 extension TMDBRepository: TMDBTrendingRepository {

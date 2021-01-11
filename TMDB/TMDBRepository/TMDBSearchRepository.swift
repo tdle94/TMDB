@@ -10,4 +10,5 @@ import Foundation
 
 protocol TMDBSearchRepository {
     func multiSearch(query: String, page: Int, completion: @escaping (Result<MultiSearchResult, Error>) -> Void)
+    func searchKeyword(query: String, page: Int, completion: @escaping (Result<KeywordSearchResult, Error>) -> Void)
 }

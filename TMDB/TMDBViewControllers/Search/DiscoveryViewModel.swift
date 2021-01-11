@@ -60,6 +60,11 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         if nextPage {
             query.page += 1
         }
+        
+        if query.page > movieResult.totalPages, movieResult.totalPages != 0 {
+            self.movie.onNext(nil)
+            return
+        }
 
         self.movieRepository.getAllMovie(query: query) { result in
             switch result {
@@ -89,6 +94,11 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         
         if nextPage {
             query.page += 1
+        }
+        
+        if query.page > tvShowResult.totalPages, tvShowResult.totalPages != 0 {
+            self.tvShow.onNext(nil)
+            return
         }
         
         self.tvShowRepository.getAllTVShow(query: query) { result in

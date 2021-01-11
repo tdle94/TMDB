@@ -11,6 +11,8 @@ import UIKit
 class KeywordView: UIViewController {
     var viewModel: KeywordViewModelProtocol
     
+    weak var delegate: KeywordViewDelegate?
+    
     weak var applyDelegate: ApplyProtocol? {
         didSet {
             viewModel.query = applyDelegate?.currentApplyQuery
@@ -25,7 +27,7 @@ class KeywordView: UIViewController {
     @IBOutlet weak var keywordTableView: UITableView! {
         didSet {
             keywordTableView.tableFooterView = UIView()
-            keywordTableView.delegate = self
+            keywordTableView.tintColor = Constant.Color.primaryColor
             keywordTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil),
                                       forCellReuseIdentifier: Constant.Identifier.keywordCell)
         }
@@ -49,23 +51,11 @@ class KeywordView: UIViewController {
         cancelBarButton.tintColor = Constant.Color.backgroundColor
         addKeywordBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.isEnabled = false
-        navigationItem.setRightBarButtonItems([addKeywordBarButton, doneBarButton], animated: true)
+        navigationItem.setRightBarButtonItems([doneBarButton, addKeywordBarButton], animated: true)
         navigationItem.setLeftBarButton(cancelBarButton, animated: true)
         title = NSLocalizedString("Keyword", comment: "")
+
         setupBinding()
-    }
-}
-
-extension KeywordView: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-
-        let numberOfKeywords = try! viewModel.keywords.value().count - 1
-
-        guard numberOfKeywords != indexPath.row else {
-            return nil
-        }
-
-        return indexPath
     }
 }
 
@@ -76,8 +66,17 @@ extension KeywordView {
             .tap
             .asDriver()
             .drive(onNext: {
-                self.navigationController?.popViewController(animated: true)
                 self.applyDelegate?.apply(keywords: self.viewModel.query?.withKeyword)
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        addKeywordBarButton
+            .rx
+            .tap
+            .asDriver()
+            .drive(onNext: {
+                self.delegate?.navigateToSearchKeywordView(applyKeyword: self.viewModel)
             })
             .disposed(by: rx.disposeBag)
         
@@ -106,6 +105,14 @@ extension KeywordView {
                 cell.isSelected = keywords?.contains(String(keyword.id)) ?? false
                 cell.textLabel?.setHeader(title: keyword.name)
             }
+            .disposed(by: rx.disposeBag)
+        
+        viewModel
+            .keywords
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { _ in
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.currentApplyQuery
+            })
             .disposed(by: rx.disposeBag)
         
         keywordTableView

@@ -8,7 +8,11 @@
 
 import RxSwift
 
-protocol KeywordViewModelProtocol {
+protocol ApplyKeyword: class {
+    func apply(newKeywords: [Keyword])
+}
+
+protocol KeywordViewModelProtocol: ApplyKeyword {
     var query: DiscoverQuery? { get set }
     var keywords: BehaviorSubject<[Keyword]> { get }
     
@@ -23,8 +27,7 @@ class KeywordViewModel: KeywordViewModelProtocol {
         Keyword(name: "ambiguous ending", id: 256055), Keyword(name: "americana", id: 165508),
         Keyword(name: "anime", id: 210024), Keyword(name: "anti hero", id: 2095),
         Keyword(name: "avant-garde", id: 15216), Keyword(name: "b movie", id: 11034),
-        Keyword(name: "bank heist", id: 191845), Keyword(name: "based on novel", id: 274858),
-        Keyword(name: "+ Add Keyword", id: -1)
+        Keyword(name: "bank heist", id: 191845), Keyword(name: "based on novel", id: 274858)
     ])
     
     func handle(keyword: Keyword, isSelected: Bool) {
@@ -45,5 +48,20 @@ class KeywordViewModel: KeywordViewModelProtocol {
         if query?.withKeyword?.isEmpty ?? false {
             query?.withKeyword = nil
         }
+    }
+    
+    func apply(newKeywords: [Keyword]) {
+        let stringKeywords = newKeywords.map { String($0.id) }.joined(separator: ",")
+        
+        if query?.withKeyword == nil {
+            query?.withKeyword = stringKeywords
+        } else {
+            query?.withKeyword?.append(",\(stringKeywords)")
+        }
+
+        var previousKeywords = try! keywords.value()
+        previousKeywords.append(contentsOf: newKeywords)
+        
+        keywords.onNext(previousKeywords)
     }
 }

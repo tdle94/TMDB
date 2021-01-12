@@ -232,6 +232,10 @@ class Keyword: Object, Decodable {
     override class func primaryKey() -> String? {
         return "id"
     }
+    
+    static func == (lhs: Keyword, rhs: Keyword) -> Bool {
+        return lhs.name == rhs.name && lhs.id == rhs.id
+    }
 }
 
 @objcMembers

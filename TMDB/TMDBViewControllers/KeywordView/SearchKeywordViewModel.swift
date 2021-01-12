@@ -7,6 +7,7 @@
 //
 
 import RxSwift
+import NotificationBannerSwift
 
 protocol SearchKeywordViewModelProtocol {
     var keywords: BehaviorSubject<[Keyword]?> { get }
@@ -43,6 +44,9 @@ class SearchKeywordViewModel: SearchKeywordViewModelProtocol {
             case .failure(let error):
                 debugPrint("Error searching for keyword: \(error.localizedDescription)")
                 self.keywords.onNext(nil)
+                StatusBarNotificationBanner(title: "Fail getting search keyword", style: .danger).show(queuePosition: .back,
+                                                                                                       bannerPosition: .top,
+                                                                                                       queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
     }

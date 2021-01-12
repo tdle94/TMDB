@@ -11,10 +11,9 @@ import RxSwift
 import RxDataSources
 
 protocol ApplyProtocol: class {
-    var currentApplyQuery: DiscoverQuery { get }
+    var currentApplyQuery: DiscoverQuery? { get }
 
-    func apply(year: String?)
-    func apply(keywords: String?)
+    func apply(query: DiscoverQuery?)
 }
 
 class FilterView: UIViewController {
@@ -96,33 +95,31 @@ extension FilterView {
 
 extension FilterView: ApplyProtocol {
     
-    var currentApplyQuery: DiscoverQuery {
+    var currentApplyQuery: DiscoverQuery? {
         viewModel.applyFilterQuery
     }
 
-    func apply(keywords: String?) {
-        let detailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 4))?.detailTextLabel
+    func apply(query: DiscoverQuery?) {
+        let keywordDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 4))?.detailTextLabel
+        let yearDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 3))?.detailTextLabel
          
-        viewModel.applyFilterQuery.withKeyword = keywords
+        viewModel.applyFilterQuery = query
+
         doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
 
-        if let numberOfSelectedKeywords = keywords?.components(separatedBy: ",").count {
-            detailTextLabel?.setHeader(title: String(numberOfSelectedKeywords))
+        if let numberOfSelectedKeywords = viewModel.applyFilterQuery?.withKeyword?.components(separatedBy: ",").count {
+            keywordDetailTextLabel?.setHeader(title: String(numberOfSelectedKeywords))
         } else {
-            detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
+            keywordDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
+        }
+
+        if let yearSelected = viewModel.applyFilterQuery?.year {
+            yearDetailTextLabel?.setHeader(title: String(yearSelected))
+        } else {
+            yearDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
         }
         
-        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 4)], with: .none)
-    }
-    
-    func apply(year: String?) {
-        let detailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 3))?.detailTextLabel
-
-        viewModel.applyFilterQuery.primaryReleaseYear = year == nil ? nil : Int(year!)
-        doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
-
-        detailTextLabel?.setHeader(title: year ?? NSLocalizedString("Any", comment: ""))
-        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
+        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 4), IndexPath(row: 0, section: 3)], with: .none)
     }
 }
 
@@ -143,9 +140,11 @@ extension FilterView: UITableViewDelegate {
 
         viewModel.selectSortByAt(row: indexPath.row, section: indexPath.section)
 
-        switch viewModel.applyFilterQuery.sortBy {
-        case .popularity(_), .voteAverage(_), .voteCount(_), .none:
+        switch viewModel.applyFilterQuery?.sortBy {
+        case .popularity(_), .voteAverage(_), .voteCount(_), .none?:
             doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+        case nil:
+            break
         }
     }
 
@@ -172,9 +171,11 @@ extension FilterView: UITableViewDelegate {
         
         viewModel.deselectSortByAt()
         
-        switch viewModel.applyFilterQuery.sortBy {
-        case .popularity(_), .voteAverage(_), .voteCount(_), .none:
+        switch viewModel.applyFilterQuery?.sortBy {
+        case .popularity(_), .voteAverage(_), .voteCount(_), .none?:
             doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+        case nil:
+            break
         }
     }
 }
@@ -207,7 +208,7 @@ extension FilterView: UITableViewDataSource {
             return cell
         } else if indexPath.section == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
-            if let year = viewModel.applyFilterQuery.primaryReleaseYear {
+            if let year = viewModel.applyFilterQuery?.primaryReleaseYear {
                 cell.detailTextLabel?.setHeader(title: String(year))
             } else {
                 cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
@@ -217,7 +218,7 @@ extension FilterView: UITableViewDataSource {
             return cell
         } else if indexPath.section == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
-            if let keywords = viewModel.applyFilterQuery.withKeyword {
+            if let keywords = viewModel.applyFilterQuery?.withKeyword {
                 cell.detailTextLabel?.setHeader(title: String(keywords.components(separatedBy: ",").count))
             } else {
                 cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))

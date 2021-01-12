@@ -15,7 +15,7 @@ class KeywordView: UIViewController {
     
     weak var applyDelegate: ApplyProtocol? {
         didSet {
-            viewModel.query = applyDelegate?.currentApplyQuery
+            viewModel.set(query: applyDelegate?.currentApplyQuery)
         }
     }
 
@@ -66,7 +66,7 @@ extension KeywordView {
             .tap
             .asDriver()
             .drive(onNext: {
-                self.applyDelegate?.apply(keywords: self.viewModel.query?.withKeyword)
+                self.applyDelegate?.apply(query: self.viewModel.query)
                 self.navigationController?.popViewController(animated: true)
             })
             .disposed(by: rx.disposeBag)
@@ -92,9 +92,9 @@ extension KeywordView {
         viewModel
             .keywords
             .bind(to: keywordTableView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, keyword, cell in
-                let keywords = self.viewModel.query?.withKeyword?.components(separatedBy: ",")
+                let keywords = self.viewModel.query?.keywords
 
-                if keywords?.contains(String(keyword.id)) ?? false {
+                if keywords?.contains(where: { $0 == keyword }) ?? false {
                     self.keywordTableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
                     cell.accessoryType = .checkmark
                 } else {
@@ -102,7 +102,7 @@ extension KeywordView {
                     cell.accessoryType = .none
                 }
                 
-                cell.isSelected = keywords?.contains(String(keyword.id)) ?? false
+                cell.isSelected = keywords?.contains(keyword) ?? false
                 cell.textLabel?.setHeader(title: keyword.name)
             }
             .disposed(by: rx.disposeBag)

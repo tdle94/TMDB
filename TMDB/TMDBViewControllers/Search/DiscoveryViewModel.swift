@@ -23,15 +23,15 @@ protocol DiscoveryViewModelProtocol {
     func getAllMovie(nextPage: Bool)
     func getAllTVShow(nextPage: Bool)
     
-    func applyMovieFilter(query: DiscoverQuery)
-    func applyTVShowFilter(query: DiscoverQuery)
+    func applyMovieFilter(query: DiscoverQuery?)
+    func applyTVShowFilter(query: DiscoverQuery?)
 }
 
 protocol ApplyFilterDelegate: class {
     var visibleRow: Int? { get }
     var query: DiscoverQuery { get }
 
-    func applyFilter(query: DiscoverQuery)
+    func applyFilter(query: DiscoverQuery?)
 }
 
 class DiscoveryViewModel: DiscoveryViewModelProtocol {
@@ -124,15 +124,23 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         }
     }
     
-    func applyMovieFilter(query: DiscoverQuery) {
-        movieQuery = query
+    func applyMovieFilter(query: DiscoverQuery?) {
+        guard let newQuery = query else {
+            return
+        }
+
+        movieQuery = newQuery
         movie.onNext([])
 
         getAllMovie(nextPage: false)
     }
 
-    func applyTVShowFilter(query: DiscoverQuery) {
-        tvShowQuery = query
+    func applyTVShowFilter(query: DiscoverQuery?) {
+        guard let newQuery = query else {
+            return
+        }
+
+        tvShowQuery = newQuery
         tvShow.onNext([])
         
         getAllTVShow(nextPage: false)

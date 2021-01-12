@@ -19,11 +19,11 @@ class SortByTableViewCell: UITableViewCell {
         }
     }
     
-    func setup(at indexPath: IndexPath, tableView: UITableView, filter: DiscoverQuery) {
+    func setup(at indexPath: IndexPath, tableView: UITableView, filter: DiscoverQuery?) {
         
         var selectedIndexPath: IndexPath?
         
-        switch filter.sortBy {
+        switch filter?.sortBy {
         case .popularity(let order):
             if indexPath.section == 0 && indexPath.row == 0 && order == .ascending || indexPath.section == 0 && indexPath.row == 1 && order == .descending {
                 selectedIndexPath = indexPath
@@ -36,7 +36,7 @@ class SortByTableViewCell: UITableViewCell {
             if indexPath.section == 2 && indexPath.row == 0 && order == .ascending || indexPath.section == 2 && indexPath.row == 1 && order == .descending {
                 selectedIndexPath = indexPath
             }
-        case .none:
+        case .none?, nil:
             break
         }
         

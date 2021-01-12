@@ -7,7 +7,7 @@
 //
 
 protocol FilterViewModelProtocol {
-    var applyFilterQuery: DiscoverQuery { get set }
+    var applyFilterQuery: DiscoverQuery? { get set }
     var userSetting: TMDBUserSettingProtocol { get }
 
     func selectSortByAt(row: Int, section: Int)
@@ -19,7 +19,7 @@ protocol FilterViewModelProtocol {
 class FilterViewModel: FilterViewModelProtocol {
     var userSetting: TMDBUserSettingProtocol
     
-    var applyFilterQuery: DiscoverQuery = DiscoverQuery()
+    var applyFilterQuery: DiscoverQuery?
     
     private var selectedGenreId: [Int] = []
     
@@ -30,46 +30,46 @@ class FilterViewModel: FilterViewModelProtocol {
     func selectSortByAt(row: Int, section: Int) {
         if section == 0 {
             if row == 0 {
-                applyFilterQuery.sortBy = .popularity(order: .ascending)
+                applyFilterQuery?.sortBy = .popularity(order: .ascending)
             } else {
-                applyFilterQuery.sortBy = .popularity(order: .descending)
+                applyFilterQuery?.sortBy = .popularity(order: .descending)
             }
         } else if section == 1 {
             if row == 0 {
-                applyFilterQuery.sortBy = .voteAverage(order: .ascending)
+                applyFilterQuery?.sortBy = .voteAverage(order: .ascending)
             } else {
-                applyFilterQuery.sortBy = .voteAverage(order: .descending)
+                applyFilterQuery?.sortBy = .voteAverage(order: .descending)
             }
         } else if section == 2 {
             if row == 0 {
-                applyFilterQuery.sortBy = .voteCount(order: .ascending)
+                applyFilterQuery?.sortBy = .voteCount(order: .ascending)
             } else {
-                applyFilterQuery.sortBy = .voteCount(order: .descending)
+                applyFilterQuery?.sortBy = .voteCount(order: .descending)
             }
         }
     }
     
     func deselectSortByAt() {
-        applyFilterQuery.sortBy = .none
+        applyFilterQuery?.sortBy = .none
     }
     
     func handleGenre(id: Int, isSelected: Bool) {
-        guard var genres = applyFilterQuery.withGenres else {
-            applyFilterQuery.withGenres = "\(id)"
+        guard var genres = applyFilterQuery?.withGenres else {
+            applyFilterQuery?.withGenres = "\(id)"
             return
         }
 
         if isSelected {
             genres += ",\(id)"
-            applyFilterQuery.withGenres = genres
+            applyFilterQuery?.withGenres = genres
         } else {
             var modifiedGenres = genres.components(separatedBy: ",")
             modifiedGenres.removeAll(where: { $0 == String(id) })
-            applyFilterQuery.withGenres = modifiedGenres.joined(separator: ",")
+            applyFilterQuery?.withGenres = modifiedGenres.joined(separator: ",")
         }
 
-        if applyFilterQuery.withGenres?.isEmpty ?? false {
-            applyFilterQuery.withGenres = nil
+        if applyFilterQuery?.withGenres?.isEmpty ?? false {
+            applyFilterQuery?.withGenres = nil
         }
     }
 }

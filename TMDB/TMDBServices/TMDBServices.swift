@@ -51,6 +51,7 @@ struct DiscoverQuery: Equatable {
     var withGenres: String?
     var withKeyword: String?
     var withOriginalLanguage: String?
+    var keywords: [Keyword] = [] // only use to save applied keywords
     
     static func == (lhs: DiscoverQuery, rhs: DiscoverQuery) -> Bool {
         return

@@ -23,15 +23,15 @@ protocol DiscoveryViewModelProtocol {
     func getAllMovie(nextPage: Bool)
     func getAllTVShow(nextPage: Bool)
     
-    func applyMovieFilter(query: DiscoverQuery)
-    func applyTVShowFilter(query: DiscoverQuery)
+    func applyMovieFilter(query: DiscoverQuery?)
+    func applyTVShowFilter(query: DiscoverQuery?)
 }
 
 protocol ApplyFilterDelegate: class {
     var visibleRow: Int? { get }
     var query: DiscoverQuery { get }
 
-    func applyFilter(query: DiscoverQuery)
+    func applyFilter(query: DiscoverQuery?)
 }
 
 class DiscoveryViewModel: DiscoveryViewModelProtocol {
@@ -59,6 +59,11 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         
         if nextPage {
             query.page += 1
+        }
+        
+        if query.page > movieResult.totalPages, movieResult.totalPages != 0 {
+            self.movie.onNext(nil)
+            return
         }
 
         self.movieRepository.getAllMovie(query: query) { result in
@@ -91,6 +96,11 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
             query.page += 1
         }
         
+        if query.page > tvShowResult.totalPages, tvShowResult.totalPages != 0 {
+            self.tvShow.onNext(nil)
+            return
+        }
+        
         self.tvShowRepository.getAllTVShow(query: query) { result in
             switch result {
             case .success(let tvShowResult):
@@ -114,15 +124,23 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         }
     }
     
-    func applyMovieFilter(query: DiscoverQuery) {
-        movieQuery = query
+    func applyMovieFilter(query: DiscoverQuery?) {
+        guard let newQuery = query else {
+            return
+        }
+
+        movieQuery = newQuery
         movie.onNext([])
 
         getAllMovie(nextPage: false)
     }
 
-    func applyTVShowFilter(query: DiscoverQuery) {
-        tvShowQuery = query
+    func applyTVShowFilter(query: DiscoverQuery?) {
+        guard let newQuery = query else {
+            return
+        }
+
+        tvShowQuery = newQuery
         tvShow.onNext([])
         
         getAllTVShow(nextPage: false)

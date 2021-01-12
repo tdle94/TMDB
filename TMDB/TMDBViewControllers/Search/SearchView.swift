@@ -87,7 +87,7 @@ extension SearchView: ApplyFilterDelegate {
         return visibleRow == 0 ? discoveryViewModel.movieQuery : discoveryViewModel.tvShowQuery
     }
 
-    func applyFilter(query: DiscoverQuery) {
+    func applyFilter(query: DiscoverQuery?) {
         guard let row = visibleRow else {
             return
         }
@@ -167,7 +167,7 @@ extension SearchView {
                     discoverCell
                         .entityCollectionView
                         .rx
-                        .didEndDecelerating
+                        .didScroll
                         .asDriver()
                         .drive(onNext: {
 
@@ -217,7 +217,7 @@ extension SearchView {
                     discoverCell
                         .entityCollectionView
                         .rx
-                        .didEndDecelerating
+                        .didScroll
                         .asDriver()
                         .drive(onNext: {
                             let bottomEdge = discoverCell.entityCollectionView.contentOffset.y + discoverCell.entityCollectionView.frame.size.height

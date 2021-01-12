@@ -48,6 +48,7 @@ protocol TMDBURLRequestBuilderProtocol {
 
     // MARK: - search
     func getMultiSearchURLRequest(query: String, language: String?, region: String?, page: Int) -> URLRequest
+    func getSearchKeywordURLRequest(query: String, page: Int) -> URLRequest
 
     // MARK: - authentication
     func getGuestSessionURLRequest() -> URLRequest
@@ -251,8 +252,9 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     func getAllMovieURLRequest(query: DiscoverQuery) -> URLRequest {
         var queryItems = [
             URLQueryItem(name: "page", value: String(query.page)),
+            URLQueryItem(name: "include_adult", value: String(true)),
         ]
-
+        
         if let keyword = query.withKeyword {
             queryItems.append(URLQueryItem(name: "with_keywords", value: keyword))
         }
@@ -365,9 +367,17 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "language", value: language ?? "en"),
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "region", value: region ?? "US"),
-            URLQueryItem(name: "include_adult", value: String(false))
+            URLQueryItem(name: "include_adult", value: String(true))
         ]
         return buildURLRequest(path: "/3/search/multi", queryItems: queryItems)
+    }
+    
+    func getSearchKeywordURLRequest(query: String, page: Int = 1) -> URLRequest {
+        let queryItems = [
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "page", value: String(page))
+        ]
+        return buildURLRequest(path: "/3/search/keyword", queryItems: queryItems)
     }
 
     // MARK: - authentication

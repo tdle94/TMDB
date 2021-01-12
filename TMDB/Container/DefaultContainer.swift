@@ -81,6 +81,18 @@ extension DefaultContainer {
         self.container.register(FilterViewModelProtocol.self) { resolver in
             FilterViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
+        
+        self.container.register(KeywordViewModelProtocol.self) { resolver in
+            KeywordViewModel()
+        }
+        
+        self.container.register(SearchKeywordViewModelProtocol.self) { resolver in
+            SearchKeywordViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
+        }
+        
+        self.container.register(YearViewModel.self) { resolver in
+            YearViewModel()
+        }
     }
 
     func registerViews() {
@@ -136,7 +148,16 @@ extension DefaultContainer {
         }
         
         self.container.register(YearView.self) { resolver in
-            YearView()
+            YearView(viewModel: resolver.resolve(YearViewModel.self)!)
+        }
+        
+        self.container.register(KeywordView.self) { resolver in
+            KeywordView(viewModel: resolver.resolve(KeywordViewModelProtocol.self)!)
+        }
+        
+        self.container.register(SearchKeywordView.self) { resolver in
+            SearchKeywordView(searchController: UISearchController(searchResultsController: nil),
+                              viewModel: resolver.resolve(SearchKeywordViewModelProtocol.self)!)
         }
     }
     

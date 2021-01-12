@@ -54,7 +54,12 @@ protocol SearchViewDelegate: class {
 }
 
 protocol FilterViewDelegate: class {
-    func navigateToYearView(applyYear: ApplyYearProtocol)
+    func navigateToYearView(apply: ApplyProtocol)
+    func navigateToKeywordView(apply: ApplyProtocol)
+}
+
+protocol KeywordViewDelegate: class {
+    func navigateToSearchKeywordView(applyKeyword: ApplyKeyword)
 }
 
 protocol EpisodeViewDelegate: CommonNavigation {
@@ -66,6 +71,8 @@ class AppCoordinator {
     let container: Container
     
     var currentView: UIViewController?
+    
+    var presentedView: UIViewController?
 
     var homeView: HomeView {
         return container.resolve(HomeView.self)!
@@ -113,6 +120,14 @@ class AppCoordinator {
     
     var yearView: YearView {
         return container.resolve(YearView.self)!
+    }
+    
+    var keywordView: KeywordView {
+        return container.resolve(KeywordView.self)!
+    }
+    
+    var searchKeywordView: SearchKeywordView {
+        return container.resolve(SearchKeywordView.self)!
     }
 
     init(window: UIWindow, container: Container) {
@@ -191,15 +206,27 @@ class AppCoordinator {
         let view = filterView
         view.applyFilterDelegate = applyFilter
         view.delegate = self
+        presentedView = view
         currentView?.navigationController?.present(UINavigationController(rootViewController: view), animated: true)
     }
     
-    fileprivate func showYearView(applyYear: ApplyYearProtocol) {
+    fileprivate func showYearView(apply: ApplyProtocol) {
         let view = yearView
-        view.applyYearDelegate = applyYear
-        ((currentView?.navigationController?.presentedViewController as? UINavigationController)?
-            .viewControllers.first as? FilterView)?
-            .navigationController?.pushViewController(view, animated: true)
+        view.applyDelegate = apply
+        presentedView?.navigationController?.pushViewController(view, animated: true)
+    }
+    
+    fileprivate func showKeywordView(apply: ApplyProtocol) {
+        let view = keywordView
+        view.applyDelegate = apply
+        view.delegate = self
+        presentedView?.navigationController?.pushViewController(view, animated: true)
+    }
+    
+    fileprivate func showSearchKeywordView(applyKeyword: ApplyKeyword) {
+        let view = searchKeywordView
+        view.applyKeywordDelegate = applyKeyword
+        presentedView?.navigationController?.viewControllers.first?.navigationController?.pushViewController(view, animated: true)
     }
     
     func navigateBack() {
@@ -251,7 +278,17 @@ extension AppCoordinator: ListSeasonViewDelegate {
 }
 
 extension AppCoordinator: FilterViewDelegate {
-    func navigateToYearView(applyYear: ApplyYearProtocol) {
-        showYearView(applyYear: applyYear)
+    func navigateToYearView(apply: ApplyProtocol) {
+        showYearView(apply: apply)
+    }
+    
+    func navigateToKeywordView(apply: ApplyProtocol) {
+        showKeywordView(apply: apply)
+    }
+}
+
+extension AppCoordinator: KeywordViewDelegate {
+    func navigateToSearchKeywordView(applyKeyword: ApplyKeyword) {
+        showSearchKeywordView(applyKeyword: applyKeyword)
     }
 }

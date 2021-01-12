@@ -214,6 +214,11 @@ class Keyword: Object, Decodable {
         case id, name
     }
 
+    init(name: String, id: Int) {
+        self.name = name
+        self.id = id
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
@@ -226,6 +231,10 @@ class Keyword: Object, Decodable {
     
     override class func primaryKey() -> String? {
         return "id"
+    }
+    
+    static func == (lhs: Keyword, rhs: Keyword) -> Bool {
+        return lhs.name == rhs.name && lhs.id == rhs.id
     }
 }
 

@@ -85,3 +85,5 @@
 "Any" = "Qualquer";
 "Descending" = "descendente";
 "Ascending" = "Ascendente";
+"No keywords found" = "Nenhuma palavra-chave encontrada";
+"Error getting keyword" = "Erro ao obter a palavra-chave";

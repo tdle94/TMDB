@@ -127,10 +127,10 @@ extension SearchKeywordView {
             .drive(onNext: { result in
                 if result?.isEmpty ?? false {
                     self.notificationLabel.isHidden = false
-                    self.notificationLabel.setHeader(title: "No keywords found")
+                    self.notificationLabel.setHeader(title: NSLocalizedString("No keywords found", comment: ""))
                 } else if result == nil {
                     self.notificationLabel.isHidden = false
-                    self.notificationLabel.setHeader(title: "Error getting keyword")
+                    self.notificationLabel.setHeader(title: NSLocalizedString("Error getting keyword", comment: ""))
                 }
             })
             .disposed(by: rx.disposeBag)

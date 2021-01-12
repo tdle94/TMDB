@@ -86,3 +86,5 @@ Startseite";
 "Any" = "Irgendein";
 "Descending" = "Absteigend";
 "Ascending" = "Aufsteigend";
+"No keywords found" = "Keine Schlüsselwörter gefunden";
+"Error getting keyword" = "Fehler beim Abrufen des Schlüsselworts";

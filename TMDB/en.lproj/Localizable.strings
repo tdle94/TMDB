@@ -86,3 +86,5 @@
 "Any" = "Any";
 "Descending" = "Descending";
 "Ascending" = "Ascending";
+"No keywords found" = "No keywords found";
+"Error getting keyword" = "Error getting keyword";

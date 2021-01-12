@@ -85,6 +85,7 @@
 		348E2EE725ACA86600551BCF /* SearchKeywordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E2EE625ACA86600551BCF /* SearchKeywordView.swift */; };
 		348E2EEB25ACAA8B00551BCF /* SearchKeywordView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 348E2EEA25ACAA8B00551BCF /* SearchKeywordView.xib */; };
 		348E2EF925ACAF8700551BCF /* SearchKeywordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E2EF825ACAF8700551BCF /* SearchKeywordViewModel.swift */; };
+		348E2EFF25AD2AFB00551BCF /* YearViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E2EFE25AD2AFB00551BCF /* YearViewModel.swift */; };
 		348F4A3825A6727000599D56 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348F4A3725A6727000599D56 /* FilterView.swift */; };
 		348F4A3E25A6727A00599D56 /* FilterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 348F4A3D25A6727A00599D56 /* FilterView.xib */; };
 		348F4A4225A675E400599D56 /* SortByTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 348F4A4125A675E400599D56 /* SortByTableViewCell.xib */; };
@@ -288,6 +289,7 @@
 		348E2EE625ACA86600551BCF /* SearchKeywordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchKeywordView.swift; sourceTree = "<group>"; };
 		348E2EEA25ACAA8B00551BCF /* SearchKeywordView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchKeywordView.xib; sourceTree = "<group>"; };
 		348E2EF825ACAF8700551BCF /* SearchKeywordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchKeywordViewModel.swift; sourceTree = "<group>"; };
+		348E2EFE25AD2AFB00551BCF /* YearViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearViewModel.swift; sourceTree = "<group>"; };
 		348F4A3725A6727000599D56 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		348F4A3D25A6727A00599D56 /* FilterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterView.xib; sourceTree = "<group>"; };
 		348F4A4125A675E400599D56 /* SortByTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SortByTableViewCell.xib; sourceTree = "<group>"; };
@@ -664,6 +666,7 @@
 			children = (
 				348FB72525A940F300CD411D /* YearView.swift */,
 				348FB72A25A9411E00CD411D /* YearView.xib */,
+				348E2EFE25AD2AFB00551BCF /* YearViewModel.swift */,
 			);
 			path = YearView;
 			sourceTree = "<group>";
@@ -1285,6 +1288,7 @@
 				34ADFA2925951CAF005705A3 /* TVShowSeasonDetailModel.swift in Sources */,
 				348FB71A25A90D1900CD411D /* GenreTableViewCell.swift in Sources */,
 				34D3E7E7248D43EE000F5D83 /* TVShowResult.swift in Sources */,
+				348E2EFF25AD2AFB00551BCF /* YearViewModel.swift in Sources */,
 				34CCA283251B9811006EFEF6 /* TMDBServices+TMDBAuthenticationService.swift in Sources */,
 				341BA3A124CFAB8E002A915B /* TMDBSearchRepository.swift in Sources */,
 				34C9215724E2075E0043E6F5 /* TMDBTVShowHeaderView.swift in Sources */,

@@ -89,6 +89,10 @@ extension DefaultContainer {
         self.container.register(SearchKeywordViewModelProtocol.self) { resolver in
             SearchKeywordViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
         }
+        
+        self.container.register(YearViewModel.self) { resolver in
+            YearViewModel()
+        }
     }
 
     func registerViews() {
@@ -144,7 +148,7 @@ extension DefaultContainer {
         }
         
         self.container.register(YearView.self) { resolver in
-            YearView()
+            YearView(viewModel: resolver.resolve(YearViewModel.self)!)
         }
         
         self.container.register(KeywordView.self) { resolver in

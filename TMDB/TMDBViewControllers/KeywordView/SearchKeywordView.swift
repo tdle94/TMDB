@@ -45,7 +45,6 @@ class SearchKeywordView: UIViewController {
     
     // MARK: - override
     override func viewDidLoad() {
-        navigationController?.resetNavBar()
         cancelBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.isEnabled = false

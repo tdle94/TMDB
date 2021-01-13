@@ -49,7 +49,6 @@ class CountryView: UIViewController {
     
     // MARK: - override
     override func viewDidLoad() {
-        navigationController?.resetNavBar()
         doneBarButton.tintColor = Constant.Color.backgroundColor
         cancelBarButton.tintColor = Constant.Color.backgroundColor
         

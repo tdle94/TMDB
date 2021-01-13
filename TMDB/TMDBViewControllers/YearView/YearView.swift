@@ -51,7 +51,6 @@ class YearView: UIViewController {
     
     // MARK: - overrides
     override func viewDidLoad() {
-        navigationController?.resetNavBar()
         doneBarButton.tintColor = Constant.Color.backgroundColor
         cancelBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.isEnabled = false

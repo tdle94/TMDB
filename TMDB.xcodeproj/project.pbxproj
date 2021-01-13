@@ -105,6 +105,7 @@
 		348FB72625A940F300CD411D /* YearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348FB72525A940F300CD411D /* YearView.swift */; };
 		348FB72B25A9411E00CD411D /* YearView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 348FB72A25A9411E00CD411D /* YearView.xib */; };
 		348FB72F25A957AB00CD411D /* FilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348FB72E25A957AB00CD411D /* FilterViewModel.swift */; };
+		3491D7F325AF78970072BF28 /* UISearchController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3491D7F225AF78970072BF28 /* UISearchController+.swift */; };
 		34932FB12596A20C00C1420D /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34932FB02596A20C00C1420D /* SearchView.swift */; };
 		34932FB72596A2E900C1420D /* SearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34932FB62596A2E900C1420D /* SearchResultView.swift */; };
 		34932FBB2596A4CC00C1420D /* SearchResultView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34932FBA2596A4CC00C1420D /* SearchResultView.xib */; };
@@ -312,6 +313,7 @@
 		348FB72525A940F300CD411D /* YearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearView.swift; sourceTree = "<group>"; };
 		348FB72A25A9411E00CD411D /* YearView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = YearView.xib; sourceTree = "<group>"; };
 		348FB72E25A957AB00CD411D /* FilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewModel.swift; sourceTree = "<group>"; };
+		3491D7F225AF78970072BF28 /* UISearchController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchController+.swift"; sourceTree = "<group>"; };
 		34932FB02596A20C00C1420D /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		34932FB62596A2E900C1420D /* SearchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultView.swift; sourceTree = "<group>"; };
 		34932FBA2596A4CC00C1420D /* SearchResultView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultView.xib; sourceTree = "<group>"; };
@@ -587,6 +589,7 @@
 				3458D31125830513008E1594 /* UINavigationController+.swift */,
 				3458D3162583052C008E1594 /* UINavigationItem+.swift */,
 				342727F225840745003E0A61 /* UIScrollView+.swift */,
+				3491D7F225AF78970072BF28 /* UISearchController+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1326,6 +1329,7 @@
 				342F9B5C25212A0800B0CB62 /* TMDBRatingService.swift in Sources */,
 				3496E2F52561E94400F999C9 /* HomeViewModel.swift in Sources */,
 				340CA6DE248DAC4C00E5A72D /* TrendingResult.swift in Sources */,
+				3491D7F325AF78970072BF28 /* UISearchController+.swift in Sources */,
 				342E66262489BB33003B5CB8 /* SceneDelegate.swift in Sources */,
 				34A5845925A3FBDC00768B78 /* LoadingIndicatorView.swift in Sources */,
 				34B2F8DC259FB27000FCA244 /* ReviewView.swift in Sources */,

@@ -60,15 +60,7 @@ class CountryView: UIViewController {
         navigationItem.setLeftBarButton(cancelBarButton, animated: true)
         
         
-        (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.textColor = Constant.Color.backgroundColor
-        (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Country", comment: ""),
-                                                                                                                              attributes: [ NSAttributedString.Key.foregroundColor : Constant.Color.backgroundColor ])
-        searchController.searchBar.tintColor = Constant.Color.backgroundColor
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal),
-                                            for: .search,
-                                            state: .normal)
+        searchController.setup(withPlaceholder: NSLocalizedString("Country", comment: ""))
         
         navigationItem.titleView = searchController.searchBar
 

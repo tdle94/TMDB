@@ -56,15 +56,7 @@ class SearchKeywordView: UIViewController {
         navigationItem.setLeftBarButton(cancelBarButton, animated: true)
         navigationItem.setRightBarButton(doneBarButton, animated: true)
         
-        (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.textColor = Constant.Color.backgroundColor
-        (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Keyword", comment: ""),
-                                                                                                                              attributes: [ NSAttributedString.Key.foregroundColor : Constant.Color.backgroundColor ])
-        searchController.searchBar.tintColor = Constant.Color.backgroundColor
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal),
-                                            for: .search,
-                                            state: .normal)
+        searchController.setup(withPlaceholder: NSLocalizedString("Keyword", comment: ""))
         
         navigationItem.titleView = searchController.searchBar
 

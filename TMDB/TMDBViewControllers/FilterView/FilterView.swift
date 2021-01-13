@@ -102,6 +102,7 @@ extension FilterView: ApplyProtocol {
     func apply(query: DiscoverQuery?) {
         let keywordDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 4))?.detailTextLabel
         let yearDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 3))?.detailTextLabel
+        let countryDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 5))?.detailTextLabel
          
         viewModel.applyFilterQuery = query
 
@@ -119,7 +120,16 @@ extension FilterView: ApplyProtocol {
             yearDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
         }
         
-        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 4), IndexPath(row: 0, section: 3)], with: .none)
+        if let countrySelected = viewModel.applyFilterQuery?.country {
+            countryDetailTextLabel?.setHeader(title: countrySelected)
+        } else {
+            countryDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
+        }
+        
+        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 3),
+                                        IndexPath(row: 0, section: 4),
+                                        IndexPath(row: 0, section: 5)],
+                                   with: .none)
     }
 }
 
@@ -131,6 +141,8 @@ extension FilterView: UITableViewDelegate {
                 delegate?.navigateToYearView(apply: self)
             } else if indexPath.section == 4 {
                 delegate?.navigateToKeywordView(apply: self)
+            } else if indexPath.section == 5 {
+                delegate?.navigateToCountryView(apply: self)
             }
             return
         }
@@ -189,11 +201,11 @@ extension FilterView: UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 7
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section < 5 {
+        if indexPath.section < 6 {
             return UITableView.automaticDimension
         }
         return applyFilterDelegate?.visibleRow == 0 ? 165 : 138
@@ -226,6 +238,16 @@ extension FilterView: UITableViewDataSource {
             cell.textLabel?.setHeader(title: NSLocalizedString("Keyword", comment: ""))
 
             return cell
+        } else if indexPath.section == 5 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
+            if let country = viewModel.applyFilterQuery?.country {
+                cell.detailTextLabel?.setHeader(title: country)
+            } else {
+                cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
+            }
+            cell.textLabel?.setHeader(title: NSLocalizedString("Country", comment: ""))
+            
+            return cell
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.genreCell, for: indexPath) as! GenreTableViewCell
@@ -245,7 +267,7 @@ extension FilterView: UITableViewDataSource {
             return NSLocalizedString("Rating Average", comment: "")
         } else if section == 2 {
             return NSLocalizedString("Most Rate", comment: "")
-        } else if section == 5 {
+        } else if section == 6 {
             return NSLocalizedString("Genres", comment: "")
         }
         return ""

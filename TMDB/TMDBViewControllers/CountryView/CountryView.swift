@@ -156,7 +156,6 @@ extension CountryView {
             .rx
             .text
             .orEmpty
-            .throttle(.seconds(1), latest: true, scheduler: MainScheduler.instance)
             .filter { !$0.isEmpty && !$0.trimmingCharacters(in: .whitespaces).isEmpty && !$0.last!.isWhitespace && !$0.first!.isWhitespace }
             .distinctUntilChanged()
             .asDriver(onErrorJustReturn: "")

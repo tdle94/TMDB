@@ -84,6 +84,10 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         if let primaryReleaseYear = query.primaryReleaseYear {
             queryItems.append(URLQueryItem(name: "first_air_date_year", value: String(primaryReleaseYear)))
         }
+        
+        if let region = query.region {
+            queryItems.append(URLQueryItem(name: "watch_region", value: region))
+        }
 
         switch query.sortBy {
         case .popularity(let order):
@@ -269,6 +273,11 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
 
         if let primaryReleaseYear = query.primaryReleaseYear {
             queryItems.append(URLQueryItem(name: "primary_release_year", value: String(primaryReleaseYear)))
+        }
+        
+        if let region = query.region {
+            queryItems.append(URLQueryItem(name: "watch_region", value: region))
+            queryItems.append(URLQueryItem(name: "region", value: region))
         }
         
         switch query.sortBy {

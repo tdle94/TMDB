@@ -56,6 +56,7 @@ protocol SearchViewDelegate: class {
 protocol FilterViewDelegate: class {
     func navigateToYearView(apply: ApplyProtocol)
     func navigateToKeywordView(apply: ApplyProtocol)
+    func navigateToCountryView(apply: ApplyProtocol)
 }
 
 protocol KeywordViewDelegate: class {
@@ -128,6 +129,10 @@ class AppCoordinator {
     
     var searchKeywordView: SearchKeywordView {
         return container.resolve(SearchKeywordView.self)!
+    }
+    
+    var countryView: CountryView {
+        return container.resolve(CountryView.self)!
     }
 
     init(window: UIWindow, container: Container) {
@@ -229,6 +234,12 @@ class AppCoordinator {
         presentedView?.navigationController?.viewControllers.first?.navigationController?.pushViewController(view, animated: true)
     }
     
+    fileprivate func showCountryView(apply: ApplyProtocol) {
+        let view = countryView
+        view.applyDelegate = apply
+        presentedView?.navigationController?.pushViewController(view, animated: true)
+    }
+    
     func navigateBack() {
         currentView = currentView?.navigationController?.popViewController(animated: true)
         currentView = currentView?.navigationController?.topViewController
@@ -284,6 +295,10 @@ extension AppCoordinator: FilterViewDelegate {
     
     func navigateToKeywordView(apply: ApplyProtocol) {
         showKeywordView(apply: apply)
+    }
+    
+    func navigateToCountryView(apply: ApplyProtocol) {
+        showCountryView(apply: apply)
     }
 }
 

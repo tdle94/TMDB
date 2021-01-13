@@ -53,15 +53,10 @@ class SearchView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constant.Color.backgroundColor
-        (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.textColor = Constant.Color.backgroundColor
-        (searchController.searchBar.value(forKey: "searchField") as? UITextField)?.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Search Bar", comment: ""),
-                                                                                                                              attributes: [ NSAttributedString.Key.foregroundColor : Constant.Color.backgroundColor ])
-        searchController.searchBar.tintColor = Constant.Color.backgroundColor
-        searchController.hidesNavigationBarDuringPresentation = false
+
+        searchController.setup(withPlaceholder: NSLocalizedString("Search Bar", comment: ""))
+
         definesPresentationContext = true
-        searchController.searchBar.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal),
-                                            for: .search,
-                                            state: .normal)
         navigationItem.titleView = searchController.searchBar
 
         filterBarButton.tintColor = Constant.Color.backgroundColor

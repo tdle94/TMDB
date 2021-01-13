@@ -51,7 +51,6 @@ class YearView: UIViewController {
     
     // MARK: - overrides
     override func viewDidLoad() {
-        navigationController?.resetNavBar()
         doneBarButton.tintColor = Constant.Color.backgroundColor
         cancelBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.isEnabled = false
@@ -61,7 +60,7 @@ class YearView: UIViewController {
         setupBinding()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if let selectedIndexPath = viewModel.selectedIndexPath {
             viewModel.selectedYear = viewModel.years[selectedIndexPath.row]
             yearTableView.selectRow(at: selectedIndexPath, animated: true, scrollPosition: .middle)

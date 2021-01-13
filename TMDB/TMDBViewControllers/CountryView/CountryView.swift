@@ -68,7 +68,7 @@ class CountryView: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if let row = viewModel.selectedRow {
-            countryTableView.scrollToRow(at: IndexPath(row: Int(row), section: 0), at: .middle, animated: true)
+            countryTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: true)
         }
     }
 }

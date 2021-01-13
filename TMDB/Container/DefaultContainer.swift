@@ -93,6 +93,10 @@ extension DefaultContainer {
         self.container.register(YearViewModel.self) { resolver in
             YearViewModel()
         }
+        
+        self.container.register(CountryViewModelProtocol.self) { resolver in
+            CountryViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
     }
 
     func registerViews() {
@@ -158,6 +162,10 @@ extension DefaultContainer {
         self.container.register(SearchKeywordView.self) { resolver in
             SearchKeywordView(searchController: UISearchController(searchResultsController: nil),
                               viewModel: resolver.resolve(SearchKeywordViewModelProtocol.self)!)
+        }
+        
+        self.container.register(CountryView.self) { resolver in
+            CountryView(viewModel: resolver.resolve(CountryViewModelProtocol.self)!)
         }
     }
     

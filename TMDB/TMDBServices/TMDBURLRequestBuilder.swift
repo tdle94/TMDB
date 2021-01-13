@@ -87,7 +87,6 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
         
         if let region = query.region {
             queryItems.append(URLQueryItem(name: "watch_region", value: region))
-            queryItems.append(URLQueryItem(name: "region", value: region))
         }
 
         switch query.sortBy {

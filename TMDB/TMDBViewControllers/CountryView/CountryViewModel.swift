@@ -27,7 +27,7 @@ class CountryViewModel: CountryViewModelProtocol {
     var query: DiscoverQuery?
     
     var selectedRow: Int? {
-        return userSetting.countriesCode.firstIndex(where: { $0.iso31661 == query?.region && $0.name == query?.country })
+        return userSetting.countriesCode.firstIndex(where: { $0.iso31661 == query?.region })
     }
     
     init(userSetting: TMDBUserSettingProtocol) {
@@ -40,10 +40,8 @@ class CountryViewModel: CountryViewModelProtocol {
     
         if isSelected {
             query?.region = previousCountries[at].iso31661
-            query?.country = previousCountries[at].name
         } else {
             query?.region = nil
-            query?.country = nil
         }
     }
     
@@ -52,7 +50,6 @@ class CountryViewModel: CountryViewModelProtocol {
         let newCountries = previousCountries.filter { $0.name.contains(query) }
         
         self.query?.region = nil
-        self.query?.country = nil
         
         countries.onNext(newCountries)
     }

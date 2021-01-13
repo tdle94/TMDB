@@ -9,6 +9,7 @@
 protocol FilterViewModelProtocol {
     var applyFilterQuery: DiscoverQuery? { get set }
     var userSetting: TMDBUserSettingProtocol { get }
+    var selectedCountry: String? { get }
 
     func selectSortByAt(row: Int, section: Int)
     func deselectSortByAt()
@@ -20,6 +21,10 @@ class FilterViewModel: FilterViewModelProtocol {
     var userSetting: TMDBUserSettingProtocol
     
     var applyFilterQuery: DiscoverQuery?
+    
+    var selectedCountry: String? {
+        return userSetting.countriesCode.first(where: { $0.iso31661 == applyFilterQuery?.region })?.name
+    }
     
     private var selectedGenreId: [Int] = []
     

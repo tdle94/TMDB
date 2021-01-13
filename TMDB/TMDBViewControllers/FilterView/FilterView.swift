@@ -120,7 +120,7 @@ extension FilterView: ApplyProtocol {
             yearDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
         }
         
-        if let countrySelected = viewModel.applyFilterQuery?.country {
+        if let countrySelected = viewModel.selectedCountry {
             countryDetailTextLabel?.setHeader(title: countrySelected)
         } else {
             countryDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
@@ -240,7 +240,7 @@ extension FilterView: UITableViewDataSource {
             return cell
         } else if indexPath.section == 5 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
-            if let country = viewModel.applyFilterQuery?.country {
+            if let country = viewModel.selectedCountry {
                 cell.detailTextLabel?.setHeader(title: country)
             } else {
                 cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))

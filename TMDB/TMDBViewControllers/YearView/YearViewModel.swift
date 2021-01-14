@@ -5,13 +5,11 @@
 //  Created by Tuyen Le on 1/11/21.
 //  Copyright © 2021 Tuyen Le. All rights reserved.
 //
-import UIKit
 
 protocol YearViewModelProtocol {
     var query: DiscoverQuery? { get set }
     var years: [String] { get }
-    var selectedIndexPath: IndexPath? { get set }
-    var selectedYear: String? { get set }
+    var selectedRow: Int? { get }
     
     func handleSelect(at: Int, isSelected: Bool)
 }
@@ -19,9 +17,9 @@ protocol YearViewModelProtocol {
 class YearViewModel: YearViewModelProtocol {
     var query: DiscoverQuery?
     
-    var selectedIndexPath: IndexPath?
-
-    var selectedYear: String?
+    var selectedRow: Int? {
+        return years.firstIndex(where: { Int($0) == query?.primaryReleaseYear })
+    }
     
     var years: [String] = [
         "1950", "1951", "1952", "1953", "1954", "1955", "1956", "1957", "1958", "1959", "1960", "1961", "1962", "1963",
@@ -34,12 +32,8 @@ class YearViewModel: YearViewModelProtocol {
     
     func handleSelect(at: Int, isSelected: Bool) {
         if isSelected {
-            selectedIndexPath = IndexPath(row: at, section: 0)
-            selectedYear = years[at]
             query?.primaryReleaseYear = Int(years[at])
         } else {
-            selectedIndexPath = nil
-            selectedYear = nil
             query?.primaryReleaseYear = nil
         }
     }

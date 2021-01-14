@@ -97,6 +97,10 @@ extension DefaultContainer {
         self.container.register(CountryViewModelProtocol.self) { resolver in
             CountryViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
+        
+        self.container.register(LanguageViewModelProtocol.self) { resolver in
+            LanguageViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
     }
 
     func registerViews() {
@@ -166,6 +170,10 @@ extension DefaultContainer {
         
         self.container.register(CountryView.self) { resolver in
             CountryView(viewModel: resolver.resolve(CountryViewModelProtocol.self)!)
+        }
+        
+        self.container.register(LanguageView.self) { resolver in
+            LanguageView(viewModel: resolver.resolve(LanguageViewModelProtocol.self)!)
         }
     }
     

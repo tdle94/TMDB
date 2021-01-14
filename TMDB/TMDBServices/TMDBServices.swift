@@ -21,21 +21,21 @@ struct DiscoverQuery: Equatable {
         case voteAverage(order: VoteAverage)
         case voteCount(order: VoteCount)
         case none
-    }
+        
+        enum Popularity: String {
+            case ascending = "popularity.asc"
+            case descending = "popularity.desc"
+        }
 
-    enum Popularity: String {
-        case ascending = "popularity.asc"
-        case descending = "popularity.desc"
-    }
+        enum VoteAverage: String {
+            case ascending = "vote_average.asc"
+            case descending = "vote_average.dsc"
+        }
 
-    enum VoteAverage: String {
-        case ascending = "vote_average.asc"
-        case descending = "vote_average.dsc"
-    }
-
-    enum VoteCount: String {
-        case ascending = "vote_count.asc"
-        case descending = "vote_count.desc"
+        enum VoteCount: String {
+            case ascending = "vote_count.asc"
+            case descending = "vote_count.desc"
+        }
     }
     
     var page: Int = 1

@@ -2407,7 +2407,7 @@ class TMDBRepositoryTests: XCTestCase {
         let expectation = self.expectation(description: "")
         var movieQuery = DiscoverQuery(page: 1)
         movieQuery.primaryReleaseYear = 2019
-        movieQuery.withKeyword = "3243"
+        movieQuery.keywords = [Keyword(name: "lsdkjfdls", id: 3243)]
         movieQuery.withOriginalLanguage = "532"
         movieQuery.withGenres = "32"
         let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
@@ -2472,7 +2472,7 @@ class TMDBRepositoryTests: XCTestCase {
         let expectation = self.expectation(description: "")
         var tvQuery = DiscoverQuery(page: 1)
         tvQuery.primaryReleaseYear = 2019
-        tvQuery.withKeyword = "3243"
+        tvQuery.keywords = [Keyword(name: "dslfjdsl", id: 3243)]
         tvQuery.withOriginalLanguage = "532"
         tvQuery.withGenres = "32"
         let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()

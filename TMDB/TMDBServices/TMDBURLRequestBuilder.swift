@@ -77,8 +77,9 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             queryItems.append(URLQueryItem(name: "with_genres", value: genres))
         }
 
-        if let keyword = query.withKeyword {
-            queryItems.append(URLQueryItem(name: "with_keywords", value: keyword))
+        let keywords = query.keywords.map { String($0.id) }.joined(separator: ",")
+        if keywords.isNotEmpty {
+            queryItems.append(URLQueryItem(name: "with_keywords", value: keywords))
         }
         
         if let primaryReleaseYear = query.primaryReleaseYear {
@@ -259,8 +260,9 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
             URLQueryItem(name: "include_adult", value: String(true)),
         ]
         
-        if let keyword = query.withKeyword {
-            queryItems.append(URLQueryItem(name: "with_keywords", value: keyword))
+        let keywords = query.keywords.map { String($0.id) }.joined(separator: ",")
+        if keywords.isNotEmpty {
+            queryItems.append(URLQueryItem(name: "with_keywords", value: keywords))
         }
         
         if let language = query.withOriginalLanguage {

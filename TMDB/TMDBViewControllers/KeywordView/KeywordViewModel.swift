@@ -13,15 +13,29 @@ protocol ApplyKeyword: class {
 }
 
 protocol KeywordViewModelProtocol: ApplyKeyword {
-    var query: DiscoverQuery? { get }
+    var query: DiscoverQuery? { get set }
     var keywords: BehaviorSubject<[Keyword]> { get }
     
     func handle(keyword: Keyword, isSelected: Bool)
-    func set(query: DiscoverQuery?)
+    func isThere(keyword: Keyword, at: Int) -> Bool
 }
 
 class KeywordViewModel: KeywordViewModelProtocol {
-    var query: DiscoverQuery?
+    var query: DiscoverQuery? {
+        willSet {
+            guard query == nil else {
+                return
+            }
+            
+            var previousKeywords = try! keywords.value()
+
+            for keyword in newValue?.keywords ?? [] where !previousKeywords.contains(where: { $0 == keyword })  {
+                previousKeywords.append(keyword)
+            }
+
+            keywords.onNext(previousKeywords)
+        }
+    }
 
     var keywords: BehaviorSubject<[Keyword]> = BehaviorSubject(value: [
         Keyword(name: "action hero", id: 219404), Keyword(name: "alternate history", id: 12026),
@@ -32,54 +46,37 @@ class KeywordViewModel: KeywordViewModelProtocol {
     ])
     
     func handle(keyword: Keyword, isSelected: Bool) {
-        guard var withKeywords = self.query?.withKeyword else {
-            query?.withKeyword = "\(keyword.id)"
+        guard self.query?.keywords.isNotEmpty ?? false else {
             query?.keywords.append(keyword)
             return
         }
 
         if isSelected {
-            withKeywords += ",\(keyword.id)"
-            query?.withKeyword = withKeywords
             query?.keywords.append(keyword)
         } else {
-            var modifyWithKeywords = withKeywords.components(separatedBy: ",")
-            modifyWithKeywords.removeAll(where: { $0 == String(keyword.id) })
-            query?.withKeyword = modifyWithKeywords.joined(separator: ",")
             query?.keywords.removeAll(where: { $0 == keyword })
-        }
-
-        if query?.withKeyword?.isEmpty ?? false {
-            query?.withKeyword = nil
         }
     }
     
     func apply(newKeywords: [Keyword]) {
-        let stringKeywords = newKeywords.map { String($0.id) }.joined(separator: ",")
-        
-        if query?.withKeyword == nil {
-            query?.withKeyword = stringKeywords
-            query?.keywords = newKeywords
-        } else {
-            query?.withKeyword?.append(",\(stringKeywords)")
-            query?.keywords.append(contentsOf: newKeywords)
-        }
+        var currentKeywords = try! keywords.value()
 
-        var previousKeywords = try! keywords.value()
-        previousKeywords.append(contentsOf: newKeywords)
+        if query?.keywords.isEmpty ?? false {
+            query?.keywords = newKeywords
+            currentKeywords.append(contentsOf: newKeywords)
+        } else {
+            let filterNewKeywords = newKeywords.filter { keyword in
+                return !currentKeywords.contains(where: { $0 == keyword })
+            }
+
+            query?.keywords.append(contentsOf: filterNewKeywords)
+            currentKeywords.append(contentsOf: filterNewKeywords)
+        }
         
-        keywords.onNext(previousKeywords)
+        keywords.onNext(currentKeywords)
     }
     
-    func set(query: DiscoverQuery?) {
-        var previousKeywords = try! keywords.value()
-
-        for keyword in query?.keywords ?? [] where !previousKeywords.contains(where: { $0 == keyword })  {
-            previousKeywords.append(keyword)
-        }
-
-        keywords.onNext(previousKeywords)
-        
-        self.query = query
+    func isThere(keyword: Keyword, at: Int) -> Bool {
+        return query?.keywords.contains(where: { $0 == keyword }) ?? false
     }
 }

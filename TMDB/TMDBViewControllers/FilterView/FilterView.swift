@@ -108,7 +108,7 @@ extension FilterView: ApplyProtocol {
 
         doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
 
-        if let numberOfSelectedKeywords = viewModel.applyFilterQuery?.withKeyword?.components(separatedBy: ",").count {
+        if let numberOfSelectedKeywords = viewModel.applyFilterQuery?.keywords.count, numberOfSelectedKeywords > 0 {
             keywordDetailTextLabel?.setHeader(title: String(numberOfSelectedKeywords))
         } else {
             keywordDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
@@ -230,8 +230,8 @@ extension FilterView: UITableViewDataSource {
             return cell
         } else if indexPath.section == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
-            if let keywords = viewModel.applyFilterQuery?.withKeyword {
-                cell.detailTextLabel?.setHeader(title: String(keywords.components(separatedBy: ",").count))
+            if let keywordCount = viewModel.applyFilterQuery?.keywords.count, keywordCount > 0 {
+                cell.detailTextLabel?.setHeader(title: String(keywordCount))
             } else {
                 cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
             }

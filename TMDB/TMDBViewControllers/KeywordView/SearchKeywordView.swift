@@ -100,6 +100,7 @@ extension SearchKeywordView {
             .distinctUntilChanged()
             .asDriver(onErrorJustReturn: "")
             .drive(onNext: { query in
+                self.notificationLabel.isHidden = true
                 self.viewModel.searchKeyword(query: query, nextPage: false)
             })
             .disposed(by: rx.disposeBag)

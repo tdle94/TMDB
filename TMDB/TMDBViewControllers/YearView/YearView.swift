@@ -16,13 +16,6 @@ class YearView: UIViewController {
     weak var applyDelegate: ApplyProtocol? {
         didSet {
             viewModel.query = applyDelegate?.applyFilterQuery
-
-            if
-                let year = viewModel.query?.primaryReleaseYear,
-                let row = viewModel.years.firstIndex(of: String(year)) {
-                
-                viewModel.selectedIndexPath = IndexPath(row: row, section: 0)
-            }
         }
     }
 
@@ -61,16 +54,13 @@ class YearView: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        if let selectedIndexPath = viewModel.selectedIndexPath {
-            viewModel.selectedYear = viewModel.years[selectedIndexPath.row]
-            yearTableView.selectRow(at: selectedIndexPath, animated: true, scrollPosition: .middle)
-        }
+        yearTableView.selectRow(at: IndexPath(row: viewModel.selectedRow ?? 0, section: 0), animated: true, scrollPosition: .middle)
     }
 }
 
 extension YearView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if let selectedIndexPath = viewModel.selectedIndexPath, indexPath == selectedIndexPath {
+        if let selectedRow = viewModel.selectedRow, indexPath.row == selectedRow {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
             viewModel.handleSelect(at: indexPath.row, isSelected: false)
             doneBarButton.isEnabled = applyDelegate?.applyFilterQuery != viewModel.query
@@ -85,9 +75,7 @@ extension YearView {
         Observable<[String]>
             .just(viewModel.years)
             .bind(to: yearTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { row, year, cell in
-                if let selectedIndexPath = self.viewModel.selectedIndexPath {
-                    cell.accessoryType = row != selectedIndexPath.row ? .none : .checkmark
-                }
+                cell.accessoryType = row != self.viewModel.selectedRow ? .none : .checkmark
                 cell.textLabel?.setHeader(title: year)
             }
             .disposed(by: rx.disposeBag)

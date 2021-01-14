@@ -22,9 +22,7 @@ class FilterView: UIViewController {
     
     weak var applyFilterDelegate: ApplyFilterDelegate? {
         didSet {
-            if let query = applyFilterDelegate?.query {
-                viewModel.applyFilterQuery = query
-            }
+            viewModel.applyFilterQuery = applyFilterDelegate?.query
         }
     }
 

@@ -5,11 +5,22 @@
 //  Created by Tuyen Le on 1/8/21.
 //  Copyright © 2021 Tuyen Le. All rights reserved.
 //
+import Foundation
+import RxSwift
 
-protocol FilterViewModelProtocol {
-    var applyFilterQuery: DiscoverQuery? { get set }
+protocol ApplyProtocol: class {
+    var applyFilterQuery: DiscoverQuery? { get }
+
+    func apply(query: DiscoverQuery?)
+}
+
+protocol FilterViewModelProtocol: ApplyProtocol {
     var userSetting: TMDBUserSettingProtocol { get }
-    var selectedCountry: String? { get }
+    var selectedCountry: String { get }
+    var selectdLanguage: String { get }
+    var selectedYear: String { get }
+    var selectedKeywordCount: String { get }
+    var notifyUIChange: PublishSubject<Void> { get }
 
     func selectSortByAt(row: Int, section: Int)
     func deselectSortByAt()
@@ -22,8 +33,28 @@ class FilterViewModel: FilterViewModelProtocol {
     
     var applyFilterQuery: DiscoverQuery?
     
-    var selectedCountry: String? {
-        return userSetting.countriesCode.first(where: { $0.iso31661 == applyFilterQuery?.region })?.name
+    var notifyUIChange: PublishSubject<Void> = PublishSubject()
+    
+    var selectedCountry: String {
+        return userSetting.countriesCode.first(where: { $0.iso31661 == applyFilterQuery?.region })?.name ?? NSLocalizedString("Any", comment: "")
+    }
+    
+    var selectdLanguage: String {
+        return userSetting.languagesCode.first(where: { $0.iso6391 == applyFilterQuery?.withOriginalLanguage })?.name ?? NSLocalizedString("Any", comment: "")
+    }
+    
+    var selectedKeywordCount: String {
+        if let count = applyFilterQuery?.keywords.count, count > 0 {
+            return String(count)
+        }
+        return NSLocalizedString("Any", comment: "")
+    }
+    
+    var selectedYear: String {
+        if let year = applyFilterQuery?.primaryReleaseYear {
+            return String(year)
+        }
+        return NSLocalizedString("Any", comment: "")
     }
     
     private var selectedGenreId: [Int] = []
@@ -75,6 +106,13 @@ class FilterViewModel: FilterViewModelProtocol {
 
         if applyFilterQuery?.withGenres?.isEmpty ?? false {
             applyFilterQuery?.withGenres = nil
+        }
+    }
+    
+    func apply(query: DiscoverQuery?) {
+        if applyFilterQuery != query {
+            applyFilterQuery = query
+            notifyUIChange.onNext(())
         }
     }
 }

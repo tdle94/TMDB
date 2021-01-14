@@ -15,7 +15,7 @@ class KeywordView: UIViewController {
     
     weak var applyDelegate: ApplyProtocol? {
         didSet {
-            viewModel.set(query: applyDelegate?.currentApplyQuery)
+            viewModel.query = applyDelegate?.currentApplyQuery
         }
     }
 
@@ -91,9 +91,9 @@ extension KeywordView {
         viewModel
             .keywords
             .bind(to: keywordTableView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, keyword, cell in
-                let keywords = self.viewModel.query?.keywords
+                let isSelected = self.viewModel.isThere(keyword: keyword, at: row)
 
-                if keywords?.contains(where: { $0 == keyword }) ?? false {
+                if isSelected {
                     self.keywordTableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
                     cell.accessoryType = .checkmark
                 } else {
@@ -101,7 +101,7 @@ extension KeywordView {
                     cell.accessoryType = .none
                 }
                 
-                cell.isSelected = keywords?.contains(keyword) ?? false
+                cell.isSelected = isSelected
                 cell.textLabel?.setHeader(title: keyword.name)
             }
             .disposed(by: rx.disposeBag)

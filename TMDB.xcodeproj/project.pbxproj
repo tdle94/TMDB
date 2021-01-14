@@ -192,6 +192,9 @@
 		34EB35AA259FFCDE008A748A /* EpisodeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB35A9259FFCDE008A748A /* EpisodeDetailView.swift */; };
 		34EB35AE259FFCE8008A748A /* EpisodeDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34EB35AD259FFCE8008A748A /* EpisodeDetailView.xib */; };
 		34EB35B225A00549008A748A /* EpisodeViewDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EB35B125A00548008A748A /* EpisodeViewDetailModel.swift */; };
+		34F17E2725B0C95A00CCC9B3 /* LanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F17E2625B0C95A00CCC9B3 /* LanguageView.swift */; };
+		34F17E2D25B0C96300CCC9B3 /* LanguageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34F17E2C25B0C96300CCC9B3 /* LanguageView.xib */; };
+		34F17E3125B0CA0000CCC9B3 /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F17E3025B0CA0000CCC9B3 /* LanguageViewModel.swift */; };
 		34F6AA5A24A4124E000DC080 /* lineto-circular-black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F6AA5624A41242000DC080 /* lineto-circular-black.ttf */; };
 		34F6AA5B24A4124E000DC080 /* lineto-circular-pro-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F6AA5924A41243000DC080 /* lineto-circular-pro-bold.ttf */; };
 		34F6AA5C24A4124E000DC080 /* lineto-circular-pro-book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F6AA5824A41242000DC080 /* lineto-circular-pro-book.ttf */; };
@@ -405,6 +408,9 @@
 		34EB35A9259FFCDE008A748A /* EpisodeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeDetailView.swift; sourceTree = "<group>"; };
 		34EB35AD259FFCE8008A748A /* EpisodeDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EpisodeDetailView.xib; sourceTree = "<group>"; };
 		34EB35B125A00548008A748A /* EpisodeViewDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeViewDetailModel.swift; sourceTree = "<group>"; };
+		34F17E2625B0C95A00CCC9B3 /* LanguageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageView.swift; sourceTree = "<group>"; };
+		34F17E2C25B0C96300CCC9B3 /* LanguageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LanguageView.xib; sourceTree = "<group>"; };
+		34F17E3025B0CA0000CCC9B3 /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
 		34F6AA5624A41242000DC080 /* lineto-circular-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lineto-circular-black.ttf"; sourceTree = "<group>"; };
 		34F6AA5724A41242000DC080 /* lineto-circular-pro-medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lineto-circular-pro-medium.ttf"; sourceTree = "<group>"; };
 		34F6AA5824A41242000DC080 /* lineto-circular-pro-book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lineto-circular-pro-book.ttf"; sourceTree = "<group>"; };
@@ -797,6 +803,7 @@
 		34CB50032490375E00E9B5CF /* TMDBViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				34F17E2525B0C94F00CCC9B3 /* LanguageView */,
 				34B9497A25AE4DFD0074F96A /* CountryView */,
 				3400016225ABDB0C00D495E9 /* KeywordView */,
 				348FB72925A940FE00CD411D /* YearView */,
@@ -958,6 +965,16 @@
 			path = Episode;
 			sourceTree = "<group>";
 		};
+		34F17E2525B0C94F00CCC9B3 /* LanguageView */ = {
+			isa = PBXGroup;
+			children = (
+				34F17E2625B0C95A00CCC9B3 /* LanguageView.swift */,
+				34F17E2C25B0C96300CCC9B3 /* LanguageView.xib */,
+				34F17E3025B0CA0000CCC9B3 /* LanguageViewModel.swift */,
+			);
+			path = LanguageView;
+			sourceTree = "<group>";
+		};
 		34F6AA5124A411EC000DC080 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1068,6 +1085,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34F17E2D25B0C96300CCC9B3 /* LanguageView.xib in Resources */,
 				34F6AA5D24A4124E000DC080 /* lineto-circular-pro-medium.ttf in Resources */,
 				34AD7CD824AA513A004A7C0A /* TMDBPreviewItemCell.xib in Resources */,
 				347520B82490932B000ABA00 /* Localizable.strings in Resources */,
@@ -1237,6 +1255,7 @@
 				3458D30D2582FE05008E1594 /* MovieDetailModel.swift in Sources */,
 				347B8E9D24B2675E00A5E9AB /* TMDBMovieKeywordLayout.swift in Sources */,
 				34D817BB258D2D97008EA1EE /* TVShowDetailModel.swift in Sources */,
+				34F17E2725B0C95A00CCC9B3 /* LanguageView.swift in Sources */,
 				348FB72625A940F300CD411D /* YearView.swift in Sources */,
 				342727F325840745003E0A61 /* UIScrollView+.swift in Sources */,
 				34EB35AA259FFCDE008A748A /* EpisodeDetailView.swift in Sources */,
@@ -1275,6 +1294,7 @@
 				34A31D15248C7CCC00D56C10 /* TMDBSession.swift in Sources */,
 				34AD7CDA24AA5177004A7C0A /* TMDBCircleUserRating.swift in Sources */,
 				34AD7A6D2597D36C005BFAF0 /* PersonDetailViewModel.swift in Sources */,
+				34F17E3125B0CA0000CCC9B3 /* LanguageViewModel.swift in Sources */,
 				3458D31225830513008E1594 /* UINavigationController+.swift in Sources */,
 				3400016425ABDB1F00D495E9 /* KeywordView.swift in Sources */,
 				34BB777D2572F91D00D8709B /* HomeModel.swift in Sources */,

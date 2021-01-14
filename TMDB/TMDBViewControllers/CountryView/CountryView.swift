@@ -17,7 +17,7 @@ class CountryView: UIViewController {
     
     weak var applyDelegate: ApplyProtocol? {
         didSet {
-            viewModel.query = applyDelegate?.currentApplyQuery
+            viewModel.query = applyDelegate?.applyFilterQuery
         }
     }
     
@@ -108,7 +108,7 @@ extension CountryView {
             .drive(onNext: { indexPath in
                 self.countryTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: true)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.currentApplyQuery
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
             })
             .disposed(by: rx.disposeBag)
         
@@ -119,7 +119,7 @@ extension CountryView {
             .drive(onNext: { indexPath in
                 self.countryTableView.cellForRow(at: indexPath)?.accessoryType = .none
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: false)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.currentApplyQuery
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
             })
             .disposed(by: rx.disposeBag)
         

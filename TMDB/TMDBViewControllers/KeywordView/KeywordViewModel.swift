@@ -61,18 +61,17 @@ class KeywordViewModel: KeywordViewModelProtocol {
     func apply(newKeywords: [Keyword]) {
         var currentKeywords = try! keywords.value()
 
+        let filterNewKeywords = newKeywords.filter { keyword in
+            return !currentKeywords.contains(where: { $0 == keyword })
+        }
+
         if query?.keywords.isEmpty ?? false {
             query?.keywords = newKeywords
-            currentKeywords.append(contentsOf: newKeywords)
         } else {
-            let filterNewKeywords = newKeywords.filter { keyword in
-                return !currentKeywords.contains(where: { $0 == keyword })
-            }
-
             query?.keywords.append(contentsOf: filterNewKeywords)
-            currentKeywords.append(contentsOf: filterNewKeywords)
         }
         
+        currentKeywords.append(contentsOf: filterNewKeywords)
         keywords.onNext(currentKeywords)
     }
     

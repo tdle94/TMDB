@@ -68,6 +68,7 @@ extension FilterView {
             .asDriver()
             .drive(onNext: {
                 self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
             })
             .disposed(by: rx.disposeBag)
         
@@ -75,10 +76,12 @@ extension FilterView {
             .rx
             .tap
             .filter { self.doneBarButton.isEnabled }
-            .subscribe { _ in
-                self.dismiss(animated: true)
-                self.applyFilterDelegate?.applyFilter(query: self.viewModel.applyFilterQuery)
-            }
+            .asDriver(onErrorJustReturn: ())
+            .drive(onNext: { _ in
+                self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
+                self.applyFilterDelegate?.applyFilter(query: self.viewModel.query)
+            })
             .disposed(by: rx.disposeBag)
         
         viewModel
@@ -90,7 +93,7 @@ extension FilterView {
                 let countryDetailTextLabel = self.filterTableView.cellForRow(at: IndexPath(row: 0, section: 5))?.detailTextLabel
                 let languageDetailTextLabel = self.filterTableView.cellForRow(at: IndexPath(row: 0, section: 6))?.detailTextLabel
     
-                self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.applyFilterQuery
+                self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.query
                 
                 keywordDetailTextLabel?.setHeader(title: self.viewModel.selectedKeywordCount)
 
@@ -127,9 +130,9 @@ extension FilterView: UITableViewDelegate {
 
         viewModel.selectSortByAt(row: indexPath.row, section: indexPath.section)
 
-        switch viewModel.applyFilterQuery?.sortBy {
+        switch viewModel.query?.sortBy {
         case .popularity(_), .voteAverage(_), .voteCount(_), .none?:
-            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.query
         case nil:
             break
         }
@@ -158,9 +161,9 @@ extension FilterView: UITableViewDelegate {
         
         viewModel.deselectSortByAt()
         
-        switch viewModel.applyFilterQuery?.sortBy {
+        switch viewModel.query?.sortBy {
         case .popularity(_), .voteAverage(_), .voteCount(_), .none?:
-            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.query
         case nil:
             break
         }
@@ -190,7 +193,7 @@ extension FilterView: UITableViewDataSource {
         if indexPath.section < 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.sortByCell, for: indexPath) as! SortByTableViewCell
             
-            cell.setup(at: indexPath, tableView: tableView, filter: viewModel.applyFilterQuery)
+            cell.setup(at: indexPath, tableView: tableView, filter: viewModel.query)
 
             return cell
         } else if indexPath.section == 3 {
@@ -227,7 +230,7 @@ extension FilterView: UITableViewDataSource {
         let mediaType = applyFilterDelegate?.visibleRow == 0 ? GenreTableViewCell.MediaType.movie : GenreTableViewCell.MediaType.tvShow
         cell.setup(viewModel: viewModel, mediaType: mediaType, selection: { genreId, isSelected in
             self.viewModel.handleGenre(id: genreId, isSelected: isSelected)
-            self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.applyFilterQuery
+            self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.query
         })
         return cell
     }

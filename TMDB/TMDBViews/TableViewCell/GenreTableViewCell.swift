@@ -59,7 +59,7 @@ class GenreTableViewCell: UITableViewCell {
             Observable<[Genre]>
                 .just(genres)
                 .bind(to: genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, genre, cell in
-                    let shouldSelect = viewModel.applyFilterQuery?.withGenres?.components(separatedBy: ",").contains(String(genre.id)) ?? false
+                    let shouldSelect = viewModel.query?.withGenres?.components(separatedBy: ",").contains(String(genre.id)) ?? false
 
                     (cell as? TMDBKeywordCell)?.configure(item: genre)
 

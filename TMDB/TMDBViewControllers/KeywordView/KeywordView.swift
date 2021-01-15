@@ -15,7 +15,7 @@ class KeywordView: UIViewController {
     
     weak var applyDelegate: ApplyProtocol? {
         didSet {
-            viewModel.query = applyDelegate?.applyFilterQuery
+            viewModel.query = applyDelegate?.query
         }
     }
 
@@ -110,7 +110,7 @@ extension KeywordView {
             .keywords
             .asDriver(onErrorJustReturn: [])
             .drive(onNext: { _ in
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
             })
             .disposed(by: rx.disposeBag)
         
@@ -122,7 +122,7 @@ extension KeywordView {
                 self.keywordTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
                 let keywords = try! self.viewModel.keywords.value()
                 self.viewModel.handle(keyword: keywords[indexPath.row], isSelected: true)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
                 
             })
             .disposed(by: rx.disposeBag)
@@ -135,7 +135,7 @@ extension KeywordView {
                 self.keywordTableView.cellForRow(at: indexPath)?.accessoryType = .none
                 let keywords = try! self.viewModel.keywords.value()
                 self.viewModel.handle(keyword: keywords[indexPath.row], isSelected: false)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
             })
             .disposed(by: rx.disposeBag)
             

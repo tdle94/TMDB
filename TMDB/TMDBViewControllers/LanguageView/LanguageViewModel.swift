@@ -8,9 +8,8 @@
 
 import RxSwift
 
-protocol LanguageViewModelProtocol {
+protocol LanguageViewModelProtocol: ApplyProtocol {
     var languages: BehaviorSubject<[LanguageCode]> { get }
-    var query: DiscoverQuery? { get set }
     var selectedRow: Int? { get }
     var userSetting: TMDBUserSettingProtocol { get }
     
@@ -54,5 +53,9 @@ class LanguageViewModel: LanguageViewModelProtocol {
 
     func resetSearch() {
         languages.onNext(userSetting.languagesCode)
+    }
+    
+    func apply(query: DiscoverQuery?) {
+        self.query = query
     }
 }

@@ -17,7 +17,7 @@ class LanguageView: UIViewController {
     
     weak var applyDelegate: ApplyProtocol? {
         didSet {
-            viewModel.query = applyDelegate?.applyFilterQuery
+            viewModel.apply(query: applyDelegate?.query)
         }
     }
     
@@ -75,7 +75,7 @@ extension LanguageView: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.cellForRow(at: indexPath)?.accessoryType = .none
         viewModel.handleSelect(at: indexPath.row, isSelected: false)
-        doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
+        doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
         return nil
     }
 }
@@ -101,7 +101,7 @@ extension LanguageView {
             .drive(onNext: { indexPath in
                 self.languageTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: true)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
             })
             .disposed(by: rx.disposeBag)
         
@@ -112,7 +112,7 @@ extension LanguageView {
             .drive(onNext: { indexPath in
                 self.languageTableView.cellForRow(at: indexPath)?.accessoryType = .none
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: false)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.applyFilterQuery
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
             })
             .disposed(by: rx.disposeBag)
         

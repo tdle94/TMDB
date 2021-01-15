@@ -15,7 +15,7 @@ class YearView: UIViewController {
 
     weak var applyDelegate: ApplyProtocol? {
         didSet {
-            viewModel.query = applyDelegate?.applyFilterQuery
+            viewModel.apply(query: applyDelegate?.query)
         }
     }
 
@@ -63,7 +63,7 @@ extension YearView: UITableViewDelegate {
         if let selectedRow = viewModel.selectedRow, indexPath.row == selectedRow {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
             viewModel.handleSelect(at: indexPath.row, isSelected: false)
-            doneBarButton.isEnabled = applyDelegate?.applyFilterQuery != viewModel.query
+            doneBarButton.isEnabled = applyDelegate?.query != viewModel.query
             return nil
         }
         return indexPath
@@ -87,7 +87,7 @@ extension YearView {
             .drive(onNext: { indexPath in
                 self.yearTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: true)
-                self.doneBarButton.isEnabled = self.applyDelegate?.applyFilterQuery != self.viewModel.query
+                self.doneBarButton.isEnabled = self.applyDelegate?.query != self.viewModel.query
             })
             .disposed(by: rx.disposeBag)
             
@@ -99,7 +99,7 @@ extension YearView {
             .drive(onNext: { indexPath in
                 self.yearTableView.cellForRow(at: indexPath)?.accessoryType = .none
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: false)
-                self.doneBarButton.isEnabled = self.applyDelegate?.applyFilterQuery != self.viewModel.query
+                self.doneBarButton.isEnabled = self.applyDelegate?.query != self.viewModel.query
             })
             .disposed(by: rx.disposeBag)
         

@@ -8,10 +8,9 @@
 
 import RxSwift
 
-protocol CountryViewModelProtocol {
+protocol CountryViewModelProtocol: ApplyProtocol {
     var userSetting: TMDBUserSettingProtocol { get }
     var countries: BehaviorSubject<[CountryCode]> { get }
-    var query: DiscoverQuery? { get set }
     var selectedRow: Int? { get }
     
     func handleSelect(at: Int, isSelected: Bool)
@@ -55,5 +54,9 @@ class CountryViewModel: CountryViewModelProtocol {
     
     func resetSearch() {
         countries.onNext(userSetting.countriesCode)
+    }
+    
+    func apply(query: DiscoverQuery?) {
+        self.query = query
     }
 }

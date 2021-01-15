@@ -60,10 +60,6 @@ protocol FilterViewDelegate: class {
     func navigateToLanguageView(apply: ApplyProtocol)
 }
 
-protocol KeywordViewDelegate: class {
-    func navigateToSearchKeywordView(applyKeyword: ApplyKeyword)
-}
-
 protocol EpisodeViewDelegate: CommonNavigation {
     func navigateToPersonDetail(personId: Int)
 }
@@ -126,10 +122,6 @@ class AppCoordinator {
     
     var keywordView: KeywordView {
         return container.resolve(KeywordView.self)!
-    }
-    
-    var searchKeywordView: SearchKeywordView {
-        return container.resolve(SearchKeywordView.self)!
     }
     
     var countryView: CountryView {
@@ -229,14 +221,7 @@ class AppCoordinator {
     fileprivate func showKeywordView(apply: ApplyProtocol) {
         let view = keywordView
         view.applyDelegate = apply
-        view.delegate = self
         presentedView?.navigationController?.pushViewController(view, animated: true)
-    }
-    
-    fileprivate func showSearchKeywordView(applyKeyword: ApplyKeyword) {
-        let view = searchKeywordView
-        view.applyKeywordDelegate = applyKeyword
-        presentedView?.navigationController?.viewControllers.first?.navigationController?.pushViewController(view, animated: true)
     }
     
     fileprivate func showCountryView(apply: ApplyProtocol) {
@@ -314,11 +299,5 @@ extension AppCoordinator: FilterViewDelegate {
     
     func navigateToLanguageView(apply: ApplyProtocol) {
         showLanguageView(apply: apply)
-    }
-}
-
-extension AppCoordinator: KeywordViewDelegate {
-    func navigateToSearchKeywordView(applyKeyword: ApplyKeyword) {
-        showSearchKeywordView(applyKeyword: applyKeyword)
     }
 }

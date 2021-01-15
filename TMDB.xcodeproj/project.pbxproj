@@ -82,9 +82,6 @@
 		348BDA0A24946BF000EA9236 /* TrendingOnTVThisWeekFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348BDA0924946BF000EA9236 /* TrendingOnTVThisWeekFixture.swift */; };
 		348BDA0C24946C2000EA9236 /* TrendingPeopleThisWeekFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348BDA0B24946C2000EA9236 /* TrendingPeopleThisWeekFixture.swift */; };
 		348CF3A4258299F8007D1EF4 /* BasicDisclosureIndicatorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 348CF3A3258299F8007D1EF4 /* BasicDisclosureIndicatorTableViewCell.xib */; };
-		348E2EE725ACA86600551BCF /* SearchKeywordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E2EE625ACA86600551BCF /* SearchKeywordView.swift */; };
-		348E2EEB25ACAA8B00551BCF /* SearchKeywordView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 348E2EEA25ACAA8B00551BCF /* SearchKeywordView.xib */; };
-		348E2EF925ACAF8700551BCF /* SearchKeywordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E2EF825ACAF8700551BCF /* SearchKeywordViewModel.swift */; };
 		348E2EFF25AD2AFB00551BCF /* YearViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E2EFE25AD2AFB00551BCF /* YearViewModel.swift */; };
 		348F4A3825A6727000599D56 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348F4A3725A6727000599D56 /* FilterView.swift */; };
 		348F4A3E25A6727A00599D56 /* FilterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 348F4A3D25A6727A00599D56 /* FilterView.xib */; };
@@ -293,9 +290,6 @@
 		348BDA0924946BF000EA9236 /* TrendingOnTVThisWeekFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingOnTVThisWeekFixture.swift; sourceTree = "<group>"; };
 		348BDA0B24946C2000EA9236 /* TrendingPeopleThisWeekFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingPeopleThisWeekFixture.swift; sourceTree = "<group>"; };
 		348CF3A3258299F8007D1EF4 /* BasicDisclosureIndicatorTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BasicDisclosureIndicatorTableViewCell.xib; sourceTree = "<group>"; };
-		348E2EE625ACA86600551BCF /* SearchKeywordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchKeywordView.swift; sourceTree = "<group>"; };
-		348E2EEA25ACAA8B00551BCF /* SearchKeywordView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchKeywordView.xib; sourceTree = "<group>"; };
-		348E2EF825ACAF8700551BCF /* SearchKeywordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchKeywordViewModel.swift; sourceTree = "<group>"; };
 		348E2EFE25AD2AFB00551BCF /* YearViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearViewModel.swift; sourceTree = "<group>"; };
 		348F4A3725A6727000599D56 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		348F4A3D25A6727A00599D56 /* FilterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterView.xib; sourceTree = "<group>"; };
@@ -459,9 +453,6 @@
 				3400016325ABDB1E00D495E9 /* KeywordView.swift */,
 				3400016925ABDB2C00D495E9 /* KeywordView.xib */,
 				3400016F25ABDE1100D495E9 /* KeywordViewModel.swift */,
-				348E2EE625ACA86600551BCF /* SearchKeywordView.swift */,
-				348E2EEA25ACAA8B00551BCF /* SearchKeywordView.xib */,
-				348E2EF825ACAF8700551BCF /* SearchKeywordViewModel.swift */,
 			);
 			path = KeywordView;
 			sourceTree = "<group>";
@@ -1102,7 +1093,6 @@
 				3496E2F02561D26D00F999C9 /* HomeView.xib in Resources */,
 				34D9567F24D476BF00A478E5 /* LanguageCode.json in Resources */,
 				34B2F8E7259FB3E700FCA244 /* TitleWithSubtitleTableViewCell.xib in Resources */,
-				348E2EEB25ACAA8B00551BCF /* SearchKeywordView.xib in Resources */,
 				34B2F8E3259FB28400FCA244 /* ReviewView.xib in Resources */,
 				348CF3A4258299F8007D1EF4 /* BasicDisclosureIndicatorTableViewCell.xib in Resources */,
 				3461E1EB259E7D5500F91BF0 /* ReleaseDateView.xib in Resources */,
@@ -1313,7 +1303,6 @@
 				34932FB72596A2E900C1420D /* SearchResultView.swift in Sources */,
 				34CDDFBB24E1936D007D5A7B /* TMDBTrendHeaderView.swift in Sources */,
 				34A31D1E248C96AF00D56C10 /* TMDBServices.swift in Sources */,
-				348E2EF925ACAF8700551BCF /* SearchKeywordViewModel.swift in Sources */,
 				3486E3B324AF82AA002D0F60 /* TMDBPreviewItemCell.swift in Sources */,
 				343CC9DE2498245600FEC4F6 /* TMDBImageService.swift in Sources */,
 				348F4A3825A6727000599D56 /* FilterView.swift in Sources */,
@@ -1321,7 +1310,6 @@
 				34083FA4259A78D000372058 /* FilterButtonView.swift in Sources */,
 				342727E32583E2FA003E0A61 /* TMDBProductionCompanyCell.swift in Sources */,
 				348F636B2491C96600245BE6 /* TMDBRepository.swift in Sources */,
-				348E2EE725ACA86600551BCF /* SearchKeywordView.swift in Sources */,
 				34A5844525A3786700768B78 /* DiscoveryViewModel.swift in Sources */,
 				34AD7A7525982342005BFAF0 /* TMDBPersonCreditHeaderView.swift in Sources */,
 				3458D3172583052C008E1594 /* UINavigationItem+.swift in Sources */,

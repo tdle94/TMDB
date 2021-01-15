@@ -95,7 +95,7 @@ class KeywordViewModel: KeywordViewModelProtocol {
     func resetSearch() {
         let filterSelectedKeywords = query?.keywords.filter {
             $0.name != "action hero" || $0.name != "alternate history" || $0.name != "ambiguous ending" || $0.name != "americana" ||
-            $0.name != "anime" || $0.name != "anti hero" || $0.name != "avant-garde" || $0.name != "avant-garde" || $0.name != "b movie" ||
+            $0.name != "anime" || $0.name != "anti hero" || $0.name != "avant-garde" || $0.name != "b movie" ||
             $0.name != "bank heist" || $0.name != "based on novel"
         }
         initialKeywords.append(contentsOf: filterSelectedKeywords ?? [])

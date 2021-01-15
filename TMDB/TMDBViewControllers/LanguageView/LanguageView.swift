@@ -1,19 +1,19 @@
 //
-//  CountryView.swift
+//  LanguageView.swift
 //  TMDB
 //
-//  Created by Tuyen Le on 1/12/21.
+//  Created by Tuyen Le on 1/14/21.
 //  Copyright © 2021 Tuyen Le. All rights reserved.
 //
 
 import UIKit
 import RxSwift
 
-class CountryView: UIViewController {
+class LanguageView: UIViewController {
     
     let searchController: UISearchController = UISearchController(searchResultsController: nil)
     
-    var viewModel: CountryViewModelProtocol
+    var viewModel: LanguageViewModelProtocol
     
     weak var applyDelegate: ApplyProtocol? {
         didSet {
@@ -22,11 +22,11 @@ class CountryView: UIViewController {
     }
     
     // MARK: - init
-    init(viewModel: CountryViewModelProtocol) {
+    init(viewModel: LanguageViewModelProtocol) {
         self.viewModel = viewModel
-        super.init(nibName: String(describing: CountryView.self), bundle: nil)
+        super.init(nibName: String(describing: LanguageView.self), bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -35,45 +35,38 @@ class CountryView: UIViewController {
     let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: nil, action: nil)
     let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
 
-    @IBOutlet weak var countryTableView: UITableView! {
+    @IBOutlet weak var languageTableView: UITableView! {
         didSet {
-            countryTableView.register(UINib(nibName: String(describing: "SortByTableViewCell"), bundle: nil),
-                                      forCellReuseIdentifier: Constant.Identifier.countryCell)
-            countryTableView.tableFooterView = UIView()
-            countryTableView.rowHeight = 60
-            countryTableView.allowsMultipleSelection = false
-            countryTableView.delegate = self
-            countryTableView.tintColor = Constant.Color.primaryColor
+            languageTableView.register(UINib(nibName: String(describing: "SortByTableViewCell"), bundle: nil),
+                                       forCellReuseIdentifier: Constant.Identifier.languageCell)
+            languageTableView.tableFooterView = UIView()
+            languageTableView.tintColor = Constant.Color.primaryColor
+            languageTableView.allowsMultipleSelection = false
+            languageTableView.delegate = self
         }
     }
     
     // MARK: - override
     override func viewDidLoad() {
-        doneBarButton.tintColor = Constant.Color.backgroundColor
         cancelBarButton.tintColor = Constant.Color.backgroundColor
-        
-        definesPresentationContext = true
-
+        doneBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.isEnabled = false
-        navigationItem.setRightBarButton(doneBarButton, animated: true)
-        navigationItem.setLeftBarButton(cancelBarButton, animated: true)
-        
-        
-        searchController.setup(withPlaceholder: NSLocalizedString("Country", comment: ""))
-        
-        navigationItem.titleView = searchController.searchBar
 
+        navigationItem.setLeftBarButton(cancelBarButton, animated: true)
+        navigationItem.setRightBarButton(doneBarButton, animated: true)
+
+        searchController.setup(withPlaceholder: NSLocalizedString("Language", comment: ""))
+
+        navigationItem.titleView = searchController.searchBar
         setupBinding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if let row = viewModel.selectedRow {
-            countryTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: true)
-        }
+        languageTableView.scrollToRow(at: IndexPath(row: viewModel.selectedRow ?? 0, section: 0), at: .middle, animated: false)
     }
 }
 
-extension CountryView: UITableViewDelegate {
+extension LanguageView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if tableView.indexPathForSelectedRow == nil || tableView.indexPathForSelectedRow != indexPath {
             return indexPath
@@ -82,42 +75,42 @@ extension CountryView: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: false)
         tableView.cellForRow(at: indexPath)?.accessoryType = .none
         viewModel.handleSelect(at: indexPath.row, isSelected: false)
-        doneBarButton.isEnabled = true
+        doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
         return nil
     }
 }
 
-extension CountryView {
+extension LanguageView {
     func setupBinding() {
+        
         viewModel
-            .countries
-            .bind(to: countryTableView.rx.items(cellIdentifier: Constant.Identifier.countryCell)) { row, country, cell in
-                if row == self.viewModel.selectedRow {
-                    self.countryTableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
+            .languages
+            .bind(to: languageTableView.rx.items(cellIdentifier: Constant.Identifier.languageCell)) { row, language, cell in
+                if self.viewModel.selectedRow == row {
+                    self.languageTableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
                     cell.isSelected = true
                 }
-                cell.textLabel?.setHeader(title: country.name)
-                cell.imageView?.image = UIImage(named: "CountryFlags/\(country.name)")?.sd_resizedImage(with: CGSize(width: 40, height: 40), scaleMode: .aspectFit)
+                cell.textLabel?.setHeader(title: language.name)
             }
             .disposed(by: rx.disposeBag)
         
-        countryTableView
+        languageTableView
             .rx
             .itemSelected
             .asDriver()
             .drive(onNext: { indexPath in
-                self.countryTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+                self.languageTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: true)
                 self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
             })
             .disposed(by: rx.disposeBag)
         
-        countryTableView
+        languageTableView
             .rx
             .itemDeselected
             .asDriver()
             .drive(onNext: { indexPath in
-                self.countryTableView.cellForRow(at: indexPath)?.accessoryType = .none
+                self.languageTableView.cellForRow(at: indexPath)?.accessoryType = .none
                 self.viewModel.handleSelect(at: indexPath.row, isSelected: false)
                 self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
             })
@@ -151,7 +144,7 @@ extension CountryView {
             .distinctUntilChanged()
             .asDriver(onErrorJustReturn: "")
             .drive(onNext: { query in
-                self.viewModel.search(country: query)
+                self.viewModel.search(language: query)
             })
             .disposed(by: rx.disposeBag)
         

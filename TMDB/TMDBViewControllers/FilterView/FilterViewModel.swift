@@ -5,11 +5,22 @@
 //  Created by Tuyen Le on 1/8/21.
 //  Copyright © 2021 Tuyen Le. All rights reserved.
 //
+import Foundation
+import RxSwift
 
-protocol FilterViewModelProtocol {
-    var applyFilterQuery: DiscoverQuery? { get set }
+protocol ApplyProtocol: class {
+    var query: DiscoverQuery? { get }
+
+    func apply(query: DiscoverQuery?)
+}
+
+protocol FilterViewModelProtocol: ApplyProtocol {
     var userSetting: TMDBUserSettingProtocol { get }
-    var selectedCountry: String? { get }
+    var selectedCountry: String { get }
+    var selectdLanguage: String { get }
+    var selectedYear: String { get }
+    var selectedKeywordCount: String { get }
+    var notifyUIChange: PublishSubject<Void> { get }
 
     func selectSortByAt(row: Int, section: Int)
     func deselectSortByAt()
@@ -20,10 +31,30 @@ protocol FilterViewModelProtocol {
 class FilterViewModel: FilterViewModelProtocol {
     var userSetting: TMDBUserSettingProtocol
     
-    var applyFilterQuery: DiscoverQuery?
+    var query: DiscoverQuery?
     
-    var selectedCountry: String? {
-        return userSetting.countriesCode.first(where: { $0.iso31661 == applyFilterQuery?.region })?.name
+    var notifyUIChange: PublishSubject<Void> = PublishSubject()
+    
+    var selectedCountry: String {
+        return userSetting.countriesCode.first(where: { $0.iso31661 == query?.region })?.name ?? NSLocalizedString("Any", comment: "")
+    }
+    
+    var selectdLanguage: String {
+        return userSetting.languagesCode.first(where: { $0.iso6391 == query?.withOriginalLanguage })?.name ?? NSLocalizedString("Any", comment: "")
+    }
+    
+    var selectedKeywordCount: String {
+        if let count = query?.keywords.count, count > 0 {
+            return String(count)
+        }
+        return NSLocalizedString("Any", comment: "")
+    }
+    
+    var selectedYear: String {
+        if let year = query?.primaryReleaseYear {
+            return String(year)
+        }
+        return NSLocalizedString("Any", comment: "")
     }
     
     private var selectedGenreId: [Int] = []
@@ -35,46 +66,53 @@ class FilterViewModel: FilterViewModelProtocol {
     func selectSortByAt(row: Int, section: Int) {
         if section == 0 {
             if row == 0 {
-                applyFilterQuery?.sortBy = .popularity(order: .ascending)
+                query?.sortBy = .popularity(order: .ascending)
             } else {
-                applyFilterQuery?.sortBy = .popularity(order: .descending)
+                query?.sortBy = .popularity(order: .descending)
             }
         } else if section == 1 {
             if row == 0 {
-                applyFilterQuery?.sortBy = .voteAverage(order: .ascending)
+                query?.sortBy = .voteAverage(order: .ascending)
             } else {
-                applyFilterQuery?.sortBy = .voteAverage(order: .descending)
+                query?.sortBy = .voteAverage(order: .descending)
             }
         } else if section == 2 {
             if row == 0 {
-                applyFilterQuery?.sortBy = .voteCount(order: .ascending)
+                query?.sortBy = .voteCount(order: .ascending)
             } else {
-                applyFilterQuery?.sortBy = .voteCount(order: .descending)
+                query?.sortBy = .voteCount(order: .descending)
             }
         }
     }
     
     func deselectSortByAt() {
-        applyFilterQuery?.sortBy = .none
+        query?.sortBy = .none
     }
     
     func handleGenre(id: Int, isSelected: Bool) {
-        guard var genres = applyFilterQuery?.withGenres else {
-            applyFilterQuery?.withGenres = "\(id)"
+        guard var genres = query?.withGenres else {
+            query?.withGenres = "\(id)"
             return
         }
 
         if isSelected {
             genres += ",\(id)"
-            applyFilterQuery?.withGenres = genres
+            query?.withGenres = genres
         } else {
             var modifiedGenres = genres.components(separatedBy: ",")
             modifiedGenres.removeAll(where: { $0 == String(id) })
-            applyFilterQuery?.withGenres = modifiedGenres.joined(separator: ",")
+            query?.withGenres = modifiedGenres.joined(separator: ",")
         }
 
-        if applyFilterQuery?.withGenres?.isEmpty ?? false {
-            applyFilterQuery?.withGenres = nil
+        if query?.withGenres?.isEmpty ?? false {
+            query?.withGenres = nil
+        }
+    }
+    
+    func apply(query: DiscoverQuery?) {
+        if self.query != query {
+            self.query = query
+            notifyUIChange.onNext(())
         }
     }
 }

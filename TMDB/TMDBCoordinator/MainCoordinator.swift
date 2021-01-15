@@ -57,10 +57,7 @@ protocol FilterViewDelegate: class {
     func navigateToYearView(apply: ApplyProtocol)
     func navigateToKeywordView(apply: ApplyProtocol)
     func navigateToCountryView(apply: ApplyProtocol)
-}
-
-protocol KeywordViewDelegate: class {
-    func navigateToSearchKeywordView(applyKeyword: ApplyKeyword)
+    func navigateToLanguageView(apply: ApplyProtocol)
 }
 
 protocol EpisodeViewDelegate: CommonNavigation {
@@ -127,12 +124,12 @@ class AppCoordinator {
         return container.resolve(KeywordView.self)!
     }
     
-    var searchKeywordView: SearchKeywordView {
-        return container.resolve(SearchKeywordView.self)!
-    }
-    
     var countryView: CountryView {
         return container.resolve(CountryView.self)!
+    }
+    
+    var languageView: LanguageView {
+        return container.resolve(LanguageView.self)!
     }
 
     init(window: UIWindow, container: Container) {
@@ -224,18 +221,17 @@ class AppCoordinator {
     fileprivate func showKeywordView(apply: ApplyProtocol) {
         let view = keywordView
         view.applyDelegate = apply
-        view.delegate = self
         presentedView?.navigationController?.pushViewController(view, animated: true)
-    }
-    
-    fileprivate func showSearchKeywordView(applyKeyword: ApplyKeyword) {
-        let view = searchKeywordView
-        view.applyKeywordDelegate = applyKeyword
-        presentedView?.navigationController?.viewControllers.first?.navigationController?.pushViewController(view, animated: true)
     }
     
     fileprivate func showCountryView(apply: ApplyProtocol) {
         let view = countryView
+        view.applyDelegate = apply
+        presentedView?.navigationController?.pushViewController(view, animated: true)
+    }
+    
+    fileprivate func showLanguageView(apply: ApplyProtocol) {
+        let view = languageView
         view.applyDelegate = apply
         presentedView?.navigationController?.pushViewController(view, animated: true)
     }
@@ -300,10 +296,8 @@ extension AppCoordinator: FilterViewDelegate {
     func navigateToCountryView(apply: ApplyProtocol) {
         showCountryView(apply: apply)
     }
-}
-
-extension AppCoordinator: KeywordViewDelegate {
-    func navigateToSearchKeywordView(applyKeyword: ApplyKeyword) {
-        showSearchKeywordView(applyKeyword: applyKeyword)
+    
+    func navigateToLanguageView(apply: ApplyProtocol) {
+        showLanguageView(apply: apply)
     }
 }

@@ -7,26 +7,39 @@
 //
 
 import UIKit
+import RxSwift
 
 class KeywordView: UIViewController {
+    let searchController: UISearchController = UISearchController(searchResultsController: nil)
+
     var viewModel: KeywordViewModelProtocol
-    
-    weak var delegate: KeywordViewDelegate?
     
     weak var applyDelegate: ApplyProtocol? {
         didSet {
-            viewModel.query = applyDelegate?.currentApplyQuery
+            viewModel.apply(query: applyDelegate?.query)
         }
     }
 
     // MARK: - views
+    let notificationLabel = UILabel()
+    let loadingIndicator = UIActivityIndicatorView(style: .medium)
     let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: nil, action: nil)
     let cancelBarButton = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
-    let addKeywordBarButton = UIBarButtonItem(title: "Add", style: .plain, target: nil, action: nil)
 
     @IBOutlet weak var keywordTableView: UITableView! {
         didSet {
-            keywordTableView.tableFooterView = UIView()
+            keywordTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+            keywordTableView.tableFooterView?.addSubview(loadingIndicator)
+
+            loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+            loadingIndicator.widthAnchor.constraint(equalTo: keywordTableView.tableFooterView!.widthAnchor).isActive = true
+            loadingIndicator.heightAnchor.constraint(equalTo: keywordTableView.tableFooterView!.heightAnchor).isActive = true
+            loadingIndicator.centerXAnchor.constraint(equalTo: keywordTableView.tableFooterView!.centerXAnchor).isActive = true
+            loadingIndicator.centerYAnchor.constraint(equalTo: keywordTableView.tableFooterView!.centerYAnchor).isActive = true
+
+            notificationLabel.textAlignment = .center
+            notificationLabel.isHidden = true
+            keywordTableView.backgroundView = notificationLabel
             keywordTableView.tintColor = Constant.Color.primaryColor
             keywordTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil),
                                       forCellReuseIdentifier: Constant.Identifier.keywordCell)
@@ -48,11 +61,17 @@ class KeywordView: UIViewController {
     override func viewDidLoad() {
         doneBarButton.tintColor = Constant.Color.backgroundColor
         cancelBarButton.tintColor = Constant.Color.backgroundColor
-        addKeywordBarButton.tintColor = Constant.Color.backgroundColor
         doneBarButton.isEnabled = false
-        navigationItem.setRightBarButtonItems([doneBarButton, addKeywordBarButton], animated: true)
+        
+        definesPresentationContext = true
+        
+        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.setLeftBarButton(cancelBarButton, animated: true)
-        title = NSLocalizedString("Keyword", comment: "")
+        navigationItem.setRightBarButton(doneBarButton, animated: true)
+        
+        searchController.setup(withPlaceholder: NSLocalizedString("Keyword", comment: ""))
+        
+        navigationItem.titleView = searchController.searchBar
 
         setupBinding()
     }
@@ -70,15 +89,6 @@ extension KeywordView {
             })
             .disposed(by: rx.disposeBag)
         
-        addKeywordBarButton
-            .rx
-            .tap
-            .asDriver()
-            .drive(onNext: {
-                self.delegate?.navigateToSearchKeywordView(applyKeyword: self.viewModel)
-            })
-            .disposed(by: rx.disposeBag)
-        
         cancelBarButton
             .rx
             .tap
@@ -90,6 +100,7 @@ extension KeywordView {
 
         viewModel
             .keywords
+            .filterNil()
             .bind(to: keywordTableView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, keyword, cell in
                 let isSelected = self.viewModel.isThere(keyword: keyword, at: row)
 
@@ -108,10 +119,46 @@ extension KeywordView {
         
         viewModel
             .keywords
-            .asDriver(onErrorJustReturn: [])
-            .drive(onNext: { _ in
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.currentApplyQuery
+            .asDriver(onErrorJustReturn: nil)
+            .drive(onNext: { result in
+                if result?.isEmpty ?? false, !self.loadingIndicator.isAnimating {
+                    self.notificationLabel.isHidden = false
+                    self.notificationLabel.setHeader(title: NSLocalizedString("No keywords found", comment: ""))
+                } else if result == nil, !self.loadingIndicator.isAnimating {
+                    self.notificationLabel.isHidden = false
+                    self.notificationLabel.setHeader(title: NSLocalizedString("Error getting keyword", comment: ""))
+                }
             })
+            .disposed(by: rx.disposeBag)
+        
+        searchController
+            .searchBar
+            .rx
+            .text
+            .orEmpty
+            .throttle(.seconds(1), latest: true, scheduler: MainScheduler.instance)
+            .filter { !$0.isEmpty && !$0.trimmingCharacters(in: .whitespaces).isEmpty && !$0.last!.isWhitespace && !$0.first!.isWhitespace }
+            .distinctUntilChanged()
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { query in
+                self.notificationLabel.isHidden = true
+                self.viewModel.searchKeyword(query: query, nextPage: false)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        searchController
+            .searchBar
+            .rx
+            .cancelButtonClicked
+            .asDriver()
+            .drive(onNext: {
+                self.viewModel.resetSearch()
+            })
+            .disposed(by: rx.disposeBag)
+        
+        viewModel
+            .isLoading
+            .bind(to: loadingIndicator.rx.isAnimating)
             .disposed(by: rx.disposeBag)
         
         keywordTableView
@@ -120,9 +167,8 @@ extension KeywordView {
             .asDriver()
             .drive(onNext: { indexPath in
                 self.keywordTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-                let keywords = try! self.viewModel.keywords.value()
-                self.viewModel.handle(keyword: keywords[indexPath.row], isSelected: true)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.currentApplyQuery
+                self.viewModel.handleKeyword(at: indexPath.row, isSelected: true)
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
                 
             })
             .disposed(by: rx.disposeBag)
@@ -133,9 +179,8 @@ extension KeywordView {
             .asDriver()
             .drive(onNext: { indexPath in
                 self.keywordTableView.cellForRow(at: indexPath)?.accessoryType = .none
-                let keywords = try! self.viewModel.keywords.value()
-                self.viewModel.handle(keyword: keywords[indexPath.row], isSelected: false)
-                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.currentApplyQuery
+                self.viewModel.handleKeyword(at: indexPath.row, isSelected: false)
+                self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
             })
             .disposed(by: rx.disposeBag)
             

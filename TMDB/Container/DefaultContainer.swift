@@ -83,11 +83,7 @@ extension DefaultContainer {
         }
         
         self.container.register(KeywordViewModelProtocol.self) { resolver in
-            KeywordViewModel()
-        }
-        
-        self.container.register(SearchKeywordViewModelProtocol.self) { resolver in
-            SearchKeywordViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
+            KeywordViewModel(repository: resolver.resolve(TMDBSearchRepository.self)!)
         }
         
         self.container.register(YearViewModel.self) { resolver in
@@ -96,6 +92,10 @@ extension DefaultContainer {
         
         self.container.register(CountryViewModelProtocol.self) { resolver in
             CountryViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+        }
+        
+        self.container.register(LanguageViewModelProtocol.self) { resolver in
+            LanguageViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
     }
 
@@ -159,13 +159,12 @@ extension DefaultContainer {
             KeywordView(viewModel: resolver.resolve(KeywordViewModelProtocol.self)!)
         }
         
-        self.container.register(SearchKeywordView.self) { resolver in
-            SearchKeywordView(searchController: UISearchController(searchResultsController: nil),
-                              viewModel: resolver.resolve(SearchKeywordViewModelProtocol.self)!)
-        }
-        
         self.container.register(CountryView.self) { resolver in
             CountryView(viewModel: resolver.resolve(CountryViewModelProtocol.self)!)
+        }
+        
+        self.container.register(LanguageView.self) { resolver in
+            LanguageView(viewModel: resolver.resolve(LanguageViewModelProtocol.self)!)
         }
     }
     

@@ -406,7 +406,7 @@ extension SearchView {
             .drive(onNext: {
                 guard
                     let text = self.searchController.searchBar.text,
-                    !text.isEmpty
+                    text.isNotEmpty
                 else {
                     return
                 }

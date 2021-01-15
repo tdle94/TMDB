@@ -16,4 +16,8 @@ struct LanguageCode: Decodable, Hashable {
         case iso6391 = "iso_639_1"
         case name = "english_name"
     }
+    
+    static func == (lhs: LanguageCode, rhs: LanguageCode) -> Bool {
+        return lhs.name == rhs.name && lhs.iso6391 == rhs.iso6391
+    }
 }

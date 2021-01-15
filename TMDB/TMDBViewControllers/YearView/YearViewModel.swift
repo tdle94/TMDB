@@ -6,8 +6,7 @@
 //  Copyright © 2021 Tuyen Le. All rights reserved.
 //
 
-protocol YearViewModelProtocol {
-    var query: DiscoverQuery? { get set }
+protocol YearViewModelProtocol: ApplyProtocol {
     var years: [String] { get }
     var selectedRow: Int? { get }
     
@@ -15,6 +14,7 @@ protocol YearViewModelProtocol {
 }
 
 class YearViewModel: YearViewModelProtocol {
+    
     var query: DiscoverQuery?
     
     var selectedRow: Int? {
@@ -36,5 +36,9 @@ class YearViewModel: YearViewModelProtocol {
         } else {
             query?.primaryReleaseYear = nil
         }
+    }
+    
+    func apply(query: DiscoverQuery?) {
+        self.query = query
     }
 }

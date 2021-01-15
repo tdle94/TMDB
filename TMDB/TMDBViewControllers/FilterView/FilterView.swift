@@ -7,14 +7,7 @@
 //
 
 import UIKit
-import RxSwift
 import RxDataSources
-
-protocol ApplyProtocol: class {
-    var currentApplyQuery: DiscoverQuery? { get }
-
-    func apply(query: DiscoverQuery?)
-}
 
 class FilterView: UIViewController {
     
@@ -22,7 +15,7 @@ class FilterView: UIViewController {
     
     weak var applyFilterDelegate: ApplyFilterDelegate? {
         didSet {
-            viewModel.applyFilterQuery = applyFilterDelegate?.query
+            viewModel.apply(query: applyFilterDelegate?.query)
         }
     }
 
@@ -75,6 +68,7 @@ extension FilterView {
             .asDriver()
             .drive(onNext: {
                 self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
             })
             .disposed(by: rx.disposeBag)
         
@@ -82,52 +76,36 @@ extension FilterView {
             .rx
             .tap
             .filter { self.doneBarButton.isEnabled }
-            .subscribe { _ in
-                self.dismiss(animated: true) {
-                    self.applyFilterDelegate?.applyFilter(query: self.viewModel.applyFilterQuery)
-                }
-            }
+            .asDriver(onErrorJustReturn: ())
+            .drive(onNext: { _ in
+                self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
+                self.applyFilterDelegate?.applyFilter(query: self.viewModel.query)
+            })
             .disposed(by: rx.disposeBag)
-    }
-}
-
-extension FilterView: ApplyProtocol {
+        
+        viewModel
+            .notifyUIChange
+            .asDriver(onErrorJustReturn: ())
+            .drive(onNext: { _ in
+                let yearDetailTextLabel = self.filterTableView.cellForRow(at: IndexPath(row: 0, section: 3))?.detailTextLabel
+                let keywordDetailTextLabel = self.filterTableView.cellForRow(at: IndexPath(row: 0, section: 4))?.detailTextLabel
+                let countryDetailTextLabel = self.filterTableView.cellForRow(at: IndexPath(row: 0, section: 5))?.detailTextLabel
+                let languageDetailTextLabel = self.filterTableView.cellForRow(at: IndexPath(row: 0, section: 6))?.detailTextLabel
     
-    var currentApplyQuery: DiscoverQuery? {
-        viewModel.applyFilterQuery
-    }
+                self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.query
+                
+                keywordDetailTextLabel?.setHeader(title: self.viewModel.selectedKeywordCount)
 
-    func apply(query: DiscoverQuery?) {
-        let keywordDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 4))?.detailTextLabel
-        let yearDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 3))?.detailTextLabel
-        let countryDetailTextLabel = filterTableView.cellForRow(at: IndexPath(row: 0, section: 5))?.detailTextLabel
-         
-        viewModel.applyFilterQuery = query
+                yearDetailTextLabel?.setHeader(title: self.viewModel.selectedYear)
 
-        doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+                countryDetailTextLabel?.setHeader(title: self.viewModel.selectedCountry)
 
-        if let numberOfSelectedKeywords = viewModel.applyFilterQuery?.keywords.count, numberOfSelectedKeywords > 0 {
-            keywordDetailTextLabel?.setHeader(title: String(numberOfSelectedKeywords))
-        } else {
-            keywordDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
-        }
+                languageDetailTextLabel!.setHeader(title: self.viewModel.selectdLanguage)
 
-        if let yearSelected = viewModel.applyFilterQuery?.year {
-            yearDetailTextLabel?.setHeader(title: String(yearSelected))
-        } else {
-            yearDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
-        }
-        
-        if let countrySelected = viewModel.selectedCountry {
-            countryDetailTextLabel?.setHeader(title: countrySelected)
-        } else {
-            countryDetailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
-        }
-        
-        filterTableView.reloadRows(at: [IndexPath(row: 0, section: 3),
-                                        IndexPath(row: 0, section: 4),
-                                        IndexPath(row: 0, section: 5)],
-                                   with: .none)
+                self.filterTableView.reloadSections(IndexSet(integersIn: 3...6), with: .automatic)
+            })
+            .disposed(by: rx.disposeBag)
     }
 }
 
@@ -136,11 +114,13 @@ extension FilterView: UITableViewDelegate {
         guard indexPath.section < 3 else {
             tableView.deselectRow(at: indexPath, animated: false)
             if indexPath.section == 3 {
-                delegate?.navigateToYearView(apply: self)
+                delegate?.navigateToYearView(apply: viewModel)
             } else if indexPath.section == 4 {
-                delegate?.navigateToKeywordView(apply: self)
+                delegate?.navigateToKeywordView(apply: viewModel)
             } else if indexPath.section == 5 {
-                delegate?.navigateToCountryView(apply: self)
+                delegate?.navigateToCountryView(apply: viewModel)
+            } else if indexPath.section == 6 {
+                delegate?.navigateToLanguageView(apply: viewModel)
             }
             return
         }
@@ -150,9 +130,9 @@ extension FilterView: UITableViewDelegate {
 
         viewModel.selectSortByAt(row: indexPath.row, section: indexPath.section)
 
-        switch viewModel.applyFilterQuery?.sortBy {
+        switch viewModel.query?.sortBy {
         case .popularity(_), .voteAverage(_), .voteCount(_), .none?:
-            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.query
         case nil:
             break
         }
@@ -181,9 +161,9 @@ extension FilterView: UITableViewDelegate {
         
         viewModel.deselectSortByAt()
         
-        switch viewModel.applyFilterQuery?.sortBy {
+        switch viewModel.query?.sortBy {
         case .popularity(_), .voteAverage(_), .voteCount(_), .none?:
-            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.applyFilterQuery
+            doneBarButton.isEnabled = applyFilterDelegate?.query != viewModel.query
         case nil:
             break
         }
@@ -199,11 +179,11 @@ extension FilterView: UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 7
+        return 8
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section < 6 {
+        if indexPath.section < 7 {
             return UITableView.automaticDimension
         }
         return applyFilterDelegate?.visibleRow == 0 ? 165 : 138
@@ -213,37 +193,35 @@ extension FilterView: UITableViewDataSource {
         if indexPath.section < 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.sortByCell, for: indexPath) as! SortByTableViewCell
             
-            cell.setup(at: indexPath, tableView: tableView, filter: viewModel.applyFilterQuery)
+            cell.setup(at: indexPath, tableView: tableView, filter: viewModel.query)
 
             return cell
         } else if indexPath.section == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
-            if let year = viewModel.applyFilterQuery?.primaryReleaseYear {
-                cell.detailTextLabel?.setHeader(title: String(year))
-            } else {
-                cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
-            }
+            cell.detailTextLabel?.setHeader(title: viewModel.selectedYear)
             cell.textLabel?.setHeader(title: NSLocalizedString("Year", comment: ""))
 
             return cell
         } else if indexPath.section == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
-            if let keywordCount = viewModel.applyFilterQuery?.keywords.count, keywordCount > 0 {
-                cell.detailTextLabel?.setHeader(title: String(keywordCount))
-            } else {
-                cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
-            }
+            cell.detailTextLabel?.setHeader(title: viewModel.selectedKeywordCount)
             cell.textLabel?.setHeader(title: NSLocalizedString("Keyword", comment: ""))
 
             return cell
         } else if indexPath.section == 5 {
             let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
-            if let country = viewModel.selectedCountry {
-                cell.detailTextLabel?.setHeader(title: country)
-            } else {
-                cell.detailTextLabel?.setHeader(title: NSLocalizedString("Any", comment: ""))
-            }
+
+            cell.detailTextLabel?.setHeader(title: viewModel.selectedCountry)
+  
             cell.textLabel?.setHeader(title: NSLocalizedString("Country", comment: ""))
+            
+            return cell
+        } else if indexPath.section == 6 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell, for: indexPath)
+
+            cell.detailTextLabel?.setHeader(title: viewModel.selectdLanguage)
+
+            cell.textLabel?.setHeader(title: NSLocalizedString("Language", comment: ""))
             
             return cell
         }
@@ -252,7 +230,7 @@ extension FilterView: UITableViewDataSource {
         let mediaType = applyFilterDelegate?.visibleRow == 0 ? GenreTableViewCell.MediaType.movie : GenreTableViewCell.MediaType.tvShow
         cell.setup(viewModel: viewModel, mediaType: mediaType, selection: { genreId, isSelected in
             self.viewModel.handleGenre(id: genreId, isSelected: isSelected)
-            self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.applyFilterQuery
+            self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.query
         })
         return cell
     }
@@ -265,7 +243,7 @@ extension FilterView: UITableViewDataSource {
             return NSLocalizedString("Rating Average", comment: "")
         } else if section == 2 {
             return NSLocalizedString("Most Rate", comment: "")
-        } else if section == 6 {
+        } else if section == 7 {
             return NSLocalizedString("Genres", comment: "")
         }
         return ""

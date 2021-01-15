@@ -47,8 +47,6 @@ class CountryViewModel: CountryViewModelProtocol {
     func search(country query: String) {
         let newCountries = userSetting.countriesCode.filter { $0.name.contains(query) }
         
-        self.query?.region = nil
-        
         countries.onNext(newCountries)
     }
     

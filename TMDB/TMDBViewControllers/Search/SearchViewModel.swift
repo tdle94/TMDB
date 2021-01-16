@@ -119,7 +119,7 @@ class SearchViewModel: SearchViewModelProtocol {
         let filterResult = oldSearchResult.filter { $0.mediaType == type.rawValue }
 
         if filterResult.isEmpty {
-            self.notificationLabel.onNext(NSLocalizedString("No item found", comment: ""))
+            self.notificationLabel.onNext(TMDBLabel.setHeader(title: NSLocalizedString("No item found", comment: "")))
         }
         searchResult.onNext(filterResult)
     }

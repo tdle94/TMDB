@@ -15,7 +15,7 @@ protocol SearchViewModelProtocol {
     var searchResult: BehaviorSubject<[MultiSearch]> { get }
     var oldSearchText: String { get }
     var isLoading: BehaviorSubject<Bool> { get }
-    var notificationLabel: PublishSubject<String> { get }
+    var notificationLabel: PublishSubject<NSAttributedString> { get }
     var hideNotificationLabel: PublishSubject<Bool> { get }
     
     func search(text: String)
@@ -41,7 +41,7 @@ class SearchViewModel: SearchViewModelProtocol {
     var searchResult: BehaviorSubject<[MultiSearch]> = BehaviorSubject(value: [])
     var oldSearchResult: [MultiSearch] = []
     var isLoading: BehaviorSubject<Bool> = BehaviorSubject(value: false)
-    var notificationLabel: PublishSubject<String> = PublishSubject()
+    var notificationLabel: PublishSubject<NSAttributedString> = PublishSubject()
     var hideNotificationLabel: PublishSubject<Bool> = PublishSubject()
 
     init(searchRepository: TMDBSearchRepository) {
@@ -88,7 +88,7 @@ class SearchViewModel: SearchViewModelProtocol {
                 
                 if self.oldSearchResult.isEmpty {
                     self.hideNotificationLabel.onNext(false)
-                    self.notificationLabel.onNext(NSLocalizedString("No item found", comment: ""))
+                    self.notificationLabel.onNext(TMDBLabel.setHeader(title: NSLocalizedString("No item found", comment: "")))
                 }
                 
                 self.page = newPage
@@ -97,7 +97,7 @@ class SearchViewModel: SearchViewModelProtocol {
             case .failure(let error):
                 if try! self.searchResult.value().isEmpty {
                     self.hideNotificationLabel.onNext(false)
-                    self.notificationLabel.onNext(NSLocalizedString("Error getting search result", comment: ""))
+                    self.notificationLabel.onNext(TMDBLabel.setHeader(title: NSLocalizedString("Error getting search result", comment: "")))
                 }
                 debugPrint("Error getting search result: \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: "Fail getting search", style: .danger).show(queuePosition: .back,

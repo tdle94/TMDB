@@ -370,7 +370,7 @@ extension SearchView {
                 
                 self.searchViewModel
                     .notificationLabel
-                    .bind(to: searchResult.emptyLabel.rx.text)
+                    .bind(to: searchResult.emptyLabel.rx.attributedText)
                     .disposed(by: self.rx.disposeBag)
                 
                 self.searchViewModel

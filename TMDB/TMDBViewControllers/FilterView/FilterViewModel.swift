@@ -8,18 +8,13 @@
 import Foundation
 import RxSwift
 
-protocol ApplyProtocol: class {
-    var query: DiscoverQuery? { get }
-
-    func apply(query: DiscoverQuery?)
-}
-
 protocol FilterViewModelProtocol: ApplyProtocol {
     var userSetting: TMDBUserSettingProtocol { get }
     var selectedCountry: String { get }
     var selectdLanguage: String { get }
     var selectedYear: String { get }
     var selectedKeywordCount: String { get }
+    var genres: [Genre] { get }
     var notifyUIChange: PublishSubject<Void> { get }
 
     func selectSortByAt(row: Int, section: Int)
@@ -29,11 +24,16 @@ protocol FilterViewModelProtocol: ApplyProtocol {
 }
 
 class FilterViewModel: FilterViewModelProtocol {
+
     var userSetting: TMDBUserSettingProtocol
     
     var query: DiscoverQuery?
     
     var notifyUIChange: PublishSubject<Void> = PublishSubject()
+    
+    var genres: [Genre] {
+        return query?.filterType == .movie ? userSetting.movieGenres : userSetting.tvShowGenres
+    }
     
     var selectedCountry: String {
         return userSetting.countriesCode.first(where: { $0.iso31661 == query?.region })?.name ?? NSLocalizedString("Any", comment: "")

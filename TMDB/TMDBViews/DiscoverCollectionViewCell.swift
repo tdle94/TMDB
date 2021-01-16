@@ -28,10 +28,11 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
     })
     
     let errorLabel = UILabel()
-
-    weak var movieLoadingIndicatorView: LoadingIndicatorView?
     
-    weak var tvShowLoadingIndicatorView: LoadingIndicatorView?
+    var isAtBottom: Bool {
+        let bottomEdge = entityCollectionView.contentOffset.y + entityCollectionView.frame.size.height
+        return bottomEdge >= entityCollectionView.contentSize.height
+    }
     
     @IBOutlet weak var entityCollectionView: UICollectionView! {
         didSet {
@@ -39,7 +40,6 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
             entityCollectionView.backgroundView?.addSubview(errorLabel)
 
             errorLabel.translatesAutoresizingMaskIntoConstraints = false
-            errorLabel.setHeader(title: NSLocalizedString("Error getting search result", comment: ""))
             errorLabel.centerXAnchor.constraint(equalTo: entityCollectionView.backgroundView!.centerXAnchor).isActive = true
             errorLabel.centerYAnchor.constraint(equalTo: entityCollectionView.backgroundView!.centerYAnchor).isActive = true
             
@@ -52,17 +52,15 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
                                           withReuseIdentifier: Constant.Identifier.loading)
 
             movieDataSource.configureSupplementaryView = { _, collectionView, _, indexPath in
-                self.movieLoadingIndicatorView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                                                 withReuseIdentifier: Constant.Identifier.loading,
-                                                                                                 for: indexPath) as? LoadingIndicatorView
-                return self.movieLoadingIndicatorView!
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
+                                                                       withReuseIdentifier: Constant.Identifier.loading,
+                                                                       for: indexPath)
             }
             
             tvShowDataSource.configureSupplementaryView = { _, collectionView, _, indexPath in
-                self.tvShowLoadingIndicatorView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                                                  withReuseIdentifier: Constant.Identifier.loading,
-                                                                                                  for: indexPath) as? LoadingIndicatorView
-                return self.tvShowLoadingIndicatorView!
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
+                                                                       withReuseIdentifier: Constant.Identifier.loading,
+                                                                       for: indexPath)
             }
         }
     }

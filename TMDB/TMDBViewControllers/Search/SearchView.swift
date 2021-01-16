@@ -23,7 +23,7 @@ class SearchView: UIViewController {
     
     private var searchResult: SearchResultView?
     
-    var filterBarButton = UIBarButtonItem(title: "Filter", style: .plain, target: nil, action: nil)
+    var filterBarButton = UIBarButtonItem(title: NSLocalizedString("Filter", comment: ""), style: .plain, target: nil, action: nil)
 
     @IBOutlet weak var discoveryChoiceView: DiscoveryFilterButtonView!
     @IBOutlet weak var discoveryCollectionView: UICollectionView! {
@@ -73,32 +73,17 @@ class SearchView: UIViewController {
     }
 }
 
-extension SearchView: ApplyFilterDelegate {
+extension SearchView: ApplyProtocol {
     var visibleRow: Int? {
         return discoveryCollectionView.indexPathsForVisibleItems.first?.row
     }
 
-    var query: DiscoverQuery {
+    var query: DiscoverQuery? {
         return visibleRow == 0 ? discoveryViewModel.movieQuery : discoveryViewModel.tvShowQuery
     }
-
-    func applyFilter(query: DiscoverQuery?) {
-        guard let row = visibleRow else {
-            return
-        }
-
-        let indexPath = IndexPath(row: row, section: 0)
-
-        (discoveryCollectionView.cellForItem(at: indexPath) as? DiscoverCollectionViewCell)?.entityCollectionView.scrollToItem(at: indexPath,
-                                                                                                                               at: .bottom,
-                                                                                                                               animated: true)
-        
-        if row == 0 {
-            discoveryViewModel.applyMovieFilter(query: query)
-        } else {
-            discoveryViewModel.applyTVShowFilter(query: query)
-        }
-
+    
+    func apply(query: DiscoverQuery?) {
+        discoveryViewModel.apply(query: query)
     }
 }
 
@@ -133,19 +118,34 @@ extension SearchView {
                     // bind inner collection view
                     self.discoveryViewModel
                         .movie
-                        .filterNil()
                         .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.movieDataSource))
+                        .disposed(by: self.rx.disposeBag)
+
+                    self.discoveryViewModel
+                        .hideMovieErrorLabel
+                        .bind(to: discoverCell.errorLabel.rx.isHidden)
                         .disposed(by: self.rx.disposeBag)
                     
                     self.discoveryViewModel
-                        .movie
-                        .asDriver(onErrorJustReturn: nil)
-                        .drive(onNext: { result in
-                            discoverCell.errorLabel.isHidden = result != nil
-                            discoverCell.movieLoadingIndicatorView?.loadingIndicator.stopAnimating()
-                        })
+                        .movieNotificationLabel
+                        .bind(to: discoverCell.errorLabel.rx.attributedText)
                         .disposed(by: self.rx.disposeBag)
                     
+                    discoverCell
+                        .entityCollectionView
+                        .rx
+                        .willDisplaySupplementaryView
+                        .asDriver()
+                        .drive(onNext: { view, element, indexPath in
+                            let footer = view as! LoadingIndicatorView
+                            self.discoveryViewModel
+                                .isMovieLoading
+                                .bind(to: footer.loadingIndicator.rx.isAnimating)
+                                .disposed(by: self.rx.disposeBag)
+                        })
+                        .disposed(by: self.rx.disposeBag)
+                        
+                        
                     discoverCell
                         .entityCollectionView
                         .rx
@@ -165,11 +165,7 @@ extension SearchView {
                         .didScroll
                         .asDriver()
                         .drive(onNext: {
-
-                            let bottomEdge = discoverCell.entityCollectionView.contentOffset.y + discoverCell.entityCollectionView.frame.size.height
-
-                            if bottomEdge >= discoverCell.entityCollectionView.contentSize.height, !(discoverCell.movieLoadingIndicatorView?.loadingIndicator.isAnimating ?? true) {
-                                discoverCell.movieLoadingIndicatorView?.loadingIndicator.startAnimating()
+                            if discoverCell.isAtBottom {
                                 self.discoveryViewModel.getAllMovie(nextPage: true)
                             }
                         })
@@ -182,16 +178,30 @@ extension SearchView {
                     // bind inner collection view
                     self.discoveryViewModel
                         .tvShow
-                        .filterNil()
                         .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.tvShowDataSource))
                         .disposed(by: self.rx.disposeBag)
                     
                     self.discoveryViewModel
-                        .tvShow
-                        .asDriver(onErrorJustReturn: nil)
-                        .drive(onNext: { result in
-                            discoverCell.errorLabel.isHidden = result != nil
-                            discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.stopAnimating()
+                        .hideTVErrorLabel
+                        .bind(to: discoverCell.errorLabel.rx.isHidden)
+                        .disposed(by: self.rx.disposeBag)
+
+                    self.discoveryViewModel
+                        .tvNotificationLabel
+                        .bind(to: discoverCell.errorLabel.rx.attributedText)
+                        .disposed(by: self.rx.disposeBag)
+                    
+                    discoverCell
+                        .entityCollectionView
+                        .rx
+                        .willDisplaySupplementaryView
+                        .asDriver()
+                        .drive(onNext: { view, element, indexPath in
+                            let footer = view as! LoadingIndicatorView
+                            self.discoveryViewModel
+                                .isTVLoading
+                                .bind(to: footer.loadingIndicator.rx.isAnimating)
+                                .disposed(by: self.rx.disposeBag)
                         })
                         .disposed(by: self.rx.disposeBag)
                     
@@ -215,10 +225,7 @@ extension SearchView {
                         .didScroll
                         .asDriver()
                         .drive(onNext: {
-                            let bottomEdge = discoverCell.entityCollectionView.contentOffset.y + discoverCell.entityCollectionView.frame.size.height
-                            
-                            if bottomEdge >= discoverCell.entityCollectionView.contentSize.height, !(discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.isAnimating ?? true) {
-                                discoverCell.tvShowLoadingIndicatorView?.loadingIndicator.startAnimating()
+                            if discoverCell.isAtBottom {
                                 self.discoveryViewModel.getAllTVShow(nextPage: true)
                             }
                         })
@@ -275,7 +282,6 @@ extension SearchView {
                 // bind search result to tableview
                 self.searchViewModel
                     .searchResult
-                    .filterNil()
                     .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.searchResultCell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
@@ -288,17 +294,8 @@ extension SearchView {
                     .didScroll
                     .asDriver()
                     .drive(onNext: { _ in
-                        let maxY = searchResult.searchResultTableView.contentOffset.y + searchResult.searchResultTableView.frame.height
-                        let indexPath = searchResult.searchResultTableView.indexPathForRow(at: CGPoint(x: 0, y: maxY))
-
-                        if
-                            let text = self.searchController.searchBar.text,
-                            indexPath?.row == searchResult.searchResultTableView.numberOfRows(inSection: 0) - 1,
-                            !searchResult.footerLoadIndicatorView.isAnimating {
-
-                            searchResult.footerLoadIndicatorView.startAnimating()
+                        if let text = self.searchController.searchBar.text, searchResult.isAtBottom {
                             self.searchViewModel.search(text: text)
-
                         }
                     })
                     .disposed(by: self.rx.disposeBag)
@@ -310,12 +307,12 @@ extension SearchView {
                     .itemSelected
                     .asDriver()
                     .drive(onNext: { indexPath in
-                        if let item = try! self.searchViewModel.searchResult.value()?[indexPath.row] {
-                            if item.mediaType == "movie" {
+                        if let item = self.searchViewModel.getSearchResult(at: indexPath.row) {
+                            if item.mediaType == SearchViewModel.SearchType.movie.rawValue {
                                 self.delegate?.navigateToMovieDetail(movieId: item.id)
-                            } else if item.mediaType == "tv" {
+                            } else if item.mediaType == SearchViewModel.SearchType.tv.rawValue {
                                 self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
-                            } else if item.mediaType == "person" {
+                            } else if item.mediaType == SearchViewModel.SearchType.person.rawValue {
                                 self.delegate?.navigateToPersonDetail(personId: item.id)
                             }
                         }
@@ -366,6 +363,26 @@ extension SearchView {
                     })
                     .disposed(by: self.rx.disposeBag)
                 
+                self.searchViewModel
+                    .isLoading
+                    .bind(to: searchResult.footerLoadIndicatorView.rx.isAnimating)
+                    .disposed(by: self.rx.disposeBag)
+                
+                self.searchViewModel
+                    .notificationLabel
+                    .bind(to: searchResult.emptyLabel.rx.text)
+                    .disposed(by: self.rx.disposeBag)
+                
+                self.searchViewModel
+                    .hideNotificationLabel
+                    .bind(to: searchResult.emptyLabel.rx.isHidden)
+                    .disposed(by: self.rx.disposeBag)
+                
+                self.searchViewModel
+                    .isLoading
+                    .bind(to: searchResult.filterButtonView.rx.isHidden)
+                    .disposed(by: self.rx.disposeBag)
+                
             })
             .disposed(by: rx.disposeBag)
         
@@ -380,22 +397,13 @@ extension SearchView {
             })
             .disposed(by: rx.disposeBag)
         
-        searchController
-            .searchBar
-            .rx
-            .cancelButtonClicked
-            .asDriver()
+        Observable
+            .of(searchController.searchBar.rx.cancelButtonClicked.asDriver(), searchController.rx.didDismiss.asDriver(onErrorJustReturn: ()))
+            .merge()
+            .asDriver(onErrorJustReturn: ())
             .drive(onNext: {
                 self.filterBarButton.isEnabled = true
             })
-            .disposed(by: rx.disposeBag)
-        
-        searchController
-            .rx
-            .didDismiss
-            .subscribe { _ in
-                self.filterBarButton.isEnabled = true
-            }
             .disposed(by: rx.disposeBag)
         
         searchController
@@ -410,7 +418,7 @@ extension SearchView {
                 else {
                     return
                 }
-                self.search(text: text)
+                self.searchViewModel.search(text: text)
             })
             .disposed(by: rx.disposeBag)
         
@@ -424,42 +432,8 @@ extension SearchView {
             .distinctUntilChanged()
             .asDriver(onErrorJustReturn: "")
             .drive(onNext: { query in
-                self.search(text: query.identity)
+                self.searchViewModel.search(text: query.identity)
             })
             .disposed(by: rx.disposeBag)
-
-        // stop loading indicator in tableview's footer view
-
-        searchViewModel
-            .searchResult
-            .skip(1)
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: { searchResult in
-                self.searchResult?.footerLoadIndicatorView.stopAnimating()
-                self.searchResult?.loadBackgroundView.stopAnimating()
-                self.searchResult?.filterButtonView.isHidden = false
-                if searchResult?.isEmpty ?? false {
-                    self.searchResult?.showEmptyLabel(message: NSLocalizedString("No item found", comment: ""))
-                } else if searchResult == nil {
-                    self.searchResult?.showEmptyLabel(message: NSLocalizedString("Error getting search result", comment: ""))
-                }
-            })
-            .disposed(by: rx.disposeBag)
-    }
-    
-    func search(text: String) {
-        if
-            self.searchResult?.searchResultTableView.numberOfSections != 0,
-            self.searchResult?.searchResultTableView.numberOfRows(inSection: 0) != 0 {
-            
-            self.searchResult?.searchResultTableView.scrollToRow(at: IndexPath(row: 0, section: 0),
-                                                                 at: .bottom,
-                                                                 animated: true)
-        }
-
-        self.searchResult?.loadBackgroundView.startAnimating()
-        self.searchResult?.filterButtonView.isHidden = true
-        self.searchResult?.emptyLabel.isHidden = true
-        self.searchViewModel.search(text: text)
     }
 }

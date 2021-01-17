@@ -50,7 +50,7 @@ protocol SearchViewDelegate: class {
     func navigateToMovieDetail(movieId: Int)
     func navigateToTVShowDetail(tvShowId: Int)
     func navigateToPersonDetail(personId: Int)
-    func presentFilterView(applyFilter: ApplyFilterDelegate)
+    func presentFilterView(applyFilter: ApplyProtocol)
 }
 
 protocol FilterViewDelegate: class {
@@ -204,7 +204,7 @@ class AppCoordinator {
         currentView = view
     }
 
-    fileprivate func showFilterView(applyFilter: ApplyFilterDelegate) {
+    fileprivate func showFilterView(applyFilter: ApplyProtocol) {
         let view = filterView
         view.applyFilterDelegate = applyFilter
         view.delegate = self
@@ -267,7 +267,7 @@ extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetai
         showEpisode(episode: episode, tvShowId: tvShowId)
     }
     
-    func presentFilterView(applyFilter: ApplyFilterDelegate) {
+    func presentFilterView(applyFilter: ApplyProtocol) {
         showFilterView(applyFilter: applyFilter)
     }
 }

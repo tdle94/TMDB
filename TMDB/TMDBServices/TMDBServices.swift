@@ -38,6 +38,11 @@ struct DiscoverQuery: Equatable {
         }
     }
     
+    enum FilterQueryType {
+        case movie
+        case tv
+    }
+    
     var page: Int = 1
     var language: String?
     var region: String?
@@ -51,6 +56,11 @@ struct DiscoverQuery: Equatable {
     var withGenres: String?
     var withOriginalLanguage: String?
     var keywords: [Keyword] = []
+    var filterType: FilterQueryType
+    
+    init(type: FilterQueryType) {
+        filterType = type
+    }
     
     static func == (lhs: DiscoverQuery, rhs: DiscoverQuery) -> Bool {
         return

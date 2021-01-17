@@ -680,7 +680,7 @@ class TMDBServiceTests: XCTestCase {
     // MARK: - all movies
     func testGetAllMovie() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: DiscoverQuery(page: 1))
+        let request = TMDBURLRequestBuilder().getAllMovieURLRequest(query: DiscoverQuery(type: .movie))
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
         
@@ -696,7 +696,7 @@ class TMDBServiceTests: XCTestCase {
         }
         
         /*WHEN*/
-        services.getAllMovie(query: DiscoverQuery(page: 1)) { _ in
+        services.getAllMovie(query: DiscoverQuery(type: .movie)) { _ in
             expectation.fulfill()
         }
         
@@ -709,7 +709,7 @@ class TMDBServiceTests: XCTestCase {
     // MARK: - all tv shows
     func testGetAllTVShow() {
         let expectation = self.expectation(description: "")
-        let request = TMDBURLRequestBuilder().getAllTVShowURLRequest(query: DiscoverQuery(page: 1))
+        let request = TMDBURLRequestBuilder().getAllTVShowURLRequest(query: DiscoverQuery(type: .tv))
         let requestMatcher: ParameterMatcher<URLRequest> = ParameterMatcher(matchesFunction: { $0 == request })
         let queryMatcher: ParameterMatcher<DiscoverQuery> = ParameterMatcher()
 
@@ -725,7 +725,7 @@ class TMDBServiceTests: XCTestCase {
         }
 
         /*WHEN*/
-        services.getAllTVShow(query: DiscoverQuery(page: 1)) { _ in
+        services.getAllTVShow(query: DiscoverQuery(type: .tv)) { _ in
             expectation.fulfill()
         }
 

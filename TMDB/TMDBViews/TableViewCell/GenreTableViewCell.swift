@@ -19,20 +19,9 @@ class GenreTableViewCell: UITableViewCell {
         }
     }
     
-    enum MediaType {
-        case movie
-        case tvShow
-    }
-    
-    func setup(viewModel: FilterViewModelProtocol, mediaType: MediaType, selection: @escaping (Int, Bool) -> Void) {
+    func setup(viewModel: FilterViewModelProtocol, selection: @escaping (Int, Bool) -> Void) {
 
-        let genres: [Genre]
-        
-        if mediaType == .movie {
-            genres = viewModel.userSetting.movieGenres
-        } else {
-            genres = viewModel.userSetting.tvShowGenres
-        }
+        let genres: [Genre] = viewModel.genres
 
         if genreCollectionView.numberOfItems(inSection: 0) == 0 {
 

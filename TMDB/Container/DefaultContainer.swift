@@ -56,7 +56,7 @@ extension DefaultContainer {
         }
         
         self.container.register(SearchViewModelProtocol.self) { resolver in
-            SearchViewViewModel(searchRepository: resolver.resolve(TMDBSearchRepository.self)!)
+            SearchViewModel(searchRepository: resolver.resolve(TMDBSearchRepository.self)!)
         }
         
         self.container.register(PersonDetailViewModelProtocol.self) { resolver in

@@ -13,7 +13,7 @@ class FilterView: UIViewController {
     
     var viewModel: FilterViewModelProtocol
     
-    weak var applyFilterDelegate: ApplyFilterDelegate? {
+    weak var applyFilterDelegate: ApplyProtocol? {
         didSet {
             viewModel.apply(query: applyFilterDelegate?.query)
         }
@@ -80,7 +80,7 @@ extension FilterView {
             .drive(onNext: { _ in
                 self.dismiss(animated: true, completion: nil)
                 self.dismiss(animated: true, completion: nil)
-                self.applyFilterDelegate?.applyFilter(query: self.viewModel.query)
+                self.applyFilterDelegate?.apply(query: self.viewModel.query)
             })
             .disposed(by: rx.disposeBag)
         
@@ -186,7 +186,7 @@ extension FilterView: UITableViewDataSource {
         if indexPath.section < 7 {
             return UITableView.automaticDimension
         }
-        return applyFilterDelegate?.visibleRow == 0 ? 165 : 138
+        return applyFilterDelegate?.query?.filterType == .movie ? 165 : 138
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -227,8 +227,8 @@ extension FilterView: UITableViewDataSource {
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.genreCell, for: indexPath) as! GenreTableViewCell
-        let mediaType = applyFilterDelegate?.visibleRow == 0 ? GenreTableViewCell.MediaType.movie : GenreTableViewCell.MediaType.tvShow
-        cell.setup(viewModel: viewModel, mediaType: mediaType, selection: { genreId, isSelected in
+
+        cell.setup(viewModel: viewModel, selection: { genreId, isSelected in
             self.viewModel.handleGenre(id: genreId, isSelected: isSelected)
             self.doneBarButton.isEnabled = self.applyFilterDelegate?.query != self.viewModel.query
         })

@@ -14,10 +14,12 @@ class SearchResultView: UIViewController {
     
     // MARK: - views
     let footerLoadIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(style: .medium)
-
-    let loadBackgroundView = UIActivityIndicatorView(style: .medium)
     
     let emptyLabel = UILabel()
+    
+    var isAtBottom: Bool {
+        return searchResultTableView.contentOffset.y >= (searchResultTableView.contentSize.height - searchResultTableView.frame.size.height)
+    }
     
     @IBOutlet weak var filterButtonView: FilterButtonView!
 
@@ -35,23 +37,14 @@ class SearchResultView: UIViewController {
             
             let backgroundView = UIView()
 
-            backgroundView.addSubview(loadBackgroundView)
             backgroundView.addSubview(emptyLabel)
             
             emptyLabel.textAlignment = .center
-            emptyLabel.setHeader(title: NSLocalizedString("No item found", comment: ""))
-            emptyLabel.isHidden = true
             emptyLabel.translatesAutoresizingMaskIntoConstraints = false
             emptyLabel.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
             emptyLabel.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor).isActive = true
             emptyLabel.widthAnchor.constraint(equalTo: backgroundView.widthAnchor).isActive = true
             emptyLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            
-            loadBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-            loadBackgroundView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-            loadBackgroundView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor).isActive = true
-            loadBackgroundView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            loadBackgroundView.heightAnchor.constraint(equalToConstant: 50).isActive = true
             
             searchResultTableView.backgroundView = backgroundView
 
@@ -62,10 +55,5 @@ class SearchResultView: UIViewController {
             footerLoadIndicatorView.centerXAnchor.constraint(equalTo: searchResultTableView.tableFooterView!.centerXAnchor).isActive = true
             footerLoadIndicatorView.centerYAnchor.constraint(equalTo: searchResultTableView.tableFooterView!.centerYAnchor).isActive = true
         }
-    }
-    
-    func showEmptyLabel(message: String) {
-        emptyLabel.isHidden = false
-        emptyLabel.setHeader(title: message)
     }
 }

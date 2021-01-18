@@ -65,7 +65,8 @@ extension DefaultContainer {
         }
         
         self.container.register(ReleaseDateViewModelProtocol.self) { resolver in
-            ReleaseDateViewModel(repository: resolver.resolve(TMDBMovieRepository.self)!)
+            ReleaseDateViewModel(repository: resolver.resolve(TMDBMovieRepository.self)!,
+                                 userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
         
         self.container.register(EpisodeDetailViewModelProtocol.self) { resolver in

@@ -11,10 +11,12 @@ import RxSwift
 protocol ReleaseDateViewModelProtocol {
     var repository: TMDBMovieRepository { get }
     var releaseDates: BehaviorSubject<[ReleaseDateResult]> { get }
-    
+    var userSetting: TMDBUserSettingProtocol { get }
+
     func getReleaseDates(movieId: Int)
     func filter(query country: String)
     func resetFilter()
+    func getCountryNameFrom(iso31661: String) -> String
 }
 
 class ReleaseDateViewModel: ReleaseDateViewModelProtocol {
@@ -25,10 +27,11 @@ class ReleaseDateViewModel: ReleaseDateViewModelProtocol {
 
     var repository: TMDBMovieRepository
     
-    var userSetting: TMDBUserSettingProtocol = TMDBUserSetting()
+    var userSetting: TMDBUserSettingProtocol
     
-    init(repository: TMDBMovieRepository) {
+    init(repository: TMDBMovieRepository, userSetting: TMDBUserSettingProtocol) {
         self.repository = repository
+        self.userSetting = userSetting
     }
     
     func getReleaseDates(movieId: Int) {
@@ -55,5 +58,9 @@ class ReleaseDateViewModel: ReleaseDateViewModelProtocol {
     
     func resetFilter() {
         self.releaseDates.onNext(saveReleaseDates)
+    }
+    
+    func getCountryNameFrom(iso31661: String) -> String {
+        return userSetting.countriesCode.first(where: { $0.iso31661 == iso31661 })?.name ?? ""
     }
 }

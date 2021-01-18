@@ -95,9 +95,8 @@ class MovieDetailView: UIViewController {
                             .segmentControl
                             .rx
                             .value
-                            .changed
-                            .subscribe { event in
-                                let index = Int(event.element!.description)
+                            .asDriver()
+                            .drive(onNext: { index in
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
                                 if index == 0, creditHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Cast", comment: "") {
@@ -105,7 +104,7 @@ class MovieDetailView: UIViewController {
                                 } else {
                                     self.viewModel.getCrews(movieId: self.movieId!)
                                 }
-                            }
+                            })
                             .disposed(by: self.rx.disposeBag)
                     }
                     
@@ -124,8 +123,8 @@ class MovieDetailView: UIViewController {
                             .rx
                             .value
                             .changed
-                            .subscribe { event in
-                                let index = Int(event.element!.description)
+                            .asDriver()
+                            .drive(onNext: { index in
                                 self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
                                 if index == 0, movieHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Similar", comment: "") {
@@ -133,7 +132,7 @@ class MovieDetailView: UIViewController {
                                 } else {
                                     self.viewModel.getRecommendMovies(movieId: self.movieId!)
                                 }
-                            }
+                            })
                             .disposed(by: self.rx.disposeBag)
                     }
                     return movieHeader
@@ -175,14 +174,11 @@ class MovieDetailView: UIViewController {
             scrollView
                 .rx
                 .didEndDecelerating
-                .asObservable()
-                .subscribe { _ in
+                .asDriver()
+                .drive(onNext: {
                     if let id = self.movieId, self.scrollView.parallaxHeader.refreshControl.isRefreshing {
                         
                         self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: true)
-                        
-                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
-                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
                         
                         let creditHeader = self.creditCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader,
                                                                                        at: IndexPath(row: 0, section: 0)) as? TMDBCreditHeaderView
@@ -196,7 +192,7 @@ class MovieDetailView: UIViewController {
                         self.viewModel.getImages(movieId: id)
                         self.viewModel.getMovieDetail(movieId: id)
                     }
-                }
+                })
                 .disposed(by: rx.disposeBag)
         }
     }
@@ -302,11 +298,12 @@ extension MovieDetailView {
         
         viewModel
             .images
-            .subscribe { event in
-                self.scrollView.parallaxHeader.carouselView = CarouselView(numberOfDot: event.element?.count ?? 0)
-            }
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { images in
+                self.scrollView.parallaxHeader.carouselView = CarouselView(numberOfDot: images.count)
+            })
             .disposed(by: rx.disposeBag)
-        
+
         // scrollview binding
         scrollView.animateNavBar(safeAreaInsetTop: view.safeAreaInsets.top,
                                  navigationController: navigationController)

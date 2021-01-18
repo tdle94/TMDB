@@ -117,22 +117,17 @@ extension HomeView {
         collectionView
             .rx
             .willDisplaySupplementaryView
-            .subscribe { event in
-                guard let supplementaryView = event.element?.supplementaryView else {
-                    return
-                }
+            .asDriver()
+            .drive(onNext: { event in
 
-                if let popularHeader = supplementaryView as? TMDBPopularHeaderView, popularHeader.segmentControl.selectedSegmentIndex == -1  {
+                if let popularHeader = event.supplementaryView as? TMDBPopularHeaderView, popularHeader.segmentControl.selectedSegmentIndex == -1  {
                     popularHeader.segmentControl.selectedSegmentIndex = 0
                     popularHeader
                         .segmentControl
                         .rx
                         .value
-                        .subscribe { event in
-                            guard let el = event.element, let segment = Int(el.description) else {
-                                return
-                            }
-
+                        .asDriver()
+                        .drive(onNext: { segment in
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
@@ -142,19 +137,17 @@ extension HomeView {
                             } else {
                                 self.viewModel.getPopularPeople()
                             }
-                            
-                        }.disposed(by: self.rx.disposeBag)
+                        })
+                        .disposed(by: self.rx.disposeBag)
 
-                } else if let trendingHeader = supplementaryView as? TMDBTrendHeaderView, trendingHeader.segmentControl.selectedSegmentIndex == -1 {
+                } else if let trendingHeader = event.supplementaryView as? TMDBTrendHeaderView, trendingHeader.segmentControl.selectedSegmentIndex == -1 {
                     trendingHeader.segmentControl.selectedSegmentIndex = 0
                     trendingHeader
                         .segmentControl
                         .rx
                         .value
-                        .subscribe { event in
-                            guard let el = event.element, let segment = Int(el.description) else {
-                                return
-                            }
+                        .asDriver()
+                        .drive(onNext: { segment in
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
@@ -162,21 +155,17 @@ extension HomeView {
                             } else {
                                 self.viewModel.getTrendingThisWeek()
                             }
-                        
-                        }
+                        })
                         .disposed(by: self.rx.disposeBag)
 
-                } else if let movieHeader = supplementaryView as? TMDBMovieHeaderView, movieHeader.segmentControl.selectedSegmentIndex == -1 {
+                } else if let movieHeader = event.supplementaryView as? TMDBMovieHeaderView, movieHeader.segmentControl.selectedSegmentIndex == -1 {
                     movieHeader.segmentControl.selectedSegmentIndex = 0
                     movieHeader
                         .segmentControl
                         .rx
                         .value
-                        .subscribe { event in
-                            guard let el = event.element, let segment = Int(el.description) else {
-                                return
-                            }
-
+                        .asDriver()
+                        .drive(onNext: { segment in
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
@@ -186,21 +175,17 @@ extension HomeView {
                             } else {
                                 self.viewModel.getUpcomingMovie()
                             }
-                        
-                        }
+                        })
                         .disposed(by: self.rx.disposeBag)
 
-                } else if let tvShowHeader = supplementaryView as? TMDBTVShowHeaderView, tvShowHeader.segmentControl.selectedSegmentIndex == -1 {
+                } else if let tvShowHeader = event.supplementaryView as? TMDBTVShowHeaderView, tvShowHeader.segmentControl.selectedSegmentIndex == -1 {
                     tvShowHeader.segmentControl.selectedSegmentIndex = 0
                     tvShowHeader
                         .segmentControl
                         .rx
                         .value
-                        .subscribe { event in
-                            guard let el = event.element, let segment = Int(el.description) else {
-                                return
-                            }
-
+                        .asDriver()
+                        .drive(onNext: { segment in
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 3), at: .centeredHorizontally, animated: true)
 
                             if segment == 0 {
@@ -210,13 +195,11 @@ extension HomeView {
                             } else {
                                 self.viewModel.getTVShowOnTheAir()
                             }
-
-                        }
+                        })
                         .disposed(by: self.rx.disposeBag)
                 }
-            }
+            })
             .disposed(by: rx.disposeBag)
-
     }
 
 

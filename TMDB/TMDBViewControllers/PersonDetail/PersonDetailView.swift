@@ -217,7 +217,7 @@ extension PersonDetailView {
         viewModel
             .profileCollectionImages
             .subscribe { event in
-                self.scrollView.parallaxHeader.carouselView = CarouselView(numberOfDot: event.element?.count ?? 0)
+                self.scrollView.parallaxHeader.dots = event.element?.count ?? 0
             }
             .disposed(by: rx.disposeBag)
         
@@ -228,7 +228,7 @@ extension PersonDetailView {
                 guard let index = self.profileCollectionView.indexPathsForVisibleItems.first?.row else {
                     return
                 }
-                self.scrollView.parallaxHeader.carouselView?.selectDot(at: index)
+                self.scrollView.parallaxHeader.selectDot(at: index)
             }
             .disposed(by: rx.disposeBag)
         

@@ -176,7 +176,7 @@ public class CarouselView: UIView {
             }
             
             let dot = DotView(frame: CGRect(x: distance,
-                                            y: dotContainer.frame.height / 2,
+                                            y: 0,
                                             width: dimension,
                                             height: dimension),
                               index: i)
@@ -447,7 +447,7 @@ public class ParallaxHeader: NSObject {
         let metrics = [
             "lowPriority" : UILayoutPriority.defaultLow,
             "highPriority" : UILayoutPriority.defaultHigh,
-            "height" : height - 50
+            "height" : height - 25
             ] as [String : Any]
         
         contentView.addConstraints(

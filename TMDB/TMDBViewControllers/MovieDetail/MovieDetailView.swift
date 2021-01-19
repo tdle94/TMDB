@@ -181,9 +181,6 @@ class MovieDetailView: UIViewController {
                         
                         self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: true)
                         
-                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: false)
-                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
-                        
                         let creditHeader = self.creditCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader,
                                                                                        at: IndexPath(row: 0, section: 0)) as? TMDBCreditHeaderView
                         let moreLikeThisHeader = self.creditCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader,
@@ -272,9 +269,7 @@ extension MovieDetailView {
             .observeOn(MainScheduler.asyncInstance)
             .subscribe(
                 onNext: { result in
-                    if self.scrollView.parallaxHeader.refreshControl.isRefreshing {
-                        self.scrollView.parallaxHeader.refreshControl.endRefreshing()
-                    }
+                    self.scrollView.parallaxHeader.refreshControl.endRefreshing()
 
                     if let posterPath = result.posterPath, let url = self.viewModel.userSetting.getImageURL(from: posterPath) {
                         self.posterImageView.sd_setImage(with: url) { _, _, _, _ in
@@ -286,11 +281,6 @@ extension MovieDetailView {
                     self.ratingLabel.rating = result.voteAverage
                     self.title = result.title
                     
-                },
-                onError: { error in
-                    if self.scrollView.parallaxHeader.refreshControl.isRefreshing {
-                        self.scrollView.parallaxHeader.refreshControl.endRefreshing()
-                    }
                 }).disposed(by: rx.disposeBag)
         // backdrop images binding
         viewModel
@@ -314,7 +304,7 @@ extension MovieDetailView {
         backdropImageCollectionView
             .rx
             .didEndDisplayingCell
-            .subscribe { cell, indexPath in
+            .subscribe { _, indexPath in
                 guard let index = self.backdropImageCollectionView.indexPathsForVisibleItems.first?.row else {
                     return
                 }

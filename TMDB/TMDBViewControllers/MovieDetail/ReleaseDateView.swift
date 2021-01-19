@@ -22,7 +22,7 @@ class ReleaseDateView: UIViewController {
             releaseDateTableView.rowHeight = 80
             releaseDateTableView.tableFooterView = UIView()
             releaseDateTableView.backgroundColor = Constant.Color.backgroundColor
-            releaseDateTableView.register(UINib(nibName: "TMDBCustomTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.releaseDateCell)
+            releaseDateTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.releaseDateCell)
             
             emptyLabel.setHeader(title: "No results")
             emptyLabel.textAlignment = .center
@@ -116,7 +116,10 @@ extension ReleaseDateView {
         viewModel
             .releaseDates
             .bind(to: releaseDateTableView.rx.items(cellIdentifier: Constant.Identifier.releaseDateCell)) { index, releaseDate, cell in
-                (cell as? TMDBCustomTableViewCell)?.configure(item: releaseDate)
+                let country = self.viewModel.getCountryNameFrom(iso31661: releaseDate.iso31661)
+                cell.textLabel?.setHeader(title: releaseDate.releaseDates.first?.releaseDate ?? "")
+                cell.detailTextLabel?.setAttributeText(title: releaseDate.releaseDates.first?.certification ?? "")
+                cell.imageView?.image = UIImage(named: "CountryFlags/\(country)")?.sd_resizedImage(with: CGSize(width: 40, height: 40), scaleMode: .aspectFit)
             }
             .disposed(by: rx.disposeBag)
         

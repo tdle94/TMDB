@@ -135,8 +135,8 @@ extension SearchView {
                         .entityCollectionView
                         .rx
                         .willDisplaySupplementaryView
-                        .asDriver()
-                        .drive(onNext: { view, element, indexPath in
+                        .take(1)
+                        .subscribe(onNext: { view, _, _ in
                             let footer = view as! LoadingIndicatorView
                             self.discoveryViewModel
                                 .isMovieLoading
@@ -195,8 +195,8 @@ extension SearchView {
                         .entityCollectionView
                         .rx
                         .willDisplaySupplementaryView
-                        .asDriver()
-                        .drive(onNext: { view, element, indexPath in
+                        .take(1)
+                        .subscribe(onNext: { view, _, _ in
                             let footer = view as! LoadingIndicatorView
                             self.discoveryViewModel
                                 .isTVLoading

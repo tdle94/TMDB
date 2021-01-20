@@ -28,7 +28,7 @@ protocol TMDBURLRequestBuilderProtocol {
     func getPersonDetailURLRequest(id: Int, language: String?) -> URLRequest
 
     // MARK: - trending
-    func getTrendingURLRequest(page: Int, time: TrendingTime, type: TrendingMediaType) -> URLRequest
+    func getTrendingURLRequest(page: Int, time: TrendingTime, type: MediaType) -> URLRequest
 
     // MARK: - image configuration
     func getImageConfigURLRequest() -> URLRequest
@@ -207,7 +207,7 @@ struct TMDBURLRequestBuilder: TMDBURLRequestBuilderProtocol {
     }
 
     // MARK: - trending
-    func getTrendingURLRequest(page: Int, time: TrendingTime, type: TrendingMediaType) -> URLRequest {
+    func getTrendingURLRequest(page: Int, time: TrendingTime, type: MediaType) -> URLRequest {
         var path = "/3/trending/"
         switch type {
         case .all:

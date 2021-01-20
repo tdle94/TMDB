@@ -347,12 +347,12 @@ class TMDBRepositoryTests: XCTestCase {
     }
 
     // MARK: - trending
-    private func setUpTrendingTest(time: TrendingTime, type: TrendingMediaType) {
+    private func setUpTrendingTest(time: TrendingTime, type: MediaType) {
         let expectation = self.expectation(description: "")
         let request = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: time, type: type)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let trendingTimeMatcher = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == time })
-        let trendingTypeMatcher = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == type })
+        let trendingTypeMatcher = ParameterMatcher<MediaType>(matchesFunction: { $0 == type })
 
         /*GIVEN*/
         stub(session) { stub in
@@ -414,7 +414,7 @@ class TMDBRepositoryTests: XCTestCase {
         let request = TMDBURLRequestBuilder().getTrendingURLRequest(page: 1, time: .today, type: .all)
         let requestMatcher = ParameterMatcher<URLRequest>(matchesFunction: { $0 == request })
         let trendingTimeMatcher = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .today })
-        let trendingTypeMatcher = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .all })
+        let trendingTypeMatcher = ParameterMatcher<MediaType>(matchesFunction: { $0 == .all })
 
         /*GIVEN*/
         stub(session) { stub in

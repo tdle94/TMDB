@@ -295,7 +295,7 @@ extension SearchView {
                     .asDriver()
                     .drive(onNext: { _ in
                         if let text = self.searchController.searchBar.text, searchResult.isAtBottom {
-                            self.searchViewModel.search(text: text)
+                            self.searchViewModel.search(text: text, nextPage: true)
                         }
                     })
                     .disposed(by: self.rx.disposeBag)
@@ -308,11 +308,11 @@ extension SearchView {
                     .asDriver()
                     .drive(onNext: { indexPath in
                         if let item = self.searchViewModel.getSearchResult(at: indexPath.row) {
-                            if item.mediaType == SearchViewModel.SearchType.movie.rawValue {
+                            if item.mediaType == MediaType.movie.rawValue {
                                 self.delegate?.navigateToMovieDetail(movieId: item.id)
-                            } else if item.mediaType == SearchViewModel.SearchType.tv.rawValue {
+                            } else if item.mediaType == MediaType.tv.rawValue {
                                 self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
-                            } else if item.mediaType == SearchViewModel.SearchType.person.rawValue {
+                            } else if item.mediaType == MediaType.person.rawValue {
                                 self.delegate?.navigateToPersonDetail(personId: item.id)
                             }
                         }

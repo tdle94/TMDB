@@ -76,216 +76,6 @@ class ParallaxView: UIView {
     }
 }
 
-
-public class DotView: UIView {
-    private let circle = CAShapeLayer()
-    
-    public let index: Int
-    
-    public var isSelected: Bool = false {
-        didSet {
-            if isSelected {
-                circle.fillColor = UIColor.white.cgColor
-                circle.strokeColor = UIColor.white.cgColor
-            } else {
-                circle.fillColor = UIColor.gray.cgColor
-                circle.strokeColor = UIColor.gray.cgColor
-            }
-        }
-    }
-    
-    public init(frame: CGRect, index: Int) {
-        self.index = index
-        super.init(frame: frame)
-        
-        circle.fillColor = UIColor.gray.cgColor
-        circle.frame = CGRect(origin: .zero, size: frame.size)
-        circle.path = UIBezierPath(arcCenter: CGPoint(x: bounds.minX, y: bounds.midY),
-                                   radius: bounds.size.width/2,
-                                   startAngle: 0,
-                                   endAngle: .pi * 2,
-                                   clockwise: true).cgPath
-        circle.strokeColor = UIColor.gray.cgColor
-
-
-        layer.addSublayer(circle)
-        
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-public class CarouselView: UIView {
-    
-    public private(set) var currentSelectedDotIndex: Int = 0
-    
-    private var dotContainer: UIView = UIView()
-    
-    private var maxDots: [DotView] = []
-    
-    public private(set) var moveCnt: Int = 0
-    
-    private var maxMove: Int = 3
-    
-    public var distanceBetweenDot: CGFloat {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            return 32
-        }
-        return 16
-    }
-    
-    let numberOfDot: Int
-    
-    public init(numberOfDot: Int) {
-        self.numberOfDot = numberOfDot
-        super.init(frame: .zero)
-        isUserInteractionEnabled = false
-        backgroundColor = .clear
-        dotContainer.backgroundColor = .clear
-        dotContainer.isUserInteractionEnabled = true
-    }
-    
-    public override func layoutSubviews() {
-        if numberOfDot == 1 || !dotContainer.subviews.isEmpty {
-            return
-        }
-        let dotContainerMaxX:CGFloat = numberOfDot >= 4 ? 4.0 : CGFloat(numberOfDot)
-        addSubview(dotContainer)
-        dotContainer.translatesAutoresizingMaskIntoConstraints = false
-        dotContainer.widthAnchor.constraint(equalToConstant: distanceBetweenDot * dotContainerMaxX ).isActive = true
-        dotContainer.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        addConstraints(
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|-0.0@250-[v]-0.0@250-|",
-                                           options: NSLayoutConstraint.FormatOptions(rawValue: 0),
-                                           metrics: nil,
-                                           views: ["v": dotContainer])
-        )
-        
-        dotContainer.layoutIfNeeded()
-
-        var distance: CGFloat = distanceBetweenDot/4
-        
-        for i in 0..<numberOfDot {
-            var dimension: CGFloat = 8
-            
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                dimension = 16
-            }
-            
-            let dot = DotView(frame: CGRect(x: distance,
-                                            y: 0,
-                                            width: dimension,
-                                            height: dimension),
-                              index: i)
-            if i < maxMove {
-                distance += distanceBetweenDot
-            } else if i >= maxMove {
-                dot.transform = CGAffineTransform.init(scaleX: 0.65, y: 0.65)
-            }
-
-            if maxDots.count <= maxMove {
-                maxDots.append(dot)
-            }
-            
-            dotContainer.addSubview(dot)
-        }
-        
-        maxDots.first?.isSelected = true
-    }
-    
-    public func selectDot(at index: Int) {
-        guard index >= 0 && index < numberOfDot && abs(index - currentSelectedDotIndex) == 1 else {
-            return
-        }
-        
-        if index > currentSelectedDotIndex {
-            
-            moveCnt += 1
-
-            if moveCnt == maxMove {
-                
-                let firstDotFrame = maxDots.first?.frame
-            
-                UIView.animate(withDuration: 0.3) {
-                    self.maxDots.first?.transform = CGAffineTransform.init(scaleX: 0.65, y: 0.65)
-                    self.maxDots.first?.frame.origin.x -= self.distanceBetweenDot + 1
-                }
-                
-                for i in 1..<maxDots.count {
-                    maxDots[i - 1] = maxDots[i]
-                }
-                    
-                if maxDots.last!.index + 1 < numberOfDot {
-                    maxDots[maxDots.count - 1] = dotContainer.subviews[maxDots.last!.index + 1] as! DotView
-                }
-
-                UIView.animate(withDuration: 0.3) {
-                    self.maxDots.first?.frame.origin.x = firstDotFrame?.origin.x ?? 0
-                    self.maxDots[self.moveCnt - 1].transform = CGAffineTransform.init(scaleX: 1, y: 1)
-                }
-               
-
-                for i in 1..<maxDots.count-1 {
-                    UIView.animate(withDuration: 0.3) {
-                        self.maxDots[i].frame.origin.x = self.maxDots[i - 1].frame.maxX + self.distanceBetweenDot / 2
-                    }
-                }
-                
-                moveCnt -= 1
-            }
-            
-            maxDots[moveCnt].isSelected = true
-            maxDots[moveCnt - 1].isSelected = false
-            
-        } else {
-
-            moveCnt -= 1
-            
-            if moveCnt == -1 {
-                let firstDotFrame = maxDots.first?.frame
-                
-                moveCnt += 1
-                
-                for i in stride(from: maxDots.count - 1, to: 0, by: -1) {
-                    maxDots[i] = maxDots[i - 1]
-                }
-                
-                maxDots[0] = dotContainer.subviews[maxDots.first!.index - 1] as! DotView
-                
-                for i in 0..<maxDots.count-1 {
-                    UIView.animate(withDuration: 0.3) {
-                        self.maxDots[i].frame.origin.x = self.maxDots[i+1].frame.origin.x
-                    }
-                }
-                
-                UIView.animate(withDuration: 0.3) {
-                    self.maxDots.last?.frame.origin.x += self.distanceBetweenDot
-                    self.maxDots.last?.transform = CGAffineTransform.init(scaleX: 0.65, y: 0.65)
-                    self.maxDots.first?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-                    self.maxDots.first?.frame.origin.x = firstDotFrame?.origin.x ?? 0
-                }
-
-            }
-            
-            maxDots[moveCnt].isSelected = true
-            maxDots[moveCnt + 1].isSelected = false
-        }
-        
-        
-        
-        currentSelectedDotIndex = index
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-
-
 /**
  The ParallaxHeader class represents a parallax header for UIScrollView.
  */
@@ -321,11 +111,20 @@ public class ParallaxHeader: NSObject {
     /**
      Carousel view
      */
-    public var carouselView: CarouselView? {
+    
+    private var pageControl: UIPageControl?
+    public var dots: Int = 0 {
         didSet {
-            updateCaraouselView()
+            pageControl?.removeFromSuperview()
+            pageControl = nil
+            pageControl = UIPageControl()
+            pageControl?.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            pageControl?.numberOfPages = dots
+            pageControl?.currentPage = 0
+            updatePageControl()
         }
     }
+    
     
     /**
      Relative offset
@@ -408,14 +207,18 @@ public class ParallaxHeader: NSObject {
     
     //MARK: constraints
     
-    private func updateCaraouselView() {
-        guard let carouselView = self.carouselView else {
+    public func selectDot(at: Int) {
+        pageControl?.currentPage = at
+    }
+    
+    private func updatePageControl() {
+        guard let page = self.pageControl else {
             return
         }
-        carouselView.removeFromSuperview()
-        contentView.addSubview(carouselView)
-        carouselView.translatesAutoresizingMaskIntoConstraints = false
-        setCarouselView()
+        page.removeFromSuperview()
+        contentView.addSubview(page)
+        page.translatesAutoresizingMaskIntoConstraints = false
+        setPageControl()
     }
     
     private func updateConstraints() {
@@ -435,13 +238,13 @@ public class ParallaxHeader: NSObject {
         setRefreshControl()
     }
     
-    private func setCarouselView() {
-        guard let carouselView = self.carouselView else {
+    private func setPageControl() {
+        guard let page = self.pageControl else {
             return
         }
-        
+
         let binding = [
-            "v": carouselView
+            "v": page
         ]
         
         let metrics = [

@@ -179,8 +179,8 @@ class MovieDetailView: UIViewController {
                 .subscribe { _ in
                     if let id = self.movieId, self.scrollView.parallaxHeader.refreshControl.isRefreshing {
                         
-                        self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: true)
-                        
+                        self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: false)
+
                         let creditHeader = self.creditCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader,
                                                                                        at: IndexPath(row: 0, section: 0)) as? TMDBCreditHeaderView
                         let moreLikeThisHeader = self.creditCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader,
@@ -293,7 +293,7 @@ extension MovieDetailView {
         viewModel
             .images
             .subscribe { event in
-                self.scrollView.parallaxHeader.carouselView = CarouselView(numberOfDot: event.element?.count ?? 0)
+                self.scrollView.parallaxHeader.dots = event.element?.count ?? 0
             }
             .disposed(by: rx.disposeBag)
         
@@ -308,7 +308,7 @@ extension MovieDetailView {
                 guard let index = self.backdropImageCollectionView.indexPathsForVisibleItems.first?.row else {
                     return
                 }
-                self.scrollView.parallaxHeader.carouselView?.selectDot(at: index)
+                self.scrollView.parallaxHeader.selectDot(at: index)
             }
             .disposed(by: rx.disposeBag)
         

@@ -295,7 +295,7 @@
                 <constraint firstItem="urT-JH-3CC" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fH9-4J-k4B"/>
                 <constraint firstItem="urT-JH-3CC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="pRf-Ob-ZGx"/>
             </constraints>
-            <point key="canvasLocation" x="-252.33644859813083" y="57.019438444924411"/>
+            <point key="canvasLocation" x="-253.62318840579712" y="56.919642857142854"/>
         </view>
     </objects>
     <designables>

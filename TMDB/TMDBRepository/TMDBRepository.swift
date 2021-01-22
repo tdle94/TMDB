@@ -102,7 +102,7 @@ extension TMDBRepository: TMDBSearchRepository {
 }
 
 extension TMDBRepository: TMDBTrendingRepository {
-    func getTrending(page: Int, time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
+    func getTrending(page: Int, time: TrendingTime, type: MediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void) {
         services.getTrending(page: page, time: time, type: type) { result in
             DispatchQueue.main.async {
                 switch result {

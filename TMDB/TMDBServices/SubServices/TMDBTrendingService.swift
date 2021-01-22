@@ -13,7 +13,7 @@ enum TrendingTime: String {
     case week
 }
 
-enum TrendingMediaType: String {
+enum MediaType: String {
     case all
     case movie
     case tv
@@ -21,5 +21,5 @@ enum TrendingMediaType: String {
 }
 
 protocol TMDBTrendingService {
-    func getTrending(page: Int, time: TrendingTime, type: TrendingMediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
+    func getTrending(page: Int, time: TrendingTime, type: MediaType, completion: @escaping (Result<TrendingResult, Error>) -> Void)
 }

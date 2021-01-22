@@ -28,8 +28,6 @@ class SearchResultView: UIViewController {
             searchResultTableView.register(UINib(nibName: String(describing: TMDBCustomTableViewCell.self), bundle: nil),
                                            forCellReuseIdentifier: Constant.Identifier.searchResultCell)
             searchResultTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
-            
-            filterButtonView.isHidden = true
 
             searchResultTableView.rowHeight = 150
             

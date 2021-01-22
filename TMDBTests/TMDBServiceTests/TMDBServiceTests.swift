@@ -26,17 +26,17 @@ class TMDBServiceTests: XCTestCase {
     }
 
     struct TrendingMediaMatchable: Matchable {
-        var matcher: ParameterMatcher<TrendingMediaType>
-        typealias MatchedType = TrendingMediaType
+        var matcher: ParameterMatcher<MediaType>
+        typealias MatchedType = MediaType
     }
 
     let todayTrending = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .today })
     let weekTrending = ParameterMatcher<TrendingTime>(matchesFunction: { $0 == .week })
 
-    let allTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .all })
-    let movieTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .movie })
-    let tvTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .tv })
-    let personTrending = ParameterMatcher<TrendingMediaType>(matchesFunction: { $0 == .person })
+    let allTrending = ParameterMatcher<MediaType>(matchesFunction: { $0 == .all })
+    let movieTrending = ParameterMatcher<MediaType>(matchesFunction: { $0 == .movie })
+    let tvTrending = ParameterMatcher<MediaType>(matchesFunction: { $0 == .tv })
+    let personTrending = ParameterMatcher<MediaType>(matchesFunction: { $0 == .person })
 
     override func setUp() {
         services = TMDBServices(session: session, urlRequestBuilder: urlRequestBuilder)
@@ -298,7 +298,7 @@ class TMDBServiceTests: XCTestCase {
         self.trending(time: .week, type: .person)
     }
     
-    private func trending(time: TrendingTime, type: TrendingMediaType) {
+    private func trending(time: TrendingTime, type: MediaType) {
         let expectation = self.expectation(description: "")
         let trendingTime = TrendingTimeMatchable(matcher: time == .today ? self.todayTrending : self.weekTrending )
         let matchRequest: URLRequest

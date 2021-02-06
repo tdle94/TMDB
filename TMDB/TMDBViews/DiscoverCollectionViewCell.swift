@@ -29,11 +29,6 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
     
     let errorLabel = UILabel()
     
-    var isAtBottom: Bool {
-        let bottomEdge = entityCollectionView.contentOffset.y + entityCollectionView.frame.size.height
-        return bottomEdge >= entityCollectionView.contentSize.height
-    }
-    
     @IBOutlet weak var entityCollectionView: UICollectionView! {
         didSet {
             entityCollectionView.backgroundView = UIView()

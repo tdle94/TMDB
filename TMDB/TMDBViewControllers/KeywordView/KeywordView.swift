@@ -79,6 +79,16 @@ class KeywordView: UIViewController {
 
 extension KeywordView {
     func setupBinding() {
+        viewModel
+            .hideErrorLabel
+            .bind(to: notificationLabel.rx.isHidden)
+            .disposed(by: rx.disposeBag)
+        
+        viewModel
+            .errorLabel
+            .bind(to: notificationLabel.rx.attributedText)
+            .disposed(by: rx.disposeBag)
+            
         doneBarButton
             .rx
             .tap
@@ -100,7 +110,6 @@ extension KeywordView {
 
         viewModel
             .keywords
-            .filterNil()
             .bind(to: keywordTableView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, keyword, cell in
                 let isSelected = self.viewModel.isThere(keyword: keyword, at: row)
 
@@ -115,20 +124,6 @@ extension KeywordView {
                 cell.isSelected = isSelected
                 cell.textLabel?.setHeader(title: keyword.name)
             }
-            .disposed(by: rx.disposeBag)
-        
-        viewModel
-            .keywords
-            .asDriver(onErrorJustReturn: nil)
-            .drive(onNext: { result in
-                if result?.isEmpty ?? false, !self.loadingIndicator.isAnimating {
-                    self.notificationLabel.isHidden = false
-                    self.notificationLabel.setHeader(title: NSLocalizedString("No keywords found", comment: ""))
-                } else if result == nil, !self.loadingIndicator.isAnimating {
-                    self.notificationLabel.isHidden = false
-                    self.notificationLabel.setHeader(title: NSLocalizedString("Error getting keyword", comment: ""))
-                }
-            })
             .disposed(by: rx.disposeBag)
         
         searchController
@@ -181,6 +176,21 @@ extension KeywordView {
                 self.keywordTableView.cellForRow(at: indexPath)?.accessoryType = .none
                 self.viewModel.handleKeyword(at: indexPath.row, isSelected: false)
                 self.doneBarButton.isEnabled = self.viewModel.query != self.applyDelegate?.query
+            })
+            .disposed(by: rx.disposeBag)
+        
+        keywordTableView
+            .rx
+            .didScroll
+            .asDriver()
+            .drive(onNext: {
+                if self.searchController.searchBar.isFirstResponder {
+                    self.searchController.searchBar.resignFirstResponder()
+                }
+
+                if let text = self.searchController.searchBar.text, self.keywordTableView.isAtBottom, text.isNotEmpty {
+                    self.viewModel.searchKeyword(query: text, nextPage: true)
+                }
             })
             .disposed(by: rx.disposeBag)
             

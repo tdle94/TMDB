@@ -8,6 +8,18 @@
 
 import UIKit
 
+extension UITableView {
+    var isAtBottom: Bool {
+        return contentOffset.y >= (contentSize.height - frame.size.height)
+    }
+}
+
+extension UICollectionView {
+    var isAtBottom: Bool {
+        return contentOffset.y + frame.size.height >= contentSize.height
+    }
+}
+
 extension UIScrollView {
     
     func getCurrentAlpha(navigationController: UINavigationController?) -> CGFloat {

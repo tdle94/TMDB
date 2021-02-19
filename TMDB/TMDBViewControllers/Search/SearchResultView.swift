@@ -17,10 +17,6 @@ class SearchResultView: UIViewController {
     
     let emptyLabel = UILabel()
     
-    var isAtBottom: Bool {
-        return searchResultTableView.contentOffset.y >= (searchResultTableView.contentSize.height - searchResultTableView.frame.size.height)
-    }
-    
     @IBOutlet weak var filterButtonView: FilterButtonView!
 
     @IBOutlet var searchResultTableView: UITableView! {

@@ -10,9 +10,11 @@ import RxSwift
 import NotificationBannerSwift
 
 protocol KeywordViewModelProtocol: ApplyProtocol {
-    var keywords: BehaviorSubject<[Keyword]?> { get }
+    var keywords: BehaviorSubject<[Keyword]> { get }
     var repository: TMDBSearchRepository { get }
-    var isLoading: PublishSubject<Bool> { get }
+    var isLoading: BehaviorSubject<Bool> { get }
+    var hideErrorLabel: PublishSubject<Bool> { get }
+    var errorLabel: PublishSubject<NSAttributedString> { get }
 
     func handleKeyword(at: Int, isSelected: Bool)
     func isThere(keyword: Keyword, at: Int) -> Bool
@@ -24,10 +26,16 @@ class KeywordViewModel: KeywordViewModelProtocol {
     var repository: TMDBSearchRepository
     
     var query: DiscoverQuery?
-
-    var isLoading: PublishSubject<Bool> = PublishSubject()
     
-    var showNotificationLabel: PublishSubject<Bool> = PublishSubject()
+    var page: Int = 1
+    
+    var totalPages: Int = 0
+
+    var isLoading: BehaviorSubject<Bool> = BehaviorSubject(value: false)
+    
+    var hideErrorLabel: PublishSubject<Bool> = PublishSubject()
+    
+    var errorLabel: PublishSubject<NSAttributedString> = PublishSubject()
     
     var initialKeywords: [Keyword] = [
         Keyword(name: "action hero", id: 219404), Keyword(name: "alternate history", id: 12026),
@@ -37,7 +45,7 @@ class KeywordViewModel: KeywordViewModelProtocol {
         Keyword(name: "bank heist", id: 191845), Keyword(name: "based on novel", id: 274858)
     ]
     
-    var keywords: BehaviorSubject<[Keyword]?>
+    var keywords: BehaviorSubject<[Keyword]>
     
     init(repository: TMDBSearchRepository) {
         keywords = BehaviorSubject(value: initialKeywords)
@@ -45,9 +53,7 @@ class KeywordViewModel: KeywordViewModelProtocol {
     }
     
     func handleKeyword(at: Int, isSelected: Bool) {
-        guard let currentKeywords = try! keywords.value() else {
-            return
-        }
+        let currentKeywords = try! keywords.value()
 
         if isSelected {
             query?.keywords.append(currentKeywords[at])
@@ -57,18 +63,43 @@ class KeywordViewModel: KeywordViewModelProtocol {
     }
     
     func searchKeyword(query: String, nextPage: Bool) {
-        isLoading.onNext(true)
-        keywords.onNext([])
-        repository.searchKeyword(query: query, page: 1) { result in
+        let isLoading = try! self.isLoading.value()
+
+        if nextPage && (page >= totalPages || isLoading) {
+            return
+        }
+        
+        if !nextPage {
+            keywords.onNext([])
+        }
+        
+        self.hideErrorLabel.onNext(true)
+        self.isLoading.onNext(true)
+        
+        repository.searchKeyword(query: query, page: nextPage ? page + 1 : page) { result in
             self.isLoading.onNext(false)
             switch result {
             case .success(let keyword):
-                self.keywords.onNext(keyword.results)
+                var keywordResult = try! self.keywords.value()
+                keywordResult.append(contentsOf: keyword.results)
+
+                if keywordResult.isEmpty {
+                    self.hideErrorLabel.onNext(false)
+                    self.errorLabel.onNext(TMDBLabel.setHeader(title: NSLocalizedString("No keywords found", comment: "")))
+                }
+
+                self.page = keyword.page
+                self.totalPages = keyword.totalPages
+                self.keywords.onNext(keywordResult)
+
             case .failure(let error):
                 debugPrint("Error searching for keyword: \(error.localizedDescription)")
-                self.keywords.onNext(nil)
+                if !nextPage {
+                    self.errorLabel.onNext(TMDBLabel.setHeader(title: NSLocalizedString("Error getting keyword", comment: "")))
+                    self.hideErrorLabel.onNext(false)
+                }
                 StatusBarNotificationBanner(title: "Fail getting search keyword", style: .danger).show(queuePosition: .back,
-                                                                                                       bannerPosition: .top,
+                                                                                                       bannerPosition: .bottom,
                                                                                                        queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
         }
@@ -79,9 +110,7 @@ class KeywordViewModel: KeywordViewModelProtocol {
     }
     
     func apply(query: DiscoverQuery?) {
-        guard var previousKeywords = try! keywords.value() else {
-            return
-        }
+        var previousKeywords = try! keywords.value()
 
         self.query = query
         

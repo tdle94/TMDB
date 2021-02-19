@@ -165,7 +165,7 @@ extension SearchView {
                         .didScroll
                         .asDriver()
                         .drive(onNext: {
-                            if discoverCell.isAtBottom {
+                            if discoverCell.entityCollectionView.isAtBottom {
                                 self.discoveryViewModel.getAllMovie(nextPage: true)
                             }
                         })
@@ -225,7 +225,7 @@ extension SearchView {
                         .didScroll
                         .asDriver()
                         .drive(onNext: {
-                            if discoverCell.isAtBottom {
+                            if discoverCell.entityCollectionView.isAtBottom  {
                                 self.discoveryViewModel.getAllTVShow(nextPage: true)
                             }
                         })
@@ -294,7 +294,7 @@ extension SearchView {
                     .didScroll
                     .asDriver()
                     .drive(onNext: { _ in
-                        if let text = self.searchController.searchBar.text, searchResult.isAtBottom {
+                        if let text = self.searchController.searchBar.text, searchResult.searchResultTableView.isAtBottom, text.isNotEmpty {
                             self.searchViewModel.search(text: text, nextPage: true)
                         }
                     })

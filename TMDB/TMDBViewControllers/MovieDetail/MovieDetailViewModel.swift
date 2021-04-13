@@ -13,38 +13,9 @@ import NotificationBannerSwift
 
 protocol MovieDetailViewModelProtocol {
     var repository: TMDBMovieRepository { get }
-    var movie: PublishSubject<Movie> { get }
-    var images: PublishSubject<[Images]> { get }
-    var keywords: PublishSubject<[Keyword]> { get }
-    var genres: PublishSubject<[Genre]> { get }
-    var productionCompanies: PublishSubject<[ProductionCompany]> { get }
-    var reviewAndRelease: PublishSubject<[String]> { get }
-    var credits: BehaviorSubject<[MovieDetailModel]> { get }
     
-    var status: PublishSubject<NSAttributedString> { get }
-    var tagline: PublishSubject<NSAttributedString> { get }
-    var produceInCountries: PublishSubject<NSAttributedString> { get }
-    var imdb: PublishSubject<NSAttributedString> { get }
-    var belongToCollection: PublishSubject<NSAttributedString> { get }
-    var homepage: PublishSubject<NSAttributedString> { get }
-    var overview: PublishSubject<NSAttributedString> { get }
-    var title: PublishSubject<NSAttributedString> { get }
-    var runtimeAndReleaseDate: PublishSubject<NSAttributedString> { get }
-    var originalLanguage: PublishSubject<NSAttributedString> { get }
-    var budget: PublishSubject<NSAttributedString> { get }
-    var revenue: PublishSubject<NSAttributedString> { get }
-    var availableLanguage: PublishSubject<NSAttributedString> { get }
-    var productionCompanyCollectionViewHeight: PublishSubject<CGFloat> { get }
-    var productionCompanyCollectionViewTop: PublishSubject<CGFloat> { get }
-    var keywordCollectionViewTop: PublishSubject<CGFloat> { get }
-    var keywordCollectionViewHeight: PublishSubject<CGFloat> { get }
-    var runtimeAndReleaseDateTop: PublishSubject<CGFloat> { get }
-    
-    var isThereSimilarMovie: Bool { get }
-    var isThereRecommendMovie: Bool { get }
-    var isThereCast: Bool { get }
-    var isThereCrew: Bool { get }
-    
+    var movieParser: MovieParser { get }
+
     var userSetting: TMDBUserSettingProtocol { get }
     
     func getMovieDetail(movieId: Int)
@@ -54,21 +25,21 @@ protocol MovieDetailViewModelProtocol {
     func getSimilarMovies(movieId: Int)
     func getRecommendMovies(movieId: Int)
     func getReviews(movieId: Int) -> [Review]
-    func resetCreditHeaderState()
-    func resetMovieHeaderState()
+    
+    func handleMovieLikeThisSelection(at segment: Int, title: String, movieId: Int)
+    func handleCreditSelection(at segment: Int, title: String, movieId: Int)
 }
 
-class MovieDetailViewModel: MovieDetailViewModelProtocol {
-    var repository: TMDBMovieRepository
-    var movie: PublishSubject<Movie> = PublishSubject()
-    var images: PublishSubject<[Images]> = PublishSubject()
-    var keywords: PublishSubject<[Keyword]> = PublishSubject()
-    var genres: PublishSubject<[Genre]> = PublishSubject()
-    var productionCompanies: PublishSubject<[ProductionCompany]> = PublishSubject()
-    var reviewAndRelease: PublishSubject<[String]> = PublishSubject()
-    var credits: BehaviorSubject<[MovieDetailModel]> = BehaviorSubject(value: [.Credits(items: []),
-                                                                               .MoviesLikeThis(items: [])])
+class MovieParser {
+    // MARK: - properties
     
+    // movie
+    var movie: PublishSubject<Movie> = PublishSubject()
+    
+    // backdrop images
+    var images: PublishSubject<[Images]> = PublishSubject()
+    
+    // label
     var status: PublishSubject<NSAttributedString> = PublishSubject()
     var tagline: PublishSubject<NSAttributedString> = PublishSubject()
     var produceInCountries: PublishSubject<NSAttributedString> = PublishSubject()
@@ -83,44 +54,230 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     var revenue: PublishSubject<NSAttributedString> = PublishSubject()
     var availableLanguage: PublishSubject<NSAttributedString> = PublishSubject()
     
-    var productionCompanyCollectionViewHeight: PublishSubject<CGFloat> = PublishSubject()
-    var productionCompanyCollectionViewTop: PublishSubject<CGFloat> = PublishSubject()
-    var keywordCollectionViewTop: PublishSubject<CGFloat> = PublishSubject()
-    var keywordCollectionViewHeight: PublishSubject<CGFloat> = PublishSubject()
-    var runtimeAndReleaseDateTop: PublishSubject<CGFloat> = PublishSubject()
+    // table view
+    var reviewAndRelease: PublishSubject<[String]> = PublishSubject()
     
-    var isThereSimilarMovie: Bool = true
-    var isThereRecommendMovie: Bool = true
-    var isThereCast: Bool = true
-    var isThereCrew: Bool = true
+    // collection view
+    var keywords: PublishSubject<[Keyword]> = PublishSubject()
+    var genres: PublishSubject<[Genre]> = PublishSubject()
+    var productionCompanies: PublishSubject<[ProductionCompany]> = PublishSubject()
+    var productionCompaniesCollectionViewHeight: PublishSubject<CGFloat> = PublishSubject()
+    
+    // poster url path
+    var posterURL: PublishSubject<URL> = PublishSubject()
+    
+    // movie credit
+    var credits: BehaviorSubject<[MovieDetailModel]> = BehaviorSubject(value: [])
+    
+    var missingSimilarMovie: Bool = false
+    var missingRecommendMovie: Bool = false
+    
+    var missingCast: Bool = false
+    var missingCrew: Bool = false
+    
+    // MARK: - parse
+    
+    func parseLabel(movie: Movie, userSetting: TMDBUserSettingProtocol) {
+        self.status.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Status", comment: ""),
+                                                      subTitle: movie.status))
+        self.tagline.onNext(TMDBLabel.setAttributeText(title: movie.tagline ?? ""))
+        
+        if let imdbId = movie.imdbId, !imdbId.isEmpty {
+            self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB",
+                                                        subTitle: imdbId))
+        }
+        
+        if !movie.productionCountries.isEmpty {
+            self.produceInCountries.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Produced In", comment: ""),
+                                                                      subTitle: Array(movie.productionCountries).map { $0.name }.joined(separator: ", ") ))
+        }
+        
+        if let collection = movie.belongToCollection?.name {
+            self.belongToCollection.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Collection", comment: ""),
+                                                                      subTitle: collection))
+        }
+        
+        if let homepage = movie.homepage, !homepage.isEmpty {
+            self.homepage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Homepage", comment: ""),
+                                                            subTitle: homepage))
+        }
+        
+        if let overview = movie.overview, !overview.isEmpty {
+            self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
+                                                                paragraph: overview))
+        }
+        
+        self.title.onNext(TMDBLabel.setHeader(title: movie.title))
+        
+        var releaseDate = ""
+        var producedInCountriesAbbreviation = Array(movie.productionCountries).map { $0.ios31661 }.joined(separator: ", ")
+        
+        if !producedInCountriesAbbreviation.isEmpty {
+            producedInCountriesAbbreviation = "(\(producedInCountriesAbbreviation))"
+        }
+
+        
+        if let date = movie.releaseDate, !date.isEmpty {
+            releaseDate = "\u{2022} \(date)"
+        }
+        
+        self.runtimeAndReleaseDate.onNext(TMDBLabel.setHeader(title: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \(releaseDate) \(producedInCountriesAbbreviation)"))
+
+        self.originalLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Original Language", comment: ""),
+                                                                subTitle: userSetting.languagesCode.first(where: { $0.iso6391 == movie.originalLanguage })?.name))
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        
+        self.budget.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Budget", comment: ""),
+                                                      subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.budget)) ?? "0.0")"))
+        self.revenue.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Revenue", comment: ""),
+                                                       subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.revenue)) ?? "0.0")"))
+        
+        let availableLanguages = Array(movie.spokenLanguages).map { $0.name }.joined(separator: ", ")
+        if !availableLanguages.isEmpty {
+            self.availableLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Available Lanuages", comment: ""),
+                                                                     subTitle: availableLanguages))
+        }
+    }
+    
+    func parsePosterURL(movie: Movie, userSetting: TMDBUserSettingProtocol) {
+        if let path = movie.posterPath, let url = userSetting.getImageURL(from: path) {
+            posterURL.onNext(url)
+        }
+    }
+    
+    func parseMovie(_ movie: Movie) {
+        self.movie.onNext(movie)
+
+        parseKeyword(Array(movie.keywords?.keywords ?? List<Keyword>()))
+        parseGenres(Array(movie.genres))
+        parseProductionCompanies(Array(movie.productionCompanies))
+        parseReviewAndRelease(movie: movie)
+        parseMovieCredits(movie)
+    }
+    
+    func parseMovieCredits(_ movie: Movie) {
+        let moviesLikeThisOne = Array((movie.similar?.movies ?? movie.recommendations?.movies ?? List<Movie>()).map { CustomElementType(identity: $0) })
+        var credits = Array(movie.credits?.cast ?? List<Cast>()).map { CustomElementType(identity: $0) }
+        
+        if credits.isEmpty {
+            credits = Array(movie.credits?.crew ?? List<Crew>()).map { CustomElementType(identity: $0) }
+        }
+
+        missingSimilarMovie = movie.similar?.movies.isEmpty ?? true
+        missingRecommendMovie = movie.recommendations?.movies.isEmpty ?? true
+        missingCast = movie.credits?.cast.isEmpty ?? true
+        missingCrew = movie.credits?.crew.isEmpty ?? true
+        
+        if moviesLikeThisOne.isEmpty, credits.isEmpty {
+            self.credits.onNext([])
+        } else if moviesLikeThisOne.isEmpty {
+            self.credits.onNext([
+                .Credits(items: credits),
+            ])
+        } else if credits.isEmpty {
+            self.credits.onNext([
+                .MoviesLikeThis(items: moviesLikeThisOne),
+            ])
+        } else {
+            self.credits.onNext([
+                .Credits(items: credits),
+                .MoviesLikeThis(items: moviesLikeThisOne),
+            ])
+        }
+    }
+    
+    func parseMovie(casts: [Cast]) {
+        guard let movieLikeThisModel = try? credits.value().dropFirst() else {
+            self.credits.onNext([
+                .Credits(items: casts.map { CustomElementType(identity: $0) })
+            ])
+            return
+        }
+        
+        self.credits.onNext([
+            .Credits(items: casts.map { CustomElementType(identity: $0) }),
+        ] + movieLikeThisModel)
+    }
+    
+    func parseMovie(crews: [Crew]) {
+        guard let movieLikeThisModel = try? credits.value().dropFirst() else {
+            self.credits.onNext([
+                .Credits(items: crews.map { CustomElementType(identity: $0) })
+            ])
+            return
+        }
+
+        self.credits.onNext([
+            .Credits(items: crews.map { CustomElementType(identity: $0) }),
+        ] +  movieLikeThisModel)
+    }
+    
+    func parseMovieLikeThis(movies: [Movie]) {
+        guard let credit = try? credits.value().first else {
+            self.credits.onNext([
+                .MoviesLikeThis(items: movies.map { CustomElementType(identity: $0) })
+            ])
+            return
+        }
+
+        switch credit {
+        case .Credits(items: _):
+            self.credits.onNext([
+                credit,
+                .MoviesLikeThis(items: movies.map { CustomElementType(identity: $0) })
+            ])
+        case .MoviesLikeThis(items: _):
+            self.credits.onNext([
+                credit,
+                .MoviesLikeThis(items: movies.map { CustomElementType(identity: $0) })
+            ])
+        }
+    }
+    
+    func parseKeyword(_ keywords: [Keyword]) {
+        self.keywords.onNext(keywords)
+    }
+    
+    func parseGenres(_ genres: [Genre]) {
+        self.genres.onNext(genres)
+    }
+    
+    func parseProductionCompanies(_ productionCompanies: [ProductionCompany]) {
+        let productionCompanyLogo = productionCompanies.filter { $0.logoPath?.isNotEmpty ?? false }
+        self.productionCompanies.onNext(productionCompanyLogo)
+        if productionCompanyLogo.isEmpty {
+            self.productionCompaniesCollectionViewHeight.onNext(0.0)
+        }
+    }
+    
+    func parseReviewAndRelease(movie: Movie) {
+        reviewAndRelease.onNext([
+            NSLocalizedString("Review (\(movie.reviews?.reviews.count ?? 0))", comment: ""),
+            NSLocalizedString("Release Date (\(movie.releaseDates?.results.count ?? 0))", comment: "")
+        ])
+    }
+    
+    func parseImages(_ images: [Images]) {
+        self.images.onNext(images)
+    }
+}
+
+class MovieDetailViewModel: MovieDetailViewModelProtocol {
+    var repository: TMDBMovieRepository
+    
+    var movieParser: MovieParser = MovieParser()
     
     var userSetting: TMDBUserSettingProtocol
     
     lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { result in
         switch result {
         case .success(let movieResult):
-            guard let credit = try? self.credits.value().first else {
-                self.credits.onNext([
-                    .MoviesLikeThis(items: Array(movieResult.movies).map { CustomElementType(identity: $0) })
-                ])
-                return
-            }
-
-            switch credit {
-            case .Credits(items: _):
-                self.credits.onNext([
-                    credit,
-                    .MoviesLikeThis(items: Array(movieResult.movies).map { CustomElementType(identity: $0) })
-                ])
-            case .MoviesLikeThis(items: _):
-                self.credits.onNext([
-                    credit,
-                    .MoviesLikeThis(items: Array(movieResult.movies).map { CustomElementType(identity: $0) })
-                ])
-            }
+            self.movieParser.parseMovieLikeThis(movies: Array(movieResult.movies))
         case .failure(let error):
             debugPrint("Error getting similar movies: \(error.localizedDescription)")
-            StatusBarNotificationBanner(title: "Fail getting popular people", style: .danger).show(queuePosition: .back,
+            StatusBarNotificationBanner(title: "Fail getting movie", style: .danger).show(queuePosition: .back,
                                                                                                    bannerPosition: .top,
                                                                                                    queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
         }
@@ -135,131 +292,11 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         repository.getMovieDetail(id: movieId) { result in
             switch result {
             case .success(let movieDetailResult):
-                self.movie.onNext(movieDetailResult)
-                self.keywords.onNext(Array(movieDetailResult.keywords?.keywords ?? List<Keyword>()))
-                self.genres.onNext(Array(movieDetailResult.genres))
-                self.productionCompanies.onNext(Array(movieDetailResult.productionCompanies).filter { $0.logoPath?.isNotEmpty ?? false } )
-                self.reviewAndRelease.onNext([
-                    NSLocalizedString("Review (\(movieDetailResult.reviews?.reviews.count ?? 0))", comment: ""),
-                    NSLocalizedString("Release Date (\(movieDetailResult.releaseDates?.results.count ?? 0))", comment: "")
-                ])
-
-                // keyword
-                if movieDetailResult.keywords?.keywords.isEmpty ?? true {
-                    self.keywordCollectionViewTop.onNext(0)
-                    self.keywordCollectionViewHeight.onNext(0)
-                    self.runtimeAndReleaseDateTop.onNext(0)
-                }
-                
-                // movie credit
-                
-                var moviesLikeThisOne = Array((movieDetailResult.similar?.movies ?? List<Movie>()).map { CustomElementType(identity: $0) })
-                
-                if moviesLikeThisOne.isEmpty {
-                    self.isThereSimilarMovie = false
-                    moviesLikeThisOne = Array((movieDetailResult.recommendations?.movies ?? List<Movie>()).map { CustomElementType(identity: $0) })
-                }
-                
-                if moviesLikeThisOne.isEmpty || (movieDetailResult.recommendations?.movies.isEmpty ?? true) {
-                    self.isThereRecommendMovie = false
-                }
-                
-                
-
-                var credits = Array(movieDetailResult.credits?.cast ?? List<Cast>()).map { CustomElementType(identity: $0) }
-                
-                if credits.isEmpty {
-                    self.isThereCast = false
-                    credits = Array(movieDetailResult.credits?.crew ?? List<Crew>()).map { CustomElementType(identity: $0) }
-                }
-                
-                if credits.isEmpty || (movieDetailResult.credits?.crew.isEmpty ?? true) {
-                    self.isThereCrew = false
-                }
-                
-                if moviesLikeThisOne.isEmpty,
-                   credits.isEmpty {
-                    self.credits.onNext([])
-                } else if moviesLikeThisOne.isEmpty {
-                    self.credits.onNext([.Credits(items: credits)])
-                } else if credits.isEmpty {
-                    self.credits.onNext([.MoviesLikeThis(items: moviesLikeThisOne)])
-                } else {
-                    self.credits.onNext([
-                        .Credits(items: credits),
-                        .MoviesLikeThis(items: moviesLikeThisOne),
-                    ])
-                }
-                
-                // label
-                self.status.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Status", comment: ""),
-                                                              subTitle: movieDetailResult.status))
-                self.tagline.onNext(TMDBLabel.setAttributeText(title: movieDetailResult.tagline ?? ""))
-                
-                if let imdbId = movieDetailResult.imdbId, !imdbId.isEmpty {
-                    self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB",
-                                                                subTitle: imdbId))
-                }
-                
-                if !movieDetailResult.productionCountries.isEmpty {
-                    self.produceInCountries.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Produced In", comment: ""),
-                                                                              subTitle: Array(movieDetailResult.productionCountries).map { $0.name }.joined(separator: ", ") ))
-                }
-                
-                if let collection = movieDetailResult.belongToCollection?.name {
-                    self.belongToCollection.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Collection", comment: ""),
-                                                                              subTitle: collection))
-                }
-                
-                if let homepage = movieDetailResult.homepage, !homepage.isEmpty {
-                    self.homepage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Homepage", comment: ""),
-                                                                    subTitle: homepage))
-                }
-                
-                if let overview = movieDetailResult.overview, !overview.isEmpty {
-                    self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
-                                                                        paragraph: overview))
-                }
-                
-                self.title.onNext(TMDBLabel.setHeader(title: movieDetailResult.title))
-                
-                var releaseDate = ""
-                var producedInCountriesAbbreviation = Array(movieDetailResult.productionCountries).map { $0.ios31661 }.joined(separator: ", ")
-                
-                if !producedInCountriesAbbreviation.isEmpty {
-                    producedInCountriesAbbreviation = "(\(producedInCountriesAbbreviation))"
-                }
-                
-                if movieDetailResult.productionCompanies.filter({ $0.logoPath != nil }).isEmpty {
-                    self.productionCompanyCollectionViewTop.onNext(0)
-                    self.productionCompanyCollectionViewHeight.onNext(0)
-                }
-                
-                if let date = movieDetailResult.releaseDate, !date.isEmpty {
-                    releaseDate = "\u{2022} \(date)"
-                }
-                
-                self.runtimeAndReleaseDate.onNext(TMDBLabel.setHeader(title: "\(movieDetailResult.runtime / 60)h \(movieDetailResult.runtime % 60)mins \(releaseDate) \(producedInCountriesAbbreviation)"))
-                
-                self.originalLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Original Language", comment: ""),
-                                                                        subTitle: self.userSetting.languagesCode.first(where: { $0.iso6391 == movieDetailResult.originalLanguage })?.name))
-                
-                let numberFormatter = NumberFormatter()
-                numberFormatter.numberStyle = .decimal
-                
-                self.budget.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Budget", comment: ""),
-                                                              subTitle: "$\(numberFormatter.string(from: NSNumber(value: movieDetailResult.budget)) ?? "0.0")"))
-                self.revenue.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Revenue", comment: ""),
-                                                               subTitle: "$\(numberFormatter.string(from: NSNumber(value: movieDetailResult.revenue)) ?? "0.0")"))
-                
-                let availableLanguages = Array(movieDetailResult.spokenLanguages).map { $0.name }.joined(separator: ", ")
-                if !availableLanguages.isEmpty {
-                    self.availableLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Available Lanuages", comment: ""),
-                                                                             subTitle: availableLanguages))
-                }
+                self.movieParser.parseMovie(movieDetailResult)
+                self.movieParser.parseLabel(movie: movieDetailResult, userSetting: self.userSetting)
             case .failure(let error):
                 debugPrint("Error getting movie detail \(movieId): \(error.localizedDescription)")
-                StatusBarNotificationBanner(title: "Fail getting popular people", style: .danger).show(queuePosition: .back,
+                StatusBarNotificationBanner(title: "Fail getting movie detail people", style: .danger).show(queuePosition: .back,
                                                                                                        bannerPosition: .top,
                                                                                                        queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             }
@@ -270,7 +307,7 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         repository.getMovieImages(from: movieId) { result in
             switch result {
             case .success(let imageResult):
-                self.images.onNext(Array(imageResult.backdrops))
+                self.movieParser.parseImages(Array(imageResult.backdrops))
             case .failure(let error):
                 debugPrint("Error getting movie images \(movieId): \(error.localizedDescription)")
             }
@@ -279,31 +316,13 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     
     func getCasts(movieId: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            guard let movieLikeThisModel = try? self.credits.value().dropFirst() else {
-                self.credits.onNext([
-                    .Credits(items: self.repository.getMovieCast(from: movieId).map { CustomElementType(identity: $0) })
-                ])
-                return
-            }
-            
-            self.credits.onNext([
-                .Credits(items: self.repository.getMovieCast(from: movieId).map { CustomElementType(identity: $0) }),
-            ] + movieLikeThisModel)
+            self.movieParser.parseMovie(casts: self.repository.getMovieCast(from: movieId))
         }
     }
     
     func getCrews(movieId: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            guard let movieLikeThisModel = try? self.credits.value().dropFirst() else {
-                self.credits.onNext([
-                    .Credits(items: self.repository.getMovieCrew(from: movieId).map { CustomElementType(identity: $0) })
-                ])
-                return
-            }
-
-            self.credits.onNext([
-                .Credits(items: self.repository.getMovieCrew(from: movieId).map { CustomElementType(identity: $0) }),
-            ] +  movieLikeThisModel)
+            self.movieParser.parseMovie(crews: self.repository.getMovieCrew(from: movieId))
         }
     }
     
@@ -323,13 +342,19 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         self.repository.getMovieReview(from: movieId)
     }
     
-    func resetCreditHeaderState() {
-        isThereCast = true
-        isThereCrew = true
+    func handleMovieLikeThisSelection(at segment: Int, title: String, movieId: Int) {
+        if segment == 0, title == NSLocalizedString("Similar", comment: "") {
+            getSimilarMovies(movieId: movieId)
+        } else {
+            getRecommendMovies(movieId: movieId)
+        }
     }
-
-    func resetMovieHeaderState() {
-        isThereRecommendMovie = true
-        isThereSimilarMovie = true
+    
+    func handleCreditSelection(at segment: Int, title: String, movieId: Int) {
+        if segment == 0, title == NSLocalizedString("Cast", comment: "") {
+            getCasts(movieId: movieId)
+        } else {
+            getCrews(movieId: movieId)
+        }
     }
 }

@@ -66,7 +66,7 @@ class CountryView: UIViewController {
         setupBinding()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if let row = viewModel.selectedRow {
             countryTableView.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: true)
         }

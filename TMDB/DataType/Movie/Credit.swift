@@ -37,25 +37,12 @@ class Cast: Object, Decodable {
     dynamic var name: String = ""
     dynamic var order: Int = 0
     dynamic var profilePath: String?
+    dynamic var popularity: Double = 0.0
 
     enum CodingKeys: String, CodingKey {
-        case id, character, name, order
+        case id, character, name, order, popularity
         case creditId = "credit_id"
         case profilePath = "profile_path"
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(Int.self, forKey: .id)
-        character = try container.decodeIfPresent(String.self, forKey: .character) ?? ""
-        creditId = try container.decode(String.self, forKey: .creditId)
-        name = try container.decode(String.self, forKey: .name)
-        order = try container.decode(Int.self, forKey: .order)
-        profilePath = try container.decodeIfPresent(String.self, forKey: .profilePath)
-    }
-
-    required override init() {
-        super.init()
     }
 }
 
@@ -67,9 +54,10 @@ class Crew: Object, Decodable {
     dynamic var job: String = ""
     dynamic var name: String = ""
     dynamic var profilePath: String?
+    dynamic var popularity: Double = 0.0
 
     enum CodingKeys: String, CodingKey {
-        case id, department, job, name
+        case id, department, job, name, popularity
         case creditId = "credit_id"
         case profilePath = "profile_path"
     }

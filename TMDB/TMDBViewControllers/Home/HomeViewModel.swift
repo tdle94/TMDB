@@ -30,6 +30,17 @@ protocol HomeViewModelProtocol {
     func getTopRatedTVShow()
     func getTVShowAiringToday()
     func getTVShowOnTheAir()
+    
+    func handleSegmentSelection(section: Int, segment: Int)
+}
+
+class F: NSObject, URLSessionDelegate {
+    var session: URLSession?
+    
+    override init() {
+        super.init()
+        session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+    }
 }
 
 class HomeViewModel: HomeViewModelProtocol {
@@ -49,7 +60,7 @@ class HomeViewModel: HomeViewModelProtocol {
     lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { result in
         switch result {
         case .success(let movieResult):
-            let items = Array(movieResult.movies).map { CustomElementType(identity: $0) }
+            let items = [CustomElementType(identity: .init())] + Array(movieResult.movies).map { CustomElementType(identity: $0) }
             let firstTwo = Array((try! self.collectionViewSection.value().dropLast(2)))
             let last = try! self.collectionViewSection.value().last!
 
@@ -57,7 +68,7 @@ class HomeViewModel: HomeViewModelProtocol {
                 .onNext(firstTwo + [.Movie(items: items), last])
         case .failure(let error):
             debugPrint("Error getting movie: \(error.localizedDescription)")
-            StatusBarNotificationBanner(title: "Fail getting movie", style: .danger).show(queuePosition: .back,
+            StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                           bannerPosition: .top,
                                                                                           queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             self.collectionViewSection.onNext(try! self.collectionViewSection.value())
@@ -67,14 +78,14 @@ class HomeViewModel: HomeViewModelProtocol {
     lazy var tvShowHandler: (Result<TVShowResult, Error>) -> Void = { result in
         switch result {
         case .success(let tvShowResult):
-            let items = Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
+            let items = [CustomElementType(identity: .init())] + Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
             let firstThree = Array(try! self.collectionViewSection.value().dropLast())
             
             self.collectionViewSection
                 .onNext(firstThree + [.TVShow(items: items)])
         case .failure(let error):
             debugPrint("Error getting tvshow: \(error.localizedDescription)")
-            StatusBarNotificationBanner(title: "Fail getting tvshow", style: .danger).show(queuePosition: .back,
+            StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                            bannerPosition: .top,
                                                                                            queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             self.collectionViewSection.onNext(try! self.collectionViewSection.value())
@@ -84,14 +95,14 @@ class HomeViewModel: HomeViewModelProtocol {
     lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { result in
         switch result {
         case .success(let trendResult):
-            let items = Array(trendResult.trending).map { CustomElementType(identity: $0) }
+            let items = [CustomElementType(identity: .init())] + Array(trendResult.trending).map { CustomElementType(identity: $0) }
             let first = try! self.collectionViewSection.value().first!
             let lastTwo = Array(try! self.collectionViewSection.value().dropFirst(2))
             
             self.collectionViewSection.onNext([first, .Trending(items: items)] + lastTwo)
         case .failure(let error):
             debugPrint("Error getting trending: \(error.localizedDescription)")
-            StatusBarNotificationBanner(title: "Fail getting trend", style: .danger).show(queuePosition: .back,
+            StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                           bannerPosition: .top,
                                                                                           queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
             self.collectionViewSection.onNext(try! self.collectionViewSection.value())
@@ -102,7 +113,7 @@ class HomeViewModel: HomeViewModelProtocol {
          tvShowRepository: TMDBTVShowRepository,
          trendingRepository: TMDBTrendingRepository,
          peopleRepository: TMDBPeopleRepository) {
-     
+        
         self.movieRepository = movieRepository
         self.tvShowRepository = tvShowRepository
         self.trendingRepository = trendingRepository
@@ -113,13 +124,13 @@ class HomeViewModel: HomeViewModelProtocol {
         movieRepository.getPopularMovie(page: 1) { result in
             switch result {
             case .success(let movieResult):
-                let items = Array(movieResult.movies).map { CustomElementType(identity: $0) }
+                let items = [CustomElementType(identity: .init())] + Array(movieResult.movies).map { CustomElementType(identity: $0) }
                 let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
                 
                 self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
                 debugPrint("Error getting populuar movie: \(error.localizedDescription)")
-                StatusBarNotificationBanner(title: "Fail getting popular movie", style: .danger).show(queuePosition: .back,
+                StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                                       bannerPosition: .top,
                                                                                                       queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
                 self.collectionViewSection.onNext(try! self.collectionViewSection.value())
@@ -131,12 +142,12 @@ class HomeViewModel: HomeViewModelProtocol {
         tvShowRepository.getPopularOnTV(page: 1) { result in
             switch result {
             case .success(let tvShowResult):
-                let items = Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
+                let items = [CustomElementType(identity: .init())] + Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
                 let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
                 self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
                 debugPrint("Error getting populuar tvshow: \(error.localizedDescription)")
-                StatusBarNotificationBanner(title: "Fail getting popular tv show", style: .danger).show(queuePosition: .back,
+                StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                                         bannerPosition: .top,
                                                                                                         queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
                 self.collectionViewSection.onNext(try! self.collectionViewSection.value())
@@ -148,13 +159,13 @@ class HomeViewModel: HomeViewModelProtocol {
         peopleRepository.getPopularPeople(page: 1) { result in
             switch result {
             case .success(let peopleResult):
-                let items = Array(peopleResult.peoples).map { CustomElementType(identity: $0) }
+                let items = [CustomElementType(identity: .init())] + Array(peopleResult.peoples).map { CustomElementType(identity: $0) }
                 let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
                 
                 self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
             case .failure(let error):
                 debugPrint("Error getting populuar people: \(error.localizedDescription)")
-                StatusBarNotificationBanner(title: "Fail getting popular people", style: .danger).show(queuePosition: .back,
+                StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                                        bannerPosition: .top,
                                                                                                        queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
                 self.collectionViewSection.onNext(try! self.collectionViewSection.value())
@@ -193,5 +204,31 @@ class HomeViewModel: HomeViewModelProtocol {
     
     func getTVShowOnTheAir() {
         tvShowRepository.getTVShowOnTheAir(page: 1, completion: tvShowHandler)
+    }
+    
+    func handleSegmentSelection(section: Int, segment: Int) {
+        if section == 0, segment == 0 {
+            getPopularMovie()
+        } else if section == 0, segment == 1 {
+            getPopularTVShow()
+        } else if section == 0, segment == 2 {
+            getPopularPeople()
+        } else if section == 1, segment == 0 {
+            getTrendingToday()
+        } else if section == 1, segment == 1 {
+            getTrendingThisWeek()
+        } else if section == 2, segment == 0 {
+            getTopRatedMovie()
+        } else if section == 2, segment == 1 {
+            getNowPlayingMovie()
+        } else if section == 2, segment == 2 {
+            getUpcomingMovie()
+        } else if section == 3, segment == 0 {
+            getTopRatedTVShow()
+        } else if section == 3, segment == 1 {
+            getTVShowAiringToday()
+        } else {
+            getTVShowOnTheAir()
+        }
     }
 }

@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ASH-1q-asC">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="779.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="644.5"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ENC-Z9-JK7">
                                     <rect key="frame" x="0.0" y="-9" width="414" height="177"/>
@@ -45,20 +45,20 @@
                                     </collectionViewFlowLayout>
                                 </collectionView>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="kQe-sd-Afe">
-                                    <rect key="frame" x="20" y="0.0" width="152" height="304"/>
+                                    <rect key="frame" x="20" y="-60" width="152" height="304"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="304" id="fbe-s7-cBg"/>
                                         <constraint firstAttribute="width" constant="152" id="pDq-gh-Utq"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="he4-yz-g01">
-                                    <rect key="frame" x="180" y="0.0" width="214" height="20.5"/>
+                                    <rect key="frame" x="180" y="-60" width="214" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c2W-tI-9Co" customClass="TMDBCircleUserRating" customModule="TMDB" customModuleProvider="target">
-                                    <rect key="frame" x="20" y="275" width="44" height="44"/>
+                                    <rect key="frame" x="20" y="215" width="44" height="44"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="44" id="Cmt-Wm-yJZ"/>
@@ -66,16 +66,16 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6g0-ff-NUz">
-                                    <rect key="frame" x="20" y="356" width="374" height="20.5"/>
+                                    <rect key="frame" x="20" y="296" width="374" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="MbG-zw-CmE">
-                                    <rect key="frame" x="0.0" y="384.5" width="414" height="375"/>
+                                    <rect key="frame" x="0.0" y="324.5" width="414" height="300"/>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="375" id="Txa-N1-fO3"/>
+                                        <constraint firstAttribute="height" constant="300" id="Txa-N1-fO3"/>
                                     </constraints>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="emy-4v-So6">
                                         <size key="itemSize" width="128" height="128"/>
@@ -85,7 +85,7 @@
                                     </collectionViewFlowLayout>
                                 </collectionView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QYb-te-38o">
-                                    <rect key="frame" x="20" y="327" width="374" height="21"/>
+                                    <rect key="frame" x="20" y="267" width="374" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -102,7 +102,7 @@
                                 <constraint firstItem="6g0-ff-NUz" firstAttribute="top" secondItem="QYb-te-38o" secondAttribute="bottom" constant="8" symbolic="YES" id="QV7-IZ-N4n"/>
                                 <constraint firstItem="MbG-zw-CmE" firstAttribute="top" secondItem="6g0-ff-NUz" secondAttribute="bottom" constant="8" symbolic="YES" id="QfH-mY-hBY"/>
                                 <constraint firstItem="MbG-zw-CmE" firstAttribute="leading" secondItem="ASH-1q-asC" secondAttribute="leading" id="Stm-7G-RAh"/>
-                                <constraint firstItem="kQe-sd-Afe" firstAttribute="top" secondItem="ASH-1q-asC" secondAttribute="top" id="YhI-es-Qht"/>
+                                <constraint firstItem="kQe-sd-Afe" firstAttribute="top" secondItem="ASH-1q-asC" secondAttribute="top" constant="-60" id="YhI-es-Qht"/>
                                 <constraint firstItem="he4-yz-g01" firstAttribute="top" secondItem="kQe-sd-Afe" secondAttribute="top" id="b6g-Ir-QWz"/>
                                 <constraint firstItem="6g0-ff-NUz" firstAttribute="leading" secondItem="ASH-1q-asC" secondAttribute="leading" constant="20" symbolic="YES" id="eXL-Xl-Gzb"/>
                                 <constraint firstItem="kQe-sd-Afe" firstAttribute="leading" secondItem="ASH-1q-asC" secondAttribute="leading" constant="20" symbolic="YES" id="gnQ-uW-NNK"/>

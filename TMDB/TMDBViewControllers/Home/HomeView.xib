@@ -4,13 +4,12 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeView" customModule="TMDB" customModuleProvider="target">
             <connections>
-                <outlet property="collectionView" destination="Dbt-NI-HOb" id="gdF-q5-RVs"/>
+                <outlet property="collectionView" destination="Dbt-NI-HOb" id="3aG-v3-9cI"/>
                 <outlet property="view" destination="iN0-l3-epB" id="JVP-KC-HTQ"/>
             </connections>
         </placeholder>
@@ -31,7 +30,7 @@
                 </collectionView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="bYi-8n-mOH"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="bYi-8n-mOH" firstAttribute="bottom" secondItem="Dbt-NI-HOb" secondAttribute="bottom" id="PBY-7T-i6Z"/>
                 <constraint firstItem="Dbt-NI-HOb" firstAttribute="leading" secondItem="bYi-8n-mOH" secondAttribute="leading" id="PTV-rh-i2j"/>
@@ -41,9 +40,4 @@
             <point key="canvasLocation" x="-52.173913043478265" y="66.964285714285708"/>
         </view>
     </objects>
-    <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>

@@ -14,16 +14,16 @@ class HomeView: UIViewController {
 
     // MARK: - properties
     
-    weak var delegate: HomeViewDelegate?
+    weak var delegate: AppCoordinator?
     
     let viewModel: HomeViewModelProtocol
 
     let userSetting: TMDBUserSettingProtocol
     
     let dataSource: RxCollectionViewSectionedReloadDataSource<HomeModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
-        let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
-        cell?.configure(item: item.identity)
-        return cell as! UICollectionViewCell
+        let cell = collectionView.getPreviewItemCell(at: indexPath)
+        (cell as? TMDBPreviewItemCell)?.configure(item: item.identity)
+        return cell
     })
     
 
@@ -38,6 +38,8 @@ class HomeView: UIViewController {
 
             collectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
                                     forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            collectionView.register(UINib(nibName: String(describing: TMDBViewAllItemCell.self), bundle: nil),
+                                    forCellWithReuseIdentifier: Constant.Identifier.viewAllCell)
             collectionView.register(TMDBTrendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.trendPreviewHeader)
             collectionView.register(TMDBPopularHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.popularPreviewHeader)
             collectionView.register(TMDBMovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
@@ -47,13 +49,7 @@ class HomeView: UIViewController {
             collectionView
                 .rx
                 .modelSelected(CustomElementType.self).subscribe { item in
-                    if let movie = item.element?.identity as? Movie ?? (item.element?.identity as? Trending)?.movie {
-                        self.delegate?.navigateToMovieDetail(movieId: movie.id)
-                    } else if let tvShow = item.element?.identity as? TVShow ?? (item.element?.identity as? Trending)?.tv {
-                        self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
-                    } else if let person = item.element?.identity as? People ?? (item.element?.identity as? Trending)?.people {
-                        self.delegate?.navigateToPersonDetail(personId: person.id)
-                    }
+                    self.delegate?.navigateWith(obj: item.element?.identity)
                 }
                 .disposed(by: rx.disposeBag)
 
@@ -101,8 +97,8 @@ class HomeView: UIViewController {
         //delegate?.navigateToTVShowDetail(tvShowId: 107775)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        navigationController?.resetNavBar()
+    override func viewWillAppear(_ animated: Bool) {
+       navigationController?.resetNavBar()
     }
 }
 
@@ -135,13 +131,7 @@ extension HomeView {
 
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
 
-                            if segment == 0 {
-                                self.viewModel.getPopularMovie()
-                            } else if segment == 1 {
-                                self.viewModel.getPopularTVShow()
-                            } else {
-                                self.viewModel.getPopularPeople()
-                            }
+                            self.viewModel.handleSegmentSelection(section: 0, segment: segment)
                             
                         }.disposed(by: self.rx.disposeBag)
 
@@ -157,11 +147,7 @@ extension HomeView {
                             }
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 1), at: .centeredHorizontally, animated: true)
 
-                            if segment == 0 {
-                                self.viewModel.getTrendingToday()
-                            } else {
-                                self.viewModel.getTrendingThisWeek()
-                            }
+                            self.viewModel.handleSegmentSelection(section: 1, segment: segment)
                         
                         }
                         .disposed(by: self.rx.disposeBag)
@@ -179,13 +165,7 @@ extension HomeView {
 
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 2), at: .centeredHorizontally, animated: true)
 
-                            if segment == 0 {
-                                self.viewModel.getTopRatedMovie()
-                            } else if segment == 1 {
-                                self.viewModel.getNowPlayingMovie()
-                            } else {
-                                self.viewModel.getUpcomingMovie()
-                            }
+                            self.viewModel.handleSegmentSelection(section: 2, segment: segment)
                         
                         }
                         .disposed(by: self.rx.disposeBag)
@@ -203,14 +183,7 @@ extension HomeView {
 
                             self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 3), at: .centeredHorizontally, animated: true)
 
-                            if segment == 0 {
-                                self.viewModel.getTopRatedTVShow()
-                            } else if segment == 1 {
-                                self.viewModel.getTVShowAiringToday()
-                            } else {
-                                self.viewModel.getTVShowOnTheAir()
-                            }
-
+                            self.viewModel.handleSegmentSelection(section: 3, segment: segment)
                         }
                         .disposed(by: self.rx.disposeBag)
                 }

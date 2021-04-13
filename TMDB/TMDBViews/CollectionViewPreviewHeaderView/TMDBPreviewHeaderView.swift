@@ -25,12 +25,10 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
         
         segmentControl.selectedSegmentTintColor = Constant.Color.primaryColor
         segmentControl.setTitleTextAttributes([
-                                                NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor,
-                                                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)
+                                                NSAttributedString.Key.foregroundColor: Constant.Color.tertiaryColor
                                                 ], for: .selected)
         segmentControl.setTitleTextAttributes([
-                                                NSAttributedString.Key.foregroundColor: UIColor.black,
-                                                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .body)],
+                                                NSAttributedString.Key.foregroundColor: UIColor.darkText],
                                               for: .normal)
         
         label.adjustsFontForContentSizeCategory = true

@@ -42,13 +42,7 @@ class TVShowListSeasonView: UIViewController {
         setupBinding()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.resetNavBar()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
         navigationController?.resetNavBar()
     }
 }

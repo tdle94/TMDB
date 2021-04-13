@@ -31,7 +31,7 @@ class TMDBCircleUserRating: UILabel {
                 endAngle = CGFloat(rating * (2 * .pi) / 10)
             }
 
-            textLayer.string = rating == 10.0 ? "10" : "\(rating)"
+            textLayer.string = rating >= 10.0 ? String(format: "%.0f", rating) : String(format: "%.1f", rating)
             
             remainingCircleLayer.path = UIBezierPath(arcCenter: CGPoint(x: oldBounds.size.width/2, y: oldBounds.size.height/2),
                                                      radius: oldBounds.size.width/2,

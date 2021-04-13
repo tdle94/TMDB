@@ -16,10 +16,14 @@ class SearchView: UIViewController {
     
     var discoveryViewModel: DiscoveryViewModelProtocol
     
-    weak var delegate: SearchViewDelegate?
+    weak var delegate: AppCoordinator?
     
     // MARK: - views
     var searchController: UISearchController
+    
+    var movieDiscoverCell: UICollectionViewCell?
+    
+    var tvDiscoverCell: UICollectionViewCell?
     
     private var searchResult: SearchResultView?
     
@@ -29,6 +33,7 @@ class SearchView: UIViewController {
     @IBOutlet weak var discoveryCollectionView: UICollectionView! {
         didSet {
             discoveryCollectionView.collectionViewLayout = CollectionViewLayout.discoveryLayout()
+            discoveryCollectionView.dataSource = self
             discoveryCollectionView.register(UINib(nibName: String(describing: DiscoverCollectionViewCell.self), bundle: nil),
                                              forCellWithReuseIdentifier: Constant.Identifier.displayAllCell)
         }
@@ -73,18 +78,159 @@ class SearchView: UIViewController {
     }
 }
 
-extension SearchView: ApplyProtocol {
-    var visibleRow: Int? {
-        return discoveryCollectionView.indexPathsForVisibleItems.first?.row
-    }
-
-    var query: DiscoverQuery? {
-        return visibleRow == 0 ? discoveryViewModel.movieQuery : discoveryViewModel.tvShowQuery
+extension SearchView: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 2
     }
     
-    func apply(query: DiscoverQuery?) {
-        discoveryViewModel.apply(query: query)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let discoverCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.displayAllCell, for: indexPath) as! DiscoverCollectionViewCell
+
+        if indexPath.row == 0, let cell = movieDiscoverCell {
+            return cell
+        } else if indexPath.row == 1, let cell = tvDiscoverCell {
+            return cell
+        }
+
+        if indexPath.row == 0 {
+            movieDiscoverCell = discoverCell
+            
+            // get first page initially
+            discoveryViewModel.getAllMovie(nextPage: false)
+            
+            
+            // bind inner collection view
+            discoveryViewModel
+                .movie
+                .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.movieDataSource))
+                .disposed(by: self.rx.disposeBag)
+
+            discoveryViewModel
+                .hideMovieErrorLabel
+                .bind(to: discoverCell.errorLabel.rx.isHidden)
+                .disposed(by: self.rx.disposeBag)
+            
+            discoveryViewModel
+                .movieNotificationLabel
+                .bind(to: discoverCell.errorLabel.rx.attributedText)
+                .disposed(by: rx.disposeBag)
+            
+            discoverCell
+                .entityCollectionView
+                .rx
+                .willDisplaySupplementaryView
+                .take(1)
+                .subscribe(onNext: { view, _, _ in
+                    let footer = view as! LoadingIndicatorView
+                    
+                    self.discoveryViewModel
+                        .hideEndOfResultMovieLabel
+                        .bind(to: footer.label.rx.isHidden)
+                        .disposed(by: self.rx.disposeBag)
+                    
+                    self.discoveryViewModel
+                        .isMovieLoading
+                        .bind(to: footer.loadingIndicator.rx.isAnimating)
+                        .disposed(by: self.rx.disposeBag)
+                })
+                .disposed(by: rx.disposeBag)
+                
+                
+            discoverCell
+                .entityCollectionView
+                .rx
+                .itemSelected
+                .asDriver()
+                .drive(onNext: { indexPath in
+                    self.delegate?.navigateWith(obj: discoverCell.movieDataSource.sectionModels.first?.items[indexPath.row])
+                })
+                .disposed(by: self.rx.disposeBag)
+            
+            // paginate, when user scroll to bottom of collectionview
+            discoverCell
+                .entityCollectionView
+                .rx
+                .didScroll
+                .asDriver()
+                .drive(onNext: {
+                    if discoverCell.entityCollectionView.isAtBottom {
+                        self.discoveryViewModel.getAllMovie(nextPage: true)
+                    }
+                })
+                .disposed(by: self.rx.disposeBag)
+            
+            return discoverCell
+        }
+        
+        tvDiscoverCell = discoverCell
+        
+        // get first page initially
+        discoveryViewModel.getAllTVShow(nextPage: false)
+        
+        // bind inner collection view
+        discoveryViewModel
+            .tvShow
+            .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.tvShowDataSource))
+            .disposed(by: rx.disposeBag)
+        
+        discoveryViewModel
+            .hideTVErrorLabel
+            .bind(to: discoverCell.errorLabel.rx.isHidden)
+            .disposed(by: rx.disposeBag)
+
+        discoveryViewModel
+            .tvNotificationLabel
+            .bind(to: discoverCell.errorLabel.rx.attributedText)
+            .disposed(by: rx.disposeBag)
+        
+        discoverCell
+            .entityCollectionView
+            .rx
+            .willDisplaySupplementaryView
+            .take(1)
+            .subscribe(onNext: { view, _, _ in
+                let footer = view as! LoadingIndicatorView
+                
+                self.discoveryViewModel
+                    .hideEndOfReusultTVShowLabel
+                    .bind(to: footer.label.rx.isHidden)
+                    .disposed(by: self.rx.disposeBag)
+                
+                self.discoveryViewModel
+                    .isTVLoading
+                    .bind(to: footer.loadingIndicator.rx.isAnimating)
+                    .disposed(by: self.rx.disposeBag)
+            })
+            .disposed(by: self.rx.disposeBag)
+        
+        discoverCell
+            .entityCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: discoverCell.tvShowDataSource.sectionModels.first?.items[indexPath.row])
+            })
+            .disposed(by: rx.disposeBag)
+
+        
+        // paginate, when user scroll to bottom of collectionview
+        discoverCell
+            .entityCollectionView
+            .rx
+            .didScroll
+            .asDriver()
+            .drive(onNext: {
+                if discoverCell.entityCollectionView.isAtBottom  {
+                    self.discoveryViewModel.getAllTVShow(nextPage: true)
+                }
+            })
+            .disposed(by: rx.disposeBag)
+        
+        return discoverCell
     }
+    
+    
 }
 
 extension SearchView {
@@ -95,143 +241,8 @@ extension SearchView {
             .tap
             .asDriver()
             .drive(onNext: { _ in
-                self.delegate?.presentFilterView(applyFilter: self)
+                self.delegate?.presentFilterView(applyFilter: self.discoveryViewModel)
             })
-            .disposed(by: rx.disposeBag)
-
-        // bind discover collection view
-        Observable<[Int]>
-            .just([0,1])
-            .bind(to: discoveryCollectionView.rx.items(cellIdentifier: Constant.Identifier.displayAllCell)) { section, _, cell  in
-                let discoverCell = cell as! DiscoverCollectionViewCell
-                
-                if discoverCell.entityCollectionView.numberOfItems(inSection: 0) != 0 {
-                    // only allow to load first time
-                    return
-                }
-
-                if section == 0 {
-                    // get first page initially
-                    self.discoveryViewModel.getAllMovie(nextPage: false)
-                    
-                    
-                    // bind inner collection view
-                    self.discoveryViewModel
-                        .movie
-                        .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.movieDataSource))
-                        .disposed(by: self.rx.disposeBag)
-
-                    self.discoveryViewModel
-                        .hideMovieErrorLabel
-                        .bind(to: discoverCell.errorLabel.rx.isHidden)
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    self.discoveryViewModel
-                        .movieNotificationLabel
-                        .bind(to: discoverCell.errorLabel.rx.attributedText)
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    discoverCell
-                        .entityCollectionView
-                        .rx
-                        .willDisplaySupplementaryView
-                        .take(1)
-                        .subscribe(onNext: { view, _, _ in
-                            let footer = view as! LoadingIndicatorView
-                            self.discoveryViewModel
-                                .isMovieLoading
-                                .bind(to: footer.loadingIndicator.rx.isAnimating)
-                                .disposed(by: self.rx.disposeBag)
-                        })
-                        .disposed(by: self.rx.disposeBag)
-                        
-                        
-                    discoverCell
-                        .entityCollectionView
-                        .rx
-                        .itemSelected
-                        .asDriver()
-                        .drive(onNext: { indexPath in
-                            if let movieId = discoverCell.movieDataSource.sectionModels.first?.items[indexPath.row].id {
-                                self.delegate?.navigateToMovieDetail(movieId: movieId)
-                            }
-                        })
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    // paginate, when user scroll to bottom of collectionview
-                    discoverCell
-                        .entityCollectionView
-                        .rx
-                        .didScroll
-                        .asDriver()
-                        .drive(onNext: {
-                            if discoverCell.entityCollectionView.isAtBottom {
-                                self.discoveryViewModel.getAllMovie(nextPage: true)
-                            }
-                        })
-                        .disposed(by: self.rx.disposeBag)
-
-                } else if section == 1 {
-                    // get first page initially
-                    self.discoveryViewModel.getAllTVShow(nextPage: false)
-                    
-                    // bind inner collection view
-                    self.discoveryViewModel
-                        .tvShow
-                        .bind(to: discoverCell.entityCollectionView.rx.items(dataSource: discoverCell.tvShowDataSource))
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    self.discoveryViewModel
-                        .hideTVErrorLabel
-                        .bind(to: discoverCell.errorLabel.rx.isHidden)
-                        .disposed(by: self.rx.disposeBag)
-
-                    self.discoveryViewModel
-                        .tvNotificationLabel
-                        .bind(to: discoverCell.errorLabel.rx.attributedText)
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    discoverCell
-                        .entityCollectionView
-                        .rx
-                        .willDisplaySupplementaryView
-                        .take(1)
-                        .subscribe(onNext: { view, _, _ in
-                            let footer = view as! LoadingIndicatorView
-                            self.discoveryViewModel
-                                .isTVLoading
-                                .bind(to: footer.loadingIndicator.rx.isAnimating)
-                                .disposed(by: self.rx.disposeBag)
-                        })
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    discoverCell
-                        .entityCollectionView
-                        .rx
-                        .itemSelected
-                        .asDriver()
-                        .drive(onNext: { indexPath in
-                            if let tvShowId = discoverCell.tvShowDataSource.sectionModels.first?.items[indexPath.row].id {
-                                self.delegate?.navigateToTVShowDetail(tvShowId: tvShowId)
-                            }
-                        })
-                        .disposed(by: self.rx.disposeBag)
-      
-                    
-                    // paginate, when user scroll to bottom of collectionview
-                    discoverCell
-                        .entityCollectionView
-                        .rx
-                        .didScroll
-                        .asDriver()
-                        .drive(onNext: {
-                            if discoverCell.entityCollectionView.isAtBottom  {
-                                self.discoveryViewModel.getAllTVShow(nextPage: true)
-                            }
-                        })
-                        .disposed(by: self.rx.disposeBag)
-                }
-            }
             .disposed(by: rx.disposeBag)
 
         discoveryCollectionView
@@ -240,6 +251,7 @@ extension SearchView {
             .asDriver()
             .drive(onNext: { event in
                 self.discoveryChoiceView.select(at: event.at.row)
+                self.discoveryViewModel.visibleDiscoveryViewRow = event.at.row
             })
             .disposed(by: rx.disposeBag)
         

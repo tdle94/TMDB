@@ -52,39 +52,34 @@ extension UIScrollView {
     }
     
     func animateNavBar(safeAreaInsetTop: CGFloat, navigationController: UINavigationController?) {
-        rx.didScroll.subscribe { _ in
-            guard self.contentOffset.y < 0 else {
-                return
-            }
+        rx
+            .didScroll
+            .subscribe { _ in
+                guard self.contentOffset.y < 0 else {
+                    return
+                }
 
-            let originalYOffset = self.parallaxHeader.originalYOffset
-            let offset = self.contentOffset.y
-            let navBarFromScrollViewOffset = safeAreaInsetTop + (navigationController?.navigationBar.frame.maxY ?? 0)
-            
-            let alpha = 1 - (abs(offset) - navBarFromScrollViewOffset) / (abs(originalYOffset) - navBarFromScrollViewOffset)
-            let color = Constant.Color.primaryColor.withAlphaComponent(alpha)
-            let image = UIImage.imageFromColor(color: color)
+                let originalYOffset = self.parallaxHeader.originalYOffset
+                let offset = self.contentOffset.y
+                let navBarFromScrollViewOffset = safeAreaInsetTop + (navigationController?.navigationBar.frame.maxY ?? 0)
+                
+                let alpha = 1 - (abs(offset) - navBarFromScrollViewOffset) / (abs(originalYOffset) - navBarFromScrollViewOffset)
+                let color = Constant.Color.primaryColor.withAlphaComponent(alpha)
+                let image = UIImage.imageFromColor(color: color)
 
-            if abs(offset) >= navBarFromScrollViewOffset && offset > originalYOffset {
-                navigationController?.navigationBar.setBackgroundImage(image, for: .default)
-                navigationController?.navigationBar.shadowImage = image
-                navigationController?.navigationBar.titleTextAttributes = [
-                    NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor.withAlphaComponent(alpha)
-                ]
-            } else if offset <= originalYOffset && alpha >= 0.0 {
-                navigationController?.navigationBar.setBackgroundImage(.init(), for: .default)
-                navigationController?.navigationBar.shadowImage = .init()
-                navigationController?.navigationBar.titleTextAttributes = [
-                    NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor.withAlphaComponent(0)
-                ]
-            } else if abs(offset) < navBarFromScrollViewOffset && alpha <= 1.0 {
-                navigationController?.navigationBar.setBackgroundImage(.imageFromColor(color: color.withAlphaComponent(1)), for: .default)
-                navigationController?.navigationBar.shadowImage = UIImage.imageFromColor(color: Constant.Color.primaryColor.withAlphaComponent(1))
-                navigationController?.navigationBar.titleTextAttributes = [
-                    NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor.withAlphaComponent(1)
-                ]
-            }
-
+                if abs(offset) >= navBarFromScrollViewOffset && offset > originalYOffset {
+                    navigationController?.navigationBar.setBackgroundImage(image, for: .default)
+                    navigationController?.navigationBar.shadowImage = image
+                    navigationController?.navigationBar.titleTextAttributes = [
+                        NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor.withAlphaComponent(alpha)
+                    ]
+                } else if offset <= originalYOffset {
+                    navigationController?.navigationBar.setBackgroundImage(.imageFromColor(color: Constant.Color.primaryColor.withAlphaComponent(0)), for: .default)
+                    navigationController?.navigationBar.shadowImage = .imageFromColor(color: Constant.Color.primaryColor.withAlphaComponent(0))
+                    navigationController?.navigationBar.titleTextAttributes = [
+                        NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor.withAlphaComponent(0)
+                    ]
+                }
         }.disposed(by: rx.disposeBag)
     }
     

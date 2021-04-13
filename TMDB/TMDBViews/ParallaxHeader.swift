@@ -129,7 +129,9 @@ public class ParallaxHeader: NSObject {
     /**
      Relative offset
      */
-    public private(set) lazy  var originalYOffset: CGFloat = scrollView.contentOffset.y + scrollView.contentInset.top - height
+    var originalYOffset: CGFloat {
+        return -scrollView.adjustedContentInset.top
+    }
     
     /**
      Loading indicator
@@ -167,8 +169,10 @@ public class ParallaxHeader: NSObject {
             guard _view != view else {
                 return
             }
-            
+            _view?.backgroundColor = .black
             _view = view
+            height = ceil(UIScreen.main.bounds.height / 2.5)
+            minimumHeight = 0
             updateConstraints()
         }
     }
@@ -358,7 +362,7 @@ public class ParallaxHeader: NSObject {
             x: 0,
             y: relativeYOffset,
             width: scrollView.frame.size.width,
-            height: max(relativeHeight, minimumHeight) - scrollView.safeAreaInsets.top
+            height: max(relativeHeight, minimumHeight) - 94
         )
 
         contentView.frame = frame

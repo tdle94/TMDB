@@ -61,15 +61,6 @@ class ReleaseDateView: UIViewController {
             viewModel.getReleaseDates(movieId: id)
         }
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavBar(withAlphaComponent: 1)
-        navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor ]
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.resetNavBar()
-    }
 }
 
 extension ReleaseDateView {

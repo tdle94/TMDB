@@ -119,7 +119,7 @@ class EpisodeDetailView: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         navigationController?.resetNavBar()
     }
 }

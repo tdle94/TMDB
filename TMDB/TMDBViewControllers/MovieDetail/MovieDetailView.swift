@@ -243,6 +243,10 @@ class MovieDetailView: UIViewController {
         genreCollectionView.layoutIfNeeded()
         creditCollectionView.layoutIfNeeded()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.resetNavBar()
+    }
 }
 
 extension MovieDetailView {

@@ -9,16 +9,8 @@
 import UIKit
 
 extension UINavigationController {
-    func setNavBar(withAlphaComponent: CGFloat = 0.0) {
-        let color = Constant.Color.primaryColor.withAlphaComponent(withAlphaComponent)
-        let image = UIImage.imageFromColor(color: color)
-
-        navigationBar.setBackgroundImage(image, for: .default)
-        navigationBar.shadowImage = image
-        navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.clear ]
-    }
-    
     func resetNavBar() {
+        guard !isMovingToParent else { return }
         navigationBar.barTintColor = Constant.Color.primaryColor
         navigationBar.setBackgroundImage(nil, for: .default)
         navigationBar.shadowImage = nil

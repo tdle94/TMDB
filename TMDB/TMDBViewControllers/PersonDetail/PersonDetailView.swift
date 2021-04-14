@@ -136,6 +136,10 @@ class PersonDetailView: UIViewController {
             viewModel.getPersonDetail(id: personId)
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.resetNavBar()
+    }
 }
 
 extension PersonDetailView {

@@ -1001,7 +1001,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 4826,
             "name": "Matti Pellonpää",
             "order": 0,
-            "profile_path": "/1Qzhkkp3wFE2NMGKVyOra9931q2.jpg"
+            "profile_path": "/1Qzhkkp3wFE2NMGKVyOra9931q2.jpg",
+            "popularity": 32.43
           },
           {
             "cast_id": 6,
@@ -1011,7 +1012,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 5999,
             "name": "Kati Outinen",
             "order": 1,
-            "profile_path": "/mi78e4O4hQBQygxVVtwXdV2xqiu.jpg"
+            "profile_path": "/mi78e4O4hQBQygxVVtwXdV2xqiu.jpg",
+            "popularity": 32.43
           },
           {
             "cast_id": 7,
@@ -1021,7 +1023,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 4828,
             "name": "Sakari Kuosmanen",
             "order": 2,
-            "profile_path": "/syM87lzV2IqFno87Za1PbeAUdMW.jpg"
+            "profile_path": "/syM87lzV2IqFno87Za1PbeAUdMW.jpg",
+            "popularity": 32.43
           },
           {
             "cast_id": 9,
@@ -1031,7 +1034,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 53508,
             "name": "Esko Nikkari",
             "order": 3,
-            "profile_path": "/mNiyD3BOzWba4CB0VTbIqA4EAVm.jpg"
+            "profile_path": "/mNiyD3BOzWba4CB0VTbIqA4EAVm.jpg",
+            "popularity": 32.43
           },
           {
             "cast_id": 10,
@@ -1041,7 +1045,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1086499,
             "name": "Kylli Köngäs",
             "order": 4,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 11,
@@ -1051,7 +1056,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 222320,
             "name": "Pekka Laiho",
             "order": 5,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 12,
@@ -1061,7 +1067,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1086500,
             "name": "Jukka-Pekka Palo",
             "order": 6,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 28,
@@ -1071,7 +1078,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2307211,
             "name": "Svante Korkiakoski",
             "order": 7,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 29,
@@ -1081,7 +1089,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 148389,
             "name": "Mari Rantasila",
             "order": 8,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 30,
@@ -1091,7 +1100,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1761924,
             "name": "Safka Pekkonen",
             "order": 9,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 31,
@@ -1101,7 +1111,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651471,
             "name": "Antti Ortamo",
             "order": 10,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 32,
@@ -1111,7 +1122,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 106172,
             "name": "Mato Valtonen",
             "order": 11,
-            "profile_path": "/3JFNkSzPjptZ8RUrrjKhtCPEsEt.jpg"
+            "profile_path": "/3JFNkSzPjptZ8RUrrjKhtCPEsEt.jpg",
+            "popularity": 32.43
           },
           {
             "cast_id": 33,
@@ -1121,7 +1133,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 69552,
             "name": "Sakke Järvenpää",
             "order": 12,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 34,
@@ -1131,7 +1144,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651474,
             "name": "Ulla Kuosmanen",
             "order": 13,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 35,
@@ -1141,7 +1155,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1294421,
             "name": "Neka Haapanen",
             "order": 14,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 36,
@@ -1151,7 +1166,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651478,
             "name": "Pentti Koski",
             "order": 15,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 37,
@@ -1161,7 +1177,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651481,
             "name": "Ari Korhonen",
             "order": 16,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 38,
@@ -1171,7 +1188,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651483,
             "name": "Teuvo Rissanen",
             "order": 17,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 39,
@@ -1181,7 +1199,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651486,
             "name": "Erkki Rissanen",
             "order": 18,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 40,
@@ -1191,7 +1210,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651487,
             "name": "Sirkka Silin",
             "order": 19,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 41,
@@ -1201,7 +1221,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651488,
             "name": "Marina Martinoff",
             "order": 20,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 42,
@@ -1211,7 +1232,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651489,
             "name": "Jussi Tiitinen",
             "order": 21,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 43,
@@ -1221,7 +1243,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 2651491,
             "name": "Riikka Kuosmanen",
             "order": 22,
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "cast_id": 44,
@@ -1231,7 +1254,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 16767,
             "name": "Aki Kaurismäki",
             "order": 23,
-            "profile_path": "/kiJErWEOv4Ew7aHOGKg4ljsmppZ.jpg"
+            "profile_path": "/kiJErWEOv4Ew7aHOGKg4ljsmppZ.jpg",
+            "popularity": 32.43
           }
         ],
         "crew": [
@@ -1242,7 +1266,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 16767,
             "job": "Screenplay",
             "name": "Aki Kaurismäki",
-            "profile_path": "/kiJErWEOv4Ew7aHOGKg4ljsmppZ.jpg"
+            "profile_path": "/kiJErWEOv4Ew7aHOGKg4ljsmppZ.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "52fe420dc3a36847f8000071",
@@ -1251,7 +1276,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 16767,
             "job": "Director",
             "name": "Aki Kaurismäki",
-            "profile_path": "/kiJErWEOv4Ew7aHOGKg4ljsmppZ.jpg"
+            "profile_path": "/kiJErWEOv4Ew7aHOGKg4ljsmppZ.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "5963e8a3c3a36828fc0e46e5",
@@ -1260,7 +1286,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 16769,
             "job": "Director of Photography",
             "name": "Timo Salminen",
-            "profile_path": "/a8rH6eJ0XY1zQph18eNDj7MC8y4.jpg"
+            "profile_path": "/a8rH6eJ0XY1zQph18eNDj7MC8y4.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "52fe420dc3a36847f8000083",
@@ -1269,7 +1296,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 54766,
             "job": "Editor",
             "name": "Raija Talvio",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5e1395b26c0b360011ffb228",
@@ -1278,7 +1306,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 54771,
             "job": "Costume Design",
             "name": "Tuula Hilkamo",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "52fe420dc3a36847f8000095",
@@ -1287,7 +1316,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 54767,
             "job": "Producer",
             "name": "Mika Kaurismäki",
-            "profile_path": "/p9Z53Mi03GPkyznS6Ho0RuEedyJ.jpg"
+            "profile_path": "/p9Z53Mi03GPkyznS6Ho0RuEedyJ.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "5e1395dd9020120018b8d2cf",
@@ -1296,7 +1326,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 4831,
             "job": "Production Manager",
             "name": "Jaakko Talaskivi",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5e1396178741c400143f3d16",
@@ -1305,7 +1336,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 16772,
             "job": "Sound Editor",
             "name": "Jouko Lumme",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5e1395d0d8af670014bfaed4",
@@ -1314,7 +1346,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1034489,
             "job": "Assistant Director",
             "name": "Pauli Pentti",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "52fe420dc3a36847f80000b1",
@@ -1323,7 +1356,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1084612,
             "job": "Art Direction",
             "name": "Heikki Ukkonen",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "52fe420dc3a36847f80000ab",
@@ -1332,7 +1366,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1084614,
             "job": "Art Direction",
             "name": "Pertti Hilkamo",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5ebb8978614c6d001d8f006d",
@@ -1341,7 +1376,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1303969,
             "job": "Still Photographer",
             "name": "Marja-Leena Hukkanen",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5ebb89bbc3514c002062a0f7",
@@ -1350,7 +1386,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1303969,
             "job": "Script Supervisor",
             "name": "Marja-Leena Hukkanen",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5e13960c5907de0017e10896",
@@ -1359,7 +1396,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1683985,
             "job": "Sound Mixer",
             "name": "Kjell Westman",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5e1395c0fc5f06001991e483",
@@ -1368,7 +1406,8 @@ let movieDetailFixtureWithVideoKeywordSimilarRecommendationCredit = Data("""
             "id": 1761858,
             "job": "Makeup Artist",
             "name": "Leena Kouhia",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           }
         ]
       }

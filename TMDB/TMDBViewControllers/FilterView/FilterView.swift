@@ -68,7 +68,6 @@ extension FilterView {
             .asDriver()
             .drive(onNext: {
                 self.dismiss(animated: true, completion: nil)
-                self.dismiss(animated: true, completion: nil)
             })
             .disposed(by: rx.disposeBag)
         
@@ -78,9 +77,9 @@ extension FilterView {
             .filter { self.doneBarButton.isEnabled }
             .asDriver(onErrorJustReturn: ())
             .drive(onNext: { _ in
-                self.dismiss(animated: true, completion: nil)
-                self.dismiss(animated: true, completion: nil)
-                self.applyFilterDelegate?.apply(query: self.viewModel.query)
+                self.dismiss(animated: true) {
+                    self.applyFilterDelegate?.apply(query: self.viewModel.query)
+                }
             })
             .disposed(by: rx.disposeBag)
         

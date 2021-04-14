@@ -13,7 +13,7 @@ import RxDataSources
 class TVShowDetailView: UIViewController {
     var tvShowId: Int?
     
-    weak var delegate: TVShowDetailViewDelegate?
+    weak var delegate: AppCoordinator?
     
     let viewModel: TVShowDetailViewModelProtocol
     
@@ -30,7 +30,11 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var genreCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
-
+    
+    // MARK: - disposables
+    var castHeaderDisposable: Disposable?
+    var moreMovieHeaderDisposable: Disposable?
+    
     // MARK: - views
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var languagesLabel: UILabel!
@@ -49,9 +53,9 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
             if UIDevice.current.userInterfaceIdiom == .pad {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.45)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
             }
 
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
@@ -67,51 +71,46 @@ class TVShowDetailView: UIViewController {
                     let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                                        for: indexPath) as! TMDBCreditHeaderView
-                    
-                    if creditHeader.segmentControl.selectedSegmentIndex == -1 {
-                        creditHeader.segmentControl.selectedSegmentIndex = 0
-                        creditHeader
-                            .segmentControl
-                            .rx
-                            .value
-                            .changed
-                            .subscribe { event in
-                                let index = Int(event.element!.description)
-                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
-                                if index == 0, creditHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Cast", comment: "") {
-                                    self.viewModel.getCasts(tvShowId: self.tvShowId!)
-                                } else {
-                                    self.viewModel.getCrews(tvShowId: self.tvShowId!)
-                                }
+                    self.castHeaderDisposable?.dispose()
+                    self.castHeaderDisposable = creditHeader
+                        .segmentControl
+                        .rx
+                        .value
+                        .changed
+                        .asDriver()
+                        .drive(onNext: { index in
+                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
+
+                            if index == 0 {
+                                self.viewModel.getCasts(tvShowId: self.tvShowId!)
+                            } else {
+                                self.viewModel.getCrews(tvShowId: self.tvShowId!)
                             }
-                            .disposed(by: self.rx.disposeBag)
-                    }
+                        })
                     
                     return creditHeader
                 case .TVShowsLikeThis(items: _):
                     let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                       withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
                                                                                       for: indexPath) as! TMDBMovieLikeThisHeaderView
-                    if movieHeader.segmentControl.selectedSegmentIndex == -1 {
-                        movieHeader.segmentControl.selectedSegmentIndex = 0
-                        movieHeader
-                            .segmentControl
-                            .rx
-                            .value
-                            .changed
-                            .subscribe { event in
-                                let index = Int(event.element!.description)
-                                self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
+                    
+                    self.moreMovieHeaderDisposable?.dispose()
+                    self.moreMovieHeaderDisposable = movieHeader
+                        .segmentControl
+                        .rx
+                        .value
+                        .changed
+                        .asDriver()
+                        .drive(onNext: { index in
+                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
-                                if index == 0, movieHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Similar", comment: "") {
-                                    self.viewModel.getSimilars(tvShowId: self.tvShowId!)
-                                } else {
-                                    self.viewModel.getRecommends(tvShowId: self.tvShowId!)
-                                }
+                            if index == 0 {
+                                self.viewModel.getSimilars(tvShowId: self.tvShowId!)
+                            } else {
+                                self.viewModel.getRecommends(tvShowId: self.tvShowId!)
                             }
-                            .disposed(by: self.rx.disposeBag)
-                    }
+                        })
                     
                     return movieHeader
                 }
@@ -162,8 +161,6 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.parallaxHeader.view = backdropImageCollectionView
-            scrollView.parallaxHeader.height = ceil(UIScreen.main.bounds.height / 2.7)
-            scrollView.parallaxHeader.minimumHeight = 0
 
         }
     }
@@ -182,24 +179,12 @@ class TVShowDetailView: UIViewController {
     
     // MARK: - override
 
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.resetNavBar()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        if !isMovingToParent {
-            scrollView.setToPreviousAlpha(navigationController: navigationController)
-        } else {
-            navigationController?.setNavBar()
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setLoveIcon()
         navigationItem.setBackArrowIcon()
         setupBinding()
-        setupViewLayout()
+
         if let id = tvShowId {
             viewModel.getImages(tvShowId: id)
             viewModel.getTVShowDetail(tvShowId: id)
@@ -215,6 +200,10 @@ class TVShowDetailView: UIViewController {
         keywordCollectionView.layoutIfNeeded()
         creditCollectionView.layoutIfNeeded()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.resetNavBar()
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -222,11 +211,6 @@ class TVShowDetailView: UIViewController {
 }
 
 extension TVShowDetailView {
-    func setupViewLayout() {
-        if UIDevice.current.userInterfaceIdiom != .pad {
-            posterImageViewTop.constant += scrollView.contentOffset.y/4
-        }
-    }
     
     func setupBinding() {
         // left bar button item
@@ -345,53 +329,16 @@ extension TVShowDetailView {
             .observeOn(MainScheduler.asyncInstance)
             .subscribe { event in
 
-                if !self.viewModel.isThereCast, !self.viewModel.isThereCrew {
-                    self.viewModel.resetCreditHeaderState()
-                    self.creditCollectionViewHeight.constant /= 2
-                    self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
-                }
-                
-                if !self.viewModel.isThereSimilarTVShow, !self.viewModel.isThereRecommendTVShow {
-                    self.viewModel.resetMovieHeaderState()
-                    self.creditCollectionViewHeight.constant /= 2
-                    self.creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
-                }
-                
-                if let header = event.element?.supplementaryView as? TMDBMovieLikeThisHeaderView {
-                    if !self.viewModel.isThereSimilarTVShow {
-                        header.segmentControl.removeSegment(at: 0, animated: false)
-                        header.segmentControl.selectedSegmentIndex = 0
-                    } else if !self.viewModel.isThereRecommendTVShow {
-                        header.segmentControl.removeSegment(at: 1, animated: false)
-                    }
-                    
-                    self.viewModel.resetMovieHeaderState()
-
-                } else if let header = event.element?.supplementaryView as? TMDBCreditHeaderView {
-                    if !self.viewModel.isThereCast {
-                        header.segmentControl.removeSegment(at: 0, animated: false)
-                        header.segmentControl.selectedSegmentIndex = 0
-                    } else if !self.viewModel.isThereCrew {
-                        header.segmentControl.removeSegment(at: 1, animated: false)
-                    }
-                    
-                    self.viewModel.resetCreditHeaderState()
-                }
             }
             .disposed(by: rx.disposeBag)
         
         creditCollectionView
             .rx
             .modelSelected(CustomElementType.self)
-            .subscribe { event in
-                if let tvShow = event.element?.identity as? TVShow {
-                    self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
-                } else if let cast = event.element?.identity as? Cast {
-                    self.delegate?.navigateToPersonDetail(personId: cast.id)
-                } else if let crew = event.element?.identity as? Crew {
-                    self.delegate?.navigateToPersonDetail(personId: crew.id)
-                }
-            }
+            .asDriver()
+            .drive(onNext: { element in
+                self.delegate?.navigateWith(obj: element.identity)
+            })
             .disposed(by: rx.disposeBag)
         
         

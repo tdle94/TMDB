@@ -32,6 +32,7 @@ class KeywordView: UIViewController {
             keywordTableView.tableFooterView?.addSubview(loadingIndicator)
 
             loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+            loadingIndicator.color = .black
             loadingIndicator.widthAnchor.constraint(equalTo: keywordTableView.tableFooterView!.widthAnchor).isActive = true
             loadingIndicator.heightAnchor.constraint(equalTo: keywordTableView.tableFooterView!.heightAnchor).isActive = true
             loadingIndicator.centerXAnchor.constraint(equalTo: keywordTableView.tableFooterView!.centerXAnchor).isActive = true

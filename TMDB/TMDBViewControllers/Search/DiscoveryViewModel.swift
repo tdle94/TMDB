@@ -16,7 +16,7 @@ protocol ApplyProtocol: class {
     func apply(query: DiscoverQuery?)
 }
 
-protocol DiscoveryViewModelProtocol {
+protocol DiscoveryViewModelProtocol: ApplyProtocol {
     var movieRepository: TMDBMovieRepository { get }
     var tvShowRepository: TMDBTVShowRepository { get }
     
@@ -31,13 +31,16 @@ protocol DiscoveryViewModelProtocol {
     
     var hideTVErrorLabel: PublishSubject<Bool> { get }
     var tvNotificationLabel: PublishSubject<NSAttributedString> { get }
+    var hideEndOfResultMovieLabel: PublishSubject<Bool> { get }
+    var hideEndOfReusultTVShowLabel: PublishSubject<Bool> { get }
     
     var movieQuery: DiscoverQuery { get }
     var tvShowQuery: DiscoverQuery { get }
+    
+    var visibleDiscoveryViewRow: Int { get set }
 
     func getAllMovie(nextPage: Bool)
     func getAllTVShow(nextPage: Bool)
-    func apply(query: DiscoverQuery?)
 }
 
 class DiscoveryViewModel: DiscoveryViewModelProtocol {
@@ -52,16 +55,36 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
 
     var hideTVErrorLabel: PublishSubject<Bool> = PublishSubject()
     var tvNotificationLabel: PublishSubject<NSAttributedString> = PublishSubject()
+    var hideEndOfResultMovieLabel: PublishSubject<Bool> = PublishSubject()
+    var hideEndOfReusultTVShowLabel: PublishSubject<Bool> = PublishSubject()
     
     var movie: BehaviorSubject<[SectionModel<String, Movie>]> = BehaviorSubject(value: [.init(model: "Movie", items: [])])
     var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]> = BehaviorSubject(value: [.init(model: "TVShow", items: [])])
     
-    var movieQuery: DiscoverQuery = DiscoverQuery(type: .movie)
-    var tvShowQuery: DiscoverQuery = DiscoverQuery(type: .tv)
-
-    private var movieResult: MovieResult = MovieResult()
+    var movieQuery: DiscoverQuery = DiscoverQuery(type: .movie) {
+        didSet {
+            if movieQuery.page == 1 {
+                movieTotalPages = 1
+                movie.onNext([.init(model: "Movie", items: [])])
+            }
+        }
+    }
+    var tvShowQuery: DiscoverQuery = DiscoverQuery(type: .tv) {
+        didSet {
+            if tvShowQuery.page == 1 {
+                tvShowTotalPages = 1
+                tvShow.onNext([.init(model: "TVShow", items: [])])
+            }
+        }
+    }
     
-    private var tvShowResult: TVShowResult = TVShowResult()
+    var visibleDiscoveryViewRow: Int = 1
+    var query: DiscoverQuery? {
+        return visibleDiscoveryViewRow == 1 ? movieQuery : tvShowQuery
+    }
+    
+    var movieTotalPages: Int = 1
+    var tvShowTotalPages: Int = 1
 
     init(movieRepository: TMDBMovieRepository, tvShowRepository: TMDBTVShowRepository) {
         self.movieRepository = movieRepository
@@ -81,9 +104,11 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         
         isMovieLoading.onNext(true)
         hideMovieErrorLabel.onNext(true)
+        hideEndOfResultMovieLabel.onNext(true)
 
-        if query.page > movieResult.totalPages, movieResult.totalPages != 0 {
+        if query.page > movieTotalPages {
             isMovieLoading.onNext(false)
+            hideEndOfResultMovieLabel.onNext(false)
             return
         }
         
@@ -91,20 +116,23 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
             self.isMovieLoading.onNext(false)
             switch result {
             case .success(let movieResult):
+                var previousMovies = try! self.movie.value().first!.items
+                self.movieTotalPages = movieResult.totalPages
+                
                 if nextPage {
-                    self.movieResult.movies.append(objectsIn: movieResult.movies)
-                    self.movieResult.page += 1
+                    previousMovies.append(contentsOf: movieResult.movies)
+
                     self.movieQuery.page += 1
                 } else {
-                    self.movieResult = movieResult
+                    previousMovies = Array(movieResult.movies)
                 }
                 
-                if self.movieResult.movies.isEmpty {
+                if previousMovies.isEmpty {
                     self.hideMovieErrorLabel.onNext(false)
                     self.movieNotificationLabel.onNext(TMDBLabel.setHeader(title: NSLocalizedString("No item found", comment: "")))
                 }
 
-                self.movie.onNext([.init(model: "Movie", items: Array(self.movieResult.movies))])
+                self.movie.onNext([.init(model: "Movie", items: previousMovies)])
             case .failure(let error):
                 let previousResult = try! self.movie.value()
 
@@ -135,8 +163,10 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         
         isTVLoading.onNext(true)
         hideTVErrorLabel.onNext(true)
+        hideEndOfReusultTVShowLabel.onNext(true)
 
-        if query.page > tvShowResult.totalPages, tvShowResult.totalPages != 0 {
+        if query.page > tvShowTotalPages {
+            hideEndOfReusultTVShowLabel.onNext(false)
             isTVLoading.onNext(false)
             return
         }
@@ -145,21 +175,23 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
             self.isTVLoading.onNext(false)
             switch result {
             case .success(let tvShowResult):
+                var previousMovies = try! self.tvShow.value().first!.items
+                self.tvShowTotalPages = tvShowResult.totalPages
                 
                 if nextPage {
-                    self.tvShowResult.onTV.append(objectsIn: tvShowResult.onTV)
-                    self.tvShowResult.page += 1
+                    previousMovies.append(contentsOf: Array(tvShowResult.onTV))
+
                     self.tvShowQuery.page += 1
                 } else {
-                    self.tvShowResult = tvShowResult
+                    previousMovies = Array(tvShowResult.onTV)
                 }
                 
-                if self.tvShowResult.onTV.isEmpty {
+                if previousMovies.isEmpty {
                     self.hideTVErrorLabel.onNext(false)
                     self.tvNotificationLabel.onNext(TMDBLabel.setHeader(title: NSLocalizedString("No item found", comment: "")))
                 }
 
-                self.tvShow.onNext([.init(model: "TVShow", items: Array(self.tvShowResult.onTV))])
+                self.tvShow.onNext([.init(model: "TVShow", items: previousMovies)])
             case .failure(let error):
                 let previousResult = try! self.tvShow.value()
 
@@ -185,26 +217,24 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         }
     }
     
-    func applyMovieFilter(query: DiscoverQuery?) {
+    private func applyMovieFilter(query: DiscoverQuery?) {
         guard let newQuery = query else {
             return
         }
 
         movieQuery = newQuery
         movieQuery.page = 1 // start at page 1 when apply new query
-        movie.onNext([])
 
         getAllMovie(nextPage: false)
     }
 
-    func applyTVShowFilter(query: DiscoverQuery?) {
+    private func applyTVShowFilter(query: DiscoverQuery?) {
         guard let newQuery = query else {
             return
         }
 
         tvShowQuery = newQuery
         tvShowQuery.page = 1 // start at page 1 when apply new query
-        tvShow.onNext([])
         
         getAllTVShow(nextPage: false)
     }

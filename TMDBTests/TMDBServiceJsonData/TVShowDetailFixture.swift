@@ -1289,7 +1289,8 @@ let tvShowDetailFixture = Data("""
             "name": "Emilia Clarke",
             "gender": 1,
             "profile_path": "/r6i4C3kYrBRzUzZ8JKAHYQ0T0dD.jpg",
-            "order": 0
+            "order": 0,
+            "popularity": 32.43
           },
           {
             "character": "Cersei Lannister",
@@ -1298,7 +1299,8 @@ let tvShowDetailFixture = Data("""
             "name": "Lena Headey",
             "gender": 1,
             "profile_path": "/xR2IBnBlUdyBe5hecaVdtRuQqUE.jpg",
-            "order": 1
+            "order": 1,
+            "popularity": 32.43
           },
           {
             "character": "Sansa Stark",
@@ -1307,7 +1309,8 @@ let tvShowDetailFixture = Data("""
             "name": "Sophie Turner",
             "gender": 1,
             "profile_path": "/1hUAKYvSi4vZSYvTnD2TlqF6VVx.jpg",
-            "order": 2
+            "order": 2,
+            "popularity": 32.43
           },
           {
             "character": "Jon Snow",
@@ -1316,7 +1319,8 @@ let tvShowDetailFixture = Data("""
             "name": "Kit Harington",
             "gender": 2,
             "profile_path": "/4MqUjb1SYrzHmFSyGiXnlZWLvBs.jpg",
-            "order": 3
+            "order": 3,
+            "popularity": 32.43
           },
           {
             "character": "Tyrion Lannister",
@@ -1325,7 +1329,8 @@ let tvShowDetailFixture = Data("""
             "name": "Peter Dinklage",
             "gender": 2,
             "profile_path": "/lRsRgnksAhBRXwAB68MFjmTtLrk.jpg",
-            "order": 4
+            "order": 4,
+            "popularity": 32.43
           },
           {
             "character": "Jaime Lannister",
@@ -1334,7 +1339,8 @@ let tvShowDetailFixture = Data("""
             "name": "Nikolaj Coster-Waldau",
             "gender": 2,
             "profile_path": "/zCWcyAfbbEgB3Lmiew1yrkPU4Lr.jpg",
-            "order": 5
+            "order": 5,
+            "popularity": 32.43
           },
           {
             "character": "Arya Stark",
@@ -1343,7 +1349,8 @@ let tvShowDetailFixture = Data("""
             "name": "Maisie Williams",
             "gender": 1,
             "profile_path": "/zLTq39cdRjS43dEzb78c1p1QcbT.jpg",
-            "order": 6
+            "order": 6,
+            "popularity": 32.43
           },
           {
             "character": "Davos Seaworth",
@@ -1352,7 +1359,8 @@ let tvShowDetailFixture = Data("""
             "name": "Liam Cunningham",
             "gender": 2,
             "profile_path": "/ljmFT9zYqh4k2bmEcNU6rxoE7fW.jpg",
-            "order": 7
+            "order": 7,
+            "popularity": 32.43
           },
           {
             "character": "Samwell Tarly",
@@ -1361,7 +1369,8 @@ let tvShowDetailFixture = Data("""
             "name": "John Bradley",
             "gender": 2,
             "profile_path": "/eLcisM9qqCLWnf0iImHuSn08FOi.jpg",
-            "order": 8
+            "order": 8,
+            "popularity": 32.43
           },
           {
             "character": "Varys",
@@ -1370,7 +1379,8 @@ let tvShowDetailFixture = Data("""
             "name": "Conleth Hill",
             "gender": 2,
             "profile_path": "/eeTnNiustUbShHU09EQ6LoOpzcg.jpg",
-            "order": 9
+            "order": 9,
+            "popularity": 32.43
           },
           {
             "character": "Brienne of Tarth",
@@ -1379,7 +1389,8 @@ let tvShowDetailFixture = Data("""
             "name": "Gwendoline Christie",
             "gender": 1,
             "profile_path": "/kmlv5i02n3zKryBr2W3kSeWVKTD.jpg",
-            "order": 10
+            "order": 10,
+            "popularity": 32.43
           },
           {
             "character": "Bran Stark",
@@ -1388,7 +1399,8 @@ let tvShowDetailFixture = Data("""
             "name": "Isaac Hempstead-Wright",
             "gender": 2,
             "profile_path": "/b6hQvID3oXPXnyrrXs22MBv2lyN.jpg",
-            "order": 11
+            "order": 11,
+            "popularity": 32.43
           },
           {
             "character": "Grey Worm",
@@ -1397,7 +1409,8 @@ let tvShowDetailFixture = Data("""
             "name": "Jacob Anderson",
             "gender": 2,
             "profile_path": "/atkSptvQU7XdRVGrL5hiymbXwhd.jpg",
-            "order": 12
+            "order": 12,
+            "popularity": 32.43
           },
           {
             "character": "Bronn",
@@ -1406,7 +1419,8 @@ let tvShowDetailFixture = Data("""
             "name": "Jerome Flynn",
             "gender": 2,
             "profile_path": "/yI5xxWITp2YjMgiwac72Nen60jq.jpg",
-            "order": 13
+            "order": 13,
+            "popularity": 32.43
           },
           {
             "character": "Sandor Clegane",
@@ -1415,7 +1429,8 @@ let tvShowDetailFixture = Data("""
             "name": "Rory McCann",
             "gender": 2,
             "profile_path": "/meEHyiCRXTTCiYQMzP4VEdvEuD0.jpg",
-            "order": 14
+            "order": 14,
+            "popularity": 32.43
           },
           {
             "character": "Gendry",
@@ -1424,7 +1439,8 @@ let tvShowDetailFixture = Data("""
             "name": "Joe Dempsie",
             "gender": 2,
             "profile_path": "/lnR0AMIwxQR6zUCOhp99GnMaRet.jpg",
-            "order": 15
+            "order": 15,
+            "popularity": 32.43
           }
         ],
         "crew": [
@@ -1435,7 +1451,8 @@ let tvShowDetailFixture = Data("""
             "name": "Duncan Muggoch",
             "gender": 2,
             "job": "Producer",
-            "profile_path": "/ukGjJ62Ejd4cFziald03G34Fsrp.jpg"
+            "profile_path": "/ukGjJ62Ejd4cFziald03G34Fsrp.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "5ceab0820e0a261a50cb87a9",
@@ -1444,7 +1461,8 @@ let tvShowDetailFixture = Data("""
             "name": "Miguel Sapochnik",
             "gender": 2,
             "job": "Executive Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5ceab0ab92514175e8bb5caf",
@@ -1453,7 +1471,8 @@ let tvShowDetailFixture = Data("""
             "name": "David Nutter",
             "gender": 2,
             "job": "Executive Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5e5a651d55c92600134ef139",
@@ -1462,7 +1481,8 @@ let tvShowDetailFixture = Data("""
             "name": "Ronan Binding",
             "gender": 2,
             "job": "Animation",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5c8be4c29251410cf7c54b74",
@@ -1471,7 +1491,8 @@ let tvShowDetailFixture = Data("""
             "name": "Bryan Cogman",
             "gender": 0,
             "job": "Co-Executive Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "59a43870c3a36821f1017856",
@@ -1480,7 +1501,8 @@ let tvShowDetailFixture = Data("""
             "name": "Guymon Casady",
             "gender": 2,
             "job": "Co-Executive Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "59a43a0a925141775b05ba2e",
@@ -1489,7 +1511,8 @@ let tvShowDetailFixture = Data("""
             "name": "Lisa McAtackney",
             "gender": 1,
             "job": "Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "54eee9e5c3a3686d5800584e",
@@ -1498,7 +1521,8 @@ let tvShowDetailFixture = Data("""
             "name": "Deborah Riley",
             "gender": 1,
             "job": "Production Design",
-            "profile_path": "/cjhADpqdrnwB1PdDUKaBnWrIj2Q.jpg"
+            "profile_path": "/cjhADpqdrnwB1PdDUKaBnWrIj2Q.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "5256c8c819c2956ff6048836",
@@ -1507,7 +1531,8 @@ let tvShowDetailFixture = Data("""
             "name": "Greg Spence",
             "gender": 2,
             "job": "Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "59a43acf925141775b05baa5",
@@ -1516,7 +1541,8 @@ let tvShowDetailFixture = Data("""
             "name": "Christopher Newman",
             "gender": 2,
             "job": "Producer",
-            "profile_path": "/2yj9kfLcBb2IDHzMKQrua8Nw883.jpg"
+            "profile_path": "/2yj9kfLcBb2IDHzMKQrua8Nw883.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "5256c8c619c2956ff6048782",
@@ -1525,7 +1551,8 @@ let tvShowDetailFixture = Data("""
             "name": "Frank Doelger",
             "gender": 0,
             "job": "Executive Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "54ef3928925141796e00614d",
@@ -1534,7 +1561,8 @@ let tvShowDetailFixture = Data("""
             "name": "Nina Gold",
             "gender": 1,
             "job": "Casting",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "54ef391cc3a3686b9a003bd0",
@@ -1543,7 +1571,8 @@ let tvShowDetailFixture = Data("""
             "name": "Robert Sterne",
             "gender": 2,
             "job": "Casting",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "59a4396bc3a368478f059163",
@@ -1552,7 +1581,8 @@ let tvShowDetailFixture = Data("""
             "name": "Vince Gerardis",
             "gender": 2,
             "job": "Co-Executive Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "5256c8c619c2956ff6048758",
@@ -1561,7 +1591,8 @@ let tvShowDetailFixture = Data("""
             "name": "Carolyn Strauss",
             "gender": 1,
             "job": "Executive Producer",
-            "profile_path": null
+            "profile_path": null,
+            "popularity": 32.43
           },
           {
             "credit_id": "54eef3e19251417965005c64",
@@ -1570,7 +1601,8 @@ let tvShowDetailFixture = Data("""
             "name": "George R. R. Martin",
             "gender": 2,
             "job": "Co-Executive Producer",
-            "profile_path": "/1A7W0L9dZz0rCN1oj6h8YUvusdN.jpg"
+            "profile_path": "/1A7W0L9dZz0rCN1oj6h8YUvusdN.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "54eeea3bc3a3680b80006048",
@@ -1579,7 +1611,8 @@ let tvShowDetailFixture = Data("""
             "name": "Ramin Djawadi",
             "gender": 2,
             "job": "Original Music Composer",
-            "profile_path": "/wgUxW19nyPnrzj4ViVOpAfmhCdr.jpg"
+            "profile_path": "/wgUxW19nyPnrzj4ViVOpAfmhCdr.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "54eeec309251417968005b14",
@@ -1588,7 +1621,8 @@ let tvShowDetailFixture = Data("""
             "name": "Michele Clapton",
             "gender": 1,
             "job": "Costume Design",
-            "profile_path": "/dyGhslpGOvhvG1QAGu0xgti4e0k.jpg"
+            "profile_path": "/dyGhslpGOvhvG1QAGu0xgti4e0k.jpg",
+            "popularity": 32.43
           },
           {
             "credit_id": "54eef1fc925141796e005aee",
@@ -1597,7 +1631,8 @@ let tvShowDetailFixture = Data("""
             "name": "George R. R. Martin",
             "gender": 2,
             "job": "Novel",
-            "profile_path": "/1A7W0L9dZz0rCN1oj6h8YUvusdN.jpg"
+            "profile_path": "/1A7W0L9dZz0rCN1oj6h8YUvusdN.jpg",
+            "popularity": 32.43
           }
         ]
       },

@@ -49,8 +49,6 @@ class EpisodeDetailView: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.parallaxHeader.view = imageCollectionView
-            scrollView.parallaxHeader.height = ceil(UIScreen.main.bounds.height / 2.7)
-            scrollView.parallaxHeader.minimumHeight = 0
         }
     }
     
@@ -59,7 +57,7 @@ class EpisodeDetailView: UIViewController {
             if UIDevice.current.userInterfaceIdiom == .pad {
                 creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.86)
             }
 
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
@@ -121,24 +119,13 @@ class EpisodeDetailView: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         navigationController?.resetNavBar()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if !isMovingToParent {
-            scrollView.setToPreviousAlpha(navigationController: navigationController)
-        } else {
-            navigationController?.setNavBar()
-        }
     }
 }
 
 extension EpisodeDetailView {
     func setupBinding() {
-        if UIDevice.current.userInterfaceIdiom != .pad {
-            posterImageTop.constant += scrollView.contentOffset.y/4
-        }
 
         scrollView.animateNavBar(safeAreaInsetTop: view.safeAreaInsets.top,
                                  navigationController: navigationController)

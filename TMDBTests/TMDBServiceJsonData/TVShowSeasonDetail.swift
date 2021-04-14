@@ -33,7 +33,8 @@ let tvShowSeasonDetail = Data("""
           "department": "Directing",
           "job": "Director",
           "gender": 0,
-          "profile_path": null
+          "profile_path": null,
+          "popularity": 32.43
         }
       ],
       "guest_stars": [
@@ -44,7 +45,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 1,
           "gender": 1,
-          "profile_path": "/nQ0f0BHnEtRB4mJZsaRGScf9OL3.jpg"
+          "profile_path": "/nQ0f0BHnEtRB4mJZsaRGScf9OL3.jpg",
+          "popularity": 32.43
         },
         {
           "id": 984,
@@ -53,7 +55,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 3,
           "gender": 2,
-          "profile_path": "/mAR7cSZO9V9v0fFlDxiKDfvHlkQ.jpg"
+          "profile_path": "/mAR7cSZO9V9v0fFlDxiKDfvHlkQ.jpg",
+          "popularity": 32.43
         },
         {
           "id": 176201,
@@ -62,7 +65,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 7,
           "gender": 2,
-          "profile_path": "/gtk4vSQzXNb0f8qSZPp6t9vUcSJ.jpg"
+          "profile_path": "/gtk4vSQzXNb0f8qSZPp6t9vUcSJ.jpg",
+          "popularity": 32.43
         }
       ]
     },
@@ -87,7 +91,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 5,
           "gender": 1,
-          "profile_path": "/fTlG9uWyaiQt9UATyPYswjo9EGh.jpg"
+          "profile_path": "/fTlG9uWyaiQt9UATyPYswjo9EGh.jpg",
+          "popularity": 32.43
         }
       ]
     },
@@ -112,7 +117,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 6,
           "gender": 2,
-          "profile_path": "/yRiMMz91LC4EgrRpbsaw80T1XM1.jpg"
+          "profile_path": "/yRiMMz91LC4EgrRpbsaw80T1XM1.jpg",
+          "popularity": 32.43
         }
       ]
     },
@@ -137,7 +143,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 8,
           "gender": 2,
-          "profile_path": "/5aVa1LgnOzkzsIYdcb1QUTxV5g3.jpg"
+          "profile_path": "/5aVa1LgnOzkzsIYdcb1QUTxV5g3.jpg",
+          "popularity": 32.43
         }
       ]
     },
@@ -177,7 +184,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 2,
           "gender": 1,
-          "profile_path": "/diashQMD26rrZOmj342EK8a6EaQ.jpg"
+          "profile_path": "/diashQMD26rrZOmj342EK8a6EaQ.jpg",
+          "popularity": 32.43
         },
         {
           "id": 14465,
@@ -186,7 +194,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 4,
           "gender": 2,
-          "profile_path": "/mqNKneqT3W4YEfW35BN1UJ1kJoy.jpg"
+          "profile_path": "/mqNKneqT3W4YEfW35BN1UJ1kJoy.jpg",
+          "popularity": 32.43
         },
         {
           "id": 429541,
@@ -195,7 +204,8 @@ let tvShowSeasonDetail = Data("""
           "character": "",
           "order": 9,
           "gender": 2,
-          "profile_path": "/lqlmRVh7j6pbiu0pRZXkaoveIGJ.jpg"
+          "profile_path": "/lqlmRVh7j6pbiu0pRZXkaoveIGJ.jpg",
+          "popularity": 32.43
         }
       ]
     }
@@ -214,7 +224,8 @@ let tvShowSeasonDetail = Data("""
         "id": 47625,
         "name": "Christina Cole",
         "order": 0,
-        "profile_path": "/lOcjHQgXg5rgM6zOr4k7SsMoABV.jpg"
+        "profile_path": "/lOcjHQgXg5rgM6zOr4k7SsMoABV.jpg",
+        "popularity": 32.43
       },
       {
         "character": "",
@@ -223,7 +234,8 @@ let tvShowSeasonDetail = Data("""
         "id": 7058,
         "name": "Kris Marshall",
         "order": 1,
-        "profile_path": "/gBq5B3HETUfgdK3vyXXLT7d4oXs.jpg"
+        "profile_path": "/gBq5B3HETUfgdK3vyXXLT7d4oXs.jpg",
+        "popularity": 32.43
       },
       {
         "character": "",
@@ -232,7 +244,8 @@ let tvShowSeasonDetail = Data("""
         "id": 47703,
         "name": "Bryan Dick",
         "order": 2,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "character": "",
@@ -241,7 +254,8 @@ let tvShowSeasonDetail = Data("""
         "id": 118036,
         "name": "Ella Smith",
         "order": 3,
-        "profile_path": "/vZmsnCgeKFqvyCzot1XSWlZwGbL.jpg"
+        "profile_path": "/vZmsnCgeKFqvyCzot1XSWlZwGbL.jpg",
+        "popularity": 32.43
       },
       {
         "character": "Mr Colubrine",
@@ -250,7 +264,8 @@ let tvShowSeasonDetail = Data("""
         "id": 34257,
         "name": "Anthony Stewart Head",
         "order": 4,
-        "profile_path": "/3IKmIaEQFgHtTlUI548eirwIJPP.jpg"
+        "profile_path": "/3IKmIaEQFgHtTlUI548eirwIJPP.jpg",
+        "popularity": 32.43
       },
       {
         "character": "Zoe",
@@ -259,7 +274,8 @@ let tvShowSeasonDetail = Data("""
         "id": 199522,
         "name": "Amanda Abbington",
         "order": 5,
-        "profile_path": "/diashQMD26rrZOmj342EK8a6EaQ.jpg"
+        "profile_path": "/diashQMD26rrZOmj342EK8a6EaQ.jpg",
+        "popularity": 32.43
       }
     ],
     "crew": []

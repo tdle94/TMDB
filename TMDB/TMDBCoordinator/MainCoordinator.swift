@@ -7,15 +7,10 @@
 //
 
 import Swinject
+import RealmSwift
 
 protocol CommonNavigation: class {
     func navigateBack()
-}
-
-protocol HomeViewDelegate: class {
-    func navigateToMovieDetail(movieId: Int)
-    func navigateToTVShowDetail(tvShowId: Int)
-    func navigateToPersonDetail(personId: Int)
 }
 
 protocol MovieDetailViewDelegate: CommonNavigation {
@@ -27,8 +22,6 @@ protocol MovieDetailViewDelegate: CommonNavigation {
 
 protocol TVShowDetailViewDelegate: CommonNavigation {
     func navigateToListSeason(season: [Season], tvShowId: Int)
-    func navigateToTVShowDetail(tvShowId: Int)
-    func navigateToPersonDetail(personId: Int)
     func navigateToReview(reviews: [Review])
 }
 
@@ -240,9 +233,23 @@ class AppCoordinator {
         currentView = currentView?.navigationController?.popViewController(animated: true)
         currentView = currentView?.navigationController?.topViewController
     }
+    
+    func navigateWith(obj: Object?) {
+        if let movie = obj as? Movie ?? (obj as? Trending)?.movie {
+            showMovieDetailView(movieId: movie.id)
+        } else if let tvShow = obj as? TVShow ?? (obj as? Trending)?.tv {
+            showTVShowDetailView(tvShowId: tvShow.id)
+        } else if let people = obj as? People ?? (obj as? Trending)?.people {
+            showPersonDetail(personId: people.id)
+        } else if let cast = obj as? Cast {
+            showPersonDetail(personId: cast.id)
+        } else if let crew = obj as? Crew {
+            showPersonDetail(personId: crew.id)
+        }
+    }
 }
 
-extension AppCoordinator: HomeViewDelegate, MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate, SeasonDetailViewDelegate, EpisodeViewDelegate {
+extension AppCoordinator: MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate, SeasonDetailViewDelegate, EpisodeViewDelegate {
     func navigateToPersonDetail(personId: Int) {
         showPersonDetail(personId: personId)
     }

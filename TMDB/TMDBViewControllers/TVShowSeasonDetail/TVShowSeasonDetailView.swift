@@ -46,9 +46,9 @@ class TVShowSeasonDetailView: UIViewController {
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
             if UIDevice.current.userInterfaceIdiom == .pad {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.95)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 1)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.86)
             }
             
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
@@ -136,8 +136,6 @@ class TVShowSeasonDetailView: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.parallaxHeader.view = backdropImageCollectionView
-            scrollView.parallaxHeader.height = ceil(UIScreen.main.bounds.height / 2.7)
-            scrollView.parallaxHeader.minimumHeight = 0
         }
     }
     
@@ -152,19 +150,10 @@ class TVShowSeasonDetailView: UIViewController {
         
         navigationItem.setBackArrowIcon()
         setupBinding()
-        setupViewLayout()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.resetNavBar()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if !isMovingToParent {
-            scrollView.setToPreviousAlpha(navigationController: navigationController)
-        } else {
-            navigationController?.setNavBar()
-        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -179,17 +168,16 @@ class TVShowSeasonDetailView: UIViewController {
         super.init(nibName: String(describing: TVShowSeasonDetailView.self), bundle: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.resetNavBar()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 extension TVShowSeasonDetailView {
-    func setupViewLayout() {
-        if UIDevice.current.userInterfaceIdiom != .pad {
-            posterImageViewTop.constant += scrollView.contentOffset.y/4
-        }
-    }
 
     func setupBinding() {
         // left bar button item

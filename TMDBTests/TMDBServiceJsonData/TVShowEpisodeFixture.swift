@@ -19,7 +19,8 @@ let tvShowEpisodeFixture = Data("""
       "department": "Directing",
       "job": "Director",
       "gender": 0,
-      "profile_path": null
+      "profile_path": null,
+      "popularity": 32.43
     },
     {
       "id": 1221040,
@@ -28,7 +29,8 @@ let tvShowEpisodeFixture = Data("""
       "department": "Writing",
       "job": "Writer",
       "gender": 2,
-      "profile_path": null
+      "profile_path": null,
+      "popularity": 32.43
     }
     ],
     "episode_number": 1,
@@ -40,7 +42,8 @@ let tvShowEpisodeFixture = Data("""
       "character": "",
       "order": 0,
       "gender": 1,
-      "profile_path": "/uVp7VarM5GX08hfCEGt63OM5c5c.jpg"
+      "profile_path": "/uVp7VarM5GX08hfCEGt63OM5c5c.jpg",
+      "popularity": 32.43
     },
     {
       "id": 59070,
@@ -49,7 +52,8 @@ let tvShowEpisodeFixture = Data("""
       "character": "",
       "order": 1,
       "gender": 1,
-      "profile_path": "/szyznnzWGxBpl7LTXUaVzdjR5No.jpg"
+      "profile_path": "/szyznnzWGxBpl7LTXUaVzdjR5No.jpg",
+      "popularity": 32.43
     },
     {
       "id": 1221038,
@@ -58,7 +62,8 @@ let tvShowEpisodeFixture = Data("""
       "character": "",
       "order": 2,
       "gender": 0,
-      "profile_path": null
+      "profile_path": null,
+      "popularity": 32.43
     },
     {
       "id": 66161,
@@ -67,7 +72,8 @@ let tvShowEpisodeFixture = Data("""
       "character": "",
       "order": 3,
       "gender": 2,
-      "profile_path": null
+      "profile_path": null,
+      "popularity": 32.43
     },
     {
       "id": 1221039,
@@ -76,7 +82,8 @@ let tvShowEpisodeFixture = Data("""
       "character": "",
       "order": 4,
       "gender": 0,
-      "profile_path": null
+      "profile_path": null,
+      "popularity": 32.43
     },
     {
       "id": 12982,
@@ -85,7 +92,8 @@ let tvShowEpisodeFixture = Data("""
       "character": "",
       "order": 5,
       "gender": 2,
-      "profile_path": "/wcsd1tMVFjgplfZlTUfb7fiD2zP.jpg"
+      "profile_path": "/wcsd1tMVFjgplfZlTUfb7fiD2zP.jpg",
+      "popularity": 32.43
     },
     {
       "id": 39681,
@@ -94,7 +102,8 @@ let tvShowEpisodeFixture = Data("""
       "character": "",
       "order": 6,
       "gender": 2,
-      "profile_path": "/zhtty4sSjw7vqKXeptF9odqkx5e.jpg"
+      "profile_path": "/zhtty4sSjw7vqKXeptF9odqkx5e.jpg",
+      "popularity": 32.43
     }
     ],
     "name": "Tony",
@@ -114,7 +123,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 570296,
         "name": "Joe Dempsie",
         "order": 1,
-        "profile_path": "/lnR0AMIwxQR6zUCOhp99GnMaRet.jpg"
+        "profile_path": "/lnR0AMIwxQR6zUCOhp99GnMaRet.jpg",
+        "popularity": 32.43
       },
       {
         "character": "Sid Jenkins",
@@ -123,7 +133,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 206912,
         "name": "Mike Bailey",
         "order": 2,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "character": "Tony Stonem",
@@ -132,7 +143,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 3292,
         "name": "Nicholas Hoult",
         "order": 4,
-        "profile_path": "/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"
+        "profile_path": "/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg",
+        "popularity": 32.43
       },
       {
         "character": "Jal Fazer",
@@ -141,7 +153,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 1221071,
         "name": "Larissa Wilson",
         "order": 5,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "character": "Anwar Kharral",
@@ -150,7 +163,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 76788,
         "name": "Dev Patel",
         "order": 6,
-        "profile_path": "/gnlTW9ntMD6Mf6egiHlBw6knlsU.jpg"
+        "profile_path": "/gnlTW9ntMD6Mf6egiHlBw6knlsU.jpg",
+        "popularity": 32.43
       },
       {
         "character": "Maxxie Oliver",
@@ -159,7 +173,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 1221072,
         "name": "Mitch Hewer",
         "order": 7,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "character": "Michelle Richardson",
@@ -168,7 +183,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 89820,
         "name": "April Pearson",
         "order": 3,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "character": "Cassie Ainsworth",
@@ -177,7 +193,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 213395,
         "name": "Hannah Murray",
         "order": 37,
-        "profile_path": "/kbD8Plq6EC8K9d6hsPb2DcS56gv.jpg"
+        "profile_path": "/kbD8Plq6EC8K9d6hsPb2DcS56gv.jpg",
+        "popularity": 32.43
       },
       {
         "character": "Effy Stonem",
@@ -186,7 +203,8 @@ let tvShowEpisodeFixture = Data("""
         "id": 115150,
         "name": "Kaya Scodelario",
         "order": 34,
-        "profile_path": "/uVp7VarM5GX08hfCEGt63OM5c5c.jpg"
+        "profile_path": "/uVp7VarM5GX08hfCEGt63OM5c5c.jpg",
+        "popularity": 32.43
       }
     ],
     "crew": [
@@ -197,7 +215,8 @@ let tvShowEpisodeFixture = Data("""
         "department": "Directing",
         "job": "Director",
         "gender": 0,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "id": 1221040,
@@ -206,7 +225,8 @@ let tvShowEpisodeFixture = Data("""
         "department": "Writing",
         "job": "Writer",
         "gender": 2,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       }
     ],
     "guest_stars": [
@@ -217,7 +237,8 @@ let tvShowEpisodeFixture = Data("""
         "character": "",
         "order": 0,
         "gender": 1,
-        "profile_path": "/uVp7VarM5GX08hfCEGt63OM5c5c.jpg"
+        "profile_path": "/uVp7VarM5GX08hfCEGt63OM5c5c.jpg",
+        "popularity": 32.43
       },
       {
         "id": 59070,
@@ -226,7 +247,8 @@ let tvShowEpisodeFixture = Data("""
         "character": "",
         "order": 1,
         "gender": 1,
-        "profile_path": "/szyznnzWGxBpl7LTXUaVzdjR5No.jpg"
+        "profile_path": "/szyznnzWGxBpl7LTXUaVzdjR5No.jpg",
+        "popularity": 32.43
       },
       {
         "id": 1221038,
@@ -235,7 +257,8 @@ let tvShowEpisodeFixture = Data("""
         "character": "",
         "order": 2,
         "gender": 0,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "id": 66161,
@@ -244,7 +267,8 @@ let tvShowEpisodeFixture = Data("""
         "character": "",
         "order": 3,
         "gender": 2,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "id": 1221039,
@@ -253,7 +277,8 @@ let tvShowEpisodeFixture = Data("""
         "character": "",
         "order": 4,
         "gender": 0,
-        "profile_path": null
+        "profile_path": null,
+        "popularity": 32.43
       },
       {
         "id": 12982,
@@ -262,7 +287,8 @@ let tvShowEpisodeFixture = Data("""
         "character": "",
         "order": 5,
         "gender": 2,
-        "profile_path": "/wcsd1tMVFjgplfZlTUfb7fiD2zP.jpg"
+        "profile_path": "/wcsd1tMVFjgplfZlTUfb7fiD2zP.jpg",
+        "popularity": 32.43
       },
       {
         "id": 39681,
@@ -271,7 +297,8 @@ let tvShowEpisodeFixture = Data("""
         "character": "",
         "order": 6,
         "gender": 2,
-        "profile_path": "/zhtty4sSjw7vqKXeptF9odqkx5e.jpg"
+        "profile_path": "/zhtty4sSjw7vqKXeptF9odqkx5e.jpg",
+        "popularity": 32.43
       }
     ]
     },

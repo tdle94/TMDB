@@ -61,7 +61,7 @@ class LanguageView: UIViewController {
         setupBinding()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         languageTableView.scrollToRow(at: IndexPath(row: viewModel.selectedRow ?? 0, section: 0), at: .middle, animated: false)
     }
 }

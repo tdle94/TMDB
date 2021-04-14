@@ -45,7 +45,7 @@ class PersonDetailView: UIViewController {
             if UIDevice.current.userInterfaceIdiom == .pad {
                 creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
             } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.9)
+                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.86)
             }
             
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
@@ -106,8 +106,6 @@ class PersonDetailView: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.parallaxHeader.view = profileCollectionView
-            scrollView.parallaxHeader.height = ceil(UIScreen.main.bounds.height / 2.7)
-            scrollView.parallaxHeader.minimumHeight = 0
         }
     }
     @IBOutlet weak var profileCollectionView: UICollectionView! {
@@ -133,36 +131,18 @@ class PersonDetailView: UIViewController {
         super.viewDidLoad()
         navigationItem.setBackArrowIcon()
         setupBinding()
-        setupViewLayout()
 
         if let personId = id {
             viewModel.getPersonDetail(id: personId)
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         navigationController?.resetNavBar()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if !isMovingToParent {
-            scrollView.setToPreviousAlpha(navigationController: navigationController)
-        } else {
-            navigationController?.setNavBar()
-        }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        creditCollectionView.layoutIfNeeded()
     }
 }
 
 extension PersonDetailView {
-    func setupViewLayout() {
-        if UIDevice.current.userInterfaceIdiom != .pad {
-            posterImageViewTop.constant += scrollView.contentOffset.y/4
-        }
-    }
 
     func setupBinding() {
         // left bar button item

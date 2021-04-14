@@ -10,4 +10,10 @@ import UIKit
 
 class LoadingIndicatorView: UICollectionReusableView {
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var label: UILabel! {
+        didSet {
+            label.isHidden = true
+            label.setHeader(title: "End of result")
+        }
+    }
 }

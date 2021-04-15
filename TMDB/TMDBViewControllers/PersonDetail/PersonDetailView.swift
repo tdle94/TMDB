@@ -15,7 +15,7 @@ class PersonDetailView: UIViewController {
     
     var id: Int?
     
-    var delegate: PersonDetailViewDelegate?
+    var delegate: AppCoordinator?
 
     // MARK: - datasource
     let creditDataSource: RxCollectionViewSectionedReloadDataSource<PersonDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
@@ -57,11 +57,7 @@ class PersonDetailView: UIViewController {
                 .rx
                 .modelSelected(CustomElementType.self)
                 .subscribe { item in
-                    if let movie = item.element?.identity as? Movie {
-                        self.delegate?.navigateToMovieDetail(movieId: movie.id)
-                    } else if let tvShow = item.element?.identity as? TVShow {
-                        self.delegate?.navigateToTVShowDetail(tvShowId: tvShow.id)
-                    }
+                    self.delegate?.navigateWith(obj: item.element?.identity)
                 }
                 .disposed(by: rx.disposeBag)
             

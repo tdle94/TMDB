@@ -17,7 +17,7 @@ class TVShowSeasonDetailView: UIViewController {
     
     var viewModel: TVShowSeasonDetailViewModelProtocol
     
-    weak var delegate: SeasonDetailViewDelegate?
+    weak var delegate: AppCoordinator?
     
     // MARK: - datasource
     let dataSource: RxCollectionViewSectionedReloadDataSource<TVShowSeasonDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
@@ -61,9 +61,7 @@ class TVShowSeasonDetailView: UIViewController {
                 .modelSelected(CustomElementType.self)
                 .asDriver()
                 .drive(onNext: { item in
-                    if let id = (item.identity as? Cast)?.id ?? (item.identity as? Crew)?.id  {
-                        self.delegate?.navigateToPersonDetail(personId: id)
-                    }
+                    self.delegate?.navigateWith(obj: item.identity)
                 })
                 .disposed(by: rx.disposeBag)
             

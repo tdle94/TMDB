@@ -319,15 +319,7 @@ extension SearchView {
                     .itemSelected
                     .asDriver()
                     .drive(onNext: { indexPath in
-                        if let item = self.searchViewModel.getSearchResult(at: indexPath.row) {
-                            if item.mediaType == MediaType.movie.rawValue {
-                                self.delegate?.navigateToMovieDetail(movieId: item.id)
-                            } else if item.mediaType == MediaType.tv.rawValue {
-                                self.delegate?.navigateToTVShowDetail(tvShowId: item.id)
-                            } else if item.mediaType == MediaType.person.rawValue {
-                                self.delegate?.navigateToPersonDetail(personId: item.id)
-                            }
-                        }
+                        self.delegate?.navigateWith(obj: self.searchViewModel.getSearchResult(at: indexPath.row))
                     })
                     .disposed(by: self.rx.disposeBag)
                 

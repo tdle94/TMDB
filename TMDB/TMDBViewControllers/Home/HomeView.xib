@@ -9,7 +9,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeView" customModule="TMDB" customModuleProvider="target">
             <connections>
-                <outlet property="collectionView" destination="Dbt-NI-HOb" id="3aG-v3-9cI"/>
+                <outlet property="movieCollectionView" destination="Ud5-xt-L7u" id="qRG-ac-Cax"/>
+                <outlet property="popularCollectionView" destination="9E3-Mz-iWd" id="8KO-Lq-ztT"/>
+                <outlet property="trendingCollectionView" destination="fk9-6A-ads" id="tv3-7k-4PO"/>
+                <outlet property="tvshowCollectionView" destination="KCl-A8-3BQ" id="pUP-tD-mQb"/>
                 <outlet property="view" destination="iN0-l3-epB" id="JVP-KC-HTQ"/>
             </connections>
         </placeholder>
@@ -18,26 +21,105 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Dbt-NI-HOb">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kW0-cI-ySX">
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qem-wW-QNM">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="1064"/>
+                            <subviews>
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="9E3-Mz-iWd" customClass="LoadIndicatorCollectionView" customModule="TMDB" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="20" width="414" height="250"/>
+                                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="250" id="6qV-vP-bqs"/>
+                                    </constraints>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="2dg-4Y-UCJ">
+                                        <size key="itemSize" width="128" height="128"/>
+                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
+                                </collectionView>
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fk9-6A-ads" customClass="LoadIndicatorCollectionView" customModule="TMDB" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="278" width="414" height="250"/>
+                                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="250" id="R3a-IP-T82"/>
+                                    </constraints>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1Qd-g1-GIj">
+                                        <size key="itemSize" width="128" height="128"/>
+                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
+                                </collectionView>
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Ud5-xt-L7u" customClass="LoadIndicatorCollectionView" customModule="TMDB" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="536" width="414" height="250"/>
+                                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="250" id="IZJ-Xh-Vzz"/>
+                                    </constraints>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Iku-Uo-HaB">
+                                        <size key="itemSize" width="128" height="128"/>
+                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
+                                </collectionView>
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="KCl-A8-3BQ" customClass="LoadIndicatorCollectionView" customModule="TMDB" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="794" width="414" height="250"/>
+                                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="250" id="8HD-3e-D1r"/>
+                                    </constraints>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="u04-GU-EWZ">
+                                        <size key="itemSize" width="128" height="128"/>
+                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
+                                </collectionView>
+                            </subviews>
+                            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstItem="9E3-Mz-iWd" firstAttribute="top" secondItem="Qem-wW-QNM" secondAttribute="top" constant="20" symbolic="YES" id="1zL-yw-JTN"/>
+                                <constraint firstAttribute="trailing" secondItem="KCl-A8-3BQ" secondAttribute="trailing" id="3NE-oG-9rt"/>
+                                <constraint firstItem="fk9-6A-ads" firstAttribute="top" secondItem="9E3-Mz-iWd" secondAttribute="bottom" constant="8" symbolic="YES" id="4z3-Mb-Wss"/>
+                                <constraint firstAttribute="trailing" secondItem="Ud5-xt-L7u" secondAttribute="trailing" id="A9b-A2-1aV"/>
+                                <constraint firstItem="Ud5-xt-L7u" firstAttribute="leading" secondItem="Qem-wW-QNM" secondAttribute="leading" id="D6B-cG-fNs"/>
+                                <constraint firstItem="KCl-A8-3BQ" firstAttribute="leading" secondItem="Qem-wW-QNM" secondAttribute="leading" id="WJj-dl-6pX"/>
+                                <constraint firstItem="KCl-A8-3BQ" firstAttribute="top" secondItem="Ud5-xt-L7u" secondAttribute="bottom" constant="8" symbolic="YES" id="Zoh-Se-G1Z"/>
+                                <constraint firstItem="Ud5-xt-L7u" firstAttribute="top" secondItem="fk9-6A-ads" secondAttribute="bottom" constant="8" symbolic="YES" id="aHV-5s-Bnp"/>
+                                <constraint firstItem="9E3-Mz-iWd" firstAttribute="leading" secondItem="Qem-wW-QNM" secondAttribute="leading" id="ack-TX-f1f"/>
+                                <constraint firstAttribute="bottom" secondItem="KCl-A8-3BQ" secondAttribute="bottom" constant="20" symbolic="YES" id="hb5-t5-G0b"/>
+                                <constraint firstItem="fk9-6A-ads" firstAttribute="leading" secondItem="Qem-wW-QNM" secondAttribute="leading" id="n9p-ta-gTS"/>
+                                <constraint firstAttribute="trailing" secondItem="fk9-6A-ads" secondAttribute="trailing" id="rH8-IT-4iK"/>
+                                <constraint firstAttribute="trailing" secondItem="9E3-Mz-iWd" secondAttribute="trailing" id="xrl-zA-wTJ"/>
+                            </constraints>
+                        </view>
+                    </subviews>
                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="H45-Wj-h6c">
-                        <size key="itemSize" width="128" height="128"/>
-                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    </collectionViewFlowLayout>
-                </collectionView>
+                    <constraints>
+                        <constraint firstItem="Qem-wW-QNM" firstAttribute="leading" secondItem="kW0-cI-ySX" secondAttribute="leading" id="3mk-jZ-Sbh"/>
+                        <constraint firstAttribute="bottom" secondItem="Qem-wW-QNM" secondAttribute="bottom" id="Bjp-TA-j7o"/>
+                        <constraint firstAttribute="trailing" secondItem="Qem-wW-QNM" secondAttribute="trailing" id="Y6U-sr-JXm"/>
+                        <constraint firstItem="Qem-wW-QNM" firstAttribute="top" secondItem="kW0-cI-ySX" secondAttribute="top" id="hhI-TX-fCl"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="Brj-XV-5pH"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="I1U-Or-QuN"/>
+                </scrollView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="bYi-8n-mOH"/>
             <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="bYi-8n-mOH" firstAttribute="bottom" secondItem="Dbt-NI-HOb" secondAttribute="bottom" id="PBY-7T-i6Z"/>
-                <constraint firstItem="Dbt-NI-HOb" firstAttribute="leading" secondItem="bYi-8n-mOH" secondAttribute="leading" id="PTV-rh-i2j"/>
-                <constraint firstItem="Dbt-NI-HOb" firstAttribute="top" secondItem="bYi-8n-mOH" secondAttribute="top" id="eTR-gH-5w9"/>
-                <constraint firstItem="bYi-8n-mOH" firstAttribute="trailing" secondItem="Dbt-NI-HOb" secondAttribute="trailing" id="wIf-Le-K5B"/>
+                <constraint firstItem="Qem-wW-QNM" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" priority="750" id="EhQ-r1-i8W"/>
+                <constraint firstItem="bYi-8n-mOH" firstAttribute="top" secondItem="kW0-cI-ySX" secondAttribute="top" id="LKL-hN-LZn"/>
+                <constraint firstItem="kW0-cI-ySX" firstAttribute="bottom" secondItem="bYi-8n-mOH" secondAttribute="bottom" id="T1A-pr-z6w"/>
+                <constraint firstItem="bYi-8n-mOH" firstAttribute="leading" secondItem="kW0-cI-ySX" secondAttribute="leading" id="aed-pH-92b"/>
+                <constraint firstItem="Qem-wW-QNM" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="lN9-VG-Luf"/>
+                <constraint firstItem="kW0-cI-ySX" firstAttribute="trailing" secondItem="bYi-8n-mOH" secondAttribute="trailing" id="ogx-A8-Lbw"/>
             </constraints>
-            <point key="canvasLocation" x="-52.173913043478265" y="66.964285714285708"/>
+            <point key="canvasLocation" x="-72.463768115942031" y="68.303571428571431"/>
         </view>
     </objects>
 </document>

@@ -202,6 +202,7 @@
 		34F6AA5C24A4124E000DC080 /* lineto-circular-pro-book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F6AA5824A41242000DC080 /* lineto-circular-pro-book.ttf */; };
 		34F6AA5D24A4124E000DC080 /* lineto-circular-pro-medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F6AA5724A41242000DC080 /* lineto-circular-pro-medium.ttf */; };
 		BA0EBA3C9225C8A1D81265A5 /* Pods_TMDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FABD873E8C3618E259E2C772 /* Pods_TMDB.framework */; };
+		E46DFF8826287D5A005BCD41 /* LoadIndicatorCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46DFF8726287D5A005BCD41 /* LoadIndicatorCollectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -420,6 +421,7 @@
 		34F6AA5824A41242000DC080 /* lineto-circular-pro-book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lineto-circular-pro-book.ttf"; sourceTree = "<group>"; };
 		34F6AA5924A41243000DC080 /* lineto-circular-pro-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lineto-circular-pro-bold.ttf"; sourceTree = "<group>"; };
 		D7B41A74E181C39A017A655C /* Pods_TMDBTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TMDBTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E46DFF8726287D5A005BCD41 /* LoadIndicatorCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadIndicatorCollectionView.swift; sourceTree = "<group>"; };
 		E6CD96C540ED141F38178A5B /* Pods-TMDBTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TMDBTests.debug.xcconfig"; path = "Target Support Files/Pods-TMDBTests/Pods-TMDBTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FABD873E8C3618E259E2C772 /* Pods_TMDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TMDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC7CC0BAF7365ABE1A8CA0FF /* Pods-TMDB.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TMDB.release.xcconfig"; path = "Target Support Files/Pods-TMDB/Pods-TMDB.release.xcconfig"; sourceTree = "<group>"; };
@@ -846,6 +848,7 @@
 				3488663C24A67B3D00E205FA /* CollectionViewLayout.swift */,
 				3480AF582588092F008F65FA /* ParallaxHeader.swift */,
 				34083FA3259A78D000372058 /* FilterButtonView.swift */,
+				E46DFF8726287D5A005BCD41 /* LoadIndicatorCollectionView.swift */,
 			);
 			path = TMDBViews;
 			sourceTree = "<group>";
@@ -1315,6 +1318,7 @@
 				3458D31225830513008E1594 /* UINavigationController+.swift in Sources */,
 				3400016425ABDB1F00D495E9 /* KeywordView.swift in Sources */,
 				34BB777D2572F91D00D8709B /* HomeModel.swift in Sources */,
+				E46DFF8826287D5A005BCD41 /* LoadIndicatorCollectionView.swift in Sources */,
 				348F635F2491C49700245BE6 /* TMDBPeopleService.swift in Sources */,
 				3488664024A67B3D00E205FA /* UIImage+.swift in Sources */,
 				348F635D2491C3C100245BE6 /* TMDBTVService.swift in Sources */,

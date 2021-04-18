@@ -38,9 +38,13 @@ protocol DiscoveryViewModelProtocol: ApplyProtocol {
     var tvShowQuery: DiscoverQuery { get }
     
     var visibleDiscoveryViewRow: Int { get set }
-
+    
+    var movieFilterCountString: PublishSubject<String> { get }
+    var tvshowFilterCountString: PublishSubject<String> { get }
+    
     func getAllMovie(nextPage: Bool)
     func getAllTVShow(nextPage: Bool)
+    func handleCollectionViewSwipe(at row: Int)
 }
 
 class DiscoveryViewModel: DiscoveryViewModelProtocol {
@@ -60,6 +64,9 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
     
     var movie: BehaviorSubject<[SectionModel<String, Movie>]> = BehaviorSubject(value: [.init(model: "Movie", items: [])])
     var tvShow: BehaviorSubject<[SectionModel<String, TVShow>]> = BehaviorSubject(value: [.init(model: "TVShow", items: [])])
+    
+    var movieFilterCountString: PublishSubject<String> = PublishSubject()
+    var tvshowFilterCountString: PublishSubject<String> = PublishSubject()
     
     var movieQuery: DiscoverQuery = DiscoverQuery(type: .movie) {
         didSet {
@@ -217,6 +224,20 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         }
     }
     
+    func handleCollectionViewSwipe(at row: Int) {
+        visibleDiscoveryViewRow = row
+        
+        let filterCount: String
+        
+        if row == 1 {
+            filterCount = movieQuery.numberOfFilterCount == 0 ? "" : " (\(movieQuery.numberOfFilterCount))"
+            movieFilterCountString.onNext(NSLocalizedString("Filter", comment: "") + filterCount)
+        } else {
+            filterCount = tvShowQuery.numberOfFilterCount == 0 ? "" : "(\(tvShowQuery.numberOfFilterCount))"
+            tvshowFilterCountString.onNext(NSLocalizedString("Filter", comment: "") + filterCount)
+        }
+    }
+    
     private func applyMovieFilter(query: DiscoverQuery?) {
         guard let newQuery = query else {
             return
@@ -225,6 +246,9 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         movieQuery = newQuery
         movieQuery.page = 1 // start at page 1 when apply new query
 
+        let filterCount = movieQuery.numberOfFilterCount == 0 ? "" : " (\(movieQuery.numberOfFilterCount))"
+
+        movieFilterCountString.onNext(NSLocalizedString("Filter", comment: "") + filterCount)
         getAllMovie(nextPage: false)
     }
 
@@ -236,6 +260,9 @@ class DiscoveryViewModel: DiscoveryViewModelProtocol {
         tvShowQuery = newQuery
         tvShowQuery.page = 1 // start at page 1 when apply new query
         
+        let filterCount = tvShowQuery.numberOfFilterCount == 0 ? "" : "(\(tvShowQuery.numberOfFilterCount))"
+        
+        tvshowFilterCountString.onNext(NSLocalizedString("Filter", comment: "") + filterCount)
         getAllTVShow(nextPage: false)
     }
 }

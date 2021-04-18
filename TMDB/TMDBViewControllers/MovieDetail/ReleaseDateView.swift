@@ -22,7 +22,7 @@ class ReleaseDateView: UIViewController {
             releaseDateTableView.rowHeight = 80
             releaseDateTableView.tableFooterView = UIView()
             releaseDateTableView.backgroundColor = Constant.Color.backgroundColor
-            releaseDateTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.releaseDateCell)
+            releaseDateTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil), forCellReuseIdentifier: Constant.Identifier.cell)
             
             emptyLabel.setHeader(title: "No results")
             emptyLabel.textAlignment = .center
@@ -106,7 +106,7 @@ extension ReleaseDateView {
 
         viewModel
             .releaseDates
-            .bind(to: releaseDateTableView.rx.items(cellIdentifier: Constant.Identifier.releaseDateCell)) { index, releaseDate, cell in
+            .bind(to: releaseDateTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, releaseDate, cell in
                 let country = self.viewModel.getCountryNameFrom(iso31661: releaseDate.iso31661)
                 cell.textLabel?.setHeader(title: releaseDate.releaseDates.first?.releaseDate ?? "")
                 cell.detailTextLabel?.setAttributeText(title: releaseDate.releaseDates.first?.certification ?? "")

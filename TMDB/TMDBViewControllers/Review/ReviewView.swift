@@ -18,7 +18,7 @@ class ReviewView: UIViewController {
     @IBOutlet weak var reviewTableView: UITableView! {
         didSet {
             reviewTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil),
-                                     forCellReuseIdentifier: Constant.Identifier.reviewCell)
+                                     forCellReuseIdentifier: Constant.Identifier.cell)
             reviewTableView.tableFooterView = UIView()
         }
     }
@@ -39,7 +39,7 @@ class ReviewView: UIViewController {
         
         Observable<[Review]>
             .just(reviews)
-            .bind(to: reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, review, cell in
+            .bind(to: reviewTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, review, cell in
                 cell.textLabel?.setHeader(title: review.author)
                 cell.detailTextLabel?.setAttributeText(title: review.content)
             }

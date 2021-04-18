@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ASH-1q-asC">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="644.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="594.5"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ENC-Z9-JK7">
                                     <rect key="frame" x="0.0" y="-9" width="414" height="177"/>
@@ -72,10 +72,10 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="MbG-zw-CmE">
-                                    <rect key="frame" x="0.0" y="324.5" width="414" height="300"/>
+                                    <rect key="frame" x="0.0" y="324.5" width="414" height="250"/>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="300" id="Txa-N1-fO3"/>
+                                        <constraint firstAttribute="height" constant="250" id="Txa-N1-fO3"/>
                                     </constraints>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="emy-4v-So6">
                                         <size key="itemSize" width="128" height="128"/>
@@ -134,9 +134,6 @@
             <point key="canvasLocation" x="-230.43478260869566" y="75.669642857142847"/>
         </view>
     </objects>
-    <designables>
-        <designable name="c2W-tI-9Co"/>
-    </designables>
     <resources>
         <image name="NoImage" width="450" height="450"/>
         <systemColor name="systemBackgroundColor">

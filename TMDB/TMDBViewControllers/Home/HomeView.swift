@@ -52,7 +52,7 @@ class HomeView: UIViewController {
             popularCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
             popularCollectionView.register(TMDBPopularHeaderView.self,
                                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                           withReuseIdentifier: Constant.Identifier.popularPreviewHeader)
+                                           withReuseIdentifier: Constant.Identifier.previewHeader)
             popularCollectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
                                     forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             popularCollectionView.register(UINib(nibName: String(describing: TMDBViewAllItemCell.self), bundle: nil),
@@ -60,7 +60,7 @@ class HomeView: UIViewController {
             
             popularDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                       withReuseIdentifier: Constant.Identifier.popularPreviewHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                        for: indexPath) as! TMDBPopularHeaderView
             }
         }
@@ -70,14 +70,14 @@ class HomeView: UIViewController {
             trendingCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
             trendingCollectionView.register(TMDBTrendHeaderView.self,
                                             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                            withReuseIdentifier: Constant.Identifier.trendPreviewHeader)
+                                            withReuseIdentifier: Constant.Identifier.previewHeader)
             trendingCollectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
                                     forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             trendingCollectionView.register(UINib(nibName: String(describing: TMDBViewAllItemCell.self), bundle: nil),
                                     forCellWithReuseIdentifier: Constant.Identifier.viewAllCell)
             trendingDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                       withReuseIdentifier: Constant.Identifier.trendPreviewHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                        for: indexPath) as! TMDBTrendHeaderView
             }
         }
@@ -87,14 +87,14 @@ class HomeView: UIViewController {
             movieCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
             movieCollectionView.register(TMDBMovieHeaderView.self,
                                          forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                         withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
+                                         withReuseIdentifier: Constant.Identifier.previewHeader)
             movieCollectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
                                          forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             movieCollectionView.register(UINib(nibName: String(describing: TMDBViewAllItemCell.self), bundle: nil),
                                          forCellWithReuseIdentifier: Constant.Identifier.viewAllCell)
             movieDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                       withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                        for: indexPath) as! TMDBMovieHeaderView
             }
         }
@@ -104,14 +104,14 @@ class HomeView: UIViewController {
             tvshowCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
             tvshowCollectionView.register(TMDBTVShowHeaderView.self,
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                          withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader)
+                                          withReuseIdentifier: Constant.Identifier.previewHeader)
             tvshowCollectionView.register(UINib(nibName: String(describing: TMDBPreviewItemCell.self), bundle: nil),
                                           forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             tvshowCollectionView.register(UINib(nibName: String(describing: TMDBViewAllItemCell.self), bundle: nil),
                                           forCellWithReuseIdentifier: Constant.Identifier.viewAllCell)
             tvshowDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                       withReuseIdentifier: Constant.Identifier.tvShowPreviewHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
                                                                        for: indexPath) as! TMDBTVShowHeaderView
             }
         }
@@ -197,6 +197,48 @@ extension HomeView {
             .bind(to: tvshowCollectionView.errorLabel.rx.text)
             .disposed(by: rx.disposeBag)
         
+        // item selection
+        popularCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let popularItem = self.popularDataSource.sectionModels.first?.items[indexPath.row]
+                self.delegate?.navigateWith(obj: popularItem)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        trendingCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let popularItem = self.trendingDataSource.sectionModels.first?.items[indexPath.row]
+                self.delegate?.navigateWith(obj: popularItem)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        movieCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let popularItem = self.movieDataSource.sectionModels.first?.items[indexPath.row]
+                self.delegate?.navigateWith(obj: popularItem)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        tvshowCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let popularItem = self.tvshowDataSource.sectionModels.first?.items[indexPath.row]
+                self.delegate?.navigateWith(obj: popularItem)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
         // segment selection
         popularCollectionView
             .rx
@@ -216,16 +258,6 @@ extension HomeView {
                         self.viewModel.handlePopularSelection(at: index)
                     })
                     .disposed(by: self.rx.disposeBag)
-            })
-            .disposed(by: rx.disposeBag)
-        
-        popularCollectionView
-            .rx
-            .itemSelected
-            .asDriver()
-            .drive(onNext: { indexPath in
-                let popularItem = self.popularDataSource.sectionModels.first?.items[indexPath.row]
-                self.delegate?.navigateWith(obj: popularItem)
             })
             .disposed(by: rx.disposeBag)
         

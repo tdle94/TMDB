@@ -44,17 +44,17 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
 
             entityCollectionView.register(UINib(nibName: String(describing: LoadingIndicatorView.self), bundle: nil),
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                          withReuseIdentifier: Constant.Identifier.loading)
+                                          withReuseIdentifier: Constant.Identifier.cell)
 
             movieDataSource.configureSupplementaryView = { _, collectionView, _, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                       withReuseIdentifier: Constant.Identifier.loading,
+                                                                       withReuseIdentifier: Constant.Identifier.cell,
                                                                        for: indexPath)
             }
             
             tvShowDataSource.configureSupplementaryView = { _, collectionView, _, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                       withReuseIdentifier: Constant.Identifier.loading,
+                                                                       withReuseIdentifier: Constant.Identifier.cell,
                                                                        for: indexPath)
             }
         }

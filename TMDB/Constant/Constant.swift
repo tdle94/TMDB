@@ -12,28 +12,12 @@ import UIKit
 struct Constant {
     struct Identifier {
         static let previewFooter = "PreviewFooter"
-        static let popularPreviewHeader = "PreviewHeader"
-        static let trendPreviewHeader = "TrendHeader"
-        static let moviePreviewHeader = "MovieHeader"
-        static let tvShowPreviewHeader = "TVShowHeader"
         static let previewHeader = "PreviewHeader"
         static let previewItem = "PreviewItem"
-        static let reviewCell = "ReviewCell"
-        static let keywordCell = "KeywordCell"
-        static let countryCell = "CountryCell"
-        static let languageCell = "LanguageCell"
-        static let countrySearch = "CountrySearch"
-        static let searchResultCell = "SearchResultCell"
-        static let imageCell = "ImageCell"
-        static let releaseDateCell = "ReleaseDateCell"
-        static let tvShowSeasonCell = "TVShowSeasonCell"
-        static let tvShowEpisodeCell = "TVShowEpisodeCell"
-        static let displayAllCell = "DisplayAll"
-        static let loading = "LoadingCell"
         static let sortByCell = "SortByCell"
         static let cell = "Cell"
+        static let viewAllCell = "ViewAllCell"
         static let genreCell = "GenreCell"
-        static let viewAllCell = "ViewAll"
     }
     struct Color {
         static let primaryColor = UIColor(displayP3Red: 13/255, green: 37/255, blue: 63/255, alpha: 1)

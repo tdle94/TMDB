@@ -21,7 +21,7 @@ class TVShowListSeasonView: UIViewController {
     @IBOutlet weak var seasonTableView: UITableView! {
         didSet {
             seasonTableView.register(UINib(nibName: String(describing: TMDBCustomTableViewCell.self), bundle: nil),
-                                     forCellReuseIdentifier: Constant.Identifier.tvShowSeasonCell)
+                                     forCellReuseIdentifier: Constant.Identifier.cell)
             seasonTableView.tableFooterView = UIView()
             seasonTableView.rowHeight = 150
         }
@@ -62,7 +62,7 @@ extension TVShowListSeasonView {
         // table view binding
         Observable<[Season]>
             .just(seasons)
-            .bind(to: seasonTableView.rx.items(cellIdentifier: Constant.Identifier.tvShowSeasonCell)) { index, season, cell in
+            .bind(to: seasonTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, season, cell in
                 (cell as? TMDBCustomTableViewCell)?.configure(item: season)
             }
             .disposed(by: rx.disposeBag)

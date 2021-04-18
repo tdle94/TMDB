@@ -22,7 +22,7 @@ class SearchResultView: UIViewController {
     @IBOutlet var searchResultTableView: UITableView! {
         didSet {
             searchResultTableView.register(UINib(nibName: String(describing: TMDBCustomTableViewCell.self), bundle: nil),
-                                           forCellReuseIdentifier: Constant.Identifier.searchResultCell)
+                                           forCellReuseIdentifier: Constant.Identifier.cell)
             searchResultTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
 
             searchResultTableView.rowHeight = 150

@@ -28,7 +28,7 @@ class TMDBPreviewItemCell: UICollectionViewCell {
     }
     @IBOutlet weak var subTitle: UILabel! {
         didSet {
-            subTitle.font = UIFont(name: "Circular-Book", size: UIFont.systemFontSize)
+            subTitle.font = UIFont(name: "Circular-Book", size: UIFont.smallSystemFontSize)
         }
     }
 

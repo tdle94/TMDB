@@ -9,10 +9,24 @@
 import RxSwift
 import RealmSwift
 import NotificationBannerSwift
+import RxDataSources
 
 protocol HomeViewModelProtocol {
     
-    var collectionViewSection: BehaviorSubject<[HomeModel]> { get }
+    var movieCollectionView: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var popularCollectionView: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var trendingCollectionView: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var tvshowCollectionView: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    
+    var popularLoadIndicator: PublishSubject<Bool> { get }
+    var trendingLoadIndicator: PublishSubject<Bool> { get }
+    var movieLoadIndicator: PublishSubject<Bool> { get }
+    var tvshowLoadIndicator: PublishSubject<Bool> { get }
+    
+    var popularErrorMessage: PublishSubject<String> { get }
+    var trendingErrorMessage: PublishSubject<String> { get }
+    var movieErrorMessage: PublishSubject<String> { get }
+    var tvshowErrorMessage: PublishSubject<String> { get }
     
     var movieRepository: TMDBMovieRepository { get }
     var tvShowRepository: TMDBTVShowRepository { get }
@@ -31,81 +45,79 @@ protocol HomeViewModelProtocol {
     func getTVShowAiringToday()
     func getTVShowOnTheAir()
     
-    func handleSegmentSelection(section: Int, segment: Int)
-}
-
-class F: NSObject, URLSessionDelegate {
-    var session: URLSession?
-    
-    override init() {
-        super.init()
-        session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
-    }
+    func handlePopularSelection(at: Int)
+    func handleTrendingSelection(at: Int)
+    func handleMovieCategorySelection(at: Int)
+    func handleTVShowCategorySelection(at: Int)
 }
 
 class HomeViewModel: HomeViewModelProtocol {
-
-    var collectionViewSection: BehaviorSubject<[HomeModel]> = BehaviorSubject(value: [
-        .Popular(items: []),
-        .Trending(items: []),
-        .Movie(items: []),
-        .TVShow(items: [])
-    ])
+    
+    var movieCollectionView: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var popularCollectionView: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var trendingCollectionView: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var tvshowCollectionView: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    
+    var popularLoadIndicator: PublishSubject<Bool> = PublishSubject()
+    var trendingLoadIndicator: PublishSubject<Bool> = PublishSubject()
+    var movieLoadIndicator: PublishSubject<Bool> = PublishSubject()
+    var tvshowLoadIndicator: PublishSubject<Bool> = PublishSubject()
+    
+    var popularErrorMessage: PublishSubject<String> = PublishSubject()
+    var trendingErrorMessage: PublishSubject<String> = PublishSubject()
+    var movieErrorMessage: PublishSubject<String> = PublishSubject()
+    var tvshowErrorMessage: PublishSubject<String> = PublishSubject()
 
     var movieRepository: TMDBMovieRepository
     var tvShowRepository: TMDBTVShowRepository
     var trendingRepository: TMDBTrendingRepository
     var peopleRepository: TMDBPeopleRepository
     
-    lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { result in
+    lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { [unowned self] result in
+        self.movieLoadIndicator.onNext(false)
+        
         switch result {
         case .success(let movieResult):
-            let items = [CustomElementType(identity: .init())] + Array(movieResult.movies).map { CustomElementType(identity: $0) }
-            let firstTwo = Array((try! self.collectionViewSection.value().dropLast(2)))
-            let last = try! self.collectionViewSection.value().last!
-
-            self.collectionViewSection
-                .onNext(firstTwo + [.Movie(items: items), last])
+            self.movieCollectionView.onNext([SectionModel(model: "movie", items: Array(movieResult.movies))])
         case .failure(let error):
             debugPrint("Error getting movie: \(error.localizedDescription)")
             StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                           bannerPosition: .top,
                                                                                           queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
-            self.collectionViewSection.onNext(try! self.collectionViewSection.value())
+            self.movieCollectionView.onNext([SectionModel(model: "movie", items: [])])
+            self.movieErrorMessage.onNext(error.localizedDescription)
         }
     }
     
-    lazy var tvShowHandler: (Result<TVShowResult, Error>) -> Void = { result in
+    lazy var tvShowHandler: (Result<TVShowResult, Error>) -> Void = { [unowned self] result in
+        self.tvshowLoadIndicator.onNext(false)
+        
         switch result {
         case .success(let tvShowResult):
-            let items = [CustomElementType(identity: .init())] + Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
-            let firstThree = Array(try! self.collectionViewSection.value().dropLast())
-            
-            self.collectionViewSection
-                .onNext(firstThree + [.TVShow(items: items)])
+            self.tvshowCollectionView.onNext([SectionModel(model: "tv show", items: Array(tvShowResult.onTV))])
         case .failure(let error):
             debugPrint("Error getting tvshow: \(error.localizedDescription)")
             StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                            bannerPosition: .top,
                                                                                            queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
-            self.collectionViewSection.onNext(try! self.collectionViewSection.value())
+            self.tvshowCollectionView.onNext([SectionModel(model: "tv show", items: [])])
+            self.tvshowErrorMessage.onNext(error.localizedDescription)
         }
     }
     
-    lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { result in
+    lazy var trendingHandler: (Result<TrendingResult, Error>) -> Void = { [unowned self] result in
+        self.trendingLoadIndicator.onNext(false)
+        
         switch result {
         case .success(let trendResult):
-            let items = [CustomElementType(identity: .init())] + Array(trendResult.trending).map { CustomElementType(identity: $0) }
-            let first = try! self.collectionViewSection.value().first!
-            let lastTwo = Array(try! self.collectionViewSection.value().dropFirst(2))
-            
-            self.collectionViewSection.onNext([first, .Trending(items: items)] + lastTwo)
+            self.trendingCollectionView.onNext([SectionModel(model: "trending", items: Array(trendResult.trending))])
         case .failure(let error):
             debugPrint("Error getting trending: \(error.localizedDescription)")
             StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                           bannerPosition: .top,
                                                                                           queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
-            self.collectionViewSection.onNext(try! self.collectionViewSection.value())
+            self.trendingCollectionView.onNext([SectionModel(model: "trending", items: [])])
+            self.trendingErrorMessage.onNext(error.localizedDescription)
         }
     }
     
@@ -121,111 +133,149 @@ class HomeViewModel: HomeViewModelProtocol {
     }
     
     func getPopularMovie() {
+        popularLoadIndicator.onNext(true)
+        popularErrorMessage.onNext("")
+        
         movieRepository.getPopularMovie(page: 1) { result in
+            self.popularLoadIndicator.onNext(false)
+            
             switch result {
             case .success(let movieResult):
-                let items = [CustomElementType(identity: .init())] + Array(movieResult.movies).map { CustomElementType(identity: $0) }
-                let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
-                
-                self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
+                self.popularCollectionView.onNext([SectionModel(model: "movie", items: Array(movieResult.movies))])
             case .failure(let error):
                 debugPrint("Error getting populuar movie: \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                                       bannerPosition: .top,
                                                                                                       queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
-                self.collectionViewSection.onNext(try! self.collectionViewSection.value())
+                self.popularCollectionView.onNext([SectionModel(model: "movie", items: [])])
+                self.popularErrorMessage.onNext(error.localizedDescription)
             }
         }
     }
     
     func getPopularTVShow() {
+        popularLoadIndicator.onNext(true)
+        popularErrorMessage.onNext("")
+        
         tvShowRepository.getPopularOnTV(page: 1) { result in
+            self.popularLoadIndicator.onNext(false)
+            
             switch result {
             case .success(let tvShowResult):
-                let items = [CustomElementType(identity: .init())] + Array(tvShowResult.onTV).map { CustomElementType(identity: $0) }
-                let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
-                self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
+                self.popularCollectionView.onNext([SectionModel(model: "tv show", items: Array(tvShowResult.onTV))])
             case .failure(let error):
                 debugPrint("Error getting populuar tvshow: \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                                         bannerPosition: .top,
                                                                                                         queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
-                self.collectionViewSection.onNext(try! self.collectionViewSection.value())
+                self.popularCollectionView.onNext([SectionModel(model: "tv show", items: [])])
+                self.popularErrorMessage.onNext(error.localizedDescription)
             }
         }
     }
     
     func getPopularPeople() {
+        popularLoadIndicator.onNext(true)
+        popularErrorMessage.onNext("")
+        
         peopleRepository.getPopularPeople(page: 1) { result in
+            self.popularLoadIndicator.onNext(false)
+            
             switch result {
             case .success(let peopleResult):
-                let items = [CustomElementType(identity: .init())] + Array(peopleResult.peoples).map { CustomElementType(identity: $0) }
-                let lastThree = Array(try! self.collectionViewSection.value().dropFirst())
-                
-                self.collectionViewSection.onNext([.Popular(items: items)] + lastThree)
+                self.popularCollectionView.onNext([SectionModel(model: "people", items: Array(peopleResult.peoples))])
             case .failure(let error):
                 debugPrint("Error getting populuar people: \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
                                                                                                        bannerPosition: .top,
                                                                                                        queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
-                self.collectionViewSection.onNext(try! self.collectionViewSection.value())
+                self.popularCollectionView.onNext([SectionModel(model: "people", items: [])])
+                self.popularErrorMessage.onNext(error.localizedDescription)
             }
         }
     }
 
     func getTrendingToday() {
+        trendingLoadIndicator.onNext(true)
+        trendingErrorMessage.onNext("")
         trendingRepository.getTrending(page: 1, time: .today, type: .all, completion: trendingHandler)
     }
     
     func getTrendingThisWeek() {
+        trendingLoadIndicator.onNext(true)
+        trendingErrorMessage.onNext("")
         trendingRepository.getTrending(page: 1, time: .week, type: .all, completion: trendingHandler)
     }
     
     func getTopRatedMovie() {
+        movieLoadIndicator.onNext(true)
+        movieErrorMessage.onNext("")
         movieRepository.getTopRateMovie(page: 1, completion: movieHandler)
     }
     
     
     func getNowPlayingMovie() {
+        movieLoadIndicator.onNext(true)
+        movieErrorMessage.onNext("")
         movieRepository.getNowPlayingMovie(page: 1, completion: movieHandler)
     }
     
     func getUpcomingMovie() {
+        movieLoadIndicator.onNext(true)
+        movieErrorMessage.onNext("")
         movieRepository.getUpcomingMovie(page: 1, completion: movieHandler)
     }
     
     func getTopRatedTVShow() {
+        tvshowLoadIndicator.onNext(true)
+        tvshowErrorMessage.onNext("")
         tvShowRepository.getTopRatedTVShow(page: 1, completion: tvShowHandler)
     }
     
     func getTVShowAiringToday() {
+        tvshowLoadIndicator.onNext(true)
+        tvshowErrorMessage.onNext("")
         tvShowRepository.getTVShowAiringToday(page: 1, completion: tvShowHandler)
     }
     
     func getTVShowOnTheAir() {
+        tvshowLoadIndicator.onNext(true)
+        tvshowErrorMessage.onNext("")
         tvShowRepository.getTVShowOnTheAir(page: 1, completion: tvShowHandler)
     }
     
-    func handleSegmentSelection(section: Int, segment: Int) {
-        if section == 0, segment == 0 {
+    func handlePopularSelection(at: Int) {
+        if at == 0 {
             getPopularMovie()
-        } else if section == 0, segment == 1 {
+        } else if at == 1 {
             getPopularTVShow()
-        } else if section == 0, segment == 2 {
+        } else {
             getPopularPeople()
-        } else if section == 1, segment == 0 {
+        }
+    }
+    
+    func handleTrendingSelection(at: Int) {
+        if at == 0 {
             getTrendingToday()
-        } else if section == 1, segment == 1 {
+        } else {
             getTrendingThisWeek()
-        } else if section == 2, segment == 0 {
+        }
+    }
+    
+    func handleMovieCategorySelection(at: Int) {
+        if at == 0 {
             getTopRatedMovie()
-        } else if section == 2, segment == 1 {
+        } else if at == 1 {
             getNowPlayingMovie()
-        } else if section == 2, segment == 2 {
+        } else {
             getUpcomingMovie()
-        } else if section == 3, segment == 0 {
+        }
+    }
+    
+    func handleTVShowCategorySelection(at: Int) {
+        if at == 0 {
             getTopRatedTVShow()
-        } else if section == 3, segment == 1 {
+        } else if at == 1 {
             getTVShowAiringToday()
         } else {
             getTVShowOnTheAir()

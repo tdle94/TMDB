@@ -78,9 +78,9 @@ class TMDBCircleUserRating: UILabel {
     
     private func setupLayer() {
         oldBounds = bounds
-        textLayer.frame = CGRect(x: bounds.midX - bounds.size.width/4,
+        textLayer.frame = CGRect(x: bounds.midX - bounds.size.width/3,
                                  y: bounds.midY - bounds.size.height/4,
-                                 width: bounds.size.width/2,
+                                 width: bounds.size.width/1.5,
                                  height: bounds.size.height/2)
         textLayer.fontSize = 15
         textLayer.foregroundColor = Constant.Color.backgroundColor.cgColor

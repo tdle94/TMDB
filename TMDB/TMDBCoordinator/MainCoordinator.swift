@@ -14,9 +14,6 @@ protocol CommonNavigation: class {
 }
 
 protocol MovieDetailViewDelegate: CommonNavigation {
-    func navigateToMovieDetail(movieId: Int)
-    func navigateToPersonDetail(personId: Int)
-    func navigateToReleaseDate(movieId: Int)
     func navigateToReview(reviews: [Review])
 }
 
@@ -25,24 +22,15 @@ protocol TVShowDetailViewDelegate: CommonNavigation {
     func navigateToReview(reviews: [Review])
 }
 
-protocol PersonDetailViewDelegate: CommonNavigation {
-    func navigateToMovieDetail(movieId: Int)
-    func navigateToTVShowDetail(tvShowId: Int)
-}
-
 protocol ListSeasonViewDelegate: CommonNavigation {
     func navigateToSeasonDetail(season: Season, tvShowId: Int)
 }
 
 protocol SeasonDetailViewDelegate: CommonNavigation {
-    func navigateToPersonDetail(personId: Int)
     func navigateToEpisodeDetail(episode: Episode, tvShowId: Int)
 }
 
 protocol SearchViewDelegate: class {
-    func navigateToMovieDetail(movieId: Int)
-    func navigateToTVShowDetail(tvShowId: Int)
-    func navigateToPersonDetail(personId: Int)
     func presentFilterView(applyFilter: ApplyProtocol)
 }
 
@@ -51,10 +39,6 @@ protocol FilterViewDelegate: class {
     func navigateToKeywordView(apply: ApplyProtocol)
     func navigateToCountryView(apply: ApplyProtocol)
     func navigateToLanguageView(apply: ApplyProtocol)
-}
-
-protocol EpisodeViewDelegate: CommonNavigation {
-    func navigateToPersonDetail(personId: Int)
 }
 
 class AppCoordinator {
@@ -245,22 +229,19 @@ class AppCoordinator {
             showPersonDetail(personId: cast.id)
         } else if let crew = obj as? Crew {
             showPersonDetail(personId: crew.id)
+        } else if let searchItem = obj as? MultiSearch {
+            if searchItem.mediaType == MediaType.movie.rawValue {
+                self.showMovieDetailView(movieId: searchItem.id)
+            } else if searchItem.mediaType == MediaType.tv.rawValue {
+                self.showTVShowDetailView(tvShowId: searchItem.id)
+            } else if searchItem.mediaType == MediaType.person.rawValue {
+                self.showPersonDetail(personId: searchItem.id)
+            }
         }
     }
 }
 
-extension AppCoordinator: MovieDetailViewDelegate, PersonDetailViewDelegate, SearchViewDelegate, SeasonDetailViewDelegate, EpisodeViewDelegate {
-    func navigateToPersonDetail(personId: Int) {
-        showPersonDetail(personId: personId)
-    }
-
-    func navigateToMovieDetail(movieId: Int) {
-        showMovieDetailView(movieId: movieId)
-    }
-    
-    func navigateToTVShowDetail(tvShowId: Int) {
-        showTVShowDetailView(tvShowId: tvShowId)
-    }
+extension AppCoordinator: SeasonDetailViewDelegate {
     
     func navigateToReleaseDate(movieId: Int) {
         showReleaseDate(movieId: movieId)

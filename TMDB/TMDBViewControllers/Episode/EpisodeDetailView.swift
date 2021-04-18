@@ -16,7 +16,7 @@ class EpisodeDetailView: UIViewController {
     
     var viewModel: EpisodeDetailViewModelProtocol
     
-    weak var delegate: EpisodeViewDelegate?
+    weak var delegate: AppCoordinator?
     
     // MARK: - constraint
     @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
@@ -70,9 +70,7 @@ class EpisodeDetailView: UIViewController {
                 .modelSelected(CustomElementType.self)
                 .asDriver()
                 .drive(onNext: { item in
-                    if let person = item.identity as? Cast {
-                        self.delegate?.navigateToPersonDetail(personId: person.id)
-                    }
+                    self.delegate?.navigateWith(obj: item.identity)
                 })
                 .disposed(by: rx.disposeBag)
                 

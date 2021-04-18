@@ -17,8 +17,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="350" height="300"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="fry-iD-S0E">
-                        <rect key="frame" x="0.0" y="247" width="350" height="53"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="fry-iD-S0E">
+                        <rect key="frame" x="0.0" y="234" width="350" height="100"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDK-nq-0mA">
                                 <rect key="frame" x="0.0" y="0.0" width="350" height="50"/>
@@ -26,8 +26,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PHH-GT-xVK">
-                                <rect key="frame" x="0.0" y="53" width="350" height="0.0"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PHH-GT-xVK">
+                                <rect key="frame" x="0.0" y="50" width="350" height="50"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                 <nil key="highlightedColor"/>
@@ -35,15 +35,15 @@
                         </subviews>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-1R-kYe">
-                        <rect key="frame" x="0.0" y="0.0" width="350" height="220"/>
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="210"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cY9-cq-cdd" customClass="TMDBCircleUserRating" customModule="TMDB" customModuleProvider="target">
-                        <rect key="frame" x="1" y="195" width="44" height="44"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cY9-cq-cdd" customClass="TMDBCircleUserRating" customModule="TMDB" customModuleProvider="target">
+                        <rect key="frame" x="1" y="190" width="36" height="36"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="44" id="D56-tc-jOW"/>
+                            <constraint firstAttribute="height" constant="36" id="D56-tc-jOW"/>
                             <constraint firstAttribute="width" secondItem="cY9-cq-cdd" secondAttribute="height" multiplier="1:1" id="Fed-Cl-zNX"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -51,8 +51,8 @@
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="Ka1-1R-kYe" secondAttribute="trailing" id="3kB-k8-Cze"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="top" secondItem="MBB-W3-fAB" secondAttribute="top" id="7Lh-px-yyY"/>
-                    <constraint firstItem="cY9-cq-cdd" firstAttribute="top" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="-25" id="A3y-Qb-qPp"/>
-                    <constraint firstAttribute="bottom" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="80" id="IwW-2f-WWV"/>
+                    <constraint firstItem="cY9-cq-cdd" firstAttribute="top" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="-20" id="A3y-Qb-qPp"/>
+                    <constraint firstAttribute="bottom" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="90" id="IwW-2f-WWV"/>
                     <constraint firstItem="fry-iD-S0E" firstAttribute="top" secondItem="cY9-cq-cdd" secondAttribute="bottom" constant="8" symbolic="YES" id="Suz-Zd-JFu"/>
                     <constraint firstItem="cY9-cq-cdd" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" constant="1" id="bbL-dM-Vff"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="dxB-WE-kKJ"/>

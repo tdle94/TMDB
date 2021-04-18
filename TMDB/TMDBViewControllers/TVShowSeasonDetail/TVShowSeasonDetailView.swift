@@ -223,7 +223,7 @@ extension TVShowSeasonDetailView {
             .rx
             .willDisplaySupplementaryView
             .take(1)
-            .asDriver()
+            .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBCreditHeaderView
                 

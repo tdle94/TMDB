@@ -65,7 +65,7 @@ class SearchView: UIViewController {
         navigationItem.titleView = searchController.searchBar
 
         filterBarButton.tintColor = Constant.Color.backgroundColor
-        navigationItem.setRightBarButton(filterBarButton,animated: true)
+        navigationItem.setRightBarButton(filterBarButton, animated: true)
         setupBinding()
     }
 
@@ -244,6 +244,16 @@ extension SearchView {
                 self.delegate?.presentFilterView(applyFilter: self.discoveryViewModel)
             })
             .disposed(by: rx.disposeBag)
+        
+        Observable
+            .merge(discoveryViewModel.movieFilterCountString, discoveryViewModel.tvshowFilterCountString)
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { filterString in
+                self.navigationItem.rightBarButtonItem = nil
+                self.filterBarButton.title = filterString
+                self.navigationItem.setRightBarButton(self.filterBarButton, animated: true)
+            })
+            .disposed(by: rx.disposeBag)
 
         discoveryCollectionView
             .rx
@@ -251,7 +261,7 @@ extension SearchView {
             .asDriver()
             .drive(onNext: { event in
                 self.discoveryChoiceView.select(at: event.at.row)
-                self.discoveryViewModel.visibleDiscoveryViewRow = event.at.row
+                self.discoveryViewModel.handleCollectionViewSwipe(at: event.at.row)
             })
             .disposed(by: rx.disposeBag)
         

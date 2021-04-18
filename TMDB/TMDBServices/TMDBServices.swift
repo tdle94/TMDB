@@ -58,6 +58,60 @@ struct DiscoverQuery: Equatable {
     var keywords: [Keyword] = []
     var filterType: FilterQueryType
     
+    var numberOfFilterCount: Int {
+        var count = 0
+        
+        if language != nil {
+            count += 1
+        }
+        
+        if region != nil {
+            count += 1
+        }
+        
+        if sortBy != .none {
+            count += 1
+        }
+        
+        if certificationCountry != nil {
+            count += 1
+        }
+        
+        if certification != nil {
+            count += 1
+        }
+        
+        if includeVideo != nil {
+            count += 1
+        }
+        
+        if primaryReleaseYear != nil {
+            count += 1
+        }
+        
+        if year != nil {
+            count += 1
+        }
+        
+        if withPeople != nil {
+            count += 1
+        }
+        
+        if withGenres != nil {
+            count += 1
+        }
+        
+        if withOriginalLanguage != nil {
+            count += 1
+        }
+        
+        if keywords.isNotEmpty {
+            count += 1
+        }
+        
+        return count
+    }
+    
     init(type: FilterQueryType) {
         filterType = type
     }

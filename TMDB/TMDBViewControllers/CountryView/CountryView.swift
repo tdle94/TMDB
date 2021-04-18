@@ -38,7 +38,7 @@ class CountryView: UIViewController {
     @IBOutlet weak var countryTableView: UITableView! {
         didSet {
             countryTableView.register(UINib(nibName: String(describing: "SortByTableViewCell"), bundle: nil),
-                                      forCellReuseIdentifier: Constant.Identifier.countryCell)
+                                      forCellReuseIdentifier: Constant.Identifier.cell)
             countryTableView.tableFooterView = UIView()
             countryTableView.rowHeight = 60
             countryTableView.allowsMultipleSelection = false
@@ -91,7 +91,7 @@ extension CountryView {
     func setupBinding() {
         viewModel
             .countries
-            .bind(to: countryTableView.rx.items(cellIdentifier: Constant.Identifier.countryCell)) { row, country, cell in
+            .bind(to: countryTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { row, country, cell in
                 if row == self.viewModel.selectedRow {
                     self.countryTableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
                     cell.isSelected = true

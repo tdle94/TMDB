@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxDataSources
+import RealmSwift
 
 class MovieDetailView: UIViewController {
     weak var delegate: AppCoordinator?
@@ -27,9 +28,16 @@ class MovieDetailView: UIViewController {
     }
     
     // MARK: - datasource
-    let dataSource: RxCollectionViewSectionedReloadDataSource<MovieDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+    
+    let movieDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
         let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
-        cell?.configure(item: item.identity)
+        cell?.configure(item: item)
+        return cell as! UICollectionViewCell
+    })
+    
+    let creditDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+        let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
+        cell?.configure(item: item)
         return cell as! UICollectionViewCell
     })
     
@@ -45,8 +53,6 @@ class MovieDetailView: UIViewController {
     @IBOutlet weak var keywordCollectionViewTop: NSLayoutConstraint!
     
     // MARK: - views
-    var creditHeader: TMDBCreditHeaderView?
-    var movieHeader: TMDBMovieLikeThisHeaderView?
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var homepageLabel: UILabel!
     @IBOutlet weak var imdbLabel: UILabel!
@@ -62,118 +68,64 @@ class MovieDetailView: UIViewController {
     @IBOutlet weak var availableLanguagesLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var budgetLabel: UILabel!
+    @IBOutlet weak var creditCollectionView: UICollectionView! {
+        didSet {
+            creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
+            creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil),
+                                          forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            creditCollectionView.register(TMDBCreditHeaderView.self,
+                                          forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                          withReuseIdentifier: Constant.Identifier.previewHeader)
+            creditDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                       for: indexPath)
+            }
+        }
+    }
+    @IBOutlet weak var movieCollectionView: UICollectionView! {
+        didSet {
+            movieCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
+            movieCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil),
+                                          forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            movieCollectionView.register(TMDBMovieLikeThisHeaderView.self,
+                                          forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                          withReuseIdentifier: Constant.Identifier.previewHeader)
+            
+            movieDataSource.configureSupplementaryView = {dataSource, collectionView, kind, indexPath in
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                       for: indexPath)
+                
+            }
+        }
+    }
     @IBOutlet weak var productionCompaniesCollectionView: UICollectionView! {
         didSet {
             productionCompaniesCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout(fractionWidth: 0.3,
                                                                                                       fractionHeight: 1,
                                                                                                       leadingInset: 18,
                                                                                                       scrollBehavior: .continuous)
-            productionCompaniesCollectionView.register(TMDBProductionCompanyCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            productionCompaniesCollectionView.register(TMDBProductionCompanyCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
-    @IBOutlet weak var creditCollectionView: UICollectionView! {
-        didSet {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2)
-            } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
-            }
-            creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
-            creditCollectionView.register(TMDBCreditHeaderView.self,
-                                          forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                          withReuseIdentifier: Constant.Identifier.previewHeader)
-            creditCollectionView.register(TMDBMovieLikeThisHeaderView.self,
-                                          forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                          withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
-            dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
-                switch dataSource.sectionModels[indexPath.section] {
-                case .Credits(items: _):
-                    if let header = self.creditHeader {
-                        return header
-                    }
-                    
-                    let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                                       for: indexPath) as! TMDBCreditHeaderView
-                    
-                    self.creditHeader = creditHeader
-                    
-                    if self.viewModel.movieParser.missingCast {
-                        creditHeader.segmentControl.removeSegment(at: 0, animated: true)
-                    } else if self.viewModel.movieParser.missingCrew {
-                        creditHeader.segmentControl.removeSegment(at: 1, animated: true)
-                    }
-  
-                    creditHeader
-                        .segmentControl
-                        .rx
-                        .value
-                        .changed
-                        .subscribe { event in
-                            guard let index = Int(event.element!.description) else { return }
-                                
-                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
 
-                            self.viewModel.handleCreditSelection(at: index,
-                                                                 title: creditHeader.segmentControl.titleForSegment(at: 0) ?? "",
-                                                                 movieId: self.movieId!)
-                        }
-                        .disposed(by: self.rx.disposeBag)
- 
-                    return creditHeader
-                case .MoviesLikeThis(items: _):
-                    if let header = self.movieHeader {
-                        return header
-                    }
-                    
-                    let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                      withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
-                                                                                      for: indexPath) as! TMDBMovieLikeThisHeaderView
-                    
-                    self.movieHeader = movieHeader
-
-                    if self.viewModel.movieParser.missingSimilarMovie {
-                        movieHeader.segmentControl.removeSegment(at: 0, animated: true)
-                    } else if self.viewModel.movieParser.missingRecommendMovie {
-                        movieHeader.segmentControl.removeSegment(at: 1, animated: true)
-                    }
-
-                    movieHeader
-                        .segmentControl
-                        .rx
-                        .value
-                        .changed
-                        .subscribe { event in
-                            guard let index = Int(event.element!.description) else { return }
-                                
-                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
-                            self.viewModel.handleMovieLikeThisSelection(at: index,
-                                                                        title: movieHeader.segmentControl.titleForSegment(at: 0) ?? "",
-                                                                        movieId: self.movieId!)
-                        }
-                        .disposed(by: self.rx.disposeBag)
-                    
-                    return movieHeader
-                }
-            }
-        }
-    }
     @IBOutlet weak var reviewAndReleaseTableView: UITableView! {
         didSet {
             reviewAndReleaseTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
-                                               forCellReuseIdentifier: Constant.Identifier.reviewCell)
+                                               forCellReuseIdentifier: Constant.Identifier.cell)
         }
     }
     @IBOutlet weak var genreCollectionView: UICollectionView! {
         didSet {
             genreCollectionView.collectionViewLayout = TMDBKeywordLayout()
-            genreCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
+            genreCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
         didSet {
             keywordCollectionView.collectionViewLayout = TMDBKeywordLayout()
-            keywordCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
+            keywordCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     @IBOutlet weak var posterImageView: UIImageView! {
@@ -215,7 +167,7 @@ class MovieDetailView: UIViewController {
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
         didSet {
             backdropImageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
-            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     
@@ -241,7 +193,6 @@ class MovieDetailView: UIViewController {
         
         keywordCollectionView.layoutIfNeeded()
         genreCollectionView.layoutIfNeeded()
-        creditCollectionView.layoutIfNeeded()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -292,7 +243,7 @@ extension MovieDetailView {
         viewModel
             .movieParser
             .images
-            .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { _, image, cell in
+            .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, image, cell in
                 (cell as? TMDBBackdropImageCell)?.configure(item: image)
             }
             .disposed(by: rx.disposeBag)
@@ -324,7 +275,7 @@ extension MovieDetailView {
         viewModel
             .movieParser
             .reviewAndRelease
-            .bind(to: self.reviewAndReleaseTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
+            .bind(to: self.reviewAndReleaseTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, text, cell in
                 cell.textLabel?.setHeader(title: text)
             }
             .disposed(by: self.rx.disposeBag)
@@ -333,7 +284,7 @@ extension MovieDetailView {
         viewModel
             .movieParser
             .productionCompanies
-            .bind(to: self.productionCompaniesCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { index, productionCompany, cell in
+            .bind(to: self.productionCompaniesCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, productionCompany, cell in
                 (cell as? TMDBProductionCompanyCell)?.configure(item: productionCompany)
             }
             .disposed(by: self.rx.disposeBag)
@@ -342,7 +293,7 @@ extension MovieDetailView {
         viewModel
             .movieParser
             .genres
-            .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { index, genre, cell in
+            .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, genre, cell in
                 (cell as? TMDBKeywordCell)?.configure(item: genre)
             }
             .disposed(by: self.rx.disposeBag)
@@ -360,7 +311,7 @@ extension MovieDetailView {
         viewModel
             .movieParser
             .keywords
-            .bind(to: keywordCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, keyword, cell in
+            .bind(to: keywordCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, keyword, cell in
                 (cell as? TMDBKeywordCell)?.configure(item: keyword)
             }
             .disposed(by: rx.disposeBag)
@@ -394,16 +345,74 @@ extension MovieDetailView {
         viewModel
             .movieParser
             .credits
-            .catchErrorJustReturn(dataSource.sectionModels)
-            .bind(to: creditCollectionView.rx.items(dataSource: dataSource))
+            .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
             .disposed(by: rx.disposeBag)
         
         creditCollectionView
             .rx
-            .modelSelected(CustomElementType.self)
-            .subscribe { item in
-                self.delegate?.navigateWith(obj: item.element?.identity)
-            }
+            .willDisplaySupplementaryView
+            .take(1)
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { supplementary, _, _ in
+                let header = supplementary as? TMDBCreditHeaderView
+                header?
+                    .segmentControl
+                    .rx
+                    .value
+                    .changed
+                    .asDriver()
+                    .drive(onNext: { index in
+                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                        self.viewModel.handleCreditSelection(at: index, movieId: self.movieId!)
+                    })
+                    .disposed(by: self.rx.disposeBag)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        creditCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: self.creditDataSource.sectionModels.first?.items[indexPath.row])
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // bind movie collection view
+        viewModel
+            .movieParser
+            .moviesLikeThis
+            .bind(to: movieCollectionView.rx.items(dataSource: movieDataSource))
+            .disposed(by: rx.disposeBag)
+        
+        movieCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: self.movieDataSource.sectionModels.first?.items[indexPath.row])
+            })
+            .disposed(by: rx.disposeBag)
+        
+        movieCollectionView
+            .rx
+            .willDisplaySupplementaryView
+            .take(1)
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { supplementary, _, _ in
+                let header = supplementary as? TMDBMovieLikeThisHeaderView
+                header?
+                    .segmentControl
+                    .rx
+                    .value
+                    .changed
+                    .asDriver()
+                    .drive(onNext: { index in
+                        self.movieCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                        self.viewModel.handleMovieLikeThisSelection(at: index, movieId: self.movieId!)
+                    })
+                    .disposed(by: self.rx.disposeBag)
+            })
             .disposed(by: rx.disposeBag)
         
         // bind label

@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxDataSources
+import RealmSwift
 
 class PersonDetailView: UIViewController {
     var viewModel: PersonDetailViewModelProtocol
@@ -18,9 +19,9 @@ class PersonDetailView: UIViewController {
     var delegate: AppCoordinator?
 
     // MARK: - datasource
-    let creditDataSource: RxCollectionViewSectionedReloadDataSource<PersonDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+    let creditDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
         let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
-        cell?.configure(item: item.identity)
+        cell?.configure(item: item)
         return cell as! UICollectionViewCell
     })
     
@@ -42,54 +43,17 @@ class PersonDetailView: UIViewController {
     @IBOutlet weak var ratingLabel: TMDBCircleUserRating!
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
-            } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.86)
-            }
+            creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
             
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBPersonCreditHeaderView.self,
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                           withReuseIdentifier: Constant.Identifier.previewHeader)
             
-            creditCollectionView
-                .rx
-                .modelSelected(CustomElementType.self)
-                .subscribe { item in
-                    self.delegate?.navigateWith(obj: item.element?.identity)
-                }
-                .disposed(by: rx.disposeBag)
-            
             creditDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                             for: indexPath) as! TMDBPersonCreditHeaderView
-                
-                if header.segmentControl.selectedSegmentIndex == -1 {
-                    header.segmentControl.selectedSegmentIndex = 0
-                    
-                    header
-                        .segmentControl
-                        .rx
-                        .value
-                        .changed
-                        .subscribe { event in
-                            guard let index = event.element, let personId = self.id else {
-                                return
-                            }
-                            
-                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
-                            
-                            if index == 0, header.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Movies", comment: "") {
-                                self.viewModel.getMoviesAppearIn(personId: personId)
-                            } else {
-                                self.viewModel.getTVShowsAppearIn(personId: personId)
-                            }
-                        }
-                        .disposed(by: self.rx.disposeBag)
-                }
-                return header
+                return  collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                        for: indexPath)
             }
         }
     }
@@ -107,7 +71,7 @@ class PersonDetailView: UIViewController {
     @IBOutlet weak var profileCollectionView: UICollectionView! {
         didSet {
             profileCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
-            profileCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            profileCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     
@@ -185,7 +149,7 @@ extension PersonDetailView {
         // bind profile collection view
         viewModel
             .profileCollectionImages
-            .bind(to: profileCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { _, image, cell in
+            .bind(to: profileCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, image, cell in
                 (cell as? TMDBBackdropImageCell)?.configure(item: image)
             }
             .disposed(by: rx.disposeBag)
@@ -217,19 +181,31 @@ extension PersonDetailView {
         creditCollectionView
             .rx
             .willDisplaySupplementaryView
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe { event in
-                if let header = event.element?.supplementaryView as? TMDBPersonCreditHeaderView {
-                    if !self.viewModel.isThereMovie {
-                        header.segmentControl.removeSegment(at: 0, animated: false)
-                        header.segmentControl.selectedSegmentIndex = 0
-                    } else if !self.viewModel.isThereTVShow {
-                        header.segmentControl.removeSegment(at: 1, animated: false)
-                    }
-                    
-                    self.viewModel.resetCreditHeaderState()
-                }
-            }
+            .take(1)
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { supplementary, _, _ in
+                let header = supplementary as? TMDBPersonCreditHeaderView
+                
+                header?
+                    .segmentControl
+                    .rx
+                    .value
+                    .changed
+                    .asDriver()
+                    .drive(onNext: { index in
+                        self.viewModel.handleCreditSelection(at: index, personId: self.id!)
+                    })
+                    .disposed(by: self.rx.disposeBag)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        creditCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: self.creditDataSource.sectionModels.first?.items[indexPath.row])
+            })
             .disposed(by: rx.disposeBag)
         
         // bind label

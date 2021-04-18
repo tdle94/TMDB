@@ -35,7 +35,7 @@ class SearchView: UIViewController {
             discoveryCollectionView.collectionViewLayout = CollectionViewLayout.discoveryLayout()
             discoveryCollectionView.dataSource = self
             discoveryCollectionView.register(UINib(nibName: String(describing: DiscoverCollectionViewCell.self), bundle: nil),
-                                             forCellWithReuseIdentifier: Constant.Identifier.displayAllCell)
+                                             forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     
@@ -84,7 +84,7 @@ extension SearchView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let discoverCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.displayAllCell, for: indexPath) as! DiscoverCollectionViewCell
+        let discoverCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.cell, for: indexPath) as! DiscoverCollectionViewCell
 
         if indexPath.row == 0, let cell = movieDiscoverCell {
             return cell
@@ -304,7 +304,7 @@ extension SearchView {
                 // bind search result to tableview
                 self.searchViewModel
                     .searchResult
-                    .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.searchResultCell)) { index, item, cell in
+                    .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
                     .disposed(by: self.rx.disposeBag)

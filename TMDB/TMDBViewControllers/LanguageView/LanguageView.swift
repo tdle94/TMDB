@@ -38,7 +38,7 @@ class LanguageView: UIViewController {
     @IBOutlet weak var languageTableView: UITableView! {
         didSet {
             languageTableView.register(UINib(nibName: String(describing: "SortByTableViewCell"), bundle: nil),
-                                       forCellReuseIdentifier: Constant.Identifier.languageCell)
+                                       forCellReuseIdentifier: Constant.Identifier.cell)
             languageTableView.tableFooterView = UIView()
             languageTableView.tintColor = Constant.Color.primaryColor
             languageTableView.allowsMultipleSelection = false
@@ -85,7 +85,7 @@ extension LanguageView {
         
         viewModel
             .languages
-            .bind(to: languageTableView.rx.items(cellIdentifier: Constant.Identifier.languageCell)) { row, language, cell in
+            .bind(to: languageTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { row, language, cell in
                 if self.viewModel.selectedRow == row {
                     self.languageTableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
                     cell.isSelected = true

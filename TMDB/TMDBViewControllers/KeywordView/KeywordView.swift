@@ -43,7 +43,7 @@ class KeywordView: UIViewController {
             keywordTableView.backgroundView = notificationLabel
             keywordTableView.tintColor = Constant.Color.primaryColor
             keywordTableView.register(UINib(nibName: "TitleWithSubtitleTableViewCell", bundle: nil),
-                                      forCellReuseIdentifier: Constant.Identifier.keywordCell)
+                                      forCellReuseIdentifier: Constant.Identifier.cell)
         }
     }
     
@@ -111,7 +111,7 @@ extension KeywordView {
 
         viewModel
             .keywords
-            .bind(to: keywordTableView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, keyword, cell in
+            .bind(to: keywordTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { row, keyword, cell in
                 let isSelected = self.viewModel.isThere(keyword: keyword, at: row)
 
                 if isSelected {

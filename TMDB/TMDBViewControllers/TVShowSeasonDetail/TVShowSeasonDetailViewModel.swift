@@ -8,6 +8,7 @@
 
 import RxSwift
 import RealmSwift
+import RxDataSources
 import NotificationBannerSwift
 
 protocol TVShowSeasonDetailViewModelProtocol {
@@ -18,18 +19,14 @@ protocol TVShowSeasonDetailViewModelProtocol {
     var title: PublishSubject<NSAttributedString> { get }
     var numberOfEpisode: PublishSubject<NSAttributedString> { get }
     var overview: PublishSubject<NSAttributedString> { get }
-    var credit: BehaviorSubject<[TVShowSeasonDetailModel]> { get }
-    
-    var isThereCrew: Bool { get }
-    var isThereCast: Bool { get }
+    var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
     
     var repository: TMDBTVShowRepository { get }
     
     func getSeasonDetail(tvShowId: Int, seasonNumber: Int)
     func getSeasonCasts(tvShowId: Int, seasonNumber: Int)
     func getSeasonCrews(tvShowId: Int, seasonNumber: Int)
-    
-    func resetCreditHeaderState()
+    func handleCreditSelection(at: Int, tvshowId: Int, seasonNumber: Int)
 }
 
 class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
@@ -47,7 +44,7 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
     var numberOfEpisode: PublishSubject<NSAttributedString> = PublishSubject()
     var overview: PublishSubject<NSAttributedString> = PublishSubject()
     var season: PublishSubject<Season> = PublishSubject()
-    var credit: BehaviorSubject<[TVShowSeasonDetailModel]> = BehaviorSubject(value: [.Credits(items: [])])
+    var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
     
     init(repository: TMDBTVShowRepository, userSetting: TMDBUserSettingProtocol) {
         self.userSetting = userSetting
@@ -74,20 +71,7 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
                                                                        subTitle: String(season.episodeCount)))
                 
                 self.title.onNext(TMDBLabel.setHeader(title: season.name))
-
-                if season.credits?.cast.isEmpty ?? true, season.credits?.crew.isEmpty ?? true {
-                    self.credit.onNext([])
-                    self.isThereCrew = false
-                    self.isThereCast = false
-                } else if season.credits?.cast.isEmpty ?? true {
-                    self.isThereCast = false
-                    self.credit.onNext([.Credits(items: Array(season.credits!.crew.map { CustomElementType(identity: $0) }) )])
-                } else if season.credits?.crew.isEmpty ?? true {
-                    self.isThereCrew = false
-                    self.credit.onNext([.Credits(items: Array(season.credits!.cast.map { CustomElementType(identity: $0) }) )])
-                } else {
-                    self.credit.onNext([.Credits(items: Array(season.credits!.cast.map { CustomElementType(identity: $0) }) )])
-                }
+                self.credits.onNext([SectionModel(model: "credit", items: Array(season.credits?.cast ?? List<Cast>()) )])
 
             case .failure(let error):
                 debugPrint("Error getting season detail \(tvShowId): \(error.localizedDescription)")
@@ -108,21 +92,20 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
     }
 
     func getSeasonCasts(tvShowId: Int, seasonNumber: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let casts = self.repository.getTVShowSeasonCasts(from: tvShowId, seasonNumber: seasonNumber)
-            self.credit.onNext([.Credits(items: casts.map { CustomElementType(identity: $0) } )])
-        }
+        let casts = self.repository.getTVShowSeasonCasts(from: tvShowId, seasonNumber: seasonNumber)
+        credits.onNext([SectionModel(model: "credit", items: casts)])
     }
 
     func getSeasonCrews(tvShowId: Int, seasonNumber: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let crews = self.repository.getTVShowSeasonCrews(from: tvShowId, seasonNumber: seasonNumber)
-            self.credit.onNext([.Credits(items: crews.map { CustomElementType(identity: $0) } )])
-        }
+        let crews = self.repository.getTVShowSeasonCrews(from: tvShowId, seasonNumber: seasonNumber)
+        credits.onNext([SectionModel(model: "credit", items: crews)])
     }
-    
-    func resetCreditHeaderState() {
-        isThereCast = true
-        isThereCrew = true
+
+    func handleCreditSelection(at: Int, tvshowId: Int, seasonNumber: Int) {
+        if at == 0 {
+            getSeasonCasts(tvShowId: tvshowId, seasonNumber: seasonNumber)
+        } else {
+            getSeasonCrews(tvShowId: tvshowId, seasonNumber: seasonNumber)
+        }
     }
 }

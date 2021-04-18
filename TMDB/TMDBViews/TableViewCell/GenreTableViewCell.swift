@@ -15,7 +15,7 @@ class GenreTableViewCell: UITableViewCell {
         didSet {
             genreCollectionView.allowsMultipleSelection = true
             genreCollectionView.register(TMDBKeywordCell.self,
-                                         forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
+                                         forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     
@@ -47,7 +47,7 @@ class GenreTableViewCell: UITableViewCell {
 
             Observable<[Genre]>
                 .just(genres)
-                .bind(to: genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { row, genre, cell in
+                .bind(to: genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { row, genre, cell in
                     let shouldSelect = viewModel.query?.withGenres?.components(separatedBy: ",").contains(String(genre.id)) ?? false
 
                     (cell as? TMDBKeywordCell)?.configure(item: genre)

@@ -10,6 +10,7 @@ import RxSwift
 import RealmSwift
 import Foundation
 import NotificationBannerSwift
+import RxDataSources
 
 protocol MovieDetailViewModelProtocol {
     var repository: TMDBMovieRepository { get }
@@ -26,8 +27,8 @@ protocol MovieDetailViewModelProtocol {
     func getRecommendMovies(movieId: Int)
     func getReviews(movieId: Int) -> [Review]
     
-    func handleMovieLikeThisSelection(at segment: Int, title: String, movieId: Int)
-    func handleCreditSelection(at segment: Int, title: String, movieId: Int)
+    func handleMovieLikeThisSelection(at segment: Int, movieId: Int)
+    func handleCreditSelection(at segment: Int, movieId: Int)
 }
 
 class MovieParser {
@@ -67,13 +68,11 @@ class MovieParser {
     var posterURL: PublishSubject<URL> = PublishSubject()
     
     // movie credit
-    var credits: BehaviorSubject<[MovieDetailModel]> = BehaviorSubject(value: [])
+    var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
     
-    var missingSimilarMovie: Bool = false
-    var missingRecommendMovie: Bool = false
-    
-    var missingCast: Bool = false
-    var missingCrew: Bool = false
+    // similar and recommend movies
+    var moviesLikeThis: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+
     
     // MARK: - parse
     
@@ -158,82 +157,24 @@ class MovieParser {
     }
     
     func parseMovieCredits(_ movie: Movie) {
-        let moviesLikeThisOne = Array((movie.similar?.movies ?? movie.recommendations?.movies ?? List<Movie>()).map { CustomElementType(identity: $0) })
-        var credits = Array(movie.credits?.cast ?? List<Cast>()).map { CustomElementType(identity: $0) }
-        
-        if credits.isEmpty {
-            credits = Array(movie.credits?.crew ?? List<Crew>()).map { CustomElementType(identity: $0) }
-        }
+        let similarMovies = Array(movie.similar?.movies ?? List<Movie>())
+        let casts = Array(movie.credits?.cast ?? List<Cast>())
 
-        missingSimilarMovie = movie.similar?.movies.isEmpty ?? true
-        missingRecommendMovie = movie.recommendations?.movies.isEmpty ?? true
-        missingCast = movie.credits?.cast.isEmpty ?? true
-        missingCrew = movie.credits?.crew.isEmpty ?? true
-        
-        if moviesLikeThisOne.isEmpty, credits.isEmpty {
-            self.credits.onNext([])
-        } else if moviesLikeThisOne.isEmpty {
-            self.credits.onNext([
-                .Credits(items: credits),
-            ])
-        } else if credits.isEmpty {
-            self.credits.onNext([
-                .MoviesLikeThis(items: moviesLikeThisOne),
-            ])
-        } else {
-            self.credits.onNext([
-                .Credits(items: credits),
-                .MoviesLikeThis(items: moviesLikeThisOne),
-            ])
-        }
+        moviesLikeThis.onNext([SectionModel(model: "movie", items: similarMovies)])
+        credits.onNext([SectionModel(model: "credit", items: casts)])
+
     }
     
     func parseMovie(casts: [Cast]) {
-        guard let movieLikeThisModel = try? credits.value().dropFirst() else {
-            self.credits.onNext([
-                .Credits(items: casts.map { CustomElementType(identity: $0) })
-            ])
-            return
-        }
-        
-        self.credits.onNext([
-            .Credits(items: casts.map { CustomElementType(identity: $0) }),
-        ] + movieLikeThisModel)
+        credits.onNext([SectionModel(model: "credit", items: casts)])
     }
     
     func parseMovie(crews: [Crew]) {
-        guard let movieLikeThisModel = try? credits.value().dropFirst() else {
-            self.credits.onNext([
-                .Credits(items: crews.map { CustomElementType(identity: $0) })
-            ])
-            return
-        }
-
-        self.credits.onNext([
-            .Credits(items: crews.map { CustomElementType(identity: $0) }),
-        ] +  movieLikeThisModel)
+        credits.onNext([SectionModel(model: "credit", items: crews)])
     }
     
     func parseMovieLikeThis(movies: [Movie]) {
-        guard let credit = try? credits.value().first else {
-            self.credits.onNext([
-                .MoviesLikeThis(items: movies.map { CustomElementType(identity: $0) })
-            ])
-            return
-        }
-
-        switch credit {
-        case .Credits(items: _):
-            self.credits.onNext([
-                credit,
-                .MoviesLikeThis(items: movies.map { CustomElementType(identity: $0) })
-            ])
-        case .MoviesLikeThis(items: _):
-            self.credits.onNext([
-                credit,
-                .MoviesLikeThis(items: movies.map { CustomElementType(identity: $0) })
-            ])
-        }
+        moviesLikeThis.onNext([SectionModel(model: "movie", items: movies)])
     }
     
     func parseKeyword(_ keywords: [Keyword]) {
@@ -271,7 +212,7 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     
     var userSetting: TMDBUserSettingProtocol
     
-    lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { result in
+    lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { [unowned self] result in
         switch result {
         case .success(let movieResult):
             self.movieParser.parseMovieLikeThis(movies: Array(movieResult.movies))
@@ -315,43 +256,35 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     }
     
     func getCasts(movieId: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.movieParser.parseMovie(casts: self.repository.getMovieCast(from: movieId))
-        }
+        self.movieParser.parseMovie(casts: self.repository.getMovieCast(from: movieId))
     }
     
     func getCrews(movieId: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.movieParser.parseMovie(crews: self.repository.getMovieCrew(from: movieId))
-        }
+        self.movieParser.parseMovie(crews: self.repository.getMovieCrew(from: movieId))
     }
     
     func getSimilarMovies(movieId: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.repository.getSimilarMovies(from: movieId, page: 1, completion: self.movieHandler)
-        }
+        self.repository.getSimilarMovies(from: movieId, page: 1, completion: self.movieHandler)
     }
     
     func getRecommendMovies(movieId: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.repository.getRecommendMovies(from: movieId, page: 1, completion: self.movieHandler)
-        }
+        self.repository.getRecommendMovies(from: movieId, page: 1, completion: self.movieHandler)
     }
     
     func getReviews(movieId: Int) -> [Review] {
         self.repository.getMovieReview(from: movieId)
     }
     
-    func handleMovieLikeThisSelection(at segment: Int, title: String, movieId: Int) {
-        if segment == 0, title == NSLocalizedString("Similar", comment: "") {
+    func handleMovieLikeThisSelection(at segment: Int, movieId: Int) {
+        if segment == 0 {
             getSimilarMovies(movieId: movieId)
         } else {
             getRecommendMovies(movieId: movieId)
         }
     }
     
-    func handleCreditSelection(at segment: Int, title: String, movieId: Int) {
-        if segment == 0, title == NSLocalizedString("Cast", comment: "") {
+    func handleCreditSelection(at segment: Int, movieId: Int) {
+        if segment == 0 {
             getCasts(movieId: movieId)
         } else {
             getCrews(movieId: movieId)

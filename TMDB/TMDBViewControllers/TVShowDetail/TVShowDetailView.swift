@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxDataSources
+import RealmSwift
 
 class TVShowDetailView: UIViewController {
     var tvShowId: Int?
@@ -18,12 +19,18 @@ class TVShowDetailView: UIViewController {
     let viewModel: TVShowDetailViewModelProtocol
     
     // MARK: - datasource
-    let dataSource: RxCollectionViewSectionedReloadDataSource<TVShowDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+    
+    let creditDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
         let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
-        cell?.configure(item: item.identity)
+        cell?.configure(item: item)
         return cell as! UICollectionViewCell
     })
     
+    let tvshowDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+        let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
+        cell?.configure(item: item)
+        return cell as! UICollectionViewCell
+    })
     // MARK: - constraint
     
     @IBOutlet weak var posterImageViewTop: NSLayoutConstraint!
@@ -52,75 +59,36 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var countriesLabel: UILabel!
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2)
-            } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout()
-            }
-
+            creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBCreditHeaderView.self,
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                           withReuseIdentifier: Constant.Identifier.previewHeader)
-            creditCollectionView.register(TMDBMovieLikeThisHeaderView.self,
+            creditDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                       for: indexPath)
+            }
+        }
+    }
+    @IBOutlet weak var tvshowCollectionView: UICollectionView! {
+        didSet {
+            tvshowCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
+            tvshowCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
+            tvshowCollectionView.register(TMDBMovieLikeThisHeaderView.self,
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                          withReuseIdentifier: Constant.Identifier.moviePreviewHeader)
-            dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
-                switch dataSource.sectionModels[indexPath.section] {
-                case .Credits(items: _):
-                    let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                                       for: indexPath) as! TMDBCreditHeaderView
-
-                    self.castHeaderDisposable?.dispose()
-                    self.castHeaderDisposable = creditHeader
-                        .segmentControl
-                        .rx
-                        .value
-                        .changed
-                        .asDriver()
-                        .drive(onNext: { index in
-                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
-
-                            if index == 0 {
-                                self.viewModel.getCasts(tvShowId: self.tvShowId!)
-                            } else {
-                                self.viewModel.getCrews(tvShowId: self.tvShowId!)
-                            }
-                        })
-                    
-                    return creditHeader
-                case .TVShowsLikeThis(items: _):
-                    let movieHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                      withReuseIdentifier: Constant.Identifier.moviePreviewHeader,
-                                                                                      for: indexPath) as! TMDBMovieLikeThisHeaderView
-                    
-                    self.moreMovieHeaderDisposable?.dispose()
-                    self.moreMovieHeaderDisposable = movieHeader
-                        .segmentControl
-                        .rx
-                        .value
-                        .changed
-                        .asDriver()
-                        .drive(onNext: { index in
-                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: indexPath.section), at: .centeredHorizontally, animated: true)
-
-                            if index == 0 {
-                                self.viewModel.getSimilars(tvShowId: self.tvShowId!)
-                            } else {
-                                self.viewModel.getRecommends(tvShowId: self.tvShowId!)
-                            }
-                        })
-                    
-                    return movieHeader
-                }
+                                          withReuseIdentifier: Constant.Identifier.previewHeader)
+            tvshowDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                       for: indexPath)
             }
         }
     }
     @IBOutlet weak var reviewTableView: UITableView! {
         didSet {
             reviewTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
-                                     forCellReuseIdentifier: Constant.Identifier.reviewCell)
+                                     forCellReuseIdentifier: Constant.Identifier.cell)
             reviewTableView
                 .rx
                 .itemSelected
@@ -143,13 +111,13 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var keywordCollectionView: UICollectionView! {
         didSet {
             keywordCollectionView.collectionViewLayout = TMDBKeywordLayout()
-            keywordCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
+            keywordCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     @IBOutlet weak var genreCollectionView: UICollectionView! {
         didSet {
             genreCollectionView.collectionViewLayout = TMDBKeywordLayout()
-            genreCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.keywordCell)
+            genreCollectionView.register(TMDBKeywordCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     @IBOutlet weak var posterImage: UIImageView! {
@@ -167,7 +135,7 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
         didSet {
             backdropImageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
-            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     
@@ -231,7 +199,7 @@ extension TVShowDetailView {
         // backdrop images binding
         viewModel
             .backdropImages
-            .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { _, image, cell in
+            .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, image, cell in
                 (cell as? TMDBBackdropImageCell)?.configure(item: image)
             }
             .disposed(by: rx.disposeBag)
@@ -257,7 +225,7 @@ extension TVShowDetailView {
         // keyword binding
         viewModel
             .keywords
-            .bind(to: keywordCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, keyword, cell in
+            .bind(to: keywordCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, keyword, cell in
                 (cell as? TMDBKeywordCell)?.configure(item: keyword)
             }
             .disposed(by: rx.disposeBag)
@@ -295,7 +263,7 @@ extension TVShowDetailView {
         // review and season table binding
         viewModel
             .reviewAndEpisode
-            .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.reviewCell)) { index, text, cell in
+            .bind(to: self.reviewTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, text, cell in
                 cell.textLabel?.setHeader(title: text)
             }
             .disposed(by: self.rx.disposeBag)
@@ -303,7 +271,7 @@ extension TVShowDetailView {
         // genre collection view binding
         viewModel
             .genres
-            .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.keywordCell)) { _, genre, cell in
+            .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, genre, cell in
                 (cell as? TMDBKeywordCell)?.configure(item: genre)
             }
             .disposed(by: self.rx.disposeBag)
@@ -319,25 +287,76 @@ extension TVShowDetailView {
         // credit binding
         viewModel
             .credits
-            .catchErrorJustReturn(dataSource.sectionModels)
-            .bind(to: creditCollectionView.rx.items(dataSource: dataSource))
+            .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
             .disposed(by: rx.disposeBag)
+        
 
         creditCollectionView
             .rx
-            .willDisplaySupplementaryView
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe { event in
-
-            }
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: self.creditDataSource.sectionModels.first?.items[indexPath.row])
+            })
             .disposed(by: rx.disposeBag)
         
         creditCollectionView
             .rx
-            .modelSelected(CustomElementType.self)
+            .willDisplaySupplementaryView
+            .take(1)
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { supplementary, _, _ in
+                let header = supplementary as? TMDBCreditHeaderView
+                
+                header?
+                    .segmentControl
+                    .rx
+                    .value
+                    .changed
+                    .asDriver()
+                    .drive(onNext: { index in
+                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                        self.viewModel.handleCreditSelection(at: index, tvshowId: self.tvShowId!)
+                    })
+                    .disposed(by: self.rx.disposeBag)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
+        // tv show binding
+        viewModel
+            .tvshows
+            .bind(to: tvshowCollectionView.rx.items(dataSource: tvshowDataSource))
+            .disposed(by: rx.disposeBag)
+        
+        tvshowCollectionView
+            .rx
+            .itemSelected
             .asDriver()
-            .drive(onNext: { element in
-                self.delegate?.navigateWith(obj: element.identity)
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: self.tvshowDataSource.sectionModels.first?.items[indexPath.row])
+            })
+            .disposed(by: rx.disposeBag)
+        
+        tvshowCollectionView
+            .rx
+            .willDisplaySupplementaryView
+            .take(1)
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { supplementary, _, _ in
+                let header = supplementary as? TMDBMovieLikeThisHeaderView
+                
+                header?
+                    .segmentControl
+                    .rx
+                    .value
+                    .changed
+                    .asDriver()
+                    .drive(onNext: { index in
+                        self.tvshowCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
+                        self.viewModel.handleTVShowLikeThisSelection(at: index, tvshowId: self.tvShowId!)
+                    })
+                    .disposed(by: self.rx.disposeBag)
             })
             .disposed(by: rx.disposeBag)
         

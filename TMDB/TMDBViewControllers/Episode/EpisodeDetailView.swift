@@ -8,6 +8,7 @@
 
 import UIKit
 import RxDataSources
+import RealmSwift
 
 class EpisodeDetailView: UIViewController {
     var episode: Episode?
@@ -23,9 +24,9 @@ class EpisodeDetailView: UIViewController {
     @IBOutlet weak var posterImageTop: NSLayoutConstraint!
     
     // MARK: - data source
-    let creditDataSource: RxCollectionViewSectionedReloadDataSource<EpisodeDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+    let creditDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
         let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
-        cell?.configure(item: item.identity)
+        cell?.configure(item: item)
         return cell as! UICollectionViewCell
     })
     
@@ -43,7 +44,7 @@ class EpisodeDetailView: UIViewController {
     @IBOutlet weak var imageCollectionView: UICollectionView! {
         didSet {
             imageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
-            imageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            imageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     @IBOutlet weak var scrollView: UIScrollView! {
@@ -64,21 +65,12 @@ class EpisodeDetailView: UIViewController {
             creditCollectionView.register(TMDBGuestStarHeaderView.self,
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                           withReuseIdentifier: Constant.Identifier.previewHeader)
-            
-            creditCollectionView
-                .rx
-                .modelSelected(CustomElementType.self)
-                .asDriver()
-                .drive(onNext: { item in
-                    self.delegate?.navigateWith(obj: item.identity)
-                })
-                .disposed(by: rx.disposeBag)
                 
             
             creditDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                        withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                       for: indexPath) as! TMDBGuestStarHeaderView
+                                                                       for: indexPath)
                     
             }
         }
@@ -131,7 +123,7 @@ extension EpisodeDetailView {
         // bind image collection view
         viewModel
             .images
-            .bind(to: imageCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { _, image, cell in
+            .bind(to: imageCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, image, cell in
                 (cell as? TMDBBackdropImageCell)?.configure(item: image)
             }
             .disposed(by: rx.disposeBag)
@@ -168,19 +160,14 @@ extension EpisodeDetailView {
             .credits
             .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
             .disposed(by: rx.disposeBag)
-        
+            
         creditCollectionView
             .rx
-            .willDisplaySupplementaryView
+            .itemSelected
             .asDriver()
-            .drive(onNext: { event in
-                if !self.viewModel.isThereGuestStar {
-                    (event.supplementaryView as? TMDBGuestStarHeaderView)?.segmentControl.removeSegment(at: 0, animated: false)
-                    self.viewModel.resetGuestStarHeaderState()
-                    self.creditCollectionView.removeFromSuperview()
-                }
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: self.creditDataSource.sectionModels.first?.items[indexPath.row])
             })
             .disposed(by: rx.disposeBag)
-            
     }
 }

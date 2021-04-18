@@ -38,7 +38,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aUu-wo-s53">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="621.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="571.5"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="OOB-XS-g1V">
                                     <rect key="frame" x="0.0" y="9" width="414" height="151"/>
@@ -106,10 +106,10 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="LJ6-9c-Krk">
-                                    <rect key="frame" x="0.0" y="301.5" width="414" height="300"/>
+                                    <rect key="frame" x="0.0" y="301.5" width="414" height="250"/>
                                     <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="300" id="Vpp-yW-Rfv"/>
+                                        <constraint firstAttribute="height" constant="250" id="Vpp-yW-Rfv"/>
                                     </constraints>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wdL-Ne-NNC">
                                         <size key="itemSize" width="128" height="128"/>
@@ -186,9 +186,6 @@
             <point key="canvasLocation" x="-197.10144927536234" y="83.705357142857139"/>
         </view>
     </objects>
-    <designables>
-        <designable name="LIP-zc-Cdb"/>
-    </designables>
     <resources>
         <image name="NoImage" width="450" height="450"/>
         <systemColor name="systemBackgroundColor">

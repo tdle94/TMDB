@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxDataSources
+import RealmSwift
 
 class TVShowSeasonDetailView: UIViewController {
     var season: Season?
@@ -20,14 +21,14 @@ class TVShowSeasonDetailView: UIViewController {
     weak var delegate: AppCoordinator?
     
     // MARK: - datasource
-    let dataSource: RxCollectionViewSectionedReloadDataSource<TVShowSeasonDetailModel> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
+    let creditDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
         let cell: TMDBCellConfig? = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath) as? TMDBCellConfig
-        cell?.configure(item: item.identity)
+        cell?.configure(item: item)
         return cell as! UICollectionViewCell
     })
     
     let episodeDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, Episode>> = RxTableViewSectionedReloadDataSource(configureCell: { dataSource, tableView, indexPath, item in
-        let cell: TMDBCustomTableViewCell? = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.tvShowEpisodeCell) as? TMDBCustomTableViewCell
+        let cell: TMDBCustomTableViewCell? = tableView.dequeueReusableCell(withIdentifier: Constant.Identifier.cell) as? TMDBCustomTableViewCell
         cell?.configure(item: item)
         return cell!
     })
@@ -45,55 +46,17 @@ class TVShowSeasonDetailView: UIViewController {
     @IBOutlet weak var numberOfEpisodeLabel: UILabel!
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2)
-            } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.86)
-            }
+            creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
             
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBCreditHeaderView.self,
                                           forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                           withReuseIdentifier: Constant.Identifier.previewHeader)
             
-            creditCollectionView
-                .rx
-                .modelSelected(CustomElementType.self)
-                .asDriver()
-                .drive(onNext: { item in
-                    self.delegate?.navigateWith(obj: item.identity)
-                })
-                .disposed(by: rx.disposeBag)
-            
-            dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
-                let creditHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                                   withReuseIdentifier: Constant.Identifier.previewHeader,
-                                                                                   for: indexPath) as! TMDBCreditHeaderView
-                
-                if creditHeader.segmentControl.selectedSegmentIndex == -1 {
-                    creditHeader.segmentControl.selectedSegmentIndex = 0
-                    creditHeader
-                        .segmentControl
-                        .rx
-                        .value
-                        .changed
-                        .subscribe { event in
-                            guard let index = event.element else {
-                                return
-                            }
-                            
-                            self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
-
-                            if index == 0, creditHeader.segmentControl.titleForSegment(at: 0) == NSLocalizedString("Cast", comment: "") {
-                                self.viewModel.getSeasonCasts(tvShowId: self.tvShowId!, seasonNumber: self.season!.number)
-                            } else {
-                                self.viewModel.getSeasonCrews(tvShowId: self.tvShowId!, seasonNumber: self.season!.number)
-                            }
-                        }
-                        .disposed(by: self.rx.disposeBag)
-                }
-                
-                return creditHeader
+            creditDataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
+                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                       withReuseIdentifier: Constant.Identifier.previewHeader,
+                                                                       for: indexPath)
             }
         }
     }
@@ -106,7 +69,7 @@ class TVShowSeasonDetailView: UIViewController {
     @IBOutlet weak var episodeTableView: UITableView! {
         didSet {
             episodeTableView.register(UINib(nibName: String(describing: TMDBCustomTableViewCell.self), bundle: nil),
-                                      forCellReuseIdentifier: Constant.Identifier.tvShowEpisodeCell)
+                                      forCellReuseIdentifier: Constant.Identifier.cell)
             episodeTableView.rowHeight = 120
             
             episodeDataSource.titleForHeaderInSection = { dataSource, index in
@@ -127,7 +90,7 @@ class TVShowSeasonDetailView: UIViewController {
     @IBOutlet weak var backdropImageCollectionView: UICollectionView! {
         didSet {
             backdropImageCollectionView.collectionViewLayout = CollectionViewLayout.imageLayout()
-            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.imageCell)
+            backdropImageCollectionView.register(TMDBBackdropImageCell.self, forCellWithReuseIdentifier: Constant.Identifier.cell)
         }
     }
     
@@ -217,7 +180,7 @@ extension TVShowSeasonDetailView {
         // bind back drop images
         viewModel
             .backdropImages
-            .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.imageCell)) { _, image, cell in
+            .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, image, cell in
                 (cell as? TMDBBackdropImageCell)?.configure(item: image)
             }
             .disposed(by: rx.disposeBag)
@@ -241,37 +204,40 @@ extension TVShowSeasonDetailView {
             .disposed(by: rx.disposeBag)
         
         // bind credit collectionView
+        
+        viewModel
+            .credits
+            .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
+            .disposed(by: rx.disposeBag)
+        
+        creditCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                self.delegate?.navigateWith(obj: self.creditDataSource.sectionModels.first?.items[indexPath.row])
+            })
+            .disposed(by: rx.disposeBag)
+        
         creditCollectionView
             .rx
             .willDisplaySupplementaryView
-            .subscribe { event in
-                guard let creditHeader = event.element?.supplementaryView as? TMDBCreditHeaderView else {
-                    return
-                }
+            .take(1)
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { supplementary, _, _ in
+                let header = supplementary as? TMDBCreditHeaderView
                 
-                if !self.viewModel.isThereCast {
-                    creditHeader.segmentControl.removeSegment(at: 0, animated: false)
-                    creditHeader.segmentControl.selectedSegmentIndex = 0
-                } else if !self.viewModel.isThereCrew {
-                    creditHeader.segmentControl.removeSegment(at: 1, animated: false)
-                }
-                
-                self.viewModel.resetCreditHeaderState()
-            }
-            .disposed(by: rx.disposeBag)
-
-        viewModel
-            .credit
-            .subscribe { event in
-                if event.element?.isEmpty ?? true {
-                    self.creditCollectionViewHeight.constant = 0
-                }
-            }
-            .disposed(by: rx.disposeBag)
-        
-        viewModel
-            .credit
-            .bind(to: creditCollectionView.rx.items(dataSource: dataSource))
+                header?
+                    .segmentControl
+                    .rx
+                    .value
+                    .changed
+                    .asDriver()
+                    .drive(onNext: { index in
+                        self.viewModel.handleCreditSelection(at: index, tvshowId: self.tvShowId!, seasonNumber: self.season!.number)
+                    })
+                    .disposed(by: self.rx.disposeBag)
+            })
             .disposed(by: rx.disposeBag)
         
         // bind labels

@@ -9,6 +9,7 @@
 import RxSwift
 import RealmSwift
 import NotificationBannerSwift
+import RxDataSources
 
 protocol PersonDetailViewModelProtocol {
     var profileCollectionImages: PublishSubject<[Images]> { get }
@@ -22,10 +23,7 @@ protocol PersonDetailViewModelProtocol {
     var homepage: PublishSubject<NSAttributedString> { get }
     var alias: PublishSubject<NSAttributedString> { get }
     var biography: PublishSubject<NSAttributedString> { get }
-    var credits: BehaviorSubject<[PersonDetailModel]> { get }
-    
-    var isThereMovie: Bool { get }
-    var isThereTVShow: Bool { get }
+    var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
      
     var userSetting: TMDBUserSettingProtocol { get }
     var repository: TMDBPeopleRepository { get }
@@ -33,7 +31,7 @@ protocol PersonDetailViewModelProtocol {
     func getPersonDetail(id: Int)
     func getMoviesAppearIn(personId: Int)
     func getTVShowsAppearIn(personId: Int)
-    func resetCreditHeaderState()
+    func handleCreditSelection(at: Int, personId: Int)
 }
 
 class PersonDetailViewModel: PersonDetailViewModelProtocol {
@@ -48,7 +46,7 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
     var homepage: PublishSubject<NSAttributedString> = PublishSubject()
     var alias: PublishSubject<NSAttributedString> = PublishSubject()
     var biography: PublishSubject<NSAttributedString> = PublishSubject()
-    var credits: BehaviorSubject<[PersonDetailModel]> = BehaviorSubject(value: [])
+    var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
     
     var isThereMovie: Bool = true
     var isThereTVShow: Bool = true
@@ -103,26 +101,6 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
                 if let imdbId = personResult.imdbId, !imdbId.isEmpty {
                     self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB", subTitle: imdbId))
                 }
-
-                if personResult.movieCredits?.cast.isEmpty ?? true, personResult.tvCredits?.cast.isEmpty ?? true {
-                    self.isThereMovie = false
-                    self.isThereTVShow = false
-                    self.credits.onNext([])
-                } else if personResult.movieCredits?.cast.isEmpty ?? true {
-                    self.isThereMovie = false
-                    self.credits.onNext([
-                        .Credits(items: personResult.tvCredits!.cast.map { CustomElementType(identity: $0) } ),
-                    ])
-                } else if personResult.tvCredits?.cast.isEmpty ?? true {
-                    self.isThereTVShow = false
-                    self.credits.onNext([
-                        .Credits(items: personResult.movieCredits!.cast.map { CustomElementType(identity: $0) } ),
-                    ])
-                } else {
-                    self.credits.onNext([
-                        .Credits(items: personResult.movieCredits!.cast.map { CustomElementType(identity: $0) } ),
-                    ])
-                }
                 
 
                 self.gender.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Gender", comment: ""),
@@ -132,6 +110,8 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
                                                                   subTitle: personResult.knownForDepartment))
                 
                 self.profileCollectionImages.onNext(Array(personResult.images?.profiles ?? List<Images>()))
+                
+                self.credits.onNext([SectionModel(model: "credit", items: Array(personResult.movieCredits?.cast ?? List<Movie>()) )])
             case .failure(let error):
                 debugPrint("Error getting season detail \(id): \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: "Fail getting person detail", style: .danger).show(queuePosition: .back,
@@ -142,22 +122,20 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
     }
     
     func getMoviesAppearIn(personId: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let movies = self.repository.getMovieCredits(from: personId)
-            self.credits.onNext([.Credits(items: movies.map { CustomElementType(identity: $0) })])
-        }
-        
+        let movies = self.repository.getMovieCredits(from: personId)
+        self.credits.onNext([SectionModel(model: "credit", items: movies)])
     }
 
     func getTVShowsAppearIn(personId: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let tvshows = self.repository.getTVCredits(from: personId)
-            self.credits.onNext([.Credits(items: tvshows.map { CustomElementType(identity: $0) })])
-        }
+        let tvshows = self.repository.getTVCredits(from: personId)
+        self.credits.onNext([SectionModel(model: "credit", items: tvshows)])
     }
     
-    func resetCreditHeaderState() {
-        self.isThereMovie = true
-        self.isThereTVShow = true
+    func handleCreditSelection(at: Int, personId: Int) {
+        if at == 0 {
+            getMoviesAppearIn(personId: personId)
+        } else {
+            getTVShowsAppearIn(personId: personId)
+        }
     }
 }

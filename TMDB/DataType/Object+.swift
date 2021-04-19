@@ -10,42 +10,42 @@ import RealmSwift
 
 extension Object {
     
-    var displayTitle: String? {
+    var displayTitle: String {
         if self is Movie {
-            return (self as? Movie)?.originalTitle
+            return (self as? Movie)?.originalTitle ?? ""
         } else if self is Trending {
-            return (self as? Trending)?.movie?.originalTitle ?? (self as? Trending)?.tv?.originalName ?? (self as? Trending)?.people?.name
+            return (self as? Trending)?.movie?.originalTitle ?? (self as? Trending)?.tv?.originalName ?? (self as? Trending)?.people?.name ?? ""
         } else if self is TVShow {
-            return (self as? TVShow)?.originalName
+            return (self as? TVShow)?.originalName ?? ""
         } else if self is People {
-            return (self as? People)?.name
+            return (self as? People)?.name ?? ""
         } else if self is Crew {
-            return (self as? Crew)?.name
+            return (self as? Crew)?.name ?? ""
         } else if self is Cast {
-            return (self as? Cast)?.name
+            return (self as? Cast)?.name ?? ""
         } else if self is CreatedBy {
-            return (self as? CreatedBy)?.name
+            return (self as? CreatedBy)?.name ?? ""
         }
-        return nil
+        return ""
     }
     
-    var displaySubtitle: String? {
+    var displaySubtitle: String {
         if self is Movie {
-            return (self as? Movie)?.releaseDate
+            return (self as? Movie)?.releaseDate ?? ""
         } else if self is Trending {
-            return (self as? Trending)?.movie?.releaseDate ?? (self as? Trending)?.tv?.firstAirDate ?? (self as? Trending)?.people?.knownForDepartment
+            return (self as? Trending)?.movie?.releaseDate ?? (self as? Trending)?.tv?.firstAirDate ?? (self as? Trending)?.people?.knownForDepartment ?? ""
         } else if self is TVShow {
-            return (self as? TVShow)?.firstAirDate
+            return (self as? TVShow)?.firstAirDate ?? ""
         } else if self is People {
-            return (self as? People)?.knownForDepartment
+            return (self as? People)?.knownForDepartment ?? ""
         } else if self is Crew {
-            return (self as? Crew)?.job
+            return (self as? Crew)?.job ?? ""
         } else if self is Cast {
-            return (self as? Cast)?.character
+            return (self as? Cast)?.character ?? ""
         } else if self is CreatedBy {
-            return (self as? CreatedBy)?.name
+            return (self as? CreatedBy)?.name ?? ""
         }
-        return nil
+        return ""
     }
     
     var displayRating: Double {

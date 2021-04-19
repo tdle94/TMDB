@@ -14,10 +14,46 @@ import RxDataSources
 
 protocol MovieDetailViewModelProtocol {
     var repository: TMDBMovieRepository { get }
-    
-    var movieParser: MovieParser { get }
 
     var userSetting: TMDBUserSettingProtocol { get }
+    
+    // movie
+    var movieDetail: PublishSubject<Movie> { get }
+    
+    // backdrop images
+    var images: PublishSubject<[Images]> { get }
+    
+    // label
+    var status: PublishSubject<NSAttributedString> { get }
+    var tagline: PublishSubject<NSAttributedString> { get }
+    var produceInCountries: PublishSubject<NSAttributedString> { get }
+    var imdb: PublishSubject<NSAttributedString> { get }
+    var belongToCollection: PublishSubject<NSAttributedString> { get }
+    var homepage: PublishSubject<NSAttributedString> { get }
+    var overview: PublishSubject<NSAttributedString> { get }
+    var title: PublishSubject<NSAttributedString> { get }
+    var runtimeAndReleaseDate: PublishSubject<NSAttributedString> { get }
+    var originalLanguage: PublishSubject<NSAttributedString> { get }
+    var budget: PublishSubject<NSAttributedString> { get }
+    var revenue: PublishSubject<NSAttributedString> { get }
+    var availableLanguage: PublishSubject<NSAttributedString> { get }
+    
+    // table view
+    var reviewAndRelease: PublishSubject<[String]> { get }
+    
+    // collection view
+    var keywords: PublishSubject<[Keyword]> { get }
+    var genres: PublishSubject<[Genre]> { get }
+    var productionCompanies: PublishSubject<[ProductionCompany]> { get }
+    
+    // poster url path
+    var posterURL: PublishSubject<URL> { get }
+    
+    // movie credit
+    var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    
+    // similar and recommend movies
+    var moviesLikeThis: BehaviorSubject<[SectionModel<String, Object>]> { get }
     
     func getMovieDetail(movieId: Int)
     func getImages(movieId: Int)
@@ -31,11 +67,13 @@ protocol MovieDetailViewModelProtocol {
     func handleCreditSelection(at segment: Int, movieId: Int)
 }
 
-class MovieParser {
-    // MARK: - properties
+class MovieDetailViewModel: MovieDetailViewModelProtocol {
+    var repository: TMDBMovieRepository
+    
+    var userSetting: TMDBUserSettingProtocol
     
     // movie
-    var movie: PublishSubject<Movie> = PublishSubject()
+    var movieDetail: PublishSubject<Movie> = PublishSubject()
     
     // backdrop images
     var images: PublishSubject<[Images]> = PublishSubject()
@@ -62,8 +100,7 @@ class MovieParser {
     var keywords: PublishSubject<[Keyword]> = PublishSubject()
     var genres: PublishSubject<[Genre]> = PublishSubject()
     var productionCompanies: PublishSubject<[ProductionCompany]> = PublishSubject()
-    var productionCompaniesCollectionViewHeight: PublishSubject<CGFloat> = PublishSubject()
-    
+
     // poster url path
     var posterURL: PublishSubject<URL> = PublishSubject()
     
@@ -72,150 +109,11 @@ class MovieParser {
     
     // similar and recommend movies
     var moviesLikeThis: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
-
-    
-    // MARK: - parse
-    
-    func parseLabel(movie: Movie, userSetting: TMDBUserSettingProtocol) {
-        self.status.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Status", comment: ""),
-                                                      subTitle: movie.status))
-        self.tagline.onNext(TMDBLabel.setAttributeText(title: movie.tagline ?? ""))
-        
-        if let imdbId = movie.imdbId, !imdbId.isEmpty {
-            self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB",
-                                                        subTitle: imdbId))
-        }
-        
-        if !movie.productionCountries.isEmpty {
-            self.produceInCountries.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Produced In", comment: ""),
-                                                                      subTitle: Array(movie.productionCountries).map { $0.name }.joined(separator: ", ") ))
-        }
-        
-        if let collection = movie.belongToCollection?.name {
-            self.belongToCollection.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Collection", comment: ""),
-                                                                      subTitle: collection))
-        }
-        
-        if let homepage = movie.homepage, !homepage.isEmpty {
-            self.homepage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Homepage", comment: ""),
-                                                            subTitle: homepage))
-        }
-        
-        if let overview = movie.overview, !overview.isEmpty {
-            self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
-                                                                paragraph: overview))
-        }
-        
-        self.title.onNext(TMDBLabel.setHeader(title: movie.title))
-        
-        var releaseDate = ""
-        var producedInCountriesAbbreviation = Array(movie.productionCountries).map { $0.ios31661 }.joined(separator: ", ")
-        
-        if !producedInCountriesAbbreviation.isEmpty {
-            producedInCountriesAbbreviation = "(\(producedInCountriesAbbreviation))"
-        }
-
-        
-        if let date = movie.releaseDate, !date.isEmpty {
-            releaseDate = "\u{2022} \(date)"
-        }
-        
-        self.runtimeAndReleaseDate.onNext(TMDBLabel.setHeader(title: "\(movie.runtime / 60)h \(movie.runtime % 60)mins \(releaseDate) \(producedInCountriesAbbreviation)"))
-
-        self.originalLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Original Language", comment: ""),
-                                                                subTitle: userSetting.languagesCode.first(where: { $0.iso6391 == movie.originalLanguage })?.name))
-        
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        
-        self.budget.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Budget", comment: ""),
-                                                      subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.budget)) ?? "0.0")"))
-        self.revenue.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Revenue", comment: ""),
-                                                       subTitle: "$\(numberFormatter.string(from: NSNumber(value: movie.revenue)) ?? "0.0")"))
-        
-        let availableLanguages = Array(movie.spokenLanguages).map { $0.name }.joined(separator: ", ")
-        if !availableLanguages.isEmpty {
-            self.availableLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Available Lanuages", comment: ""),
-                                                                     subTitle: availableLanguages))
-        }
-    }
-    
-    func parsePosterURL(movie: Movie, userSetting: TMDBUserSettingProtocol) {
-        if let path = movie.posterPath, let url = userSetting.getImageURL(from: path) {
-            posterURL.onNext(url)
-        }
-    }
-    
-    func parseMovie(_ movie: Movie) {
-        self.movie.onNext(movie)
-
-        parseKeyword(Array(movie.keywords?.keywords ?? List<Keyword>()))
-        parseGenres(Array(movie.genres))
-        parseProductionCompanies(Array(movie.productionCompanies))
-        parseReviewAndRelease(movie: movie)
-        parseMovieCredits(movie)
-    }
-    
-    func parseMovieCredits(_ movie: Movie) {
-        let similarMovies = Array(movie.similar?.movies ?? List<Movie>())
-        let casts = Array(movie.credits?.cast ?? List<Cast>())
-
-        moviesLikeThis.onNext([SectionModel(model: "movie", items: similarMovies)])
-        credits.onNext([SectionModel(model: "credit", items: casts)])
-
-    }
-    
-    func parseMovie(casts: [Cast]) {
-        credits.onNext([SectionModel(model: "credit", items: casts)])
-    }
-    
-    func parseMovie(crews: [Crew]) {
-        credits.onNext([SectionModel(model: "credit", items: crews)])
-    }
-    
-    func parseMovieLikeThis(movies: [Movie]) {
-        moviesLikeThis.onNext([SectionModel(model: "movie", items: movies)])
-    }
-    
-    func parseKeyword(_ keywords: [Keyword]) {
-        self.keywords.onNext(keywords)
-    }
-    
-    func parseGenres(_ genres: [Genre]) {
-        self.genres.onNext(genres)
-    }
-    
-    func parseProductionCompanies(_ productionCompanies: [ProductionCompany]) {
-        let productionCompanyLogo = productionCompanies.filter { $0.logoPath?.isNotEmpty ?? false }
-        self.productionCompanies.onNext(productionCompanyLogo)
-        if productionCompanyLogo.isEmpty {
-            self.productionCompaniesCollectionViewHeight.onNext(0.0)
-        }
-    }
-    
-    func parseReviewAndRelease(movie: Movie) {
-        reviewAndRelease.onNext([
-            NSLocalizedString("Review (\(movie.reviews?.reviews.count ?? 0))", comment: ""),
-            NSLocalizedString("Release Date (\(movie.releaseDates?.results.count ?? 0))", comment: "")
-        ])
-    }
-    
-    func parseImages(_ images: [Images]) {
-        self.images.onNext(images)
-    }
-}
-
-class MovieDetailViewModel: MovieDetailViewModelProtocol {
-    var repository: TMDBMovieRepository
-    
-    var movieParser: MovieParser = MovieParser()
-    
-    var userSetting: TMDBUserSettingProtocol
     
     lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { [unowned self] result in
         switch result {
         case .success(let movieResult):
-            self.movieParser.parseMovieLikeThis(movies: Array(movieResult.movies))
+            self.moviesLikeThis.onNext([SectionModel(model: "movie", items: Array(movieResult.movies))])
         case .failure(let error):
             debugPrint("Error getting similar movies: \(error.localizedDescription)")
             StatusBarNotificationBanner(title: "Fail getting movie", style: .danger).show(queuePosition: .back,
@@ -233,8 +131,70 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         repository.getMovieDetail(id: movieId) { result in
             switch result {
             case .success(let movieDetailResult):
-                self.movieParser.parseMovie(movieDetailResult)
-                self.movieParser.parseLabel(movie: movieDetailResult, userSetting: self.userSetting)
+                self.movieDetail.onNext(movieDetailResult)
+                self.status.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Status", comment: ""),
+                                                              subTitle: movieDetailResult.status))
+                self.tagline.onNext(TMDBLabel.setAttributeText(title: movieDetailResult.tagline ?? ""))
+
+                self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB",
+                                                            subTitle: movieDetailResult.imdbId ?? ""))
+
+                self.produceInCountries.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Produced In", comment: ""),
+                                                                            subTitle: Array(movieDetailResult.productionCountries).map { $0.name }.joined(separator: ", ") ))
+
+                self.belongToCollection.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Collection", comment: ""),
+                                                                            subTitle: movieDetailResult.belongToCollection?.name ))
+
+                self.homepage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Homepage", comment: ""),
+                                                                subTitle: movieDetailResult.homepage ?? ""))
+
+                self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
+                                                                    paragraph: movieDetailResult.overview ?? ""))
+
+                
+                self.keywords.onNext(Array(movieDetailResult.keywords?.keywords ?? List<Keyword>()))
+                self.genres.onNext(Array(movieDetailResult.genres))
+                self.productionCompanies.onNext(Array(movieDetailResult.productionCompanies))
+                self.moviesLikeThis.onNext([SectionModel(model: "movies", items: Array(movieDetailResult.similar?.movies ?? List<Movie>()))])
+                self.credits.onNext([SectionModel(model: "credits", items: Array(movieDetailResult.credits?.cast ?? List<Cast>()))])
+                
+                self.reviewAndRelease.onNext([
+                    NSLocalizedString("Review", comment: "") + " (\(movieDetailResult.reviews?.totalResults ?? 0))",
+                    NSLocalizedString("Release Date", comment: "") + " (\(movieDetailResult.releaseDates?.results.count ?? 0))"
+                ])
+                
+                self.title.onNext(TMDBLabel.setHeader(title: movieDetailResult.title))
+                
+                var releaseDate = ""
+                var producedInCountriesAbbreviation = Array(movieDetailResult.productionCountries).map { $0.ios31661 }.joined(separator: ", ")
+                
+                if !producedInCountriesAbbreviation.isEmpty {
+                    producedInCountriesAbbreviation = "(\(producedInCountriesAbbreviation))"
+                }
+
+                
+                if let date = movieDetailResult.releaseDate, !date.isEmpty {
+                    releaseDate = "\u{2022} \(date)"
+                }
+                
+                self.runtimeAndReleaseDate.onNext(TMDBLabel.setHeader(title: "\(movieDetailResult.runtime / 60)h \(movieDetailResult.runtime % 60)mins \(releaseDate) \(producedInCountriesAbbreviation)"))
+
+                self.originalLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Original Language", comment: ""),
+                                                                        subTitle: self.userSetting.languagesCode.first(where: { $0.iso6391 == movieDetailResult.originalLanguage })?.name))
+                
+                let numberFormatter = NumberFormatter()
+                numberFormatter.numberStyle = .decimal
+                
+                self.budget.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Budget", comment: ""),
+                                                              subTitle: "$\(numberFormatter.string(from: NSNumber(value: movieDetailResult.budget)) ?? "0.0")"))
+                self.revenue.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Revenue", comment: ""),
+                                                               subTitle: "$\(numberFormatter.string(from: NSNumber(value: movieDetailResult.revenue)) ?? "0.0")"))
+                
+                let availableLanguages = Array(movieDetailResult.spokenLanguages).map { $0.name }.joined(separator: ", ")
+
+                self.availableLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Available Lanuages", comment: ""),
+                                                                        subTitle: availableLanguages))
+
             case .failure(let error):
                 debugPrint("Error getting movie detail \(movieId): \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: "Fail getting movie detail people", style: .danger).show(queuePosition: .back,
@@ -248,7 +208,7 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         repository.getMovieImages(from: movieId) { result in
             switch result {
             case .success(let imageResult):
-                self.movieParser.parseImages(Array(imageResult.backdrops))
+                self.images.onNext(Array(imageResult.backdrops))
             case .failure(let error):
                 debugPrint("Error getting movie images \(movieId): \(error.localizedDescription)")
             }
@@ -256,11 +216,13 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     }
     
     func getCasts(movieId: Int) {
-        self.movieParser.parseMovie(casts: self.repository.getMovieCast(from: movieId))
+        let casts = repository.getMovieCast(from: movieId)
+        credits.onNext([SectionModel(model: "credit", items: casts)])
     }
     
     func getCrews(movieId: Int) {
-        self.movieParser.parseMovie(crews: self.repository.getMovieCrew(from: movieId))
+        let crews = repository.getMovieCrew(from: movieId)
+        credits.onNext([SectionModel(model: "credit", items: crews)])
     }
     
     func getSimilarMovies(movieId: Int) {

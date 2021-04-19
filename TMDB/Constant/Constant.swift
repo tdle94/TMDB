@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 struct Constant {
+    static let productionCompanyCollectionViewHeight: CGFloat = 60
+    
     struct Identifier {
         static let previewFooter = "PreviewFooter"
         static let previewHeader = "PreviewHeader"

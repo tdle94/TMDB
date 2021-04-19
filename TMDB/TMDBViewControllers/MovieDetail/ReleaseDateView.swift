@@ -109,7 +109,7 @@ extension ReleaseDateView {
             .bind(to: releaseDateTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, releaseDate, cell in
                 let country = self.viewModel.getCountryNameFrom(iso31661: releaseDate.iso31661)
                 cell.textLabel?.setHeader(title: releaseDate.releaseDates.first?.releaseDate ?? "")
-                cell.detailTextLabel?.setAttributeText(title: releaseDate.releaseDates.first?.certification ?? "")
+                cell.detailTextLabel?.setAttributeText(releaseDate.releaseDates.first?.certification ?? "")
                 cell.imageView?.image = UIImage(named: "CountryFlags/\(country)")?.sd_resizedImage(with: CGSize(width: 40, height: 40), scaleMode: .aspectFit)
             }
             .disposed(by: rx.disposeBag)

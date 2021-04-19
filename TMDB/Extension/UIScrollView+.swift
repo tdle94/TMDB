@@ -99,6 +99,7 @@ extension UIScrollView {
                 return header
             }
             let header = ParallaxHeader()
+            header.contentView.isSkeletonable = true
             self.parallaxHeader = header
             return header
         }

@@ -193,6 +193,7 @@ extension PersonDetailView {
                     .changed
                     .asDriver()
                     .drive(onNext: { index in
+                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                         self.viewModel.handleCreditSelection(at: index, personId: self.id!)
                     })
                     .disposed(by: self.rx.disposeBag)

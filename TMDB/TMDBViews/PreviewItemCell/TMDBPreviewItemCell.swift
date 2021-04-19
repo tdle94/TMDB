@@ -48,8 +48,8 @@ class TMDBPreviewItemCell: UICollectionViewCell {
 extension TMDBPreviewItemCell: TMDBCellConfig {
     func configure(item: Object) {
         ratingLabel.isHidden = item.hideRatingLabel
-        title.setHeader(title: item.displayTitle ?? "")
-        subTitle.setAttributeText(title: item.displaySubtitle ?? "")
+        title.setHeader(title: item.displayTitle)
+        subTitle.setAttributeText(item.displaySubtitle)
         ratingLabel.rating = item.displayRating
         getImage(from: item.imagePath)
     }

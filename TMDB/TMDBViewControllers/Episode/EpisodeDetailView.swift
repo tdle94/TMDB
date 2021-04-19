@@ -98,7 +98,7 @@ class EpisodeDetailView: UIViewController {
             airDateLabel.attributedText = TMDBLabel.setAttributeText(title: NSLocalizedString("Air On", comment: ""), subTitle: episode.airDate)
             titleLabel.setHeader(title: episode.name)
             
-            overviewLabel.setAttributeText(title: episode.overview)
+            overviewLabel.setAttributeText(episode.overview)
             ratingLabel.rating = episode.voteAverage
             if let path = episode.stillPath, let url = viewModel.userSetting.getImageURL(from: path) {
                 posterImage.sd_setImage(with: url)

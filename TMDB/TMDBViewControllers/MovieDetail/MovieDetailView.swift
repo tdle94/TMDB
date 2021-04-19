@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxDataSources
 import RealmSwift
+import SkeletonView
 
 class MovieDetailView: UIViewController {
     weak var delegate: AppCoordinator?
@@ -42,18 +43,13 @@ class MovieDetailView: UIViewController {
     })
     
     // MARK: - constraints
-    
-    @IBOutlet weak var posterImageViewTop: NSLayoutConstraint!
-    @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var genreCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var runtimeAndReleaseDateTop: NSLayoutConstraint!
-    @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var productionCompanyCollectionViewTop: NSLayoutConstraint!
-    @IBOutlet weak var productionCompanyCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var keywordCollectionViewTop: NSLayoutConstraint!
+    @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var productionCompanyCollectionViewHeight: NSLayoutConstraint!
     // MARK: - views
     @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var homepageLabel: UILabel!
     @IBOutlet weak var imdbLabel: UILabel!
     @IBOutlet weak var collectionNameLabel: UILabel!
@@ -112,6 +108,7 @@ class MovieDetailView: UIViewController {
 
     @IBOutlet weak var reviewAndReleaseTableView: UITableView! {
         didSet {
+            reviewAndReleaseTableView.overrideUserInterfaceStyle  = .light
             reviewAndReleaseTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
                                                forCellReuseIdentifier: Constant.Identifier.cell)
         }
@@ -144,7 +141,7 @@ class MovieDetailView: UIViewController {
                 .didEndDecelerating
                 .asObservable()
                 .subscribe { _ in
-                    if let id = self.movieId, self.scrollView.parallaxHeader.refreshControl.isRefreshing {
+                    if self.scrollView.parallaxHeader.refreshControl.isRefreshing {
                         
                         self.backdropImageCollectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: false)
 
@@ -157,8 +154,7 @@ class MovieDetailView: UIViewController {
 
                         // get movie detail
                         self.scrollView.parallaxHeader.refreshControl.beginRefreshing()
-                        self.viewModel.getImages(movieId: id)
-                        self.viewModel.getMovieDetail(movieId: id)
+                        self.getMovieDetail()
                     }
                 }
                 .disposed(by: rx.disposeBag)
@@ -179,24 +175,44 @@ class MovieDetailView: UIViewController {
         navigationItem.setBackArrowIcon()
                                          
         self.setupBinding()
-
-        if let id = movieId {
-            viewModel.getImages(movieId: id)
-            viewModel.getMovieDetail(movieId: id)
-        }
+        self.getMovieDetail()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         keywordCollectionViewHeight.constant = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
         genreCollectionViewHeight.constant = genreCollectionView.collectionViewLayout.collectionViewContentSize.height
-        
+
         keywordCollectionView.layoutIfNeeded()
         genreCollectionView.layoutIfNeeded()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.resetNavBar()
+    }
+    
+    // MARK: - get movie detail
+    func getMovieDetail() {
+        stackView.showAnimatedGradientSkeleton()
+        titleLabel.showAnimatedGradientSkeleton()
+        posterImageView.showAnimatedGradientSkeleton()
+        statusLabel.showAnimatedGradientSkeleton()
+        originalLanguageLabel.showAnimatedGradientSkeleton()
+        budgetLabel.showAnimatedGradientSkeleton()
+        revenueLabel.showAnimatedGradientSkeleton()
+        availableLanguagesLabel.showAnimatedGradientSkeleton()
+        produceInCountriesLabel.showAnimatedGradientSkeleton()
+        imdbLabel.showAnimatedGradientSkeleton()
+        homepageLabel.showAnimatedGradientSkeleton()
+        collectionNameLabel.showAnimatedGradientSkeleton()
+        overviewLabel.showAnimatedGradientSkeleton()
+        runtimeAndReleaseDate.showAnimatedGradientSkeleton()
+        scrollView.parallaxHeader.contentView.showAnimatedGradientSkeleton()
+        
+        if let id = movieId {
+            viewModel.getImages(movieId: id)
+            viewModel.getMovieDetail(movieId: id)
+        }
     }
 }
 
@@ -215,21 +231,35 @@ extension MovieDetailView {
 
         // movie detail binding
         viewModel
-            .movieParser
-            .movie
-            .asObserver()
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe(
-                onNext: { result in
-                    self.scrollView.parallaxHeader.refreshControl.endRefreshing()
-                    self.ratingLabel.rating = result.voteAverage
-                    self.title = result.title
-                })
+            .movieDetail
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { movie in
+                
+                self.scrollView.parallaxHeader.refreshControl.endRefreshing()
+                self.ratingLabel.rating = movie.voteAverage
+                self.title = movie.title
+                self.productionCompanyCollectionViewHeight.constant = movie.productionCompanies.isEmpty ? 0 : Constant.productionCompanyCollectionViewHeight
+
+                self.stackView.hideSkeleton()
+                self.titleLabel.hideSkeleton()
+                self.posterImageView.hideSkeleton()
+                self.statusLabel.hideSkeleton()
+                self.originalLanguageLabel.hideSkeleton()
+                self.budgetLabel.hideSkeleton()
+                self.revenueLabel.hideSkeleton()
+                self.availableLanguagesLabel.hideSkeleton()
+                self.produceInCountriesLabel.hideSkeleton()
+                self.imdbLabel.hideSkeleton()
+                self.homepageLabel.hideSkeleton()
+                self.collectionNameLabel.hideSkeleton()
+                self.overviewLabel.hideSkeleton()
+                self.runtimeAndReleaseDate.hideSkeleton()
+                self.scrollView.parallaxHeader.contentView.hideSkeleton()
+            })
             .disposed(by: rx.disposeBag)
         
         // poster image url binding
         viewModel
-            .movieParser
             .posterURL
             .subscribe(onNext: { url in
                 self.posterImageView.sd_setImage(with: url) { _, _, _, _ in
@@ -241,7 +271,6 @@ extension MovieDetailView {
         
         // backdrop images binding
         viewModel
-            .movieParser
             .images
             .bind(to: backdropImageCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, image, cell in
                 (cell as? TMDBBackdropImageCell)?.configure(item: image)
@@ -249,7 +278,6 @@ extension MovieDetailView {
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .images
             .subscribe { event in
                 self.scrollView.parallaxHeader.dots = event.element?.count ?? 0
@@ -273,7 +301,6 @@ extension MovieDetailView {
         
         // bind release and review tableview
         viewModel
-            .movieParser
             .reviewAndRelease
             .bind(to: self.reviewAndReleaseTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, text, cell in
                 cell.textLabel?.setHeader(title: text)
@@ -282,7 +309,6 @@ extension MovieDetailView {
         
         // bind production companies
         viewModel
-            .movieParser
             .productionCompanies
             .bind(to: self.productionCompaniesCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, productionCompany, cell in
                 (cell as? TMDBProductionCompanyCell)?.configure(item: productionCompany)
@@ -291,7 +317,6 @@ extension MovieDetailView {
         
         // genres collectionView binding
         viewModel
-            .movieParser
             .genres
             .bind(to: self.genreCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, genre, cell in
                 (cell as? TMDBKeywordCell)?.configure(item: genre)
@@ -299,7 +324,6 @@ extension MovieDetailView {
             .disposed(by: self.rx.disposeBag)
         
         viewModel
-            .movieParser
             .genres
             .asDriver(onErrorJustReturn: [])
             .drive(onNext: { genres in
@@ -309,7 +333,6 @@ extension MovieDetailView {
         
         // keyword collectionView binding
         viewModel
-            .movieParser
             .keywords
             .bind(to: keywordCollectionView.rx.items(cellIdentifier: Constant.Identifier.cell)) { _, keyword, cell in
                 (cell as? TMDBKeywordCell)?.configure(item: keyword)
@@ -317,7 +340,6 @@ extension MovieDetailView {
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .keywords
             .asDriver(onErrorJustReturn: [])
             .drive(onNext: { keywords in
@@ -343,7 +365,6 @@ extension MovieDetailView {
         // bind credit collection view
 
         viewModel
-            .movieParser
             .credits
             .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
             .disposed(by: rx.disposeBag)
@@ -380,7 +401,6 @@ extension MovieDetailView {
         
         // bind movie collection view
         viewModel
-            .movieParser
             .moviesLikeThis
             .bind(to: movieCollectionView.rx.items(dataSource: movieDataSource))
             .disposed(by: rx.disposeBag)
@@ -417,89 +437,68 @@ extension MovieDetailView {
         
         // bind label
         viewModel
-            .movieParser
             .status
             .bind(to: statusLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .tagline
             .bind(to: taglineLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .produceInCountries
             .bind(to: produceInCountriesLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .imdb
             .bind(to: imdbLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .belongToCollection
             .bind(to: collectionNameLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .homepage
             .bind(to: homepageLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .overview
             .bind(to: overviewLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .title
             .bind(to: titleLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .runtimeAndReleaseDate
             .bind(to: runtimeAndReleaseDate.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .originalLanguage
             .bind(to: originalLanguageLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .budget
             .bind(to: budgetLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .revenue
             .bind(to: revenueLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
         
         viewModel
-            .movieParser
             .availableLanguage
             .bind(to: availableLanguagesLabel.rx.attributedText)
-            .disposed(by: rx.disposeBag)
-        
-        
-        // bind constraint
-        viewModel
-            .movieParser
-            .productionCompaniesCollectionViewHeight
-            .bind(to: productionCompanyCollectionViewHeight.rx.constant)
             .disposed(by: rx.disposeBag)
     }
 }

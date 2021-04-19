@@ -46,9 +46,9 @@ class SortByTableViewCell: UITableViewCell {
         }
 
         if indexPath.row == 0 {
-            textLabel?.setAttributeText(title: NSLocalizedString("Ascending", comment: ""))
+            textLabel?.setAttributeText(NSLocalizedString("Ascending", comment: ""))
         } else {
-            textLabel?.setAttributeText(title: NSLocalizedString("Descending", comment: ""))
+            textLabel?.setAttributeText(NSLocalizedString("Descending", comment: ""))
         }
     }
 }

@@ -65,12 +65,8 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
             case .success(let personResult):
                 self.personDetail.onNext(personResult)
                 
-                if !personResult.biography.isEmpty {
-                    self.personName.onNext(TMDBLabel.setAtributeParagraph(title: personResult.name,
-                                                                          paragraph: personResult.biography))
-                } else {
-                    self.personName.onNext(TMDBLabel.setHeader(title: personResult.name))
-                }
+                self.personName.onNext(TMDBLabel.setAtributeParagraph(title: personResult.name,
+                                                                      paragraph: personResult.biography))
                 
                 
                 var placeOfBirth = personResult.placeOfBirth?.isEmpty ?? true ? "" : personResult.placeOfBirth!
@@ -84,23 +80,16 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
                                                                           subTitle: birthday + placeOfBirth))
                 }
                 
-                if let deathday = personResult.deathday, !deathday.isEmpty {
-                    self.personDeathDay.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Deathday", comment: ""),
-                                                                          subTitle: personResult.deathday))
-                }
+
+                self.personDeathDay.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Deathday", comment: ""),
+                                                                      subTitle: personResult.deathday))
                 
-                if let homepage = personResult.homepage, !homepage.isEmpty {
-                    self.homepage.onNext(TMDBLabel.setAttributeText(title: "Homepage", subTitle: homepage))
-                }
+                self.homepage.onNext(TMDBLabel.setAttributeText(title: "Homepage", subTitle: personResult.homepage))
                 
-                if !personResult.alsoKnownAs.isEmpty {
-                    self.alias.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Aliases", comment: ""),
-                                                                 subTitle: personResult.alsoKnownAs.joined(separator: ", ")))
-                }
+                self.alias.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Aliases", comment: ""),
+                                                             subTitle: personResult.alsoKnownAs.joined(separator: ", ")))
                 
-                if let imdbId = personResult.imdbId, !imdbId.isEmpty {
-                    self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB", subTitle: imdbId))
-                }
+                self.imdb.onNext(TMDBLabel.setAttributeText(title: "IMDB", subTitle: personResult.imdbId))
                 
 
                 self.gender.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Gender", comment: ""),

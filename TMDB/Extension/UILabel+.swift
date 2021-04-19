@@ -10,11 +10,8 @@ import UIKit
 
 struct TMDBLabel {
     static func setAttributeText(title: String, subTitle: String? = nil) -> NSMutableAttributedString {
-        guard let subTitle = subTitle else {
-            return NSMutableAttributedString(string: title, attributes: [
-                NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.systemFontSize)!),
-                NSAttributedString.Key.foregroundColor: UIColor.darkText
-            ])
+        guard let subTitle = subTitle, subTitle.isNotEmpty else {
+            return NSMutableAttributedString(string: "")
         }
 
         let firstString = NSMutableAttributedString(string: "\(title): ", attributes: [
@@ -29,6 +26,13 @@ struct TMDBLabel {
 
         firstString.append(secondString)
         return firstString
+    }
+    
+    static func setAttributeText(_ text: String) -> NSMutableAttributedString {
+        return NSMutableAttributedString(string: text, attributes: [
+            NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.systemFontSize)!),
+            NSAttributedString.Key.foregroundColor: UIColor.darkText
+        ])
     }
     
     static func setAtributeParagraph(title: String, paragraph: String) -> NSMutableAttributedString {
@@ -67,7 +71,7 @@ extension UILabel {
         attributedText = TMDBLabel.setHeader(title: title)
     }
     
-    func setAttributeText(title: String) {
-        attributedText = TMDBLabel.setAttributeText(title: title)
+    func setAttributeText(_ text: String) {
+        attributedText = TMDBLabel.setAttributeText(text)
     }
 }

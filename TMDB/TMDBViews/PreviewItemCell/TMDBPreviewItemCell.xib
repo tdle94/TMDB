@@ -11,23 +11,23 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="OFp-g2-STo" customClass="TMDBPreviewItemCell" customModule="TMDB" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="350" height="300"/>
+            <rect key="frame" x="0.0" y="0.0" width="371" height="363"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="MBB-W3-fAB">
-                <rect key="frame" x="0.0" y="0.0" width="350" height="300"/>
+                <rect key="frame" x="0.0" y="0.0" width="371" height="363"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="fry-iD-S0E">
-                        <rect key="frame" x="0.0" y="234" width="350" height="100"/>
+                        <rect key="frame" x="0.0" y="294" width="371" height="100"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDK-nq-0mA">
-                                <rect key="frame" x="0.0" y="0.0" width="350" height="50"/>
+                                <rect key="frame" x="0.0" y="0.0" width="371" height="50"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PHH-GT-xVK">
-                                <rect key="frame" x="0.0" y="50" width="350" height="50"/>
+                                <rect key="frame" x="0.0" y="50" width="371" height="50"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                 <nil key="highlightedColor"/>
@@ -35,10 +35,10 @@
                         </subviews>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-1R-kYe">
-                        <rect key="frame" x="0.0" y="0.0" width="350" height="210"/>
+                        <rect key="frame" x="0.0" y="0.0" width="371" height="273"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cY9-cq-cdd" customClass="TMDBCircleUserRating" customModule="TMDB" customModuleProvider="target">
-                        <rect key="frame" x="1" y="190" width="36" height="36"/>
+                        <rect key="frame" x="1" y="253" width="36" height="36"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="36" id="D56-tc-jOW"/>
                             <constraint firstAttribute="width" secondItem="cY9-cq-cdd" secondAttribute="height" multiplier="1:1" id="Fed-Cl-zNX"/>
@@ -53,13 +53,14 @@
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="top" secondItem="MBB-W3-fAB" secondAttribute="top" id="7Lh-px-yyY"/>
                     <constraint firstItem="cY9-cq-cdd" firstAttribute="top" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="-20" id="A3y-Qb-qPp"/>
                     <constraint firstAttribute="bottom" secondItem="Ka1-1R-kYe" secondAttribute="bottom" constant="90" id="IwW-2f-WWV"/>
-                    <constraint firstItem="fry-iD-S0E" firstAttribute="top" secondItem="cY9-cq-cdd" secondAttribute="bottom" constant="8" symbolic="YES" id="Suz-Zd-JFu"/>
+                    <constraint firstItem="fry-iD-S0E" firstAttribute="top" secondItem="cY9-cq-cdd" secondAttribute="bottom" constant="5" id="Suz-Zd-JFu"/>
                     <constraint firstItem="cY9-cq-cdd" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" constant="1" id="bbL-dM-Vff"/>
                     <constraint firstItem="Ka1-1R-kYe" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="dxB-WE-kKJ"/>
                     <constraint firstItem="fry-iD-S0E" firstAttribute="leading" secondItem="MBB-W3-fAB" secondAttribute="leading" id="u6T-fe-rkI"/>
                     <constraint firstAttribute="trailing" secondItem="fry-iD-S0E" secondAttribute="trailing" id="w5J-G6-akv"/>
                 </constraints>
             </collectionViewCellContentView>
+            <size key="customSize" width="371" height="363"/>
             <connections>
                 <outlet property="imageView" destination="Ka1-1R-kYe" id="6Cc-ty-yvR"/>
                 <outlet property="imageViewBottomConstraint" destination="IwW-2f-WWV" id="0Qj-fb-IFe"/>
@@ -68,7 +69,7 @@
                 <outlet property="subTitle" destination="PHH-GT-xVK" id="Eh9-CL-R0G"/>
                 <outlet property="title" destination="oDK-nq-0mA" id="WZv-ZI-TdB"/>
             </connections>
-            <point key="canvasLocation" x="134.78260869565219" y="136.60714285714286"/>
+            <point key="canvasLocation" x="150" y="157.70089285714286"/>
         </collectionViewCell>
     </objects>
     <designables>

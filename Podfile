@@ -22,6 +22,7 @@ target 'TMDB' do
   pod 'RxDataSources'
   pod 'RxOptional'
   pod 'NotificationBannerSwift'
+  pod 'SkeletonView'
 
   target 'TMDBTests' do
     inherit! :search_paths

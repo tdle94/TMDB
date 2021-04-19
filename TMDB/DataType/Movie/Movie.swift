@@ -107,7 +107,7 @@ class Movie: Object, Decodable {
         }
 
         if let productionCompanies = try container.decodeIfPresent(List<ProductionCompany>.self, forKey: .productionCompanies) {
-            self.productionCompanies.append(objectsIn: productionCompanies)
+            self.productionCompanies.append(objectsIn: productionCompanies.filter { $0.logoPath != nil })
         }
 
         if let productionCountries = try container.decodeIfPresent(List<ProductionCountry>.self, forKey: .productionCountries) {

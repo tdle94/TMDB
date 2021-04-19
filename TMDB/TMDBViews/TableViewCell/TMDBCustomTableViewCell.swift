@@ -46,15 +46,15 @@ extension TMDBCustomTableViewCell: TMDBCellConfig {
         var path: String?
         if let item = item as? MultiSearch {
             label.setHeader(title: item.originalTitle ?? item.originalName ?? item.name ?? "")
-            subTitle.setAttributeText(title: item.releaseDate ?? item.firstAirDate ?? "")
+            subTitle.setAttributeText(item.releaseDate ?? item.firstAirDate ?? "")
             path = item.posterPath ?? item.profilePath
         } else if let item = item as? Season {
             label.setHeader(title: item.name)
-            subTitle.setAttributeText(title: item.overview)
+            subTitle.setAttributeText(item.overview)
             path = item.posterPath
         } else if let item = item as? Episode {
             label.setHeader(title: item.name)
-            subTitle.setAttributeText(title: item.overview)
+            subTitle.setAttributeText(item.overview)
             path = item.stillPath
         }
         

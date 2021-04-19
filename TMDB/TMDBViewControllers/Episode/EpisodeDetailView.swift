@@ -9,6 +9,7 @@
 import UIKit
 import RxDataSources
 import RealmSwift
+import SkeletonView
 
 class EpisodeDetailView: UIViewController {
     var episode: Episode?
@@ -55,11 +56,7 @@ class EpisodeDetailView: UIViewController {
     
     @IBOutlet weak var creditCollectionView: UICollectionView! {
         didSet {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.2, heightDimension: 0.43)
-            } else {
-                creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(heightDimension: 0.86)
-            }
+            creditCollectionView.collectionViewLayout = CollectionViewLayout.customLayout(widthDimension: 0.3, heightDimension: 1)
 
             creditCollectionView.register(UINib(nibName: "TMDBPreviewItemCell", bundle: nil), forCellWithReuseIdentifier: Constant.Identifier.previewItem)
             creditCollectionView.register(TMDBGuestStarHeaderView.self,
@@ -98,12 +95,12 @@ class EpisodeDetailView: UIViewController {
             airDateLabel.attributedText = TMDBLabel.setAttributeText(title: NSLocalizedString("Air On", comment: ""), subTitle: episode.airDate)
             titleLabel.setHeader(title: episode.name)
             
-            overviewLabel.setAttributeText(title: episode.overview)
+            overviewLabel.setAttributeText(episode.overview)
             ratingLabel.rating = episode.voteAverage
             if let path = episode.stillPath, let url = viewModel.userSetting.getImageURL(from: path) {
                 posterImage.sd_setImage(with: url)
             }
-            
+            scrollView.parallaxHeader.contentView.showAnimatedGradientSkeleton()
             viewModel.getGuestStar(tvShowId: id, seasonNumber: episode.seasonNumber, episodeNumber: episode.episodeNumber)
             viewModel.getImages(tvShowId: id, seasonNumber: episode.seasonNumber, episodeNumber: episode.episodeNumber)
         }
@@ -141,6 +138,7 @@ extension EpisodeDetailView {
         viewModel
             .images
             .subscribe { event in
+                self.scrollView.parallaxHeader.contentView.hideSkeleton()
                 self.scrollView.parallaxHeader.dots = event.element?.count ?? 0
             }
             .disposed(by: rx.disposeBag)

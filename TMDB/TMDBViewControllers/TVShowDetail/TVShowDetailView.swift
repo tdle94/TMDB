@@ -36,13 +36,13 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var posterImageViewTop: NSLayoutConstraint!
     @IBOutlet weak var genreCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
     
     // MARK: - disposables
     var castHeaderDisposable: Disposable?
     var moreMovieHeaderDisposable: Disposable?
     
     // MARK: - views
+    @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var languagesLabel: UILabel!
     @IBOutlet weak var episodeRuntimeLabel: UILabel!
@@ -87,6 +87,7 @@ class TVShowDetailView: UIViewController {
     }
     @IBOutlet weak var reviewTableView: UITableView! {
         didSet {
+            reviewTableView.overrideUserInterfaceStyle = .light
             reviewTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
                                      forCellReuseIdentifier: Constant.Identifier.cell)
             reviewTableView
@@ -152,11 +153,7 @@ class TVShowDetailView: UIViewController {
         navigationItem.setLoveIcon()
         navigationItem.setBackArrowIcon()
         setupBinding()
-
-        if let id = tvShowId {
-            viewModel.getImages(tvShowId: id)
-            viewModel.getTVShowDetail(tvShowId: id)
-        }
+        getTVShowDetail()
     }
     
     override func viewDidLayoutSubviews() {
@@ -175,6 +172,31 @@ class TVShowDetailView: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - get tvshow detail
+    func getTVShowDetail() {
+        numberOfEpisodeLabel.showAnimatedGradientSkeleton()
+        numberOfSeasonLabel.showAnimatedGradientSkeleton()
+        inProductionLabel.showAnimatedGradientSkeleton()
+        firstAirdateLabel.showAnimatedGradientSkeleton()
+        lastAirDateLabel.showAnimatedGradientSkeleton()
+        originalLanguageLabel.showAnimatedGradientSkeleton()
+        statusLabel.showAnimatedGradientSkeleton()
+        languagesLabel.showAnimatedGradientSkeleton()
+        countriesLabel.showAnimatedGradientSkeleton()
+        overviewLabel.showAnimatedGradientSkeleton()
+        homepageLabel.showAnimatedGradientSkeleton()
+        episodeRuntimeLabel.showAnimatedGradientSkeleton()
+        titleLabel.showAnimatedGradientSkeleton()
+        stackView.showAnimatedGradientSkeleton()
+        posterImage.showAnimatedGradientSkeleton()
+        scrollView.parallaxHeader.contentView.showAnimatedGradientSkeleton()
+        
+        if let id = tvShowId {
+            viewModel.getImages(tvShowId: id)
+            viewModel.getTVShowDetail(tvShowId: id)
+        }
     }
 }
 
@@ -257,6 +279,23 @@ extension TVShowDetailView {
                 
                 self.ratingLabel.rating = tvShowDetail.voteAverage
                 self.title = tvShowDetail.name
+                
+                self.numberOfEpisodeLabel.hideSkeleton()
+                self.numberOfSeasonLabel.hideSkeleton()
+                self.inProductionLabel.hideSkeleton()
+                self.firstAirdateLabel.hideSkeleton()
+                self.lastAirDateLabel.hideSkeleton()
+                self.originalLanguageLabel.hideSkeleton()
+                self.statusLabel.hideSkeleton()
+                self.languagesLabel.hideSkeleton()
+                self.countriesLabel.hideSkeleton()
+                self.overviewLabel.hideSkeleton()
+                self.homepageLabel.hideSkeleton()
+                self.episodeRuntimeLabel.hideSkeleton()
+                self.titleLabel.hideSkeleton()
+                self.stackView.hideSkeleton()
+                self.posterImage.hideSkeleton()
+                self.scrollView.parallaxHeader.contentView.hideSkeleton()
             }
             .disposed(by: rx.disposeBag)
         

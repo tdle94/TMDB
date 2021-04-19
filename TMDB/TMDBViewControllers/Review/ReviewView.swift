@@ -41,7 +41,7 @@ class ReviewView: UIViewController {
             .just(reviews)
             .bind(to: reviewTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, review, cell in
                 cell.textLabel?.setHeader(title: review.author)
-                cell.detailTextLabel?.setAttributeText(title: review.content)
+                cell.detailTextLabel?.setAttributeText(review.content)
             }
             .disposed(by: rx.disposeBag)
         

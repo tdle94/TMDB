@@ -136,9 +136,6 @@ class HomeView: UIViewController {
         viewModel.getTrendingToday()
         viewModel.getTopRatedMovie()
         viewModel.getTopRatedTVShow()
-        //self.delegate?.navigateToMovieDetail(movieId: 464052)
-        //delegate?.navigateToPersonDetail(personId: 59586)
-        //delegate?.navigateToTVShowDetail(tvShowId: 107775)
     }
     
     override func viewWillAppear(_ animated: Bool) {

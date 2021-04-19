@@ -87,6 +87,7 @@ class TVShowDetailView: UIViewController {
     }
     @IBOutlet weak var reviewTableView: UITableView! {
         didSet {
+            reviewTableView.overrideUserInterfaceStyle = .light
             reviewTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
                                      forCellReuseIdentifier: Constant.Identifier.cell)
             reviewTableView

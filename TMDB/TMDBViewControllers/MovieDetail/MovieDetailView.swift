@@ -108,6 +108,7 @@ class MovieDetailView: UIViewController {
 
     @IBOutlet weak var reviewAndReleaseTableView: UITableView! {
         didSet {
+            reviewAndReleaseTableView.overrideUserInterfaceStyle  = .light
             reviewAndReleaseTableView.register(UINib(nibName: "BasicDisclosureIndicatorTableViewCell", bundle: nil),
                                                forCellReuseIdentifier: Constant.Identifier.cell)
         }

@@ -26,7 +26,7 @@ class SearchResultView: UIViewController {
             searchResultTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
 
             searchResultTableView.rowHeight = 150
-            
+            searchResultTableView.overrideUserInterfaceStyle = .light
             searchResultTableView.tableFooterView?.addSubview(footerLoadIndicatorView)
             
             let backgroundView = UIView()

@@ -100,14 +100,10 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                 self.genres.onNext(Array(result.genres))
                 self.reviewAndEpisode.onNext([NSLocalizedString("Review", comment: "") + " (\(result.reviews?.reviews.count ?? 0))",
                                               NSLocalizedString("Season", comment: "") + " (\(result.numberOfSeasons))" ])
-                if result.homepage.isNotEmpty {
-                    self.homepage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Homepage", comment: ""), subTitle: result.homepage))
-                }
+                self.homepage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Homepage", comment: ""), subTitle: result.homepage))
                 
-                if result.overview.isNotEmpty {
-                    self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
-                                                                        paragraph: result.overview))
-                }
+                self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
+                                                                    paragraph: result.overview))
                 
                 self.numberOfEpisode.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Number Of Episode", comment: ""),
                                                                       subTitle: String(result.numberOfEpisodes)))

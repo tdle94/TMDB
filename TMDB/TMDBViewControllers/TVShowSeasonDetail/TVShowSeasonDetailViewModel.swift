@@ -57,15 +57,14 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
             case .success(let season):
                 self.season.onNext(season)
                 
-                if let airDate = season.airDate, !airDate.isEmpty {
-                    self.airDate.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Air On", comment: ""),
-                                                                   subTitle: airDate))
-                }
+ 
+                self.airDate.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Air On", comment: ""),
+                                                               subTitle: season.airDate))
                 
-                if !season.overview.isEmpty {
-                    self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
-                                                                        paragraph: season.overview))
-                }
+
+                self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
+                                                                    paragraph: season.overview))
+
                 
                 self.numberOfEpisode.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Number Of Episode", comment: ""),
                                                                        subTitle: String(season.episodeCount)))

@@ -38,7 +38,7 @@ class PersonDetailView: UIViewController {
     @IBOutlet weak var deathdateLabel: UILabel!
     @IBOutlet weak var genderLabel: UILabel!
     @IBOutlet weak var occupationLabel: UILabel!
-    @IBOutlet weak var homapageLabel: UILabel!
+    @IBOutlet weak var homepageLabel: UILabel!
     @IBOutlet weak var aliasLabel: UILabel!
     @IBOutlet weak var ratingLabel: TMDBCircleUserRating!
     @IBOutlet weak var creditCollectionView: UICollectionView! {
@@ -93,6 +93,17 @@ class PersonDetailView: UIViewController {
         setupBinding()
 
         if let personId = id {
+            profileImageView.showAnimatedGradientSkeleton()
+            birthdateLabel.showAnimatedGradientSkeleton()
+            deathdateLabel.showAnimatedGradientSkeleton()
+            genderLabel.showAnimatedGradientSkeleton()
+            occupationLabel.showAnimatedGradientSkeleton()
+            imdbLabel.showAnimatedGradientSkeleton()
+            homepageLabel.showAnimatedGradientSkeleton()
+            aliasLabel.showAnimatedGradientSkeleton()
+            personNameLabel.showAnimatedGradientSkeleton()
+            scrollView.parallaxHeader.contentView.showAnimatedGradientSkeleton()
+            
             viewModel.getPersonDetail(id: personId)
         }
     }
@@ -143,6 +154,17 @@ extension PersonDetailView {
                 
                 self.ratingLabel.rating = person.popularity
                 self.title = person.name
+                
+                self.profileImageView.hideSkeleton()
+                self.birthdateLabel.hideSkeleton()
+                self.deathdateLabel.hideSkeleton()
+                self.genderLabel.hideSkeleton()
+                self.occupationLabel.hideSkeleton()
+                self.imdbLabel.hideSkeleton()
+                self.homepageLabel.hideSkeleton()
+                self.aliasLabel.hideSkeleton()
+                self.personNameLabel.hideSkeleton()
+                self.scrollView.parallaxHeader.contentView.hideSkeleton()
             }
             .disposed(by: rx.disposeBag)
 
@@ -247,7 +269,7 @@ extension PersonDetailView {
         
         viewModel
             .homepage
-            .bind(to: homapageLabel.rx.attributedText)
+            .bind(to: homepageLabel.rx.attributedText)
             .disposed(by: rx.disposeBag)
     }
 }

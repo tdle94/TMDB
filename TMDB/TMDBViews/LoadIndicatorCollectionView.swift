@@ -34,6 +34,7 @@ class LoadIndicatorCollectionView: UICollectionView {
         errorLabel.textAlignment = .center
         errorLabel.textColor = .black
         
+        loadIndicator.color = .black
         loadIndicator.startAnimating()
     }
 }

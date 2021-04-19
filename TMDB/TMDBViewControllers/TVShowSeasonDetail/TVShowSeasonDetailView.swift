@@ -106,6 +106,14 @@ class TVShowSeasonDetailView: UIViewController {
         super.viewDidLoad()
 
         if let season = self.season, let id = tvShowId {
+            episodeTableView.showAnimatedGradientSkeleton()
+            airDateLabel.showAnimatedGradientSkeleton()
+            numberOfEpisodeLabel.showAnimatedGradientSkeleton()
+            titleLabel.showAnimatedGradientSkeleton()
+            overviewLabel.showAnimatedGradientSkeleton()
+            scrollView.parallaxHeader.contentView.showAnimatedGradientSkeleton()
+            posterImageView.showAnimatedGradientSkeleton()
+            
             viewModel.getSeasonDetail(tvShowId: id, seasonNumber: season.number)
         }
         
@@ -163,6 +171,14 @@ extension TVShowSeasonDetailView {
                 if let path = season.posterPath, let url = self.viewModel.userSetting.getImageURL(from: path) {
                     self.posterImageView.sd_setImage(with: url)
                 }
+                
+                self.episodeTableView.hideSkeleton()
+                self.airDateLabel.hideSkeleton()
+                self.numberOfEpisodeLabel.hideSkeleton()
+                self.titleLabel.hideSkeleton()
+                self.overviewLabel.hideSkeleton()
+                self.scrollView.parallaxHeader.contentView.hideSkeleton()
+                self.posterImageView.hideSkeleton()
 
                 Observable
                     .just([SectionModel(model: "Episode", items: Array(season.episodes))])

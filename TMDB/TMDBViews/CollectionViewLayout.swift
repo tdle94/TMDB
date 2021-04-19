@@ -84,7 +84,7 @@ struct CollectionViewLayout {
                                                                             elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
 
             
-            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0)
+            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 0)
             section.boundarySupplementaryItems = [sectionFooter]

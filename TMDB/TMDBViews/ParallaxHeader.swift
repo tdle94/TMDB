@@ -121,6 +121,7 @@ public class ParallaxHeader: NSObject {
             pageControl?.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
             pageControl?.numberOfPages = dots
             pageControl?.currentPage = 0
+            pageControl?.hidesForSinglePage = true
             updatePageControl()
         }
     }

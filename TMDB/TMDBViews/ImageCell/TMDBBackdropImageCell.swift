@@ -21,6 +21,10 @@ class TMDBBackdropImageCell: TMDBImageCell, TMDBCellConfig {
         super.init(coder: coder)
     }
     
+    override func prepareForReuse() {
+        imageView.image = UIImage(named: "NoImage")
+    }
+    
     func configure(item: Object) {
         guard
             let image = item as? Images,

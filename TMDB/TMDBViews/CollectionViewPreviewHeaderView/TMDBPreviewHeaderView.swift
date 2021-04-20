@@ -73,4 +73,11 @@ class TMDBPreviewHeaderView: UICollectionReusableView {
         let text = sender.titleForSegment(at: sender.selectedSegmentIndex)!
         delegate?.segmentControlSelected(self, text: text)
     }
+    
+    func shouldRemoveSegment(_ shouldRemove: Bool, at: Int) {
+        if shouldRemove {
+            segmentControl.removeSegment(at: at, animated: false)
+            segmentControl.selectedSegmentIndex = 0
+        }
+    }
 }

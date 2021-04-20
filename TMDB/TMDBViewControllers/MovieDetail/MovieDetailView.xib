@@ -17,6 +17,7 @@
                 <outlet property="collectionNameLabel" destination="fdy-hz-WAL" id="yYV-nc-zwH"/>
                 <outlet property="contentView" destination="fSe-m6-hYt" id="MFe-0N-JV0"/>
                 <outlet property="creditCollectionView" destination="c2v-pr-C1R" id="1o4-nl-GeU"/>
+                <outlet property="creditCollectionViewHeight" destination="yRn-BH-VNy" id="FI2-9Q-Dyg"/>
                 <outlet property="genreCollectionView" destination="M2f-U7-vpL" id="6BW-EC-JTD"/>
                 <outlet property="genreCollectionViewHeight" destination="LiD-8D-Btk" id="rPk-QJ-qcI"/>
                 <outlet property="homepageLabel" destination="okD-1J-kcW" id="3ET-VE-ZsM"/>
@@ -24,6 +25,7 @@
                 <outlet property="keywordCollectionView" destination="11l-eE-Mth" id="EPM-ci-Hd9"/>
                 <outlet property="keywordCollectionViewHeight" destination="KJv-Wj-y8W" id="n6f-LD-vPn"/>
                 <outlet property="movieCollectionView" destination="Nk0-yh-aOe" id="FPY-P1-sni"/>
+                <outlet property="movieCollectionViewHeight" destination="qbi-uA-d4I" id="ARK-OO-ZWM"/>
                 <outlet property="originalLanguageLabel" destination="Kcc-As-l5F" id="FaO-Go-Ejy"/>
                 <outlet property="overviewLabel" destination="k30-Dh-oWq" id="q7n-4a-n2e"/>
                 <outlet property="posterImageView" destination="U7C-sZ-xb8" id="LRr-Lq-jor"/>
@@ -544,6 +546,9 @@
             <point key="canvasLocation" x="-253.62318840579712" y="56.919642857142854"/>
         </view>
     </objects>
+    <designables>
+        <designable name="pb4-en-0DY"/>
+    </designables>
     <resources>
         <image name="NoImage" width="450" height="450"/>
         <systemColor name="systemBackgroundColor">

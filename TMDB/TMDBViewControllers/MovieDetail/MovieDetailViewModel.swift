@@ -45,15 +45,22 @@ protocol MovieDetailViewModelProtocol {
     var keywords: PublishSubject<[Keyword]> { get }
     var genres: PublishSubject<[Genre]> { get }
     var productionCompanies: PublishSubject<[ProductionCompany]> { get }
+    var productionCompanyCollectionViewHeight: CGFloat { get }
     
     // poster url path
-    var posterURL: PublishSubject<URL> { get }
+    var posterURL: PublishSubject<URL?> { get }
     
     // movie credit
     var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var noCast: Bool { get }
+    var noCrew: Bool { get }
+    var creditCollectionViewHeight: CGFloat { get }
     
     // similar and recommend movies
     var moviesLikeThis: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var noSimilarMovie: Bool { get }
+    var noRecommendMovie: Bool { get }
+    var movieCollectionViewHeight: CGFloat { get }
     
     func getMovieDetail(movieId: Int)
     func getImages(movieId: Int)
@@ -100,15 +107,26 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     var keywords: PublishSubject<[Keyword]> = PublishSubject()
     var genres: PublishSubject<[Genre]> = PublishSubject()
     var productionCompanies: PublishSubject<[ProductionCompany]> = PublishSubject()
+    var productionCompanyCollectionViewHeight: CGFloat = 0
 
     // poster url path
-    var posterURL: PublishSubject<URL> = PublishSubject()
+    var posterURL: PublishSubject<URL?> = PublishSubject()
     
     // movie credit
     var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var noCast: Bool = true
+    var noCrew: Bool = true
+    var creditCollectionViewHeight: CGFloat {
+        return noCast && noCrew ? 0 : Constant.collectionViewHeight
+    }
     
     // similar and recommend movies
     var moviesLikeThis: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var noSimilarMovie: Bool = true
+    var noRecommendMovie: Bool = true
+    var movieCollectionViewHeight: CGFloat {
+        return noSimilarMovie && noRecommendMovie ? 0 : Constant.collectionViewHeight
+    }
     
     lazy var movieHandler: (Result<MovieResult, Error>) -> Void = { [unowned self] result in
         switch result {
@@ -131,7 +149,10 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         repository.getMovieDetail(id: movieId) { result in
             switch result {
             case .success(let movieDetailResult):
+                self.productionCompanyCollectionViewHeight = movieDetailResult.productionCompanies.isEmpty ? 0 : Constant.productionCompanyCollectionViewHeight
+                
                 self.movieDetail.onNext(movieDetailResult)
+                
                 self.status.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Status", comment: ""),
                                                               subTitle: movieDetailResult.status))
                 self.tagline.onNext(TMDBLabel.setAttributeText(title: movieDetailResult.tagline ?? ""))
@@ -150,13 +171,34 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
 
                 self.overview.onNext(TMDBLabel.setAtributeParagraph(title: NSLocalizedString("Overview", comment: ""),
                                                                     paragraph: movieDetailResult.overview ?? ""))
+                
+                self.posterURL.onNext(self.userSetting.getImageURL(from: movieDetailResult.posterPath))
 
+                var movies = Array(movieDetailResult.similar?.movies ?? List<Movie>())
+                
+                if movies.isEmpty {
+                    movies = Array(movieDetailResult.recommendations?.movies ?? List<Movie>())
+                }
+                
+                self.moviesLikeThis.onNext([SectionModel(model: "movies", items: movies)])
+                
+                self.noSimilarMovie = movieDetailResult.similar?.movies.isEmpty ?? true
+                self.noRecommendMovie = movieDetailResult.recommendations?.movies.isEmpty ?? true
+                
+                var movieCredit: [Object] = Array(movieDetailResult.credits?.cast ?? List<Cast>())
+                
+                self.noCast = movieDetailResult.credits?.cast.isEmpty ?? true
+                self.noCrew = movieDetailResult.credits?.crew.isEmpty ?? true
+                
+                if movieCredit.isEmpty {
+                    movieCredit = Array(movieDetailResult.credits?.crew ?? List<Crew>())
+                }
+                
+                self.credits.onNext([SectionModel(model: "credits", items: movieCredit)])
                 
                 self.keywords.onNext(Array(movieDetailResult.keywords?.keywords ?? List<Keyword>()))
                 self.genres.onNext(Array(movieDetailResult.genres))
                 self.productionCompanies.onNext(Array(movieDetailResult.productionCompanies))
-                self.moviesLikeThis.onNext([SectionModel(model: "movies", items: Array(movieDetailResult.similar?.movies ?? List<Movie>()))])
-                self.credits.onNext([SectionModel(model: "credits", items: Array(movieDetailResult.credits?.cast ?? List<Cast>()))])
                 
                 self.reviewAndRelease.onNext([
                     NSLocalizedString("Review", comment: "") + " (\(movieDetailResult.reviews?.totalResults ?? 0))",
@@ -190,10 +232,9 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                 self.revenue.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Revenue", comment: ""),
                                                                subTitle: "$\(numberFormatter.string(from: NSNumber(value: movieDetailResult.revenue)) ?? "0.0")"))
                 
-                let availableLanguages = Array(movieDetailResult.spokenLanguages).map { $0.name }.joined(separator: ", ")
 
                 self.availableLanguage.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Available Lanuages", comment: ""),
-                                                                        subTitle: availableLanguages))
+                                                                        subTitle: Array(movieDetailResult.spokenLanguages).map { $0.name }.joined(separator: ", ")))
 
             case .failure(let error):
                 debugPrint("Error getting movie detail \(movieId): \(error.localizedDescription)")
@@ -208,7 +249,11 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         repository.getMovieImages(from: movieId) { result in
             switch result {
             case .success(let imageResult):
-                self.images.onNext(Array(imageResult.backdrops))
+                if imageResult.backdrops.isEmpty, imageResult.stills.isEmpty, imageResult.posters.isEmpty {
+                    self.images.onNext([Images()]) // image holder
+                } else {
+                    self.images.onNext(Array(imageResult.backdrops) + Array(imageResult.stills) + Array(imageResult.posters))
+                }
             case .failure(let error):
                 debugPrint("Error getting movie images \(movieId): \(error.localizedDescription)")
             }

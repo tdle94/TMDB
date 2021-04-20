@@ -11,6 +11,7 @@ import UIKit
 
 struct Constant {
     static let productionCompanyCollectionViewHeight: CGFloat = 60
+    static let collectionViewHeight: CGFloat = 250
     
     struct Identifier {
         static let previewFooter = "PreviewFooter"

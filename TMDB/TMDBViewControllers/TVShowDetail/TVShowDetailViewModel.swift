@@ -34,7 +34,18 @@ protocol TVShowDetailViewModelProtocol {
     var credits: BehaviorSubject<[SectionModel<String, Object>]> { get}
     var tvshows: BehaviorSubject<[SectionModel<String, Object>]> { get}
     
+    // poster url path
+    var posterURL: PublishSubject<URL?> { get }
+    
     var userSetting: TMDBUserSettingProtocol { get }
+    
+    var noSimilarTVShow: Bool { get }
+    var noRecommendTVShow: Bool { get }
+    var noCast: Bool { get }
+    var noCrew: Bool { get }
+    
+    var creditCollectionViewHeight: CGFloat { get }
+    var tvshowCollectionViewHeight: CGFloat { get }
      
     func getTVShowDetail(tvShowId: Int)
     func getImages(tvShowId: Int)
@@ -72,7 +83,26 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
     var tvshows: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
     
-    lazy var tvShowHandler: (Result<TVShowResult, Error>) -> Void = { result in
+    // poster url path
+    var posterURL: PublishSubject<URL?> = PublishSubject()
+
+    var userSetting: TMDBUserSettingProtocol
+    
+    var noSimilarTVShow: Bool = true
+    var noRecommendTVShow: Bool = true
+    var noCast: Bool = true
+    var noCrew: Bool = true
+    
+    var creditCollectionViewHeight: CGFloat {
+        return noCrew && noCast ? 0 : Constant.collectionViewHeight
+    }
+    
+    var tvshowCollectionViewHeight: CGFloat {
+        return noSimilarTVShow && noRecommendTVShow ? 0 : Constant.collectionViewHeight
+    }
+     
+    
+    lazy var tvShowHandler: (Result<TVShowResult, Error>) -> Void = { [unowned self] result in
         switch result {
         case .success(let result):
             self.tvshows.onNext([SectionModel(model: "tvshow", items: Array(result.onTV))])
@@ -83,8 +113,6 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                                                                                                    queue: NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1))
         }
     }
-
-    var userSetting: TMDBUserSettingProtocol
 
     init(repository: TMDBTVShowRepository, userSetting: TMDBUserSettingProtocol) {
         self.repository = repository
@@ -130,8 +158,27 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                 self.episodeRuntime.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Episode Runtime", comment: ""),
                                                                       subTitle: Array(result.episodeRunTime).map { String($0) }.joined(separator: ", ") + " min"))
                 
-                self.credits.onNext([SectionModel(model: "credit", items: Array(result.credits?.cast ?? List<Cast>())  )])
-                self.tvshows.onNext([SectionModel(model: "tvshow", items: Array(result.similar?.onTV ?? List<TVShow>()) )])
+                self.posterURL.onNext(self.userSetting.getImageURL(from: result.posterPath))
+                
+                self.noSimilarTVShow = result.similar?.onTV.isEmpty ?? true
+                self.noRecommendTVShow = result.recommendations?.onTV.isEmpty ?? true
+                
+                self.noCast = result.credits?.cast.isEmpty ?? true
+                self.noCrew = result.credits?.crew.isEmpty ?? true
+                
+                var tvshowLikeThis = Array(result.similar?.onTV ?? List<TVShow>())
+                var tvshowCredit: [Object] = Array(result.credits?.cast ?? List<Cast>())
+                
+                if tvshowCredit.isEmpty {
+                    tvshowCredit = Array(result.credits?.crew ?? List<Crew>())
+                }
+
+                if tvshowLikeThis.isEmpty {
+                    tvshowLikeThis = Array(result.recommendations?.onTV ?? List<TVShow>())
+                }
+                
+                self.credits.onNext([SectionModel(model: "credit", items: tvshowCredit)])
+                self.tvshows.onNext([SectionModel(model: "tvshow", items: tvshowLikeThis)])
                 
             case .failure(let error):
                 debugPrint("Error getting tvshow detail \(tvShowId): \(error.localizedDescription)")
@@ -146,7 +193,11 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         repository.getTVShowImages(from: tvShowId) { result in
             switch result {
             case .success(let result):
-                self.backdropImages.onNext(Array(result.backdrops))
+                if result.backdrops.isEmpty, result.stills.isEmpty, result.posters.isEmpty {
+                    self.backdropImages.onNext([Images()])
+                } else {
+                    self.backdropImages.onNext(Array(result.backdrops) + Array(result.stills) + Array(result.posters))
+                }
             case .failure(let error):
                 debugPrint("Error getting tvshow detail: \(error.localizedDescription)")
             }

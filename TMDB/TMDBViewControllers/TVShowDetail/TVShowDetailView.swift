@@ -36,6 +36,8 @@ class TVShowDetailView: UIViewController {
     @IBOutlet weak var posterImageViewTop: NSLayoutConstraint!
     @IBOutlet weak var genreCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var tvshowCollectionViewHeight: NSLayoutConstraint!
     
     // MARK: - disposables
     var castHeaderDisposable: Disposable?
@@ -266,19 +268,10 @@ extension TVShowDetailView {
         // tvshow detail binding
         viewModel
             .tvShowDetail
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe { event in
-                guard let tvShowDetail = event.element else {
-                    return
-                }
-
-                if let path = tvShowDetail.posterPath,
-                   let url = self.viewModel.userSetting.getImageURL(from: path) {
-                    self.posterImage.sd_setImage(with: url)
-                }
-                
-                self.ratingLabel.rating = tvShowDetail.voteAverage
-                self.title = tvShowDetail.name
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { tvshowDetail in
+                self.ratingLabel.rating = tvshowDetail.voteAverage
+                self.title = tvshowDetail.name
                 
                 self.numberOfEpisodeLabel.hideSkeleton()
                 self.numberOfSeasonLabel.hideSkeleton()
@@ -296,7 +289,16 @@ extension TVShowDetailView {
                 self.stackView.hideSkeleton()
                 self.posterImage.hideSkeleton()
                 self.scrollView.parallaxHeader.contentView.hideSkeleton()
-            }
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // poster image
+        viewModel
+            .posterURL
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { url in
+                self.posterImage.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"))
+            })
             .disposed(by: rx.disposeBag)
         
         // review and season table binding
@@ -346,6 +348,10 @@ extension TVShowDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBCreditHeaderView
+                header?.shouldRemoveSegment(self.viewModel.noCast, at: 0)
+                header?.shouldRemoveSegment(self.viewModel.noCrew, at: 1)
+                
+                self.creditCollectionViewHeight.constant = self.viewModel.creditCollectionViewHeight
                 
                 header?
                     .segmentControl
@@ -384,6 +390,10 @@ extension TVShowDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBMovieLikeThisHeaderView
+                header?.shouldRemoveSegment(self.viewModel.noSimilarTVShow, at: 0)
+                header?.shouldRemoveSegment(self.viewModel.noRecommendTVShow, at: 1)
+                
+                self.tvshowCollectionViewHeight.constant = self.viewModel.tvshowCollectionViewHeight
                 
                 header?
                     .segmentControl

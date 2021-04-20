@@ -167,9 +167,27 @@ extension HomeView {
             .bind(to: tvshowCollectionView.rx.items(dataSource: tvshowDataSource))
             .disposed(by: rx.disposeBag)
         
+        // load indicator
+        
         viewModel
             .popularLoadIndicator
             .bind(to: popularCollectionView.loadIndicator.rx.isAnimating)
+            .disposed(by: rx.disposeBag)
+        
+        
+        viewModel
+            .trendingLoadIndicator
+            .bind(to: trendingCollectionView.loadIndicator.rx.isAnimating)
+            .disposed(by: rx.disposeBag)
+        
+        viewModel
+            .tvshowLoadIndicator
+            .bind(to: tvshowCollectionView.loadIndicator.rx.isAnimating)
+            .disposed(by: rx.disposeBag)
+        
+        viewModel
+            .movieLoadIndicator
+            .bind(to: movieCollectionView.loadIndicator.rx.isAnimating)
             .disposed(by: rx.disposeBag)
         
         // error label

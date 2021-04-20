@@ -45,8 +45,9 @@ class MovieDetailView: UIViewController {
     // MARK: - constraints
     @IBOutlet weak var genreCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var keywordCollectionViewHeight: NSLayoutConstraint!
-    
     @IBOutlet weak var productionCompanyCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var creditCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var movieCollectionViewHeight: NSLayoutConstraint!
     // MARK: - views
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var stackView: UIStackView!
@@ -238,7 +239,7 @@ extension MovieDetailView {
                 self.scrollView.parallaxHeader.refreshControl.endRefreshing()
                 self.ratingLabel.rating = movie.voteAverage
                 self.title = movie.title
-                self.productionCompanyCollectionViewHeight.constant = movie.productionCompanies.isEmpty ? 0 : Constant.productionCompanyCollectionViewHeight
+                self.productionCompanyCollectionViewHeight.constant = self.viewModel.productionCompanyCollectionViewHeight
 
                 self.stackView.hideSkeleton()
                 self.titleLabel.hideSkeleton()
@@ -262,10 +263,7 @@ extension MovieDetailView {
         viewModel
             .posterURL
             .subscribe(onNext: { url in
-                self.posterImageView.sd_setImage(with: url) { _, _, _, _ in
-                    let color = self.posterImageView.image?.getColors()
-                    self.posterImageView.layer.borderColor = color?.primary.cgColor
-                }
+                self.posterImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"))
             })
             .disposed(by: rx.disposeBag)
         
@@ -376,6 +374,12 @@ extension MovieDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBCreditHeaderView
+                header?.shouldRemoveSegment(self.viewModel.noCast, at: 0)
+                header?.shouldRemoveSegment(self.viewModel.noCrew, at: 1)
+                
+
+                self.creditCollectionViewHeight.constant = self.viewModel.creditCollectionViewHeight
+                
                 header?
                     .segmentControl
                     .rx
@@ -421,6 +425,11 @@ extension MovieDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBMovieLikeThisHeaderView
+                header?.shouldRemoveSegment(self.viewModel.noSimilarMovie, at: 0)
+                header?.shouldRemoveSegment(self.viewModel.noRecommendMovie, at: 1)
+                
+                self.movieCollectionViewHeight.constant = self.viewModel.movieCollectionViewHeight
+                
                 header?
                     .segmentControl
                     .rx

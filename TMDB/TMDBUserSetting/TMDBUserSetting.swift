@@ -17,7 +17,7 @@ protocol TMDBUserSettingProtocol {
     var tvShowGenres: [Genre] { get }
     var guestSession: GuestSession? { get set }
     var apiKey: String { get }
-    func getImageURL(from path: String) -> URL?
+    func getImageURL(from path: String?) -> URL?
     func getYoutubeImageURL(key: String) -> URL?
     func getYoutubeVideoURL(key: String) -> URL?
 }
@@ -83,9 +83,9 @@ struct TMDBUserSetting: TMDBUserSettingProtocol {
         return try! JSONDecoder().decode(GenreResult.self, from: jsonData as Data).genres
     }
 
-    func getImageURL(from path: String) -> URL? {
+    func getImageURL(from path: String?) -> URL? {
         let base = imageConfig.images.secureBaseURL
-        guard let size = imageConfig.images.posterSizes.last, let url = URL(string: "\(base)\(size)\(path)") else {
+        guard let path = path, path.isNotEmpty, let size = imageConfig.images.posterSizes.last, let url = URL(string: "\(base)\(size)\(path)") else {
             return nil
         }
         return url

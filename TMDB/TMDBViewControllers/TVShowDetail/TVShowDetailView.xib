@@ -13,6 +13,7 @@
                 <outlet property="backdropImageCollectionView" destination="Q5a-HV-UwT" id="Bvs-el-WRa"/>
                 <outlet property="countriesLabel" destination="cDJ-2b-nY3" id="LeV-AX-Ivo"/>
                 <outlet property="creditCollectionView" destination="dX8-HY-dT0" id="922-Xb-Z0v"/>
+                <outlet property="creditCollectionViewHeight" destination="nYQ-uj-Tt3" id="nVM-zq-wPH"/>
                 <outlet property="episodeRuntimeLabel" destination="Wws-YF-1uB" id="DyB-re-tXb"/>
                 <outlet property="firstAirdateLabel" destination="Obh-FX-xGv" id="rdX-1b-Nue"/>
                 <outlet property="genreCollectionView" destination="h3r-xH-MJa" id="JHM-eS-KvR"/>
@@ -36,6 +37,7 @@
                 <outlet property="statusLabel" destination="VXb-UJ-r0D" id="V5C-zc-C9o"/>
                 <outlet property="titleLabel" destination="zqK-bj-s0Z" id="H3e-IP-b9b"/>
                 <outlet property="tvshowCollectionView" destination="bnY-Sq-UTV" id="OhI-It-S5A"/>
+                <outlet property="tvshowCollectionViewHeight" destination="ffG-aP-b8X" id="lPh-fo-8Y1"/>
                 <outlet property="view" destination="iN0-l3-epB" id="9X1-Ba-jTc"/>
             </connections>
         </placeholder>

@@ -297,7 +297,7 @@ extension TVShowDetailView {
             .posterURL
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { url in
-                self.posterImage.sd_setImage(with: url)
+                self.posterImage.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"))
             })
             .disposed(by: rx.disposeBag)
         

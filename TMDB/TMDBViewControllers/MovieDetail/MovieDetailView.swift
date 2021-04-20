@@ -263,7 +263,7 @@ extension MovieDetailView {
         viewModel
             .posterURL
             .subscribe(onNext: { url in
-                self.posterImageView.sd_setImage(with: url)
+                self.posterImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "NoImage"))
             })
             .disposed(by: rx.disposeBag)
         

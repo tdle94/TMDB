@@ -193,7 +193,11 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         repository.getTVShowImages(from: tvShowId) { result in
             switch result {
             case .success(let result):
-                self.backdropImages.onNext(Array(result.backdrops))
+                if result.backdrops.isEmpty, result.stills.isEmpty, result.posters.isEmpty {
+                    self.backdropImages.onNext([Images()])
+                } else {
+                    self.backdropImages.onNext(Array(result.backdrops) + Array(result.stills) + Array(result.posters))
+                }
             case .failure(let error):
                 debugPrint("Error getting tvshow detail: \(error.localizedDescription)")
             }

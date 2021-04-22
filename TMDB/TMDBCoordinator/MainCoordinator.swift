@@ -108,6 +108,10 @@ class AppCoordinator {
     var languageView: LanguageView {
         return container.resolve(LanguageView.self)!
     }
+    
+    var viewAllView: ViewAllView {
+        return container.resolve(ViewAllView.self)!
+    }
 
     init(window: UIWindow, container: Container) {
         self.window = window
@@ -238,6 +242,14 @@ class AppCoordinator {
                 self.showPersonDetail(personId: searchItem.id)
             }
         }
+    }
+    
+    func navigateToViewAll(type: ViewAllViewModel.ViewAll?) {
+        let view = viewAllView
+        view.viewModel.viewAllType = type
+        view.delegate = self
+        currentView?.navigationController?.pushViewController(view, animated: true)
+        currentView = view
     }
 }
 

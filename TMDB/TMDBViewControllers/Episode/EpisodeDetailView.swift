@@ -158,7 +158,12 @@ extension EpisodeDetailView {
             .credits
             .bind(to: creditCollectionView.rx.items(dataSource: creditDataSource))
             .disposed(by: rx.disposeBag)
-            
+        
+        viewModel
+            .creditCollectionViewHeight
+            .bind(to: creditCollectionViewHeight.rx.constant)
+            .disposed(by: rx.disposeBag)
+        
         creditCollectionView
             .rx
             .itemSelected

@@ -3,7 +3,6 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -138,7 +137,7 @@
                                 </label>
                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nif-Dg-Ucg">
                                     <rect key="frame" x="0.0" y="575.5" width="414" height="200"/>
-                                    <color key="backgroundColor" red="0.1782557688602785" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="200" id="jfJ-mj-dEl"/>
                                     </constraints>
@@ -169,7 +168,7 @@
                                     </collectionViewFlowLayout>
                                 </collectionView>
                             </subviews>
-                            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="e98-I8-ikW" secondAttribute="trailing" id="136-TX-ZJc"/>
                                 <constraint firstItem="HE2-5h-zVk" firstAttribute="leading" secondItem="SPR-nW-7Iw" secondAttribute="leading" id="3aY-DA-oI3"/>
@@ -196,7 +195,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="BBJ-2i-pKT" firstAttribute="width" secondItem="HwR-b8-o1D" secondAttribute="width" id="69w-vb-lnw"/>
                         <constraint firstItem="BBJ-2i-pKT" firstAttribute="top" secondItem="HwR-b8-o1D" secondAttribute="top" id="Aiq-aN-hYn"/>
@@ -206,7 +205,7 @@
                     </constraints>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="BBJ-2i-pKT" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" priority="250" id="EKM-t1-MAR"/>
                 <constraint firstAttribute="trailing" secondItem="HwR-b8-o1D" secondAttribute="trailing" id="RGb-sg-vGg"/>
@@ -220,8 +219,5 @@
     </objects>
     <resources>
         <image name="NoImage" width="450" height="450"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

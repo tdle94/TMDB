@@ -374,8 +374,8 @@ extension MovieDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBCreditHeaderView
-                header?.shouldRemoveSegment(self.viewModel.noCast, at: 0)
                 header?.shouldRemoveSegment(self.viewModel.noCrew, at: 1)
+                header?.shouldRemoveSegment(self.viewModel.noCast, at: 0)
                 
 
                 self.creditCollectionViewHeight.constant = self.viewModel.creditCollectionViewHeight
@@ -425,8 +425,8 @@ extension MovieDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBMovieLikeThisHeaderView
-                header?.shouldRemoveSegment(self.viewModel.noSimilarMovie, at: 0)
                 header?.shouldRemoveSegment(self.viewModel.noRecommendMovie, at: 1)
+                header?.shouldRemoveSegment(self.viewModel.noSimilarMovie, at: 0)
                 
                 self.movieCollectionViewHeight.constant = self.viewModel.movieCollectionViewHeight
                 

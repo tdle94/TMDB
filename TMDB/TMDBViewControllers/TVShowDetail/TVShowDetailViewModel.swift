@@ -135,7 +135,7 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
                 
                 self.numberOfEpisode.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Number Of Episode", comment: ""),
                                                                       subTitle: String(result.numberOfEpisodes)))
-                self.numberOfSeason.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Number Of Seasadson", comment: ""),
+                self.numberOfSeason.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Number Of Season", comment: ""),
                                                                       subTitle: String(result.numberOfSeasons)))
                 self.inProduction.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("In Production", comment: ""),
                                                                     subTitle: result.inProduction ? NSLocalizedString("Yes", comment: "") : NSLocalizedString("No", comment: "")))

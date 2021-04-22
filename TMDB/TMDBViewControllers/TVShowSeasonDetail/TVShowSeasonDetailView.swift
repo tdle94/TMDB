@@ -242,7 +242,8 @@ extension TVShowSeasonDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBCreditHeaderView
-                
+                header?.shouldRemoveSegment(self.viewModel.noCrew, at: 1)
+                header?.shouldRemoveSegment(self.viewModel.noCast, at: 0)
                 header?
                     .segmentControl
                     .rx
@@ -250,6 +251,7 @@ extension TVShowSeasonDetailView {
                     .changed
                     .asDriver()
                     .drive(onNext: { index in
+                        self.creditCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: true)
                         self.viewModel.handleCreditSelection(at: index, tvshowId: self.tvShowId!, seasonNumber: self.season!.number)
                     })
                     .disposed(by: self.rx.disposeBag)

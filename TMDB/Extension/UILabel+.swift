@@ -36,6 +36,10 @@ struct TMDBLabel {
     }
     
     static func setAtributeParagraph(title: String, paragraph: String) -> NSMutableAttributedString {
+        guard paragraph.isNotEmpty else {
+            return NSMutableAttributedString(string: "")
+        }
+        
         let paragraphStyle = NSMutableParagraphStyle()
         let headerStyle = NSMutableParagraphStyle()
         
@@ -43,7 +47,9 @@ struct TMDBLabel {
         headerStyle.lineSpacing = 6
 
         
-        let first = NSMutableAttributedString(string: "\(title):\n", attributes: [
+        
+        
+        let first = NSMutableAttributedString(string: paragraph.isEmpty ? "\(title)\n" : "\(title):\n", attributes: [
             NSAttributedString.Key.font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Circular-Book", size: UIFont.labelFontSize)!),
             NSAttributedString.Key.paragraphStyle: headerStyle,
             NSAttributedString.Key.foregroundColor: UIColor.darkText

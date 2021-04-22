@@ -10,6 +10,15 @@ import Foundation
 import UIKit
 
 class TMDBMovieHeaderView: TMDBPreviewHeaderView {
+    var viewAllType: ViewAllViewModel.ViewAll {
+        if segmentControl.selectedSegmentIndex == 0 {
+            return ViewAllViewModel.ViewAll.movie(.topRated)
+        } else if segmentControl.selectedSegmentIndex == 1 {
+            return ViewAllViewModel.ViewAll.movie(.nowPlaying)
+        }
+        return ViewAllViewModel.ViewAll.movie(.upcoming)
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }

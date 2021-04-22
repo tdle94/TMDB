@@ -13,6 +13,7 @@ import RealmSwift
 protocol EpisodeDetailViewModelProtocol {
     var images: PublishSubject<[Images]> { get }
     var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var creditCollectionViewHeight: PublishSubject<CGFloat> { get }
     
     var userSetting: TMDBUserSettingProtocol { get }
     var repository: TMDBTVShowRepository { get }
@@ -24,6 +25,7 @@ protocol EpisodeDetailViewModelProtocol {
 class EpisodeDetailViewModel: EpisodeDetailViewModelProtocol {
     var images: PublishSubject<[Images]> = PublishSubject()
     var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var creditCollectionViewHeight: PublishSubject<CGFloat> = PublishSubject()
     
     var userSetting: TMDBUserSettingProtocol
     
@@ -53,6 +55,7 @@ class EpisodeDetailViewModel: EpisodeDetailViewModelProtocol {
         let guestStar = repository.getTVShowEpisodeGuestStar(from: tvShowId,
                                                              seasonNumber: seasonNumber,
                                                              episodeNumber: episodeNumber)
+        creditCollectionViewHeight.onNext(guestStar.isEmpty ? 0 : Constant.collectionViewHeight)
         credits.onNext([SectionModel(model: "credit", items: guestStar)])
     }
 }

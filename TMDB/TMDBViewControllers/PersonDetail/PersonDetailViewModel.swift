@@ -24,6 +24,11 @@ protocol PersonDetailViewModelProtocol {
     var alias: PublishSubject<NSAttributedString> { get }
     var biography: PublishSubject<NSAttributedString> { get }
     var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    
+    var noMovieCredit: Bool { get }
+    var noTVShowCredit: Bool { get }
+    
+    var creditCollectionViewHeight: CGFloat { get }
      
     var userSetting: TMDBUserSettingProtocol { get }
     var repository: TMDBPeopleRepository { get }
@@ -48,8 +53,12 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
     var biography: PublishSubject<NSAttributedString> = PublishSubject()
     var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
     
-    var isThereMovie: Bool = true
-    var isThereTVShow: Bool = true
+    var noMovieCredit: Bool = true
+    var noTVShowCredit: Bool = true
+    
+    var creditCollectionViewHeight: CGFloat {
+        return noMovieCredit && noTVShowCredit ? 0 : Constant.collectionViewHeight
+    }
 
     var userSetting: TMDBUserSettingProtocol
     var repository: TMDBPeopleRepository
@@ -69,17 +78,17 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
                                                                       paragraph: personResult.biography))
                 
                 
-                var placeOfBirth = personResult.placeOfBirth?.isEmpty ?? true ? "" : personResult.placeOfBirth!
+                var placeOfBirth = (personResult.placeOfBirth?.isEmpty ?? true) ? "" : personResult.placeOfBirth!
                 
                 if !placeOfBirth.isEmpty {
                     placeOfBirth = " in \(placeOfBirth)"
                 }
         
-                if let birthday = personResult.birthday, !birthday.isEmpty {
-                    self.personBirthDay.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Birthday", comment: ""),
-                                                                          subTitle: birthday + placeOfBirth))
-                }
+                self.personBirthDay.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Birthday", comment: ""),
+                                                                      subTitle: (personResult.birthday ?? "") + placeOfBirth))
                 
+                self.noMovieCredit = personResult.movieCredits?.cast.isEmpty ?? true
+                self.noTVShowCredit = personResult.tvCredits?.cast.isEmpty ?? true
 
                 self.personDeathDay.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Deathday", comment: ""),
                                                                       subTitle: personResult.deathday))
@@ -98,9 +107,19 @@ class PersonDetailViewModel: PersonDetailViewModelProtocol {
                 self.occupation.onNext(TMDBLabel.setAttributeText(title: NSLocalizedString("Occupation", comment: ""),
                                                                   subTitle: personResult.knownForDepartment))
                 
-                self.profileCollectionImages.onNext(Array(personResult.images?.profiles ?? List<Images>()))
+                if personResult.images?.profiles.isEmpty ?? true {
+                    self.profileCollectionImages.onNext([Images()])
+                } else {
+                    self.profileCollectionImages.onNext(Array(personResult.images?.profiles ?? List<Images>()))
+                }
                 
-                self.credits.onNext([SectionModel(model: "credit", items: Array(personResult.movieCredits?.cast ?? List<Movie>()) )])
+                var credit: [Object] = Array(personResult.movieCredits?.cast ?? List<Movie>())
+                
+                if credit.isEmpty {
+                    credit = Array(personResult.tvCredits?.cast ?? List<TVShow>())
+                }
+                
+                self.credits.onNext([SectionModel(model: "credit", items: credit)])
             case .failure(let error):
                 debugPrint("Error getting season detail \(id): \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: "Fail getting person detail", style: .danger).show(queuePosition: .back,

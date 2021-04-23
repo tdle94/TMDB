@@ -55,6 +55,12 @@ class ReleaseDateView: UIViewController {
                                                            for: .search,
                                                            state: .normal)
         
+        navigationController?.navigationBar.setBackgroundImage(UIImage.imageFromColor(color: Constant.Color.primaryColor.withAlphaComponent(1)), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage.imageFromColor(color: Constant.Color.primaryColor.withAlphaComponent(1))
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: Constant.Color.backgroundColor.withAlphaComponent(1)
+        ]
+        
         setupBinding()
         title = NSLocalizedString("Release Date", comment: "")
         if let id = movieId {
@@ -65,7 +71,6 @@ class ReleaseDateView: UIViewController {
 
 extension ReleaseDateView {
     func setupBinding() {
-        navigationController?.resetNavBar()
         navigationItem.setBackArrowIcon()
         
         // bind search bar

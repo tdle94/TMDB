@@ -98,6 +98,14 @@ extension DefaultContainer {
         self.container.register(LanguageViewModelProtocol.self) { resolver in
             LanguageViewModel(userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
         }
+        
+        self.container.register(ViewAllViewModelProtocol.self) { resolver in
+            let repository = TMDBRepository(services: TMDBServices(session: resolver.resolve(TMDBSessionProtocol.self)!,
+                                            urlRequestBuilder: resolver.resolve(TMDBURLRequestBuilderProtocol.self)!),
+                                            localDataSource: resolver.resolve(TMDBLocalDataSourceProtocol.self)!,
+                                            userSetting: resolver.resolve(TMDBUserSettingProtocol.self)!)
+            return ViewAllViewModel(repository: repository)
+        }
     }
 
     func registerViews() {
@@ -166,6 +174,10 @@ extension DefaultContainer {
         
         self.container.register(LanguageView.self) { resolver in
             LanguageView(viewModel: resolver.resolve(LanguageViewModelProtocol.self)!)
+        }
+        
+        self.container.register(ViewAllView.self) { resolver in
+            ViewAllView(viewModel: resolver.resolve(ViewAllViewModelProtocol.self)!)
         }
     }
     

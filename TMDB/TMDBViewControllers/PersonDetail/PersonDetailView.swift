@@ -207,6 +207,10 @@ extension PersonDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBPersonCreditHeaderView
+                header?.shouldRemoveSegment(self.viewModel.noTVShowCredit, at: 1)
+                header?.shouldRemoveSegment(self.viewModel.noMovieCredit, at: 0)
+                
+                self.creditCollectionViewHeight.constant = self.viewModel.creditCollectionViewHeight
                 
                 header?
                     .segmentControl

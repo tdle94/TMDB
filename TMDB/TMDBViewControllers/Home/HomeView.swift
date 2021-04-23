@@ -216,9 +216,32 @@ extension HomeView {
         popularCollectionView
             .rx
             .itemSelected
-            .asDriver()
+            .filter { $0.row != 0 }
+            .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { indexPath in
                 let popularItem = self.popularDataSource.sectionModels.first?.items[indexPath.row]
+                self.delegate?.navigateWith(obj: popularItem)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        popularCollectionView
+            .rx
+            .itemSelected
+            .filter { $0.row == 0 }
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { indexPath in
+                let header = self.popularCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) as? TMDBPopularHeaderView
+                self.delegate?.navigateToViewAll(type: header?.viewAllType)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        trendingCollectionView
+            .rx
+            .itemSelected
+            .filter { $0.row != 0 }
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { indexPath in
+                let popularItem = self.trendingDataSource.sectionModels.first?.items[indexPath.row]
                 self.delegate?.navigateWith(obj: popularItem)
             })
             .disposed(by: rx.disposeBag)
@@ -226,9 +249,21 @@ extension HomeView {
         trendingCollectionView
             .rx
             .itemSelected
-            .asDriver()
+            .filter { $0.row == 0 }
+            .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { indexPath in
-                let popularItem = self.trendingDataSource.sectionModels.first?.items[indexPath.row]
+                let header = self.trendingCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) as? TMDBTrendHeaderView
+                self.delegate?.navigateToViewAll(type: header?.viewAllType)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        movieCollectionView
+            .rx
+            .itemSelected
+            .filter { $0.row != 0 }
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { indexPath in
+                let popularItem = self.movieDataSource.sectionModels.first?.items[indexPath.row]
                 self.delegate?.navigateWith(obj: popularItem)
             })
             .disposed(by: rx.disposeBag)
@@ -236,9 +271,21 @@ extension HomeView {
         movieCollectionView
             .rx
             .itemSelected
-            .asDriver()
+            .filter { $0.row == 0 }
+            .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { indexPath in
-                let popularItem = self.movieDataSource.sectionModels.first?.items[indexPath.row]
+                let header = self.movieCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) as? TMDBMovieHeaderView
+                self.delegate?.navigateToViewAll(type: header?.viewAllType)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        tvshowCollectionView
+            .rx
+            .itemSelected
+            .filter { $0.row != 0 }
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { indexPath in
+                let popularItem = self.tvshowDataSource.sectionModels.first?.items[indexPath.row]
                 self.delegate?.navigateWith(obj: popularItem)
             })
             .disposed(by: rx.disposeBag)
@@ -246,10 +293,11 @@ extension HomeView {
         tvshowCollectionView
             .rx
             .itemSelected
-            .asDriver()
+            .filter { $0.row == 0 }
+            .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { indexPath in
-                let popularItem = self.tvshowDataSource.sectionModels.first?.items[indexPath.row]
-                self.delegate?.navigateWith(obj: popularItem)
+                let header = self.tvshowCollectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(row: 0, section: 0)) as? TMDBTVShowHeaderView
+                self.delegate?.navigateToViewAll(type: header?.viewAllType)
             })
             .disposed(by: rx.disposeBag)
         

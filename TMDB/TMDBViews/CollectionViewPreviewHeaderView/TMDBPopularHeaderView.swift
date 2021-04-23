@@ -9,6 +9,16 @@ import Foundation
 import UIKit
 
 class TMDBPopularHeaderView: TMDBPreviewHeaderView {
+    
+    var viewAllType: ViewAllViewModel.ViewAll {
+        if segmentControl.selectedSegmentIndex == 0 {
+            return ViewAllViewModel.ViewAll.popular(.movie)
+        } else if segmentControl.selectedSegmentIndex == 1 {
+            return ViewAllViewModel.ViewAll.popular(.tvshow)
+        }
+        return ViewAllViewModel.ViewAll.popular(.people)
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.setHeader(title: NSLocalizedString("Popular", comment: ""))

@@ -348,8 +348,8 @@ extension TVShowDetailView {
             .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: { supplementary, _, _ in
                 let header = supplementary as? TMDBCreditHeaderView
-                header?.shouldRemoveSegment(self.viewModel.noCast, at: 0)
                 header?.shouldRemoveSegment(self.viewModel.noCrew, at: 1)
+                header?.shouldRemoveSegment(self.viewModel.noCast, at: 0)
                 
                 self.creditCollectionViewHeight.constant = self.viewModel.creditCollectionViewHeight
                 

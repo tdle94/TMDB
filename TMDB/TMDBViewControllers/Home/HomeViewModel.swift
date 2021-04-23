@@ -78,7 +78,7 @@ class HomeViewModel: HomeViewModelProtocol {
         
         switch result {
         case .success(let movieResult):
-            self.movieCollectionView.onNext([SectionModel(model: "movie", items: Array(movieResult.movies))])
+            self.movieCollectionView.onNext([SectionModel(model: "movie", items: [Movie()] + Array(movieResult.movies))])
         case .failure(let error):
             debugPrint("Error getting movie: \(error.localizedDescription)")
             StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
@@ -94,7 +94,7 @@ class HomeViewModel: HomeViewModelProtocol {
         
         switch result {
         case .success(let tvShowResult):
-            self.tvshowCollectionView.onNext([SectionModel(model: "tv show", items: Array(tvShowResult.onTV))])
+            self.tvshowCollectionView.onNext([SectionModel(model: "tv show", items: [TVShow()] + Array(tvShowResult.onTV))])
         case .failure(let error):
             debugPrint("Error getting tvshow: \(error.localizedDescription)")
             StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
@@ -110,7 +110,7 @@ class HomeViewModel: HomeViewModelProtocol {
         
         switch result {
         case .success(let trendResult):
-            self.trendingCollectionView.onNext([SectionModel(model: "trending", items: Array(trendResult.trending))])
+            self.trendingCollectionView.onNext([SectionModel(model: "trending", items: [Trending()] + Array(trendResult.trending))])
         case .failure(let error):
             debugPrint("Error getting trending: \(error.localizedDescription)")
             StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
@@ -141,7 +141,7 @@ class HomeViewModel: HomeViewModelProtocol {
             
             switch result {
             case .success(let movieResult):
-                self.popularCollectionView.onNext([SectionModel(model: "movie", items: Array(movieResult.movies))])
+                self.popularCollectionView.onNext([SectionModel(model: "movie", items: [Movie()] + Array(movieResult.movies))])
             case .failure(let error):
                 debugPrint("Error getting populuar movie: \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
@@ -162,7 +162,7 @@ class HomeViewModel: HomeViewModelProtocol {
             
             switch result {
             case .success(let tvShowResult):
-                self.popularCollectionView.onNext([SectionModel(model: "tv show", items: Array(tvShowResult.onTV))])
+                self.popularCollectionView.onNext([SectionModel(model: "tv show", items: [TVShow()] + Array(tvShowResult.onTV))])
             case .failure(let error):
                 debugPrint("Error getting populuar tvshow: \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,
@@ -183,7 +183,7 @@ class HomeViewModel: HomeViewModelProtocol {
             
             switch result {
             case .success(let peopleResult):
-                self.popularCollectionView.onNext([SectionModel(model: "people", items: Array(peopleResult.peoples))])
+                self.popularCollectionView.onNext([SectionModel(model: "people", items: [People()] + Array(peopleResult.peoples))])
             case .failure(let error):
                 debugPrint("Error getting populuar people: \(error.localizedDescription)")
                 StatusBarNotificationBanner(title: error.localizedDescription, style: .danger).show(queuePosition: .back,

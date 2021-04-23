@@ -10,6 +10,13 @@ import Foundation
 import UIKit
 
 class TMDBTrendHeaderView: TMDBPreviewHeaderView {
+    var viewAllType: ViewAllViewModel.ViewAll {
+        if segmentControl.selectedSegmentIndex == 0 {
+            return ViewAllViewModel.ViewAll.trending(.today)
+        }
+        return ViewAllViewModel.ViewAll.trending(.thisWeek)
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         label.setHeader(title: NSLocalizedString("Trends", comment: ""))

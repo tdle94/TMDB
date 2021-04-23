@@ -10,6 +10,15 @@ import Foundation
 import UIKit
 
 class TMDBTVShowHeaderView: TMDBPreviewHeaderView {
+    var viewAllType: ViewAllViewModel.ViewAll {
+        if segmentControl.selectedSegmentIndex == 0 {
+            return ViewAllViewModel.ViewAll.tvshow(.topRated)
+        } else if segmentControl.selectedSegmentIndex == 1 {
+            return ViewAllViewModel.ViewAll.tvshow(.airToday)
+        }
+        return ViewAllViewModel.ViewAll.tvshow(.onTheAir)
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }

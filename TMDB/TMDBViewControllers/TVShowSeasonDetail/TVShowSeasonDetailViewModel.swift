@@ -21,6 +21,9 @@ protocol TVShowSeasonDetailViewModelProtocol {
     var overview: PublishSubject<NSAttributedString> { get }
     var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
     
+    var noCrew: Bool { get }
+    var noCast: Bool { get }
+    
     var repository: TMDBTVShowRepository { get }
     
     func getSeasonDetail(tvShowId: Int, seasonNumber: Int)
@@ -35,8 +38,8 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
     
     var repository: TMDBTVShowRepository
     
-    var isThereCrew: Bool = true
-    var isThereCast: Bool = true
+    var noCrew: Bool = true
+    var noCast: Bool = true
     
     var backdropImages: PublishSubject<[Images]> = PublishSubject()
     var airDate: PublishSubject<NSAttributedString> = PublishSubject()
@@ -70,7 +73,17 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
                                                                        subTitle: String(season.episodeCount)))
                 
                 self.title.onNext(TMDBLabel.setHeader(title: season.name))
-                self.credits.onNext([SectionModel(model: "credit", items: Array(season.credits?.cast ?? List<Cast>()) )])
+                
+                self.noCast = season.credits?.cast.isEmpty ?? true
+                self.noCrew = season.credits?.crew.isEmpty ?? true
+                
+                var credit: [Object] = Array(season.credits?.cast ?? List<Cast>())
+                
+                if credit.isEmpty {
+                    credit = Array(season.credits?.crew ?? List<Crew>())
+                }
+                
+                self.credits.onNext([SectionModel(model: "credit", items: credit)])
 
             case .failure(let error):
                 debugPrint("Error getting season detail \(tvShowId): \(error.localizedDescription)")

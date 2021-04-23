@@ -151,11 +151,10 @@ extension SearchView: UICollectionViewDataSource {
                 .entityCollectionView
                 .rx
                 .didScroll
-                .asDriver()
+                .filter { discoverCell.entityCollectionView.isAtBottom }
+                .asDriver(onErrorDriveWith: .empty())
                 .drive(onNext: {
-                    if discoverCell.entityCollectionView.isAtBottom {
-                        self.discoveryViewModel.getAllMovie(nextPage: true)
-                    }
+                    self.discoveryViewModel.getAllMovie(nextPage: true)
                 })
                 .disposed(by: self.rx.disposeBag)
             
@@ -219,11 +218,10 @@ extension SearchView: UICollectionViewDataSource {
             .entityCollectionView
             .rx
             .didScroll
-            .asDriver()
+            .filter { discoverCell.entityCollectionView.isAtBottom }
+            .asDriver(onErrorDriveWith: .empty())
             .drive(onNext: {
-                if discoverCell.entityCollectionView.isAtBottom  {
-                    self.discoveryViewModel.getAllTVShow(nextPage: true)
-                }
+                self.discoveryViewModel.getAllTVShow(nextPage: true)
             })
             .disposed(by: rx.disposeBag)
         
@@ -314,11 +312,10 @@ extension SearchView {
                     .searchResultTableView
                     .rx
                     .didScroll
-                    .asDriver()
+                    .filter { searchResult.searchResultTableView.isAtBottom }
+                    .asDriver(onErrorDriveWith: .empty())
                     .drive(onNext: { _ in
-                        if let text = self.searchController.searchBar.text, searchResult.searchResultTableView.isAtBottom, text.isNotEmpty {
-                            self.searchViewModel.search(text: text, nextPage: true)
-                        }
+                        self.searchViewModel.search(text: self.searchController.searchBar.text, nextPage: true)
                     })
                     .disposed(by: self.rx.disposeBag)
                 
@@ -426,13 +423,7 @@ extension SearchView {
             .searchButtonClicked
             .asDriver()
             .drive(onNext: {
-                guard
-                    let text = self.searchController.searchBar.text,
-                    text.isNotEmpty
-                else {
-                    return
-                }
-                self.searchViewModel.search(text: text)
+                self.searchViewModel.search(text: self.searchController.searchBar.text, nextPage: false)
             })
             .disposed(by: rx.disposeBag)
         
@@ -446,7 +437,7 @@ extension SearchView {
             .distinctUntilChanged()
             .asDriver(onErrorJustReturn: "")
             .drive(onNext: { query in
-                self.searchViewModel.search(text: query.identity)
+                self.searchViewModel.search(text: query.identity, nextPage: false)
             })
             .disposed(by: rx.disposeBag)
     }

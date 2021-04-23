@@ -18,15 +18,9 @@ protocol SearchViewModelProtocol {
     var notificationLabel: PublishSubject<NSAttributedString> { get }
     var hideNotificationLabel: PublishSubject<Bool> { get }
     
-    func search(text: String, nextPage: Bool)
+    func search(text: String?, nextPage: Bool)
     func filter(search type: MediaType)
     func getSearchResult(at: Int) -> MultiSearch?
-}
-
-extension SearchViewModelProtocol {
-    func search(text: String, nextPage: Bool = false) {
-        search(text: text, nextPage: nextPage)
-    }
 }
 
 class SearchViewModel: SearchViewModelProtocol {
@@ -46,8 +40,8 @@ class SearchViewModel: SearchViewModelProtocol {
         self.searchRepository = searchRepository
     }
     
-    func search(text: String, nextPage: Bool) {
-        if try! isLoading.value() {
+    func search(text: String?, nextPage: Bool) {
+        guard let query = text, query.isNotEmpty, !(try! isLoading.value()) else {
             return
         }
 
@@ -68,7 +62,7 @@ class SearchViewModel: SearchViewModelProtocol {
             return
         }
 
-        searchRepository.multiSearch(query: text, page: newPage) { result in
+        searchRepository.multiSearch(query: query, page: newPage) { result in
             self.isLoading.onNext(false)
             switch result {
             case .success(let searchResult):
@@ -93,7 +87,7 @@ class SearchViewModel: SearchViewModelProtocol {
 
                 self.page = newPage
                 self.totalPages = searchResult.totalPages
-                self.oldSearchText = text
+                self.oldSearchText = query
             case .failure(let error):
                 if try! self.searchResult.value().isEmpty {
                     self.hideNotificationLabel.onNext(false)

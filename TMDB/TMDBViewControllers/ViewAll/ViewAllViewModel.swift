@@ -166,6 +166,7 @@ class ViewAllViewModel: ViewAllViewModelProtocol {
     func getNextPage() {
         guard let type = viewAllType, totalPages >= currentPage + 1 else {
             hideEndOfResult.onNext(false)
+            loadingIndicator.onNext(false)
             return
         }
         

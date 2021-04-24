@@ -20,6 +20,7 @@ protocol TVShowSeasonDetailViewModelProtocol {
     var numberOfEpisode: PublishSubject<NSAttributedString> { get }
     var overview: PublishSubject<NSAttributedString> { get }
     var credits: BehaviorSubject<[SectionModel<String, Object>]> { get }
+    var creditCollectionView: CGFloat { get }
     
     var noCrew: Bool { get }
     var noCast: Bool { get }
@@ -48,6 +49,9 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
     var overview: PublishSubject<NSAttributedString> = PublishSubject()
     var season: PublishSubject<Season> = PublishSubject()
     var credits: BehaviorSubject<[SectionModel<String, Object>]> = BehaviorSubject(value: [])
+    var creditCollectionView: CGFloat {
+        return noCrew && noCast ? 0 : Constant.collectionViewHeight
+    }
     
     init(repository: TMDBTVShowRepository, userSetting: TMDBUserSettingProtocol) {
         self.userSetting = userSetting

@@ -25,7 +25,7 @@ class SearchView: UIViewController {
     
     var tvDiscoverCell: UICollectionViewCell?
     
-    private var searchResult: SearchResultView?
+    private var searchResult: SearchResultView
     
     var filterBarButton = UIBarButtonItem(title: NSLocalizedString("Filter", comment: ""), style: .plain, target: nil, action: nil)
 
@@ -46,7 +46,7 @@ class SearchView: UIViewController {
         self.searchViewModel = searchViewModel
         self.discoveryViewModel = discoveryViewModel
         self.searchController = searchController
-        self.searchResult = searchController.searchResultsController as? SearchResultView
+        self.searchResult = (searchController.searchResultsController as? SearchResultView) ?? SearchResultView()
         super.init(nibName: String(describing: SearchView.self), bundle: nil)
     }
     
@@ -294,25 +294,23 @@ extension SearchView {
             .willPresent
             .take(1)
             .asSingle()
-            .subscribe(onSuccess: {
-                guard let searchResult = self.searchResult else {
-                    return
-                }
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { _ in
                 
                 // bind search result to tableview
                 self.searchViewModel
                     .searchResult
-                    .bind(to: searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, item, cell in
+                    .bind(to: self.searchResult.searchResultTableView.rx.items(cellIdentifier: Constant.Identifier.cell)) { index, item, cell in
                         (cell as? TMDBCustomTableViewCell)?.configure(item: item)
                     }
                     .disposed(by: self.rx.disposeBag)
                 
                 // search new page when user scroll to bottom of tableview
-                searchResult
+                self.searchResult
                     .searchResultTableView
                     .rx
                     .didScroll
-                    .filter { searchResult.searchResultTableView.isAtBottom }
+                    .filter { self.searchResult.searchResultTableView.isAtBottom }
                     .asDriver(onErrorDriveWith: .empty())
                     .drive(onNext: { _ in
                         self.searchViewModel.search(text: self.searchController.searchBar.text, nextPage: true)
@@ -320,7 +318,7 @@ extension SearchView {
                     .disposed(by: self.rx.disposeBag)
                 
                 // navigate when user tap on search result
-                searchResult
+                self.searchResult
                     .searchResultTableView
                     .rx
                     .itemSelected
@@ -331,7 +329,7 @@ extension SearchView {
                     .disposed(by: self.rx.disposeBag)
                 
                 // bind filter button
-                searchResult
+                self.searchResult
                     .filterButtonView
                     .movieButton
                     .rx
@@ -342,7 +340,7 @@ extension SearchView {
                     .disposed(by: self.rx.disposeBag)
                 
                 
-                searchResult
+                self.searchResult
                     .filterButtonView
                     .tvShowButton
                     .rx
@@ -352,7 +350,7 @@ extension SearchView {
                     }
                     .disposed(by: self.rx.disposeBag)
                 
-                searchResult
+                self.searchResult
                     .filterButtonView
                     .peopleButton
                     .rx
@@ -362,7 +360,7 @@ extension SearchView {
                     }
                     .disposed(by: self.rx.disposeBag)
                 
-                searchResult
+                self.searchResult
                     .searchResultTableView
                     .rx
                     .willBeginDragging
@@ -376,22 +374,22 @@ extension SearchView {
                 
                 self.searchViewModel
                     .isLoading
-                    .bind(to: searchResult.footerLoadIndicatorView.rx.isAnimating)
+                    .bind(to: self.searchResult.footerLoadIndicatorView.rx.isAnimating)
                     .disposed(by: self.rx.disposeBag)
                 
                 self.searchViewModel
                     .notificationLabel
-                    .bind(to: searchResult.emptyLabel.rx.attributedText)
+                    .bind(to: self.searchResult.emptyLabel.rx.attributedText)
                     .disposed(by: self.rx.disposeBag)
                 
                 self.searchViewModel
                     .hideNotificationLabel
-                    .bind(to: searchResult.emptyLabel.rx.isHidden)
+                    .bind(to: self.searchResult.emptyLabel.rx.isHidden)
                     .disposed(by: self.rx.disposeBag)
                 
                 self.searchViewModel
                     .isLoading
-                    .bind(to: searchResult.filterButtonView.rx.isHidden)
+                    .bind(to: self.searchResult.filterButtonView.rx.isHidden)
                     .disposed(by: self.rx.disposeBag)
                 
             })

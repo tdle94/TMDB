@@ -16,6 +16,8 @@ class ViewAllView: UIViewController {
     
     weak var delegate: AppCoordinator?
     
+    var loadIndicatorView: UICollectionReusableView?
+    
     var viewAllDataSource: RxCollectionViewSectionedReloadDataSource<SectionModel<String, Object>> = RxCollectionViewSectionedReloadDataSource(configureCell: { dataSource, collectionView, indexPath, item in
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constant.Identifier.previewItem, for: indexPath)
         (cell as? TMDBPreviewItemCell)?.configure(item: item)
@@ -37,9 +39,14 @@ class ViewAllView: UIViewController {
             backgroundLabel.textAlignment = .center
             
             viewAllDataSource.configureSupplementaryView = { _, collectionView, _, indexPath in
-                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                       withReuseIdentifier: Constant.Identifier.cell,
-                                                                       for: indexPath)
+                if let view = self.loadIndicatorView {
+                    return view
+                }
+                
+                self.loadIndicatorView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
+                                                                                         withReuseIdentifier: Constant.Identifier.cell,
+                                                                                         for: indexPath)
+                return self.loadIndicatorView!
             }
         }
     }

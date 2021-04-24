@@ -162,16 +162,15 @@ extension TVShowSeasonDetailView {
         // bind season detail
         viewModel
             .season
-            .subscribe { event in
-                guard let season = event.element else {
-                    return
-                }
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(onNext: { season in
                 
                 self.title = season.name
                 if let path = season.posterPath, let url = self.viewModel.userSetting.getImageURL(from: path) {
                     self.posterImageView.sd_setImage(with: url)
                 }
                 
+                self.creditCollectionViewHeight.constant = self.viewModel.creditCollectionView
                 self.episodeTableView.hideSkeleton()
                 self.airDateLabel.hideSkeleton()
                 self.numberOfEpisodeLabel.hideSkeleton()
@@ -184,7 +183,7 @@ extension TVShowSeasonDetailView {
                     .just([SectionModel(model: "Episode", items: Array(season.episodes))])
                     .bind(to: self.episodeTableView.rx.items(dataSource: self.episodeDataSource))
                     .disposed(by: self.rx.disposeBag)
-            }
+            })
             .disposed(by: rx.disposeBag)
         
         

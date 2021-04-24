@@ -27,6 +27,9 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
         return cell
     })
     
+    private var tvshowLoadingIndicatorView: UICollectionReusableView?
+    private var movieLoadingIndicatorView: UICollectionReusableView?
+    
     let errorLabel = UILabel()
     
     @IBOutlet weak var entityCollectionView: UICollectionView! {
@@ -47,15 +50,26 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
                                           withReuseIdentifier: Constant.Identifier.cell)
 
             movieDataSource.configureSupplementaryView = { _, collectionView, _, indexPath in
-                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                       withReuseIdentifier: Constant.Identifier.cell,
-                                                                       for: indexPath)
+                if let view = self.movieLoadingIndicatorView {
+                    return view
+                }
+                
+                self.movieLoadingIndicatorView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
+                                                                                                 withReuseIdentifier: Constant.Identifier.cell,
+                                                                                                 for: indexPath)
+                return self.movieLoadingIndicatorView!
             }
             
             tvShowDataSource.configureSupplementaryView = { _, collectionView, _, indexPath in
-                return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
-                                                                       withReuseIdentifier: Constant.Identifier.cell,
-                                                                       for: indexPath)
+                if let view = self.tvshowLoadingIndicatorView {
+                    return view
+                }
+                
+                self.tvshowLoadingIndicatorView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
+                                                                                                  withReuseIdentifier: Constant.Identifier.cell,
+                                                                                                  for: indexPath)
+                
+                return self.tvshowLoadingIndicatorView!
             }
         }
     }

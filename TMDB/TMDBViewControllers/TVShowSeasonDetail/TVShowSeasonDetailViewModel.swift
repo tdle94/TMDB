@@ -62,6 +62,9 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
         repository.getTVShowSeasonDetail(from: tvShowId, seasonNumber: seasonNumber) { result in
             switch result {
             case .success(let season):
+                self.noCast = season.credits?.cast.isEmpty ?? true
+                self.noCrew = season.credits?.crew.isEmpty ?? true
+                
                 self.season.onNext(season)
                 
  
@@ -77,10 +80,7 @@ class TVShowSeasonDetailViewModel: TVShowSeasonDetailViewModelProtocol {
                                                                        subTitle: String(season.episodeCount)))
                 
                 self.title.onNext(TMDBLabel.setHeader(title: season.name))
-                
-                self.noCast = season.credits?.cast.isEmpty ?? true
-                self.noCrew = season.credits?.crew.isEmpty ?? true
-                
+
                 var credit: [Object] = Array(season.credits?.cast ?? List<Cast>())
                 
                 if credit.isEmpty {

@@ -55,6 +55,8 @@ protocol TVShowDetailViewModelProtocol {
     func getRecommends(tvShowId: Int)
     func getTVShowSeasons(tvShowId: Int) -> [Season]
     func getTVShowReview(tvShowId: Int) -> [Review]
+    func getTVShowKeywords(tvShowId: Int) -> [Keyword]
+    func getTVShowGenres(tvShowId: Int) -> [Genre]
     
     func handleCreditSelection(at: Int, tvshowId: Int)
     func handleTVShowLikeThisSelection(at: Int, tvshowId: Int)
@@ -228,6 +230,14 @@ class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     
     func getTVShowReview(tvShowId: Int) -> [Review] {
         return repository.getTVShowReviews(from: tvShowId)
+    }
+    
+    func getTVShowKeywords(tvShowId: Int) -> [Keyword] {
+        repository.getTVShowKeywords(from: tvShowId)
+    }
+    
+    func getTVShowGenres(tvShowId: Int) -> [Genre] {
+        repository.getTVShowGenres(from: tvShowId)
     }
     
     func handleCreditSelection(at: Int, tvshowId: Int) {

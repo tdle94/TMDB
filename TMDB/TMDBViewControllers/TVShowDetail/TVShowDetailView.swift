@@ -239,10 +239,7 @@ extension TVShowDetailView {
             .rx
             .didEndDisplayingCell
             .subscribe { _, indexPath in
-                guard let index = self.backdropImageCollectionView.indexPathsForVisibleItems.first?.row else {
-                    return
-                }
-                self.scrollView.parallaxHeader.selectDot(at: index)
+                self.scrollView.parallaxHeader.selectDot(at: self.backdropImageCollectionView.indexPathsForVisibleItems.first?.row ?? 0)
             }
             .disposed(by: rx.disposeBag)
         
@@ -256,13 +253,20 @@ extension TVShowDetailView {
 
         viewModel
             .keywords
-            .asObserver()
-            .subscribe { event in
-                guard let keywords = event.element else {
-                    return
-                }
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { keywords in
                 (self.keywordCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = keywords.map { $0.name }
-            }
+            })
+            .disposed(by: rx.disposeBag)
+        
+        keywordCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let keyword = self.viewModel.getTVShowKeywords(tvShowId: self.tvShowId!)[indexPath.row]
+                self.delegate?.navigateToViewAll(type: .tvshow(.keyword(keyword)))
+            })
             .disposed(by: rx.disposeBag)
         
         // tvshow detail binding
@@ -322,6 +326,16 @@ extension TVShowDetailView {
             .asDriver(onErrorJustReturn: [])
             .drive(onNext: { genres in
                 (self.genreCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = genres.map { $0.name }
+            })
+            .disposed(by: rx.disposeBag)
+        
+        genreCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let genre = self.viewModel.getTVShowGenres(tvShowId: self.tvShowId!)[indexPath.row]
+                self.delegate?.navigateToViewAll(type: .tvshow(.genre(genre)))
             })
             .disposed(by: rx.disposeBag)
         

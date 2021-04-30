@@ -69,6 +69,8 @@ protocol MovieDetailViewModelProtocol {
     func getSimilarMovies(movieId: Int)
     func getRecommendMovies(movieId: Int)
     func getReviews(movieId: Int) -> [Review]
+    func getMovieKeywords(movieId: Int) -> [Keyword]
+    func getMovieGenres(movieId: Int) -> [Genre]
     
     func handleMovieLikeThisSelection(at segment: Int, movieId: Int)
     func handleCreditSelection(at segment: Int, movieId: Int)
@@ -280,6 +282,14 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     
     func getReviews(movieId: Int) -> [Review] {
         self.repository.getMovieReview(from: movieId)
+    }
+    
+    func getMovieKeywords(movieId: Int) -> [Keyword] {
+        self.repository.getMovieKeywords(from: movieId)
+    }
+    
+    func getMovieGenres(movieId: Int) -> [Genre] {
+        self.repository.getMovieGenre(from: movieId)
     }
     
     func handleMovieLikeThisSelection(at segment: Int, movieId: Int) {

@@ -290,10 +290,7 @@ extension MovieDetailView {
             .rx
             .didEndDisplayingCell
             .subscribe { _, indexPath in
-                guard let index = self.backdropImageCollectionView.indexPathsForVisibleItems.first?.row else {
-                    return
-                }
-                self.scrollView.parallaxHeader.selectDot(at: index)
+                self.scrollView.parallaxHeader.selectDot(at: self.backdropImageCollectionView.indexPathsForVisibleItems.first?.row ?? 0)
             }
             .disposed(by: rx.disposeBag)
         
@@ -329,6 +326,16 @@ extension MovieDetailView {
             })
             .disposed(by: rx.disposeBag)
         
+        genreCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let genre = self.viewModel.getMovieGenres(movieId: self.movieId!)[indexPath.row]
+                self.delegate?.navigateToViewAll(type: .movie(.genre(genre)))
+            })
+            .disposed(by: rx.disposeBag)
+        
         // keyword collectionView binding
         viewModel
             .keywords
@@ -342,6 +349,16 @@ extension MovieDetailView {
             .asDriver(onErrorJustReturn: [])
             .drive(onNext: { keywords in
                 (self.keywordCollectionView.collectionViewLayout as? TMDBKeywordLayout)?.texts = keywords.map { $0.name }
+            })
+            .disposed(by: rx.disposeBag)
+        
+        keywordCollectionView
+            .rx
+            .itemSelected
+            .asDriver()
+            .drive(onNext: { indexPath in
+                let keyword = self.viewModel.getMovieKeywords(movieId: self.movieId!)[indexPath.row]
+                self.delegate?.navigateToViewAll(type: .movie(.keyword(keyword)))
             })
             .disposed(by: rx.disposeBag)
         

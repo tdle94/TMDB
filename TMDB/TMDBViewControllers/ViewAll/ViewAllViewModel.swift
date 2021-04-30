@@ -38,11 +38,15 @@ class ViewAllViewModel: ViewAllViewModelProtocol {
         case topRated
         case nowPlaying
         case upcoming
+        case keyword(Keyword)
+        case genre(Genre)
     }
     enum TVShow {
         case topRated
         case airToday
         case onTheAir
+        case keyword(Keyword)
+        case genre(Genre)
     }
 
     enum ViewAll {
@@ -78,20 +82,30 @@ class ViewAllViewModel: ViewAllViewModelProtocol {
                     self.title = NSLocalizedString("Trends", comment: "") + " " + NSLocalizedString("This Week", comment: "")
                 }
             case .movie(let type):
-                if type == .topRated {
+                switch type {
+                case .nowPlaying:
                     self.title = NSLocalizedString("Top Rated", comment: "") + " " + NSLocalizedString("Movies", comment: "")
-                } else if type == .nowPlaying {
+                case .topRated:
                     self.title = NSLocalizedString("Now Playing", comment: "") + " " + NSLocalizedString("Movies", comment: "")
-                } else {
+                case .upcoming:
                     self.title = NSLocalizedString("Upcoming", comment: "") + " " + NSLocalizedString("Movies", comment: "")
+                case .keyword(let keyword):
+                    self.title = keyword.name
+                case .genre(let genre):
+                    self.title = genre.name
                 }
             case .tvshow(let type):
-                if type == .topRated {
+                switch type {
+                case .airToday:
                     self.title = NSLocalizedString("Top Rated", comment: "") + " " + NSLocalizedString("TV Shows", comment: "")
-                } else if type == .airToday {
+                case .onTheAir:
                     self.title = NSLocalizedString("Air Today", comment: "") + " " + NSLocalizedString("TV Shows", comment: "")
-                } else {
+                case .topRated:
                     self.title = NSLocalizedString("On The Air", comment: "") + " " + NSLocalizedString("TV Shows", comment: "")
+                case .keyword(let keyword):
+                    self.title = keyword.name
+                case .genre(let genre):
+                    self.title = genre.name
                 }
             default:
                 break
@@ -198,22 +212,44 @@ class ViewAllViewModel: ViewAllViewModelProtocol {
     }
     
     private func getTVShow(type: TVShow) {
-        if type == .airToday {
+        switch type {
+        case .airToday:
             repository.getTVShowAiringToday(page: currentPage + 1, completion: tvshowHandler)
-        } else if type == .onTheAir {
+        case .onTheAir:
             repository.getTVShowOnTheAir(page: currentPage + 1, completion: tvshowHandler)
-        } else {
+        case .topRated:
             repository.getTopRatedTVShow(page: currentPage + 1, completion: tvshowHandler)
+        case .keyword(let keyword):
+            var query = DiscoverQuery(type: .tv)
+            query.keywords = [keyword]
+            query.page = currentPage + 1
+            repository.getAllTVShow(query: query, completion: tvshowHandler)
+        case .genre(let genre):
+            var query = DiscoverQuery(type: .movie)
+            query.withGenres = "\(genre.id)"
+            query.page = currentPage + 1
+            repository.getAllTVShow(query: query, completion: tvshowHandler)
         }
     }
     
     private func getMovie(type: Movie) {
-        if type == .nowPlaying {
+        switch type {
+        case .nowPlaying:
             repository.getNowPlayingMovie(page: currentPage + 1, completion: movieHandler)
-        } else if type == .topRated {
+        case .topRated:
             repository.getTopRateMovie(page: currentPage + 1, completion: movieHandler)
-        } else {
+        case .upcoming:
             repository.getUpcomingMovie(page: currentPage + 1, completion: movieHandler)
+        case .keyword(let keyword):
+            var query = DiscoverQuery(type: .movie)
+            query.keywords = [keyword]
+            query.page = currentPage + 1
+            repository.getAllMovie(query: query, completion: movieHandler)
+        case .genre(let genre):
+            var query = DiscoverQuery(type: .movie)
+            query.withGenres = "\(genre.id)"
+            query.page = currentPage + 1
+            repository.getAllMovie(query: query, completion: movieHandler)
         }
     }
     

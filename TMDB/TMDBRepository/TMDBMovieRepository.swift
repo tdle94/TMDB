@@ -17,6 +17,7 @@ protocol TMDBMovieRepository {
     func getMovieCast(from movieId: Int) -> [Cast]
     func getMovieCrew(from movieId: Int) -> [Crew]
     func getMovieKeywords(from movieId: Int) -> [Keyword]
+    func getMovieGenre(from movieId: Int) -> [Genre]
     func getMovieReleaseDates(from movieId: Int) -> ReleaseDateResults?
     func refreshMovie(id: Int, completion: @escaping (Result<Movie, Error>) -> Void)
     func getMovieImages(from movieId: Int, completion: @escaping (Result<ImageResult, Error>) -> Void)

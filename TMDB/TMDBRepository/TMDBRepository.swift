@@ -376,6 +376,13 @@ extension TMDBRepository: TMDBTVShowRepository {
         }
         return Array(keywords)
     }
+    
+    func getTVShowGenres(from tvShowId: Int) -> [Genre] {
+        guard let genres = localDataSource.getTVShow(id: tvShowId)?.genres else {
+            return []
+        }
+        return Array(genres)
+    }
 
     func getTVShowCast(from tvShowId: Int) -> [Cast] {
         guard let cast = localDataSource.getTVShow(id: tvShowId)?.credits?.cast else {
@@ -560,6 +567,13 @@ extension TMDBRepository: TMDBMovieRepository {
             return []
         }
         return Array(crew)
+    }
+    
+    func getMovieGenre(from movieId: Int) -> [Genre] {
+        guard let genres = localDataSource.getMovie(id: movieId)?.genres else {
+            return []
+        }
+        return Array(genres)
     }
 
     func getMovieDetail(id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {

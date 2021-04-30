@@ -793,8 +793,8 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         /*WHEN*/
-        let keywords = repository.getMovieKeywords(from: 3)
-        XCTAssertEqual(keywords.count, 1)
+        XCTAssertEqual(repository.getMovieKeywords(from: 3).count, 1)
+        
         /*THEN*/
         verify(localDataSource).getMovie(id: 3)
     }
@@ -809,9 +809,42 @@ class TMDBRepositoryTests: XCTestCase {
         }
         
         /*WHEN*/
-        let keywords = repository.getMovieKeywords(from: 3)
-        XCTAssertEqual(keywords.count, 0)
+        XCTAssertEqual(repository.getMovieKeywords(from: 3).count, 0)
 
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
+    
+    // MARK: - movie genre
+    func testGetValidGenreMoviey() {
+        let movie = Movie()
+        movie.id = 3
+        movie.genres.append(Genre())
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+        
+        /*WHEN*/
+        XCTAssertEqual(repository.getMovieGenre(from: 3).count, 1)
+
+        /*THEN*/
+        verify(localDataSource).getMovie(id: 3)
+    }
+    
+    func testGetInvalidGenreFromMovie() {
+        let movie = Movie()
+        movie.id = 3
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getMovie(id: 3).thenReturn(movie)
+        }
+        
+        /*WHEN*/
+        XCTAssertEqual(repository.getMovieGenre(from: 3).count, 0)
+        
         /*THEN*/
         verify(localDataSource).getMovie(id: 3)
     }
@@ -1080,6 +1113,7 @@ class TMDBRepositoryTests: XCTestCase {
         let keywords = TVKeywordResult()
         keywords.results.append(Keyword())
         tvShow.keywords = keywords
+        
         /*GIVEN*/
         stub(localDataSource) { stub in
             when(stub).getTVShow(id: 3).thenReturn(tvShow)
@@ -1087,6 +1121,54 @@ class TMDBRepositoryTests: XCTestCase {
         
         /*WHEN*/
         XCTAssertNotEqual(repository.getTVShowKeywords(from: 3).count, 0)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
+    
+    func testGetNonExistingTVShowKeywords() {
+        let tvShow = TVShow()
+
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+        
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowKeywords(from: 3).count, 0)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
+    
+    // MARK: - tv show genre
+    func testGetExisingTVShowGenre() {
+        let tvShow = TVShow()
+        tvShow.genres.append(Genre())
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+        
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowGenres(from: 3).count, 1)
+        
+        /*THEN*/
+        verify(localDataSource).getTVShow(id: 3)
+    }
+    
+    func testGetNonExisitingTVShowGenre() {
+        let tvShow = TVShow()
+        tvShow.id = 3
+        
+        /*GIVEN*/
+        stub(localDataSource) { stub in
+            when(stub).getTVShow(id: 3).thenReturn(tvShow)
+        }
+        
+        /*WHEN*/
+        XCTAssertEqual(repository.getTVShowGenres(from: 3).count, 0)
         
         /*THEN*/
         verify(localDataSource).getTVShow(id: 3)

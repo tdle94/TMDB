@@ -65,6 +65,7 @@ internal func nimblePrecondition(
 }
 
 internal func internalError(_ msg: String, file: FileString = #file, line: UInt = #line) -> Never {
+    // swiftlint:disable line_length
     fatalError(
         """
         Nimble Bug Found: \(msg) at \(file):\(line).

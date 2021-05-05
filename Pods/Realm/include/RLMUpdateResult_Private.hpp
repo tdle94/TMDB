@@ -17,11 +17,14 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #import <Realm/RLMUpdateResult.h>
-
-#import <realm/object-store/sync/mongo_collection.hpp>
+#import "sync/remote_mongo_collection.hpp"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface RLMUpdateResult ()
+
 - (instancetype)initWithUpdateResult:(realm::app::MongoCollection::UpdateResult)UpdateResult;
+
 @end
+
 NS_ASSUME_NONNULL_END

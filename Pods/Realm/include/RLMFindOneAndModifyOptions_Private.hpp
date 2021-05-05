@@ -17,9 +17,10 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #import <Realm/RLMFindOneAndModifyOptions.h>
-
-#import <realm/object-store/sync/mongo_collection.hpp>
+#import "sync/remote_mongo_collection.hpp"
 
 @interface RLMFindOneAndModifyOptions ()
+
 - (realm::app::MongoCollection::FindOneAndModifyOptions)_findOneAndModifyOptions;
+
 @end

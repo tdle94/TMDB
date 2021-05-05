@@ -18,16 +18,16 @@
 
 #import "RLMApp_Private.hpp"
 
-#import "RLMBSON_Private.hpp"
 #import "RLMCredentials_Private.hpp"
-#import "RLMEmailPasswordAuth.h"
+#import "RLMBSON_Private.hpp"
 #import "RLMPushClient_Private.hpp"
-#import "RLMSyncManager_Private.hpp"
 #import "RLMUser_Private.hpp"
+#import "RLMSyncManager_Private.hpp"
 #import "RLMUtil.hpp"
+#import "RLMEmailPasswordAuth.h"
 
-#import <realm/object-store/sync/sync_manager.hpp>
-#import <realm/sync/config.hpp>
+#include "sync/sync_config.hpp"
+#include "sync/sync_manager.hpp"
 
 #if !defined(REALM_COCOA_VERSION)
 #import "RLMVersion.h"
@@ -35,7 +35,6 @@
 
 using namespace realm;
 
-#pragma mark CocoaNetworkTransport
 namespace {
     /// Internal transport struct to bridge RLMNetworkingTransporting to the GenericNetworkTransport.
     class CocoaNetworkTransport : public realm::app::GenericNetworkTransport {
@@ -57,7 +56,7 @@ namespace {
             rlmRequest.timeout = request.timeout_ms / 1000;
 
             // Send the request through to the Cocoa level transport
-            [m_transport sendRequestToServer:rlmRequest completion:^(RLMResponse *response) {
+            [m_transport sendRequestToServer:rlmRequest completion:^(RLMResponse * response) {
                 __block std::map<std::string, std::string> bridgingHeaders;
                 [response.headers enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *) {
                     bridgingHeaders[key.UTF8String] = value.UTF8String;
@@ -82,7 +81,6 @@ namespace {
     };
 }
 
-#pragma mark RLMAppConfiguration
 @implementation RLMAppConfiguration {
     realm::app::App::Config _config;
 }
@@ -216,27 +214,6 @@ NSError *RLMAppErrorToNSError(realm::app::AppError const& appError) {
                                   }];
 }
 
-#pragma mark RLMAppSubscriptionToken
-@implementation RLMAppSubscriptionToken {
-@public
-    std::unique_ptr<realm::Subscribable<app::App>::Token> _token;
-}
-
-- (instancetype)initWithToken:(realm::Subscribable<app::App>::Token&&)token {
-    if (self = [super init]) {
-        _token = std::make_unique<realm::Subscribable<app::App>::Token>(std::move(token));
-        return self;
-    }
-
-    return nil;
-}
-
-- (NSUInteger)value {
-    return _token->value();
-}
-@end
-
-#pragma mark RLMApp
 @interface RLMApp() <ASAuthorizationControllerDelegate> {
     std::shared_ptr<realm::app::App> _app;
     __weak id<RLMASLoginDelegate> _authorizationDelegate API_AVAILABLE(ios(13.0), macos(10.15), tvos(13.0), watchos(6.0));
@@ -285,19 +262,14 @@ NSError *RLMAppErrorToNSError(realm::app::AppError const& appError) {
     return nil;
 }
 
-static NSMutableDictionary *s_apps = [NSMutableDictionary new];
-static std::mutex& s_appMutex = *new std::mutex();
-
-+ (void)resetAppCache {
-    std::lock_guard<std::mutex> lock(s_appMutex);
-    [s_apps removeAllObjects];
-    app::App::clear_cached_apps();
-}
-
 + (instancetype)appWithId:(NSString *)appId
             configuration:(RLMAppConfiguration *)configuration
             rootDirectory:(NSURL *)rootDirectory {
-    std::lock_guard<std::mutex> lock(s_appMutex);
+    static NSMutableDictionary *s_apps = [NSMutableDictionary new];
+    // protects the app cache
+    static std::mutex& initLock = *new std::mutex();
+    std::lock_guard<std::mutex> lock(initLock);
+
     if (RLMApp *app = s_apps[appId]) {
         return app;
     }
@@ -396,16 +368,6 @@ static std::mutex& s_appMutex = *new std::mutex();
 - (void)authorizationController:(__unused ASAuthorizationController *)controller
            didCompleteWithError:(NSError *)error API_AVAILABLE(ios(13.0), macos(10.15), tvos(13.0), watchos(6.0)) {
     [self.authorizationDelegate authenticationDidCompleteWithError:error];
-}
-
-- (RLMAppSubscriptionToken *)subscribe:(RLMAppNotificationBlock)block {
-    return [[RLMAppSubscriptionToken alloc] initWithToken:_app->subscribe([block, self] (auto&) {
-        block(self);
-    })];
-}
-
-- (void)unsubscribe:(RLMAppSubscriptionToken *)token {
-    return _app->unsubscribe(*token->_token);
 }
 
 @end

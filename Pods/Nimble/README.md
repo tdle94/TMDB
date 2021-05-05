@@ -419,7 +419,7 @@ the default timeout and poll interval values. This can be done as follows:
 // Swift
 
 // Increase the global timeout to 5 seconds:
-Nimble.AsyncDefaults.timeout = .seconds(5)
+Nimble.AsyncDefaults.timeout = .seconds(1)
 
 // Slow the polling interval to 0.1 seconds:
 Nimble.AsyncDefaults.pollInterval = .milliseconds(100)

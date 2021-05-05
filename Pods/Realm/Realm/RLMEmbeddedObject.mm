@@ -61,10 +61,6 @@
     return RLMObjectFreeze(self);
 }
 
-- (instancetype)thaw {
-    return RLMObjectThaw(self);
-}
-
 - (RLMNotificationToken *)addNotificationBlock:(RLMObjectChangeBlock)block {
     return RLMObjectAddNotificationBlock(self, block, nil);
 }

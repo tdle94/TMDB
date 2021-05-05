@@ -16,11 +16,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <Realm/RLMApp_Private.h>
-
-#import <realm/object-store/sync/app.hpp>
-
+#import <Realm/RLMApp.h>
 #import <memory>
+#import "sync/app.hpp"
 
 @interface RLMAppConfiguration()
 
@@ -42,7 +40,6 @@
 
 - (nonnull instancetype)initWithApp:(std::shared_ptr<realm::app::App>)app;
 
-+ (void)resetAppCache;
 @end
 
 NSError * _Nonnull RLMAppErrorToNSError(realm::app::AppError const& appError);

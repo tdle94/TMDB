@@ -54,6 +54,7 @@ public typealias MongoDatabase = RLMMongoDatabase
 public typealias FindOptions = RLMFindOptions
 
 extension FindOptions {
+
     /// Limits the fields to return for all matching documents.
     public var projection: Document? {
         get {
@@ -74,7 +75,7 @@ extension FindOptions {
         }
     }
 
-    /// Options to use when executing a `find` command on a `MongoCollection`.
+    /// Options to use when executing a `find` command on a `RLMMongoCollection`.
     /// - Parameters:
     ///   - limit: The maximum number of documents to return. Specifying 0 will return all documents.
     ///   - projected: Limits the fields to return for all matching documents.
@@ -84,15 +85,6 @@ extension FindOptions {
         self.limit = limit ?? 0
         self.projection = projection
         self.sort = sort
-    }
-
-    /// Options to use when executing a `find` command on a `MongoCollection`.
-    /// - Parameters:
-    ///   - limit: The maximum number of documents to return. Specifying 0 will return all documents.
-    ///   - projected: Limits the fields to return for all matching documents.
-    ///   - sort: The order in which to return matching documents.
-    public convenience init(limit: Int?, projection: Document?, sort: Document?) {
-        self.init(limit, projection, sort)
     }
 }
 
@@ -124,7 +116,7 @@ extension FindOneAndModifyOptions {
     }
 
     /// Options to use when executing a `findOneAndUpdate`, `findOneAndReplace`,
-    /// or `findOneAndDelete` command on a `MongoCollection`
+    /// or `findOneAndDelete` command on a `RLMMongoCollection`
     /// - Parameters:
     ///   - projection: Limits the fields to return for all matching documents.
     ///   - sort: The order in which to return matching documents.
@@ -142,23 +134,6 @@ extension FindOneAndModifyOptions {
         self.sort = sort
         self.upsert = upsert
         self.shouldReturnNewDocument = shouldReturnNewDocument
-    }
-
-    /// Options to use when executing a `findOneAndUpdate`, `findOneAndReplace`,
-    /// or `findOneAndDelete` command on a `MongoCollection`
-    /// - Parameters:
-    ///   - projection: Limits the fields to return for all matching documents.
-    ///   - sort: The order in which to return matching documents.
-    ///   - upsert: Whether or not to perform an upsert, default is false
-    ///   (only available for findOneAndReplace and findOneAndUpdate)
-    ///   - shouldReturnNewDocument: When true then the new document is returned,
-    ///   Otherwise the old document is returned (default)
-    ///   (only available for findOneAndReplace and findOneAndUpdate)
-    public convenience init(projection: Document?,
-                            sort: Document?,
-                            upsert: Bool=false,
-                            shouldReturnNewDocument: Bool=false) {
-        self.init(projection, sort, upsert, shouldReturnNewDocument)
     }
 }
 

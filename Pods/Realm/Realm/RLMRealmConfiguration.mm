@@ -23,11 +23,11 @@
 #import "RLMSchema_Private.hpp"
 #import "RLMUtil.hpp"
 
-#import <realm/object-store/schema.hpp>
-#import <realm/object-store/shared_realm.hpp>
+#import "schema.hpp"
+#import "shared_realm.hpp"
 
 #if REALM_ENABLE_SYNC
-#import <realm/sync/config.hpp>
+#import "sync/sync_config.hpp"
 #else
 @class RLMSyncConfiguration;
 #endif
@@ -200,28 +200,6 @@ static bool isSync(realm::Realm::Config const& config) {
     return false;
 }
 
-- (void)updateSchemaMode {
-    if (self.deleteRealmIfMigrationNeeded) {
-        if (isSync(_config)) {
-            @throw RLMException(@"Cannot set 'deleteRealmIfMigrationNeeded' when sync is enabled ('syncConfig' is set).");
-        }
-    }
-    else if (self.readOnly) {
-        _config.schema_mode = isSync(_config) ? realm::SchemaMode::ReadOnlyAlternative : realm::SchemaMode::Immutable;
-    }
-    else if (isSync(_config)) {
-        if (_customSchema) {
-            _config.schema_mode = realm::SchemaMode::AdditiveExplicit;
-        }
-        else {
-            _config.schema_mode = realm::SchemaMode::AdditiveDiscovered;
-        }
-    }
-    else {
-        _config.schema_mode = realm::SchemaMode::Automatic;
-    }
-}
-
 - (void)setReadOnly:(BOOL)readOnly {
     if (readOnly) {
         if (self.deleteRealmIfMigrationNeeded) {
@@ -232,8 +210,7 @@ static bool isSync(realm::Realm::Config const& config) {
         _config.schema_mode = isSync(_config) ? realm::SchemaMode::ReadOnlyAlternative : realm::SchemaMode::Immutable;
     }
     else if (self.readOnly) {
-        _config.schema_mode = realm::SchemaMode::Automatic;
-        [self updateSchemaMode];
+        _config.schema_mode = isSync(_config) ? realm::SchemaMode::Additive : realm::SchemaMode::Automatic;
     }
 }
 
@@ -272,8 +249,7 @@ static bool isSync(realm::Realm::Config const& config) {
 }
 
 - (void)setObjectClasses:(NSArray *)objectClasses {
-    self.customSchema = objectClasses ? [RLMSchema schemaWithObjectClasses:objectClasses] : nil;
-    [self updateSchemaMode];
+    self.customSchema = [RLMSchema schemaWithObjectClasses:objectClasses];
 }
 
 - (NSUInteger)maximumNumberOfActiveVersions {

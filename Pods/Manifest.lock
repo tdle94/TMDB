@@ -1,20 +1,20 @@
 PODS:
   - Cosmos (23.0.0)
-  - Cuckoo (1.5.0):
-    - Cuckoo/Swift (= 1.5.0)
-  - Cuckoo/Swift (1.5.0)
+  - Cuckoo (1.4.1):
+    - Cuckoo/Swift (= 1.4.1)
+  - Cuckoo/Swift (1.4.1)
   - Differentiator (4.0.1)
   - MarqueeLabel (4.0.5)
-  - Nimble (9.0.1)
+  - Nimble (9.0.0)
   - NotificationBannerSwift (3.0.6):
     - MarqueeLabel (~> 4.0.5)
     - SnapKit (~> 5.0.1)
-  - Quick (3.1.2)
-  - Realm (10.7.4):
-    - Realm/Headers (= 10.7.4)
-  - Realm/Headers (10.7.4)
-  - RealmSwift (10.7.4):
-    - Realm (= 10.7.4)
+  - Quick (3.0.0)
+  - Realm (10.1.3):
+    - Realm/Headers (= 10.1.3)
+  - Realm/Headers (10.1.3)
+  - RealmSwift (10.1.3):
+    - Realm (= 10.1.3)
   - RxCocoa (5.1.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
@@ -27,7 +27,7 @@ PODS:
     - RxSwift (~> 5)
   - RxRelay (5.1.1):
     - RxSwift (~> 5)
-  - RxSwift (5.1.2)
+  - RxSwift (5.1.1)
   - RxSwiftExt (5.2.0):
     - RxSwiftExt/Core (= 5.2.0)
     - RxSwiftExt/RxCocoa (= 5.2.0)
@@ -39,9 +39,9 @@ PODS:
   - RxSwiftUtilities (2.2.0):
     - RxCocoa (~> 5.1)
     - RxSwift (~> 5.1)
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
+  - SDWebImage (5.9.5):
+    - SDWebImage/Core (= 5.9.5)
+  - SDWebImage/Core (5.9.5)
   - SkeletonView (1.15.0)
   - SnapKit (5.0.1)
   - Swinject (2.7.1)
@@ -88,22 +88,22 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
-  Cuckoo: 09ff1b7c6613b9c27dafea90702ca32208fe59d3
+  Cuckoo: 4625f7f54d9bb880123270e8969898d6c1d036b5
   Differentiator: 886080237d9f87f322641dedbc5be257061b0602
   MarqueeLabel: 00cc0bcd087111dca575878b3531af980559707d
-  Nimble: 7bed62ffabd6dbfe05f5925cbc43722533248990
+  Nimble: 3b4ec3fd40f1dc178058e0981107721c615643d8
   NotificationBannerSwift: 7021be2338f8f29cf424b0aca43da462bf9e2a1a
-  Quick: 60f0ea3b8e0cfc0df3259a5c06a238ad8b3c46e0
-  Realm: f08ce1a85649a41303ecfe1cbd914c62e9e6d710
-  RealmSwift: 60ec49d165f23d040ab48811d8dd177e09baf4d3
+  Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
+  Realm: 072f4060c99150cb1d35e35ce1dd4dda7d9ddfed
+  RealmSwift: 96f96feafee63186789419235d14857dae9004ae
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
   RxOptional: b1fcd60856807a564c0215c2184b8d33e7826dc2
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
-  RxSwift: 1e2e1f9570186967f617e49128ed26ccf1bafc8e
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   RxSwiftExt: 4ca80336f43c28f11a2825cdd2fc61dd6c044697
   RxSwiftUtilities: 59e2d82daf74b9962f732b09e6da85a26281cfc0
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
   SkeletonView: cac18a3ac4f893b09d99e65072d806ef08377aae
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   Swinject: ddf78b8486dd9b71a667b852cad919ab4484478e

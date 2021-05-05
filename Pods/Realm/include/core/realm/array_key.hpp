@@ -89,10 +89,6 @@ public:
     {
         return ObjKey{Array::get(ndx) - adj};
     }
-    Mixed get_any(size_t ndx) const override
-    {
-        return Mixed(get(ndx));
-    }
     bool is_null(size_t ndx) const
     {
         return Array::get(ndx) == 0;

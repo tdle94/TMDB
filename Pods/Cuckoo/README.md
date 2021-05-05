@@ -7,6 +7,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen?style=flat)](https://github.com/Carthage/Carthage)
 [![License](https://img.shields.io/cocoapods/l/Cuckoo.svg?style=flat)](http://cocoapods.org/pods/Cuckoo)
 [![Platform](https://img.shields.io/cocoapods/p/Cuckoo.svg?style=flat)](http://cocoapods.org/pods/Cuckoo)
+[![Slack Status](http://swiftkit.brightify.org/badge.svg)](http://swiftkit.brightify.org)
 
 ## Introduction
 Cuckoo was created due to lack of a proper Swift mocking framework. We built the DSL to be very similar to [Mockito](http://mockito.org/), so anyone coming from Java/Android can immediately pick it up and use it.
@@ -297,16 +298,6 @@ Verification of properties is similar to their stubbing.
 
 You can check if there are no more interactions on mock with function `verifyNoMoreInteractions`.
 
-With Swift's generic types, it is possible to use a generic parameter as the return type. To properly verify these methods, you need to be able to specify the return type.
-
-```Swift
-// Given:
-func genericReturn<T: Codable>(for: String) -> T? { ... }
-
-// Verify
-verify(mock).genericReturn(for: any()).with(returnType: String?.self)
-```
-
 ##### Argument capture
 You can use `ArgumentCaptor` to capture arguments in verification of calls (doing that in stubbing is not recommended). Here is an example code:
 
@@ -464,7 +455,7 @@ When a method is called or a property accessed/set on a stub, nothing happens. I
 ##### Type inference
 Cuckoo does a simple type inference on all variables which allows for much cleaner source code on your side. There are a total 3 ways the inference tries to extract the type name from a variable:
 
-```Swift
+```
 // From the explicitly declared type:
 let constant1: MyType
 
@@ -498,7 +489,7 @@ To download the generator from GitHub instead of building it, use the `--downloa
 
 **NOTE**: If you encounter Github API rate limit using the `--download` option, the [run script](run) refers to the environment variable `GITHUB_ACCESS_TOKEN`.
 Add this line (replacing the Xs with your [GitHub token](https://github.com/settings/tokens), no additional permissions are needed) to the script build phase above the `run` call:
-```Bash
+```
 export GITHUB_ACCESS_TOKEN="XXXXXXX"
 ```
 
@@ -565,7 +556,7 @@ After the `help` command you can specify the name of another command for display
 Cuckoo subspec `Cuckoo/OCMock` brings support for mocking Objective-C classes and protocols.
 
 Example usage:
-```Swift
+```
 let tableView = UITableView()
 // stubbing the class is very similar to stubbing with Cuckoo
 let mock = objcStub(for: UITableViewController.self) { stubber, mock in
@@ -589,7 +580,7 @@ objcVerify(mock.tableView(tableView, accessoryButtonTappedForRowWith: IndexPath(
 Detailed usage is available in Cuckoo tests along with DOs and DON'Ts of this Swift-ObjC bridge.
 
 So far, only CocoaPods is supported. To install, simply add this line to your `Podfile`:
-```Ruby
+```
 pod 'Cuckoo/OCMock'
 ```
 

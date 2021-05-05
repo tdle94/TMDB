@@ -28,8 +28,8 @@ namespace realm {
 
 class ObjectId {
 public:
-    static constexpr size_t num_bytes = 12;
-    using ObjectIdBytes = std::array<uint8_t, num_bytes>;
+    using ObjectIdBytes = std::array<uint8_t, 12>;
+
     /**
      * Constructs an ObjectId with all bytes 0x00.
      */

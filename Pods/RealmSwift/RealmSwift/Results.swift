@@ -361,10 +361,6 @@ extension Decimal128: AddableType {}
     public func freeze() -> Results {
         return Results(rlmResults.freeze())
     }
-
-    public func thaw() -> Results? {
-        return Results(rlmResults.thaw())
-    }
 }
 
 extension Results: RealmCollection {

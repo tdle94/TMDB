@@ -24,7 +24,6 @@
 #include <realm/util/features.h>
 #include <realm/obj_list.hpp>
 #include <realm/list.hpp>
-#include <realm/set.hpp>
 
 namespace realm {
 
@@ -160,6 +159,7 @@ namespace realm {
 /// for more on this.
 class ConstTableView : public ObjList {
 public:
+
     /// Construct null view (no memory allocated).
     ConstTableView()
         : m_key_values(Allocator::get_default())
@@ -170,9 +170,8 @@ public:
     /// Construct empty view, ready for addition of row indices.
     ConstTableView(ConstTableRef parent);
     ConstTableView(ConstTableRef parent, Query& query, size_t start, size_t end, size_t limit);
-    ConstTableView(ConstTableRef parent, ColKey column, const Obj& obj);
-    ConstTableView(ConstTableRef parent, LnkLstPtr link_list);
-    ConstTableView(ConstTableRef parent, LnkSetPtr link_list);
+    ConstTableView(ConstTableRef parent, ColKey column, const ConstObj& obj);
+    ConstTableView(ConstTableRef parent, ConstLnkLstPtr link_list);
 
     /// Copy constructor.
     ConstTableView(const ConstTableView&);
@@ -233,11 +232,6 @@ public:
         return m_query;
     }
 
-    // Change the TableView to be backed by another query
-    // only works if the TableView is already backed by a query, and both
-    // queries points to the same Table
-    void update_query(const Query& q);
-
     std::unique_ptr<ConstTableView> clone() const
     {
         return std::unique_ptr<ConstTableView>(new ConstTableView(*this));
@@ -292,7 +286,7 @@ public:
     }
 
     // Conversion
-    void to_json(std::ostream&, size_t link_depth = 0) const;
+    void to_json(std::ostream&, size_t link_depth = 0, std::map<std::string, std::string>* renames = nullptr) const;
 
     // Determine if the view is 'in sync' with the underlying table
     // as well as other views used to generate the view. Note that updates
@@ -305,10 +299,7 @@ public:
 
     // A TableView is frozen if it is a) obtained from a query against a frozen table
     // and b) is synchronized (is_in_sync())
-    bool is_frozen()
-    {
-        return m_table->is_frozen() && is_in_sync();
-    }
+    bool is_frozen() { return m_table->is_frozen() && is_in_sync(); }
     // Tells if this TableView depends on a LinkList or row that has been deleted.
     bool depends_on_deleted_object() const;
 
@@ -351,6 +342,8 @@ public:
     void distinct(ColKey column);
     void distinct(DistinctDescriptor columns);
     void limit(LimitDescriptor limit);
+    void include(IncludeDescriptor include_paths);
+    IncludeDescriptor get_include_descriptors();
 
     // Replace the order of sort and distinct operations, bypassing manually
     // calling sort and distinct. This is a convenience method for bindings.
@@ -391,9 +384,7 @@ protected:
     ConstTableRef m_linked_table;
 
     // If this TableView was created from a LnkLst, then this reference points to it. Otherwise it's 0
-    mutable LnkLstPtr m_linklist_source;
-    // If this TableView was created from a LnkSet, then this reference points to it. Otherwise it's 0
-    mutable LnkSetPtr m_linkset_source;
+    mutable ConstLnkLstPtr m_linklist_source;
 
     // Stores the ordering criteria of applied sort and distinct operations.
     DescriptorOrdering m_descriptor_ordering;
@@ -418,7 +409,7 @@ private:
     util::RaceDetector m_race_detector;
 
     friend class Table;
-    friend class Obj;
+    friend class ConstObj;
     friend class Query;
     friend class DB;
     friend class ObjList;
@@ -483,13 +474,15 @@ public:
 private:
     TableView(TableRef parent);
     TableView(TableRef parent, Query& query, size_t start, size_t end, size_t limit);
-    TableView(TableRef parent, LnkLstPtr);
+    TableView(TableRef parent, ConstLnkLstPtr);
 
     friend class ConstTableView;
     friend class Table;
     friend class Query;
     friend class LnkLst;
 };
+
+
 
 
 // ================================================================================================
@@ -516,7 +509,7 @@ inline ConstTableView::ConstTableView(ConstTableRef parent, Query& query, size_t
     m_key_values.create();
 }
 
-inline ConstTableView::ConstTableView(ConstTableRef src_table, ColKey src_column_key, const Obj& obj)
+inline ConstTableView::ConstTableView(ConstTableRef src_table, ColKey src_column_key, const ConstObj& obj)
     : m_table(src_table) // Throws
     , m_source_column_key(src_column_key)
     , m_linked_obj_key(obj.get_key())
@@ -530,7 +523,7 @@ inline ConstTableView::ConstTableView(ConstTableRef src_table, ColKey src_column
     }
 }
 
-inline ConstTableView::ConstTableView(ConstTableRef parent, LnkLstPtr link_list)
+inline ConstTableView::ConstTableView(ConstTableRef parent, ConstLnkLstPtr link_list)
     : m_table(parent) // Throws
     , m_linklist_source(std::move(link_list))
     , m_key_values(Allocator::get_default())
@@ -542,25 +535,12 @@ inline ConstTableView::ConstTableView(ConstTableRef parent, LnkLstPtr link_list)
     }
 }
 
-inline ConstTableView::ConstTableView(ConstTableRef parent, LnkSetPtr link_set)
-    : m_table(parent) // Throws
-    , m_linkset_source(std::move(link_set))
-    , m_key_values(Allocator::get_default())
-{
-    REALM_ASSERT(m_linkset_source);
-    m_key_values.create();
-    if (m_table) {
-        m_last_seen_versions.emplace_back(m_table->get_key(), m_table->get_content_version());
-    }
-}
-
 inline ConstTableView::ConstTableView(const ConstTableView& tv)
     : m_table(tv.m_table)
     , m_source_column_key(tv.m_source_column_key)
     , m_linked_obj_key(tv.m_linked_obj_key)
     , m_linked_table(tv.m_linked_table)
-    , m_linklist_source(tv.m_linklist_source ? tv.m_linklist_source->clone_linklist() : LnkLstPtr{})
-    , m_linkset_source(tv.m_linkset_source ? tv.m_linkset_source->clone_linkset() : LnkSetPtr{})
+    , m_linklist_source(tv.m_linklist_source ? tv.m_linklist_source->clone() : LnkLstPtr{})
     , m_descriptor_ordering(tv.m_descriptor_ordering)
     , m_query(tv.m_query)
     , m_start(tv.m_start)
@@ -578,7 +558,6 @@ inline ConstTableView::ConstTableView(ConstTableView&& tv) noexcept
     , m_linked_obj_key(tv.m_linked_obj_key)
     , m_linked_table(tv.m_linked_table)
     , m_linklist_source(std::move(tv.m_linklist_source))
-    , m_linkset_source(std::move(tv.m_linkset_source))
     , m_descriptor_ordering(std::move(tv.m_descriptor_ordering))
     , m_query(std::move(tv.m_query))
     , m_start(tv.m_start)
@@ -607,7 +586,6 @@ inline ConstTableView& ConstTableView::operator=(ConstTableView&& tv) noexcept
     m_linked_obj_key = tv.m_linked_obj_key;
     m_linked_table = tv.m_linked_table;
     m_linklist_source = std::move(tv.m_linklist_source);
-    m_linkset_source = std::move(tv.m_linkset_source);
     m_descriptor_ordering = std::move(tv.m_descriptor_ordering);
 
     return *this;
@@ -629,8 +607,7 @@ inline ConstTableView& ConstTableView::operator=(const ConstTableView& tv)
     m_source_column_key = tv.m_source_column_key;
     m_linked_obj_key = tv.m_linked_obj_key;
     m_linked_table = tv.m_linked_table;
-    m_linklist_source = tv.m_linklist_source ? tv.m_linklist_source->clone_linklist() : LnkLstPtr{};
-    m_linkset_source = tv.m_linkset_source ? tv.m_linkset_source->clone_linkset() : LnkSetPtr{};
+    m_linklist_source = tv.m_linklist_source ? tv.m_linklist_source->clone() : LnkLstPtr{};
     m_descriptor_ordering = tv.m_descriptor_ordering;
 
     return *this;
@@ -675,7 +652,7 @@ ConstTableView ObjList::find_all(ColKey column_key, T value) const
 {
     ConstTableView tv(get_target_table());
     auto& keys = tv.m_key_values;
-    for_each([column_key, value, &keys](const Obj& o) {
+    for_each([column_key, value, &keys](ConstObj& o) {
         if (o.get<T>(column_key) == value) {
             keys.add(o.get_key());
         }
@@ -700,7 +677,7 @@ inline TableView::TableView(TableRef parent, Query& query, size_t start, size_t 
 {
 }
 
-inline TableView::TableView(TableRef parent, LnkLstPtr link_list)
+inline TableView::TableView(TableRef parent, ConstLnkLstPtr link_list)
     : ConstTableView(parent, std::move(link_list))
 {
 }

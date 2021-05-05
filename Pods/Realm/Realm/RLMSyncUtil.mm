@@ -26,9 +26,10 @@
 #import "RLMUser_Private.hpp"
 #import "RLMUtil.hpp"
 
-#import <realm/object-store/shared_realm.hpp>
-#import <realm/object-store/sync/sync_user.hpp>
-#import <realm/sync/config.hpp>
+#import "shared_realm.hpp"
+
+#import "sync/sync_config.hpp"
+#import "sync/sync_user.hpp"
 
 NSString *const RLMSyncErrorDomain = @"io.realm.sync";
 NSString *const RLMSyncAuthErrorDomain = @"io.realm.sync.auth";

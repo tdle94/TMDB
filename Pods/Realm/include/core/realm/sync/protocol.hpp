@@ -18,14 +18,9 @@ namespace sync {
 //   1 Initial version, matching io.realm.sync-30, but not including query-based
 //     sync, serialized transactions, and state realms (async open).
 //
-//   2 Restored erase-always-wins OT behavior.
-//
-//  XX Changes:
-//     - Add support for Mixed and TypedLinks columns.
-//
 constexpr int get_current_protocol_version() noexcept
 {
-    return 2;
+    return 1;
 }
 
 constexpr const char* get_websocket_protocol_prefix() noexcept

@@ -59,8 +59,7 @@ public final class Decimal128: RLMDecimal128, Decodable {
 
     /// Parse the given string as a Decimal128.
     ///
-    /// This initializer never throws and is marked as `throws` only because removing it is a breaking
-    /// change. Strings which cannot be parsed as a Decimal128 return a value where `isNaN` is `true`.
+    /// This initializer throws if the string is not a valid Decimal128 or is not a value which can be exactly represented by Decimal128.
     ///
     /// - parameter string: The string to parse.
     public override required init(string: String) throws {

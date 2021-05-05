@@ -169,6 +169,7 @@ extension Predicate {
     /// Compatibility layer for old Matcher API, deprecated.
     /// Emulates the MatcherFunc API
     internal static func _fromDeprecatedClosure(_ matcher: @escaping (Expression<T>, FailureMessage) throws -> Bool) -> Predicate {
+        // swiftlint:disable:previous identifier_name
         return Predicate { actual in
             let failureMessage = FailureMessage()
             let result = try matcher(actual, failureMessage)

@@ -16,3 +16,4 @@ using set = std::set<T, Compare, Alloc>;
 } // namespace realm
 
 #endif // REALM_UTIL_METERED_SET_HPP
+

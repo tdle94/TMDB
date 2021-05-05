@@ -26,8 +26,8 @@
 #import "RLMSchema.h"
 #import "RLMSyncSession.h"
 
-#import <realm/object-store/results.hpp>
-#import <realm/object-store/shared_realm.hpp>
+#import "results.hpp"
+#import "shared_realm.hpp"
 
 using namespace realm;
 

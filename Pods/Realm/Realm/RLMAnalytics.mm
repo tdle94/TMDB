@@ -179,8 +179,9 @@ static NSDictionary *RLMAnalyticsPayload() {
     }
 
     NSString *osVersionString = [[NSProcessInfo processInfo] operatingSystemVersionString];
-    Class swiftDecimal128 = NSClassFromString(@"RealmSwiftDecimal128");
-    BOOL isSwift = swiftDecimal128 != nil;
+    Class swiftObjectUtilClass = NSClassFromString(@"RealmSwiftObjectUtil");
+    BOOL isSwift = swiftObjectUtilClass != nil;
+    NSString *swiftVersion = isSwift ? [swiftObjectUtilClass swiftVersion] : @"N/A";
 
     static NSString *kUnknownString = @"unknown";
     NSString *hashedMACAddress = RLMMACAddress() ?: kUnknownString;
@@ -212,8 +213,7 @@ static NSDictionary *RLMAnalyticsPayload() {
 #else
                      @"Target OS Type": @"osx",
 #endif
-                     @"Clang Version": @__clang_version__,
-                     @"Clang Major Version": @__clang_major__,
+                     @"Swift Version": swiftVersion,
                      // Current OS version the app is targetting
                      @"Target OS Version": osVersionString,
                      // Minimum OS version the app is targetting

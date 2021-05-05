@@ -21,8 +21,7 @@
 #import "RLMBSON_Private.hpp"
 #import "RLMSyncUtil_Private.h"
 #import "RLMUtil.hpp"
-
-#import <realm/object-store/util/bson/bson.hpp>
+#import "util/bson/bson.hpp"
 
 using namespace realm;
 
@@ -41,11 +40,7 @@ using namespace realm;
 }
 
 + (instancetype)credentialsWithGoogleAuthCode:(RLMCredentialsToken)token {
-    return [[self alloc] initWithAppCredentials:app::AppCredentials::google(app::AuthCode(token.UTF8String))];
-}
-
-+ (instancetype)credentialsWithGoogleIdToken:(RLMCredentialsToken)token {
-    return [[self alloc] initWithAppCredentials:app::AppCredentials::google(app::IdToken(token.UTF8String))];
+    return [[self alloc] initWithAppCredentials:app::AppCredentials::google(token.UTF8String)];
 }
 
 + (instancetype)credentialsWithAppleToken:(RLMCredentialsToken)token {

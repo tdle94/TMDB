@@ -73,9 +73,17 @@
     return self;
 }
 
-- (instancetype)initWithString:(NSString *)string error:(__unused NSError **)error {
+- (instancetype)initWithString:(NSString *)string error:(NSError **)error {
     if ((self = [self init])) {
-        _value = realm::Decimal128(string.UTF8String);
+        try {
+            _value = realm::Decimal128(string.UTF8String);
+        }
+        catch (std::exception const& e) {
+            if (error) {
+                *error = RLMMakeError(RLMErrorInvalidInput, e);
+            }
+            return nil;
+        }
     }
     return self;
 }

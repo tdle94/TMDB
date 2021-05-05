@@ -84,9 +84,9 @@ class ViewAllViewModel: ViewAllViewModelProtocol {
             case .movie(let type):
                 switch type {
                 case .nowPlaying:
-                    self.title = NSLocalizedString("Top Rated", comment: "") + " " + NSLocalizedString("Movies", comment: "")
-                case .topRated:
                     self.title = NSLocalizedString("Now Playing", comment: "") + " " + NSLocalizedString("Movies", comment: "")
+                case .topRated:
+                    self.title = NSLocalizedString("Top Rated", comment: "") + " " + NSLocalizedString("Movies", comment: "")
                 case .upcoming:
                     self.title = NSLocalizedString("Upcoming", comment: "") + " " + NSLocalizedString("Movies", comment: "")
                 case .keyword(let keyword):
